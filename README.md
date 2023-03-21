@@ -79,7 +79,7 @@ Open new issue with [TOOL REQUEST] tag in name, and ill check it...
 ## How to request new themes?
 
 **How to do it?**  
-`saveThemeSettings("#{BUTTON_COLOR}", "{TOOL_NAME_COLOR}", "{TOOL_DESCRIPTION_COLOR}", 10, "{frame_xml_filename}", "{BORDER_COLOR}", "nhlauncher");`  
+`saveThemeSettings("{BUTTON_COLOR}", "{TOOL_NAME_COLOR}", "{TOOL_DESCRIPTION_COLOR}", 10, "{frame_xml_filename}", "{BORDER_COLOR}", "nhlauncher");`  
 `saveThemeSettings("#4A4A4C", "#FFFFFF", "#e94b3c", 10, "frame6", "#4A4A4C", "nhlauncher");`
              
 **Border color**
