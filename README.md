@@ -97,9 +97,9 @@ If you dont want to change border color of buttons, set this color same as BUTTO
 As you can see, all colors are in hex format...  
 
 **How to send request?**  
-Open new issue with [THEME REQUEST] tag in name, and ill check it...
+Open new issue with [THEME REQUEST](https://github.com/cr4sh-me/NHLauncher/labels) label, and ill check it...
 
 ## Features request
-You can also send features request with [FEATURE REQUEST] tag
+You can also send features request with [FEATURE REQUEST](https://github.com/cr4sh-me/NHLauncher/labels) label
 
 
