@@ -24,17 +24,20 @@ You can your own button, by holding any button in chosen category, and clicking 
 - Deleting button:  
 You can delete button by holding it, and clicking appropriate option. Please note that you can only delete buttons that were created by you
 
-- Usage sorting:  
-This feature display all the buttons by their usage rate, you can turn it on/off by holding any button and clicking appropriate option
-
 - Threading:  
 This app is running some tasks on threads, especially Sqlite queries, so you can operate slightly faster than without it
 
 - Themes manager:  
-You can customize NHLauncher appearance by selecting theme manager from top right toolbar
+You can fully customize NHLauncher appearance by selecting theme manager from top right toolbar
 
 - Settings manager:  
 You can customize NHLauncher settings, backup and restore your custom tools, favourites and own buttons, run missed setup by selecting settings manager from top right toolbar
+
+- Sorting modes:  
+You can easily select sorting mode for tools: Default, By usage, A-Z, Z-A, 0-9 A-Z, 9-0 Z-A
+
+- Searchbar
+You can search for specific tools by their name using search icon in top left
 
 ## How to request new tool/s
 If you like to request new tool for NHLauncher, first check all it functions on NetHunter platform.
