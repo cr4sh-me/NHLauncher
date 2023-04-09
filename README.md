@@ -36,7 +36,7 @@ You can customize NHLauncher settings, backup and restore your custom tools, fav
 - Sorting modes:  
 You can easily select sorting mode for tools: Default, By usage, A-Z, Z-A, 0-9 A-Z, 9-0 Z-A
 
-- Searchbar
+- Searchbar:  
 You can search for specific tools by their name using search icon in top left
 
 ## How to request new tool/s
