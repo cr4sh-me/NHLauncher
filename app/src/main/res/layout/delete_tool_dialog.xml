@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_button"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/text_view1"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:hint="@string/loading"
+        android:layout_width="280dp"
+        android:layout_height="55dp"/>
+
+    <TextView
+        android:id="@+id/text_view2"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:hint="@string/this_will_delete_yout_button_from_all_categories_are_you_sure"
+        android:layout_width="280dp"
+        android:layout_height="55dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/close"/>
+
+        <Button
+            android:id="@+id/delete_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/delete"/>
+
+    </LinearLayout>
+
+</LinearLayout>

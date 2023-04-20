@@ -1,0 +1,69 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/new_button"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+
+    <EditText
+        android:id="@+id/textview1"
+        android:inputType="textNoSuggestions"
+        android:maxLength="25"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:hint="@string/button_name"
+        android:layout_width="280dp"
+        android:layout_height="55dp"/>
+
+    <EditText
+        android:id="@+id/textview2"
+        android:inputType="textNoSuggestions"
+        android:maxLength="100"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:hint="@string/button_description"
+        android:layout_width="280dp"
+        android:layout_height="55dp"/>
+
+    <EditText
+        android:id="@+id/textview3"
+        android:inputType="textNoSuggestions"
+        android:maxLength="1000"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:hint="@string/button_cmd"
+        android:layout_width="280dp"
+        android:layout_height="55dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/close"/>
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/add"/>
+
+    </LinearLayout>
+
+</LinearLayout>

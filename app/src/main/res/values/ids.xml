@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="edit_text_button_color" type="id" />
+    <item name="edit_text_name_color" type="id" />
+    <item name="edit_text_description_color" type="id" />
+    <item name="edit_text_button_radius" type="id" />
+</resources>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="custom_theme_manager">Menadżer motywów</string>
+
+    <string-array name="categories">
+        <item>AL - Wszytskie kategorie</item>
+        <item>FT - Ulubione narzędzia</item>
+        <item>01 - Zbieranie Informacji</item>
+        <item>02 - Analiza Podatności</item>
+        <item>03 - Analiza Aplikacji WWW</item>
+        <item>04 - Analiza Baz Danych</item>
+        <item>05 - Ataki Na Hasła</item>
+        <item>06 - Ataki Bezprzewodowe</item>
+        <item>07 - Inżynieria Odwrotna</item>
+        <item>08 - Narzędzia Eksploatacyjne</item>
+        <item>09 - Detekcja I Fałszowanie</item>
+        <item>10 - Wykorzystanie Poatakowe</item>
+        <item>11 - Analiza śledcza</item>
+        <item>12 - Narzędzia Raportujące</item>
+        <item>13 - Inżynieria Społeczna</item>
+    </string-array>
+
+    <string name="category_ft">FT - Ulubione narzędzia</string>
+    <string name="category_01">01 - Zbieranie Informacji</string>
+    <string name="category_02">02 - Analiza Podatności</string>
+    <string name="category_03">03 - Analiza Aplikacji WWW</string>
+    <string name="category_04">04 - Analiza Baz Danych</string>
+    <string name="category_05">05 - Ataki Na Hasła</string>
+    <string name="category_06">06 - Ataki Bezprzewodowe</string>
+    <string name="category_07">07 - Inżynieria Odwrotna</string>
+    <string name="category_08">08 - Narzędzia Eksploatacyjne</string>
+    <string name="category_09">09 - Detekcja I Fałszowanie</string>
+    <string name="category_10">10 - Wykorzystanie Poatakowe</string>
+    <string name="category_11">11 - Analiza śledcza</string>
+    <string name="category_12">12 - Narzędzia Raportujące</string>
+    <string name="category_13">13 - Inżynieria Społeczna</string>
+
+
+    <string name="loading">Ładowanie…</string>
+    <string name="settings_manager">Menadżer ustawień</string>
+    <string name="theme_manager">Menadżer motywów</string>
+    <string name="statistics">Statystyki</string>
+    <string name="about">Więcej</string>
+    <string name="edit_this_command">Edytuj komendę</string>
+    <string name="favourite_add_delete">Dodaj/usuń ulubione</string>
+    <string name="add_new_button">Nowy przycisk</string>
+    <string name="delete_this_button">Usuń ten przycisk</string>
+    <string name="delete_button">Usuń przycisk</string>
+    <string name="this_will_delete_yout_button_from_all_categories_are_you_sure">Ta akcja USUNIE ten przycisk ze wszytskich kategorii. Jesteś pewien?</string>
+    <string name="close">Zamknij</string>
+    <string name="delete">Usuń</string>
+    <string name="edit_command">Edytuj komendę</string>
+    <string name="new_cmd">Nowa koemenda</string>
+    <string name="save">Zapisz</string>
+    <string name="new_button">Nowy przycisk</string>
+    <string name="button_name">Nazwa przycisku</string>
+    <string name="button_cmd">Komenda przycisku</string>
+    <string name="button_description">Opis przycisku</string>
+    <string name="add">Dodaj</string>
+    <string name="run_setup">Uruchom konfigurację</string>
+    <string name="backup_custom_tools">Zapisz swoje narzędzia</string>
+    <string name="restore_custom_tools">Przywróć swoje narzędzia</string>
+    <string name="cancel">Anuluj</string>
+    <string name="no_fav_tools">Brak ulubionych narzędzi</string>
+    <string name="no_newtext_entry">Wpisz nazwę narzędzia aby rozpocząć wyszukiwanie</string>
+    <string name="cant_found">"Nie można znaleść: "</string>
+    <string name="check_your_query">sprawdź swoje zapytanie!</string>
+    <string name="cant_delete">Nie możesz tego usunąć</string>
+    <string name="deleted">Usunięto!</string>
+    <string name="deleting">"Usuwanie: "</string>
+    <string name="current_cmd">"Aktualna komenda: "</string>
+    <string name="empty_input">Brak danych!</string>
+    <string name="command_updated">Komenda zaaktualizowana!</string>
+    <string name="removed_favourite">Usunięto z ulubionych!</string>
+    <string name="added_favourite">Dodano do ulubionych!</string>
+    <string name="choose_option">"Wybierz opcje: "</string>
+    <string name="saved_to">"Zapisano do: "</string>
+    <string name="ex_storage">Pamięć zewnętrzna niedostępna!</string>
+    <string name="backup_failed">Kopia nieudana!</string>
+    <string name="bf_not">Nie znaleziono kopii!</string>
+    <string name="bp_restored">Kopia przywrócona pomyślnie!</string>
+    <string name="err_backup_dir">Błąd podczas tworzenia katalogu kopii!</string>
+    <string name="name_exist">Nazwa już istnieje!</string>
+    <string name="added">Dodano!</string>
+    <string name="name_empty">Nazwa jest pusta!</string>
+    <string name="desc_empty">Opis jest pusty!</string>
+    <string name="cmd_empty">Komenda jest pusta!</string>
+    <string name="no_tools_stat">Brak użytych narzędzi!</string>
+    <string name="usage">"Użycie: "</string>
+    <string name="choose_theme">Wybierz motyw:</string>
+    <string name="choose_font">Wybierz czcionkę</string>
+    <string name="sorting">Wybierz sortowanie:</string>
+    <string name="choose_lanuage">Wybierz język:</string>
+    <string name="apps_error">Aplikacja NetHunter lub NetHunter Terminal nie jest zainstalowana! Przeczytaj dokumentację NHLauncher i użyj mózgu...</string>
+    <string name="default_sorting">Domyślne</string>
+    <string name="by_usage">Po użyciu</string>
+    <string name="first_setup">Jeśli uruchamiasz NHLauncher poraz pierwszy, uruchom konfigurację aby zainstalować wszystkie nardzędzia które oferuje ta aplikacja. To wymaga połączenia z internetem i dostępnej pamięci. Możesz to zrobić pózniej w ustawieniach!</string>
+    <string name="setup">Konfiguracja</string>
+    <string name="perm_dialog">Proszę zezwolić na uprawnienia do wszystkich plików, aby NHLauncher mógł uzyskać dostęp do pamięci i zapisać/przywracać kopie zapasowe!</string>
+    <string name="all_file_perm">Uprawnienia do wszyskich plików!</string>
+    <string name="allow">Zezwól</string>
+    <string name="get_out">Wybierz kategorię od 01 do 13!</string>
+
+</resources>

@@ -1,0 +1,103 @@
+<resources>
+    <string name="app_name" translatable="false">NHLauncher</string>
+    <string name="custom_theme_manager">Custom theme manager</string>
+    <string name="loading">Loading…</string>
+    <string name="settings_manager">Settings manager</string>
+    <string name="theme_manager">Theme manager</string>
+    <string name="statistics">Statistics</string>
+    <string name="about">About</string>
+    <string name="edit_this_command">Edit this command</string>
+    <string name="favourite_add_delete">Favourite add/delete</string>
+    <string name="add_new_button">Add new button</string>
+    <string name="delete_this_button">Delete this button</string>
+    <string name="delete_button">Delete button</string>
+    <string name="this_will_delete_yout_button_from_all_categories_are_you_sure">This will DELETE yout button from all categories. Are you sure?</string>
+    <string name="close">Close</string>
+    <string name="delete">Delete</string>
+    <string name="edit_command">Edit command</string>
+    <string name="new_cmd">New cmd</string>
+    <string name="save">Save</string>
+    <string name="new_button">New button</string>
+    <string name="button_name">Button name</string>
+    <string name="button_cmd">Button cmd</string>
+    <string name="button_description">Button description</string>
+    <string name="add">Add</string>
+    <string name="run_setup">Run setup</string>
+    <string name="backup_custom_tools">Backup custom tools</string>
+    <string name="restore_custom_tools">Restore custom tools</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="category_ft">FT - Favourite Tools</string>
+    <string name="category_01">01 - Information Gathering</string>
+    <string name="category_02">02 - Vulnerability Analysis</string>
+    <string name="category_03">03 - Web Application Analysis</string>
+    <string name="category_04">04 - Database Assessment</string>
+    <string name="category_05">05 - Passwords Attacks</string>
+    <string name="category_06">06 - Wireless Attacks</string>
+    <string name="category_07">07 - Reverse Engineering</string>
+    <string name="category_08">08 - Exploitation Tools</string>
+    <string name="category_09">09 - Sniffing &amp; Spoofing</string>
+    <string name="category_10">10 - Post Exploitation</string>
+    <string name="category_11">11 - Forensics</string>
+    <string name="category_12">12 - Reporting Tools</string>
+    <string name="category_13">13 - Social Engineering</string>
+
+    <string name="no_fav_tools">No favourite tools yet!</string>
+    <string name="no_newtext_entry">Input tool name to begin search</string>
+    <string name="cant_found">"Can't found: "</string>
+    <string name="check_your_query">check your query!</string>
+    <string name="cant_delete">You can\'t delete it!</string>
+    <string name="deleted">Deleted!</string>
+    <string name="deleting">"Deleting "</string>
+    <string name="current_cmd">"Current cmd: "</string>
+    <string name="empty_input">Empty input!</string>
+    <string name="command_updated">Command updated!</string>
+    <string name="removed_favourite">Removed from favourite!</string>
+    <string name="added_favourite">Added to favourite!</string>
+    <string name="choose_option">Choose option</string>
+    <string name="saved_to">"Saved to: "</string>
+    <string name="ex_storage">External storage not avaiable!</string>
+    <string name="backup_failed">Backup failed!</string>
+    <string name="bf_not">Backup file not found!</string>
+    <string name="bp_restored">Backup restored successfuly!</string>
+    <string name="err_backup_dir">Error creating backup directory!</string>
+    <string name="name_exist">Name already exist!</string>
+    <string name="added">Added!</string>
+    <string name="name_empty">Name is empty!</string>
+    <string name="desc_empty">Description is empty!</string>
+    <string name="cmd_empty">Command is empty!</string>
+    <string name="no_tools_stat">No used tools yet!</string>
+    <string name="usage">"Usage: "</string>
+    <string name="apps_error">NetHunter and/or NetHunter Terminal app is not installed! Please read NHLauncher documentation and use your brain...</string>
+    <string name="choose_theme">Choose theme:</string>
+    <string name="choose_font">Choose font:</string>
+    <string name="sorting">Choose sorting:</string>
+    <string name="choose_lanuage">Choose language:</string>
+    <string name="default_sorting">Default</string>
+    <string name="by_usage">By usage</string>
+    <string name="first_setup">If you running NHLauncher for the first time, please run setup to install all tools that this launcher have. It require internet connection and some disk space. You can run it later from settings!</string>
+    <string name="setup">Setup</string>
+    <string name="perm_dialog">Please grant all files permission, so NHLauncher can access storage and save/restore backups!</string>
+    <string name="all_file_perm">All file permissons!</string>
+    <string name="allow">Allow</string>
+
+
+    <string-array name="categories">
+        <item>AL - All categories</item>
+        <item>FT - Favourite Tools</item>
+        <item>01 - Information Gathering</item>
+        <item>02 - Vulnerability Analysis</item>
+        <item>03 - Web Application Analysis</item>
+        <item>04 - Database Assessment</item>
+        <item>05 - Passwords Attacks</item>
+        <item>06 - Wireless Attacks</item>
+        <item>07 - Reverse Engineering</item>
+        <item>08 - Exploitation Tools</item>
+        <item>09 - Sniffing &amp; Spoofing</item>
+        <item>10 - Post Exploitation</item>
+        <item>11 - Forensics</item>
+        <item>12 - Reporting Tools</item>
+        <item>13 - Social Engineering</item>
+    </string-array>
+    <string name="get_out">Please choose 01-13 category!</string>
+</resources>

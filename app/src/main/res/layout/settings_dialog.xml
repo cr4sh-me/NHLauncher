@@ -1,0 +1,60 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_manager"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <Spinner
+        android:id="@+id/sorting_spinner"
+        android:layout_width="280dp"
+        android:layout_height="55dp" />
+
+    <Spinner
+        android:id="@+id/language_spinner"
+        android:layout_width="280dp"
+        android:layout_height="55dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/run_setup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/run_setup" />
+
+        <Button
+            android:id="@+id/db_backup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/backup_custom_tools" />
+
+        <Button
+
+            android:id="@+id/db_restore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/restore_custom_tools" />
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/close" />
+
+    </LinearLayout>
+
+</LinearLayout>
