@@ -57,7 +57,7 @@
     <string name="choose_option">Choose option</string>
     <string name="saved_to">"Saved to: "</string>
     <string name="ex_storage">External storage not avaiable!</string>
-    <string name="backup_failed">Backup failed!</string>
+    <string name="backup_failed">Backup failed! Missing permissions...</string>
     <string name="bf_not">Backup file not found!</string>
     <string name="bp_restored">Backup restored successfuly!</string>
     <string name="err_backup_dir">Error creating backup directory!</string>
@@ -100,5 +100,6 @@
         <item>13 - Social Engineering</item>
     </string-array>
     <string name="get_out">Please choose 01–13 category!</string>
+    <string name="restore_fail">Restore failed! Missing permissions…</string>
 
 </resources>

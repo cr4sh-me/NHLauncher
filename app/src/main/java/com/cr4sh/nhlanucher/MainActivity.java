@@ -23,6 +23,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -89,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (!PermissionUtils.isPermissionsGranted(this)) {
             dialogUtils.openPermissionsDialog();
         }
-
 
         // Setting up spinner
         Spinner spinner = findViewById(R.id.categoriesSpinner);

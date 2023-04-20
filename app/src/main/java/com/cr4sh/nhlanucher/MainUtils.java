@@ -8,7 +8,6 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -179,7 +178,8 @@ public class MainUtils extends AppCompatActivity {
     public static void takePermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             try {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                // Open directly on NHLauncher app!
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
                 intent.addCategory("android.intent.category.DEFAULT");
                 Uri uri = Uri.fromParts("package", mainActivity.getPackageName(), null);
                 intent.setData(uri);
@@ -187,7 +187,7 @@ public class MainUtils extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
                 Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
                 mainActivity.startActivityForResult(intent, 101);
             }
         } else {

@@ -2,6 +2,7 @@ package com.cr4sh.nhlanucher;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
@@ -70,7 +71,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         holder.itemView.setOnClickListener(v -> {
             MainUtils.mainActivity.buttonUsage = item.getUsage();
             MainUtils.buttonUsageIncrease(item.getName());
-            new Thread(() -> MainUtils.run_cmd(item.getCmd())).start();
+//            new Thread(() -> MainUtils.run_cmd(item.getCmd())).start();
+
+            Intent intent = new Intent("com.offsec.nhterm.RUN_SCRIPT_NH");
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.putExtra("com.offsec.nhterm.iInitialCommand", item.getCmd());
+            context.startActivity(intent);
+
         });
 
         holder.itemView.setOnLongClickListener(view -> {

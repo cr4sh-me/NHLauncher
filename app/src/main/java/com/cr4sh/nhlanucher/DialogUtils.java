@@ -89,5 +89,4 @@ public class DialogUtils {
         // Display our dialog!
         statsDialog.show(fragmentManager, "PermissionsDialog");
     }
-
 }
