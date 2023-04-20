@@ -57,6 +57,7 @@ If you like to request new tool for NHLauncher, first check all it functions on 
 Heres example of a request:  
 (Second description is for Polish language!)
 `insertTool(db, 1, "{CATEGORY}", 0, "{NAME}", "{DESCRIPTION}", "{DESCRIPTION}", "{COMMAND}", "{ICON}", 0);`  
+
 `insertTool(db, 1, "01", 0, "nmap", "Network exploration tool and security / port scanner", "Network exploration tool and security / port scanner", "nmap -h", "kali_nmap", 0);`
 
 **CATEGORY**:   
@@ -95,6 +96,7 @@ Open new issue with [TOOL REQUEST] tag in name, and ill check it...
 
 **How to do it?**  
 `saveThemeSettings("{BUTTON_COLOR}", "{TOOL_NAME_COLOR}", "{TOOL_DESCRIPTION_COLOR}", "{frame_xml_filename}", "{BORDER_COLOR}", "nhlauncher");`  
+
 `saveThemeSettings("#4A4A4C", "#FFFFFF", "#e94b3c", "frame6", "#4A4A4C", "nhlauncher");`
              
 **Border color**
