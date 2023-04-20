@@ -68,7 +68,7 @@
     <string name="cmd_empty">Command is empty!</string>
     <string name="no_tools_stat">No used tools yet!</string>
     <string name="usage">"Usage: "</string>
-    <string name="apps_error">NetHunter and/or NetHunter Terminal app is not installed! Please read NHLauncher documentation and use your brain...</string>
+    <string name="apps_error">NetHunter and/or NetHunter Terminal app is not installed! Please read NHLauncher documentation and use your brain…</string>
     <string name="choose_theme">Choose theme:</string>
     <string name="choose_font">Choose font:</string>
     <string name="sorting">Choose sorting:</string>
@@ -99,5 +99,6 @@
         <item>12 - Reporting Tools</item>
         <item>13 - Social Engineering</item>
     </string-array>
-    <string name="get_out">Please choose 01-13 category!</string>
+    <string name="get_out">Please choose 01–13 category!</string>
+
 </resources>

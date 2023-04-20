@@ -112,18 +112,31 @@ public class DBBackup {
             int usage = backupCursor.getInt(8);
 
             // Not checking FAVOURITE, CMD and USAGE, because these values can be changed and it can cause duplicated buttons!!!
-            Cursor existingCursor = existingDB.query("TOOLS", null, "SYSTEM = ? AND CATEGORY = ? AND NAME = ? AND DESCRIPTION_EN = ? AND DESCRIPTION_PL = ? AND ICON = ?", new String[] {String.valueOf(system), category, name, description_en, description_pl ,icon}, null, null, null);
-            Log.d("CRS", system + " " +category + " " + favourite + " " + name + " " + description_en + " " + description_pl + " " + backupCursor.getString(5) + " " + backupCursor.getString(6) + " " + backupCursor.getString(7));
-            Log.d("CRS", "LOG -> " + existingCursor.getCount());
-                if (existingCursor.getCount() > 0) {
+            Cursor existingCursor = existingDB.query("TOOLS", null, "SYSTEM = ? AND CATEGORY = ? AND NAME = ? AND DESCRIPTION_EN = ? AND DESCRIPTION_PL = ? AND ICON = ?", new String[]{String.valueOf(system), category, name, description_en, description_pl, icon}, null, null, null);
+//            Log.d("CRS", system + " " +category + " " + favourite + " " + name + " " + description_en + " " + description_pl + " " + backupCursor.getString(5) + " " + backupCursor.getString(6) + " " + backupCursor.getString(7));
+//            Log.d("CRS", "LOG -> " + existingCursor.getCount());
+            int existingUsage = 0;
+            if (existingCursor.getCount() > 0) {
+                // Get the existing favorite value for the tool
+                existingCursor.moveToFirst();
+                int existingFavorite = existingCursor.getInt(existingCursor.getColumnIndex("FAVOURITE"));
+                existingUsage = existingCursor.getInt(existingCursor.getColumnIndex("USAGE"));
+                existingCursor.close();
+                // Only update the favorite value if it is different from the existing value
+                if (existingFavorite != 1) {
                     Log.d("CRS", name + " Updated\n");
-                    DBHandler.updateTool(existingDB, system, category, favourite, name, description_en, description_pl, cmd, icon, usage);
+                    DBHandler.updateTool(existingDB, system, category, favourite, name, description_en, description_pl, cmd, icon, existingUsage);
                 } else {
-                    Log.d("CRS", name + "Inserted\n");
-                    DBHandler.insertTool(existingDB, system, category, favourite, name, description_en, description_pl, cmd, icon, usage);
+                    Log.d("CRS", name + " Not updated favourite (already has favorite status)\n");
+                    DBHandler.updateTool(existingDB, system, category, 1, name, description_en, description_pl, cmd, icon, existingUsage);
                 }
-            existingCursor.close();
+            } else {
+                Log.d("CRS", name + "Inserted\n");
+                DBHandler.insertTool(existingDB, system, category, favourite, name, description_en, description_pl, cmd, icon, existingUsage);
             }
+
+            existingCursor.close();
+        }
 
         backupCursor.close();
         backupDB.close();

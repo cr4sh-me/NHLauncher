@@ -1,4 +1,4 @@
-# NHLauncher (Ill add source code with first app release!)
+# NHLauncher
 
 ## What is NHLauncher?
 NHLauncher is an application that makes it easier and faster to launch pentesting tools.
@@ -39,12 +39,25 @@ You can easily select sorting mode for tools: Default, By usage, A-Z, Z-A, 0-9 A
 - Searchbar:  
 You can search for specific tools by their name using search icon in top left
 
+- RecyclerView + DiffUtilCallback: 
+Load a lot of buttons in second, and keep them in memory!
+
+- Statistics: 
+Check which tools you use the most with Statistics feature!
+
+- Polish language: 
+NHLauncher have Polish language!
+
+- Availability: 
+NHLauncher is available on older and newer android versions!
+
 ## How to request new tool/s
 If you like to request new tool for NHLauncher, first check all it functions on NetHunter platform.
 
 Heres example of a request:  
-`insertTool(db, "1", "{CATEGORY}", "0", "{NAME}", "{DESCRIPTION}", "{COMMAND}", "{ICON}", 0);`  
-`insertTool(db, "1", "01", "0", "nmap", "Network exploration tool and security / port scanner", "nmap -h", "kali_nmap", 0);`
+(Second description is for Polish language!)
+`insertTool(db, 1, "{CATEGORY}", 0, "{NAME}", "{DESCRIPTION}", "{DESCRIPTION}", "{COMMAND}", "{ICON}", 0);`  
+`insertTool(db, 1, "01", 0, "nmap", "Network exploration tool and security / port scanner", "Network exploration tool and security / port scanner", "nmap -h", "kali_nmap", 0);`
 
 **CATEGORY**:   
 choose one of these...  
@@ -66,7 +79,7 @@ choose one of these...
 Put tool name here...  
 
 **DESCRIPTION:**  
-Put tool description here, please make sure it's not so long
+Put tool description here, please make sure it's not longer than 90 characters
 
 **COMMAND**
 Put tool command here, display it help message by default  
@@ -74,7 +87,6 @@ Put tool command here, display it help message by default
 **ICON:**
 You can also attach tool image as svg, so i can scale it and put to tools database.
 If you cant or dont want to add image, put `kali_menu` here  
-
 
 **How to send request?**  
 Open new issue with [TOOL REQUEST] tag in name, and ill check it...

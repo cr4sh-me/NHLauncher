@@ -3,10 +3,12 @@ package com.cr4sh.nhlanucher;
 import static com.cr4sh.nhlanucher.MainUtils.itemList;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.SpannableString;
@@ -139,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 TextView noToolsText = findViewById(R.id.messagebox);
                     Cursor cursor;
 
-                        String[] projection = {"CATEGORY", "NAME", MainUtils.language, "CMD", "ICON"};
+                        String[] projection = {"CATEGORY", "NAME", MainUtils.language, "CMD", "ICON", "USAGE"};
 
                         // Add search filter to query
                         String selection = "NAME LIKE ?";
@@ -164,10 +166,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 String toolDescription = cursor.getString(2);
                                 String toolCmd = cursor.getString(3);
                                 String toolIcon = cursor.getString(4);
+                                int toolUsage = cursor.getInt(5);
 
 //                                MainUtils.createButton(toolCategory, toolName, toolDescription, toolCmd, toolIcon);
                                 @SuppressLint("DiscouragedApi") int drawableId = getResources().getIdentifier(toolIcon, "drawable", getPackageName());
-                                Item item = new Item(toolCategory, toolName, toolDescription, toolCmd, drawableId);
+                                Item item = new Item(toolCategory, toolName, toolDescription, toolCmd, drawableId, toolUsage);
                                 // Add the item to the itemList
                                 itemList.add(item);
                             }
@@ -295,7 +298,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 dialogUtils.openStatisticsDialog();
                 return true;
             case R.id.menu_item_4:
-                dialogUtils.openInfoDialog();
+                // Just open link in browser
+                String url = "https://github.com/cr4sh-me/NHLauncher";
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

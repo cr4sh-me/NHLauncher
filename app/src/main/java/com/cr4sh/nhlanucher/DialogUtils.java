@@ -9,7 +9,6 @@ import com.cr4sh.nhlanucher.dialogs.CustomThemeDialog;
 import com.cr4sh.nhlanucher.dialogs.DeleteToolDialog;
 import com.cr4sh.nhlanucher.dialogs.EditableDialog;
 import com.cr4sh.nhlanucher.dialogs.FirstSetupDialog;
-import com.cr4sh.nhlanucher.dialogs.InfoDialog;
 import com.cr4sh.nhlanucher.dialogs.NewToolDialog;
 import com.cr4sh.nhlanucher.dialogs.PermissionDialog;
 import com.cr4sh.nhlanucher.dialogs.SettingsDialog;
@@ -51,12 +50,6 @@ public class DialogUtils {
         dtDialog.setArguments(args);
         // Display our dialog!
         dtDialog.show(fragmentManager, "DeleteToolDialog");
-    }
-
-    public void openInfoDialog() {
-        InfoDialog infoDialog = new InfoDialog();
-        // Display our dialog!
-        infoDialog.show(fragmentManager, "InfoDialog");
     }
 
     public void openAppsDialog() {

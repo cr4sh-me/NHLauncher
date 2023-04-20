@@ -154,8 +154,9 @@ public class MainUtils extends AppCompatActivity {
                 String toolDescription = cursor.getString(3);
                 String toolCmd = cursor.getString(4);
                 String toolIcon = cursor.getString(5);
+                int toolUsage = cursor.getInt(6);
                 @SuppressLint("DiscouragedApi") int drawableId = resources.getIdentifier(toolIcon, "drawable", mainActivity.getPackageName());
-                Item item = new Item(toolCategory, toolName, toolDescription, toolCmd, drawableId);
+                Item item = new Item(toolCategory, toolName, toolDescription, toolCmd, drawableId, toolUsage);
                 newItemList.add(item);
             }
 

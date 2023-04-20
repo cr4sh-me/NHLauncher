@@ -67,6 +67,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         holder.emailView.setTypeface(MainUtils.typeface);
 
         holder.itemView.setOnClickListener(v -> {
+            MainUtils.mainActivity.buttonUsage = item.getUsage();
             MainUtils.buttonUsageIncrease(item.getName());
             new Thread(() -> MainUtils.run_cmd(item.getCmd())).start();
         });

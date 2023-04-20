@@ -8,26 +8,28 @@ public class Item {
     String cmd;
     int image;
 
-    public Item(String category, String name, String description, String cmd,  int image) {
+    int usage;
+
+    public Item(String category, String name, String description, String cmd,  int image, int usage) {
         this.category = category;
         this.name = name;
         this.description = description;
         this.cmd = cmd;
         this.image = image;
+        this.usage = usage;
     }
 
     public String getCategory() { return category;}
-
     public String getName() {
         return name;
     }
     public String getDescription() {
         return description;
     }
+    public String getCmd(){ return cmd; }
     public int getImage() {
         return image;
     }
-
-    public String getCmd(){ return cmd; }
+    public int getUsage(){ return usage; }
 
 }
