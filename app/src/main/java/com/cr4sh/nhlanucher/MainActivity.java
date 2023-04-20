@@ -67,14 +67,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         this.setFinishOnTouchOutside(false);
 
         // Check for nethunter and terminal apps
-//        PackageManager pm = getPackageManager();
-//        try {
-//            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
-//            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
-//        } catch (PackageManager.NameNotFoundException e) {
-//            dialogUtils.openAppsDialog();
-//            return;
-//        }
+        PackageManager pm = getPackageManager();
+        try {
+            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
+            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
+        } catch (PackageManager.NameNotFoundException e) {
+            dialogUtils.openAppsDialog();
+            return;
+        }
 
         // Set content view before dialogs below, so they wont appear twice!!
         setContentView(R.layout.activity_main);
