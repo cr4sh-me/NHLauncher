@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -70,26 +71,24 @@ public class MainUtils extends AppCompatActivity {
     }
 
     // MainUtils functions!!!
+    public static final Object spinnerLock = new Object();
+
     public static void restartSpinner() {
         itemList.clear();
         // Reload spinner in the same position as it currently is
         Spinner spinner = mainActivity.findViewById(R.id.categoriesSpinner);
         int selectedItemText = spinner.getSelectedItemPosition();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mainActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mainActivity, valuesList, imageList, buttonColor, nameColor);
-                        spinner.setAdapter(adapter);
-                        spinner.setOnItemSelectedListener(mainActivity);
-                        spinner.setSelection(selectedItemText);
-                    }
-                });
-            }
-        }).start();
+        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mainActivity, valuesList, imageList, buttonColor, nameColor);
+
+        synchronized (spinnerLock) {
+            new Thread(() -> mainActivity.runOnUiThread(() -> {
+                spinner.setAdapter(adapter);
+                spinner.setOnItemSelectedListener(mainActivity);
+                spinner.setSelection(selectedItemText);
+            })).start();
+        }
     }
+
 
     // NetHunter bridge function
     public static void run_cmd(String cmd) {
@@ -155,20 +154,24 @@ public class MainUtils extends AppCompatActivity {
                 String toolCmd = cursor.getString(4);
                 String toolIcon = cursor.getString(5);
                 int toolUsage = cursor.getInt(6);
-                @SuppressLint("DiscouragedApi") int drawableId = resources.getIdentifier(toolIcon, "drawable", mainActivity.getPackageName());
-                Item item = new Item(toolCategory, toolName, toolDescription, toolCmd, drawableId, toolUsage);
+
+                Item item = new Item(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
                 newItemList.add(item);
+
             }
 
             // Create the adapter and set it as the adapter for the RecyclerView
             if (layout.getAdapter() == null) {
-                MyAdapter adapter = new MyAdapter(mainActivity, itemList);
+                MyAdapter adapter = new MyAdapter(mainActivity, newItemList);
                 layout.setAdapter(adapter);
                 layout.setLayoutManager(new LinearLayoutManager(mainActivity));
-                ((MyAdapter)layout.getAdapter()).updateData(newItemList);
             } else {
-                ((MyAdapter)layout.getAdapter()).updateData(newItemList);
+                // Update the itemList to reflect the latest list of items
+                itemList.clear();
+                itemList.addAll(newItemList);
+                ((MyAdapter)layout.getAdapter()).updateData(itemList);
             }
+
         }
     }
 

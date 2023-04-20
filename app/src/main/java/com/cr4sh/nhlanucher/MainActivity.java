@@ -67,14 +67,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         this.setFinishOnTouchOutside(false);
 
         // Check for nethunter and terminal apps
-        PackageManager pm = getPackageManager();
-        try {
-            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
-            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
-        } catch (PackageManager.NameNotFoundException e) {
-            dialogUtils.openAppsDialog();
-            return;
-        }
+//        PackageManager pm = getPackageManager();
+//        try {
+//            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
+//            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
+//        } catch (PackageManager.NameNotFoundException e) {
+//            dialogUtils.openAppsDialog();
+//            return;
+//        }
 
         // Set content view before dialogs below, so they wont appear twice!!
         setContentView(R.layout.activity_main);
@@ -168,9 +168,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 String toolIcon = cursor.getString(4);
                                 int toolUsage = cursor.getInt(5);
 
-//                                MainUtils.createButton(toolCategory, toolName, toolDescription, toolCmd, toolIcon);
-                                @SuppressLint("DiscouragedApi") int drawableId = getResources().getIdentifier(toolIcon, "drawable", getPackageName());
-                                Item item = new Item(toolCategory, toolName, toolDescription, toolCmd, drawableId, toolUsage);
+                                Item item = new Item(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
                                 // Add the item to the itemList
                                 itemList.add(item);
                             }

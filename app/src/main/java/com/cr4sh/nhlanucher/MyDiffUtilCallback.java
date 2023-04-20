@@ -4,6 +4,7 @@ package com.cr4sh.nhlanucher;
 import androidx.recyclerview.widget.DiffUtil;
 
 import java.util.List;
+import java.util.Objects;
 
 // RecyclerView performance improvement
 // This class compares items, and leaves these that are same
@@ -39,7 +40,7 @@ public class MyDiffUtilCallback extends DiffUtil.Callback {
 
         return oldItem.getName().equals(newItem.getName()) &&
                 oldItem.getDescription().equals(newItem.getDescription()) &&
-                oldItem.getImage() == newItem.getImage() &&
+                Objects.equals(oldItem.getImage(), newItem.getImage()) &&
                 oldItem.getCmd().equals(newItem.getCmd()) &&
                 oldItem.getCategory().equals(newItem.getCategory());
     }

@@ -109,7 +109,6 @@ public class DBBackup {
             String description_pl = backupCursor.getString(5);
             String cmd = backupCursor.getString(6);
             String icon = backupCursor.getString(7);
-            int usage = backupCursor.getInt(8);
 
             // Not checking FAVOURITE, CMD and USAGE, because these values can be changed and it can cause duplicated buttons!!!
             Cursor existingCursor = existingDB.query("TOOLS", null, "SYSTEM = ? AND CATEGORY = ? AND NAME = ? AND DESCRIPTION_EN = ? AND DESCRIPTION_PL = ? AND ICON = ?", new String[]{String.valueOf(system), category, name, description_en, description_pl, icon}, null, null, null);
@@ -142,7 +141,7 @@ public class DBBackup {
         backupDB.close();
         existingDB.close();
         Toast.makeText(context, context.getResources().getString(R.string.bp_restored), Toast.LENGTH_SHORT).show();
-//        ((MainActivity)context).restartSpinner();
+
         MainUtils.restartSpinner();
     }
 }

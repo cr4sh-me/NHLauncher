@@ -5,7 +5,7 @@ NHLauncher is an application that makes it easier and faster to launch pentestin
 It uses NetHunter bridge for launching tools in nh terminal!
 
 ## Requirements 
-- Android 7.1+
+- Android 6.0+
 - Rooted android device (Its required for NetHunter installation)  
 - Full NetHunter installation  
 - New nethunter terminal and app, you can download sources and build them in android studio from here [nethunter](https://gitlab.com/kalilinux/nethunter/apps/kali-nethunter-app/-/tree/2023.1-dev-martin-neoterm), [terminal](https://gitlab.com/kalilinux/nethunter/apps/kali-nethunter-term/-/tree/2023.1-dev-martin-neoterm). These apps will come to next kali linux release probably...  

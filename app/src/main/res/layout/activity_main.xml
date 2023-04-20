@@ -26,13 +26,13 @@
         android:inputType="textNoSuggestions" />
 
     <androidx.appcompat.widget.Toolbar
-    android:id="@+id/toolBar"
-    app:menu="@menu/main_menu"
-    android:layout_height="45dp"
-    android:layout_width="45dp"
-    android:layout_margin="10dp"
-    android:layout_alignParentTop="true"
-    android:layout_alignParentEnd="true"/>
+        android:id="@+id/toolBar"
+        app:menu="@menu/main_menu"
+        android:layout_height="45dp"
+        android:layout_width="45dp"
+        android:layout_margin="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"/>
 
     <RelativeLayout
         android:id="@+id/imageViewHeader"

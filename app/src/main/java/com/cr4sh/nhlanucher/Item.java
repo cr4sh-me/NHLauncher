@@ -6,11 +6,10 @@ public class Item {
     String name;
     String description;
     String cmd;
-    int image;
-
+    String image;
     int usage;
 
-    public Item(String category, String name, String description, String cmd,  int image, int usage) {
+    public Item(String category, String name, String description, String cmd,  String image, int usage) {
         this.category = category;
         this.name = name;
         this.description = description;
@@ -27,7 +26,7 @@ public class Item {
         return description;
     }
     public String getCmd(){ return cmd; }
-    public int getImage() {
+    public String getImage() {
         return image;
     }
     public int getUsage(){ return usage; }

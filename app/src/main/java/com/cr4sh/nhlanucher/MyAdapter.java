@@ -26,6 +26,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @SuppressLint("NotifyDataSetChanged")
     public void updateData(List<Item> newData) {
+
         if (newData.isEmpty()) {
             items.clear();
             notifyDataSetChanged();
@@ -37,10 +38,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         diffResult.dispatchUpdatesTo(this);
         Log.d("MyAdapter", "Updating data");
         Log.d("MyAdapter", "New item list size: " + newData.size());
-
     }
-
-
 
     @NonNull
     @Override
@@ -50,13 +48,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+
         Item item = getItem(position);
         holder.nameView.setText(item.getName().toUpperCase());
-        holder.emailView.setText(item.getDescription().toUpperCase());
+        holder.descriptionView.setText(item.getDescription().toUpperCase());
 
-        holder.imageView.setImageResource(item.getImage());
+        @SuppressLint("DiscouragedApi") int imageResourceId = context.getResources().getIdentifier(item.getImage(), "drawable", context.getPackageName());
+        holder.imageView.setImageResource(imageResourceId);
+
         holder.nameView.setTextColor(Color.parseColor(MainUtils.nameColor));
-        holder.emailView.setTextColor(Color.parseColor(MainUtils.descriptionColor));
+        holder.descriptionView.setTextColor(Color.parseColor(MainUtils.descriptionColor));
 
         GradientDrawable drawable = new GradientDrawable();
         drawable.setColor(Color.parseColor(MainUtils.buttonColor));
@@ -64,7 +65,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         drawable.setStroke(2, Color.parseColor(MainUtils.strokeColor));
         holder.itemView.setBackground(drawable);
         holder.nameView.setTypeface(MainUtils.typeface);
-        holder.emailView.setTypeface(MainUtils.typeface);
+        holder.descriptionView.setTypeface(MainUtils.typeface);
 
         holder.itemView.setOnClickListener(v -> {
             MainUtils.mainActivity.buttonUsage = item.getUsage();
