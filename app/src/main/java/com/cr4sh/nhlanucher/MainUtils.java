@@ -1,5 +1,7 @@
 package com.cr4sh.nhlanucher;
 
+import static com.cr4sh.nhlanucher.MainActivity.itemList;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -19,7 +21,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cr4sh.nhlanucher.bridge.Bridge;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class MainUtils extends AppCompatActivity {
 
@@ -62,7 +64,7 @@ public class MainUtils extends AppCompatActivity {
 
     public static Typeface typeface;
 
-    public static List<Item> itemList = new ArrayList<>();
+//    public static List<Item> itemList = new ArrayList<>();
 
     public MainUtils(MainActivity mainActivity) {
         MainUtils.mainActivity = mainActivity;
@@ -155,19 +157,11 @@ public class MainUtils extends AppCompatActivity {
 
             }
 
-            // Create the adapter and set it as the adapter for the RecyclerView
-            if (layout.getAdapter() == null) {
-                MyAdapter adapter = new MyAdapter(mainActivity, newItemList);
-                layout.setAdapter(adapter);
-                layout.setLayoutManager(new LinearLayoutManager(mainActivity));
-            } else {
-                // Update the itemList to reflect the latest list of items
-                itemList.clear();
-                itemList.addAll(newItemList);
-                ((MyAdapter)layout.getAdapter()).updateData(itemList);
-            }
+            ((MyAdapter) Objects.requireNonNull(layout.getAdapter())).updateData(newItemList);
+
 
         }
+        cursor.close();
     }
 
     // Using deprecated methods for older android versions!!!!!
@@ -236,11 +230,11 @@ public class MainUtils extends AppCompatActivity {
     public static void refreshFrame() {
         @SuppressLint("DiscouragedApi") int frame = mainActivity.getResources().getIdentifier(frameColor, "drawable", mainActivity.getPackageName());
         @SuppressLint("DiscouragedApi") int logo = mainActivity.getResources().getIdentifier(logoIcon, "drawable", mainActivity.getPackageName());
-        TextView changableTextView = mainActivity.findViewById(R.id.changableTextView);
-        ImageView changableLogo = mainActivity.findViewById(R.id.nhlauncher_logo);
-        changableTextView.setBackgroundResource(frame);
-        changableLogo.setImageResource(logo);
-        changableTextView.invalidate();
+        TextView changeableTextView = mainActivity.findViewById(R.id.changeableTextView);
+        ImageView changeableLogo = mainActivity.findViewById(R.id.nhlauncher_logo);
+        changeableTextView.setBackgroundResource(frame);
+        changeableLogo.setImageResource(logo);
+        changeableTextView.invalidate();
     }
 
     // Adds button to favourites bu updating FAVOURITE value

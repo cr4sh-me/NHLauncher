@@ -1,7 +1,5 @@
 package com.cr4sh.nhlanucher;
 
-import static com.cr4sh.nhlanucher.MainUtils.itemList;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,13 +21,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -47,13 +47,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     // Access methods from DialogUtils
     DialogUtils dialogUtils = new DialogUtils(this.getSupportFragmentManager());
 
+    private RecyclerView recyclerView;
+    public static List<Item> itemList;
+
     @SuppressLint("Recycle")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
 
         DBHandler mDbHandler = DBHandler.getInstance(this);
         mDatabase = mDbHandler.getDatabase();
+
+        itemList = new ArrayList<>();
+        recyclerView = findViewById(R.id.recyclerView);
+
+        // Set the layout manager
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Set the adapter
+        MyAdapter adapter = new MyAdapter(this, itemList);
+        recyclerView.setAdapter(adapter);
 
         // Get functions from this class
         new MainUtils(this);
@@ -79,8 +94,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         // Set content view before dialogs below, so they wont appear twice!!
-        setContentView(R.layout.activity_main);
-
         // Check if setup has been completed
 
         if (!MainUtils.isSetupCompleted) {
@@ -150,6 +163,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         String[] selectionArgs = {newText + "%"};
 
                         if(newText.length() > 0){
+
+                            recyclerView.setVisibility(View.VISIBLE);
+
 //                            menuItem.setEnabled(false);
                             disableMenu = true;
 
@@ -179,6 +195,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             runOnUiThread(() -> {
                                 disableMenu = false;
                                 noToolsText.setText(getResources().getString(R.string.no_newtext_entry));
+                                // Clear the list of items
+                                recyclerView.setVisibility(View.GONE);
+
                             });
                             return false;
                         }

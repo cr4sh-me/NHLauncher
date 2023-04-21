@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,7 +17,7 @@
         android:layout_marginBottom="20px"
         android:gravity="center"
         android:layout_gravity="center"
-        />
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/text_view"

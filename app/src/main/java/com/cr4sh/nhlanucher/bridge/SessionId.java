@@ -1,5 +1,7 @@
 package com.cr4sh.nhlanucher.bridge;
 
+import androidx.annotation.NonNull;
+
 import java.util.Objects;
 
 /**
@@ -11,11 +13,6 @@ public class SessionId {
    */
   public static final SessionId NEW_SESSION = SessionId.of("new");
 
-  /**
-   * Presents current session in NeoTerm.
-   */
-  public static final SessionId CURRENT_SESSION = SessionId.of("current");
-
   private final String sessionId;
 
   SessionId(String sessionId) {
@@ -26,6 +23,7 @@ public class SessionId {
     return sessionId;
   }
 
+  @NonNull
   @Override
   public String toString() {
     return "TerminalSession { id = " + sessionId + " }";
