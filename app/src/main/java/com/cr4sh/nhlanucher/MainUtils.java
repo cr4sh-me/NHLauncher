@@ -70,22 +70,18 @@ public class MainUtils extends AppCompatActivity {
     }
 
     // MainUtils functions!!!
-    public static final Object spinnerLock = new Object();
 
     public static void restartSpinner() {
         itemList.clear();
         // Reload spinner in the same position as it currently is
         Spinner spinner = mainActivity.findViewById(R.id.categoriesSpinner);
         int selectedItemText = spinner.getSelectedItemPosition();
-        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mainActivity, valuesList, imageList, buttonColor, nameColor);
-
-        synchronized (spinnerLock) {
-            new Thread(() -> mainActivity.runOnUiThread(() -> {
-                spinner.setAdapter(adapter);
-                spinner.setOnItemSelectedListener(mainActivity);
-                spinner.setSelection(selectedItemText);
-            })).start();
-        }
+        new Thread(() -> mainActivity.runOnUiThread(() -> {
+            CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mainActivity, valuesList, imageList, buttonColor, nameColor);
+            spinner.setAdapter(adapter);
+            spinner.setOnItemSelectedListener(mainActivity);
+            spinner.setSelection(selectedItemText);
+        })).start();
     }
 
 

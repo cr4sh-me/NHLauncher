@@ -2,7 +2,6 @@ package com.cr4sh.nhlanucher;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
@@ -27,18 +26,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @SuppressLint("NotifyDataSetChanged")
     public void updateData(List<Item> newData) {
-
-        if (newData.isEmpty()) {
-            items.clear();
-            notifyDataSetChanged();
-            return;
-        }
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new MyDiffUtilCallback(items, newData));
         items.clear();
         items.addAll(newData);
-        diffResult.dispatchUpdatesTo(this);
-        Log.d("MyAdapter", "Updating data");
-        Log.d("MyAdapter", "New item list size: " + newData.size());
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -71,13 +61,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         holder.itemView.setOnClickListener(v -> {
             MainUtils.mainActivity.buttonUsage = item.getUsage();
             MainUtils.buttonUsageIncrease(item.getName());
-//            new Thread(() -> MainUtils.run_cmd(item.getCmd())).start();
-
-            Intent intent = new Intent("com.offsec.nhterm.RUN_SCRIPT_NH");
-            intent.addCategory(Intent.CATEGORY_DEFAULT);
-            intent.putExtra("com.offsec.nhterm.iInitialCommand", item.getCmd());
-            context.startActivity(intent);
-
+            new Thread(() -> MainUtils.run_cmd(item.getCmd())).start();
         });
 
         holder.itemView.setOnLongClickListener(view -> {
