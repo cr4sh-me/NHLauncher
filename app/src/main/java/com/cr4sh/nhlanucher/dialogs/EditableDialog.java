@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlanucher.DBHandler;
+import com.cr4sh.nhlanucher.MainActivity;
 import com.cr4sh.nhlanucher.MainUtils;
 import com.cr4sh.nhlanucher.R;
 
@@ -30,6 +31,8 @@ public class EditableDialog extends AppCompatDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.editable_dialog, container, false);
+
+        MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
 
         // Get arguments
         assert getArguments() != null;
@@ -60,7 +63,7 @@ public class EditableDialog extends AppCompatDialogFragment {
                 try (SQLiteOpenHelper dbHandler = new DBHandler(getActivity());
                      SQLiteDatabase db = dbHandler.getReadableDatabase()) {
                     DBHandler.updateToolCmd(db, name, newCmd.getText().toString().trim());
-                    MainUtils.restartSpinner();
+                    mainUtils.restartSpinner();
                     Toast.makeText(getActivity(), requireActivity().getResources().getString(R.string.command_updated), Toast.LENGTH_SHORT).show();
                     Objects.requireNonNull(getDialog()).cancel();
                 } catch (SQLException e) {

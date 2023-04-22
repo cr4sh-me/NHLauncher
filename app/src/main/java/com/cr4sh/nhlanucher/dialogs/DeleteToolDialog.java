@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlanucher.DBHandler;
+import com.cr4sh.nhlanucher.MainActivity;
 import com.cr4sh.nhlanucher.MainUtils;
 import com.cr4sh.nhlanucher.R;
 
@@ -31,6 +32,8 @@ public class DeleteToolDialog extends AppCompatDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.delete_tool_dialog, container, false);
+
+        MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
 
         // Get arguments
         assert getArguments() != null;
@@ -70,7 +73,7 @@ public class DeleteToolDialog extends AppCompatDialogFragment {
                 }
 
 //                ((MainActivity)getActivity()).restartSpinner();
-                MainUtils.restartSpinner();
+                mainUtils.restartSpinner();
                 // Close connection
                 cursor.close();
                 db.close();

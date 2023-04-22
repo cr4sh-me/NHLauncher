@@ -16,12 +16,17 @@ import java.io.FileOutputStream;
 
 public class DBBackup {
 
-    private final DialogUtils dialogUtils = new DialogUtils(MainUtils.mainActivity.getSupportFragmentManager());
+    private final MainUtils mainUtils;
+    private final DialogUtils dialogUtils;
 
-    public DBBackup(Context ignoredContext) {
+    public DBBackup(MainActivity activity) {
+        this.mainUtils = new MainUtils(activity);
+        this.dialogUtils = new DialogUtils(activity.getSupportFragmentManager());
     }
 
+
     public void createBackup(Context context) {
+
         try {
             // Create a new instance of your DBHandler class
             DBHandler dbHelper = new DBHandler(context);
@@ -147,7 +152,7 @@ public class DBBackup {
             existingDB.close();
             Toast.makeText(context, context.getResources().getString(R.string.bp_restored), Toast.LENGTH_SHORT).show();
 
-            MainUtils.restartSpinner();
+            mainUtils.restartSpinner();
         } catch (SQLiteCantOpenDatabaseException e){
             Toast.makeText(context, context.getResources().getString(R.string.restore_fail), Toast.LENGTH_LONG).show();
             dialogUtils.openPermissionsDialog();

@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlanucher.DBHandler;
+import com.cr4sh.nhlanucher.MainActivity;
 import com.cr4sh.nhlanucher.MainUtils;
 import com.cr4sh.nhlanucher.R;
 
@@ -30,6 +31,8 @@ public class NewToolDialog extends AppCompatDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.new_tool_dialog, container, false);
+
+        MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
 
         assert getArguments() != null;
         String category = getArguments().getString("category");
@@ -71,7 +74,7 @@ public class NewToolDialog extends AppCompatDialogFragment {
                         // What did you expect here ??
                         DBHandler.insertTool(db, 0, category, 0, myName.getText().toString().trim(), myDescription.getText().toString().trim(), myDescription.getText().toString().trim(),  myCmd.getText().toString().trim(), "kali_menu", 0);
 //                        MainUtils.refreshRecyclerViewData("13");
-                        MainUtils.restartSpinner();
+                        mainUtils.restartSpinner();
                         Objects.requireNonNull(getDialog()).cancel();
                         Toast.makeText(requireActivity(), getResources().getString(R.string.added), Toast.LENGTH_SHORT).show();
                     } else {

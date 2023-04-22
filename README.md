@@ -39,7 +39,7 @@ You can easily select sorting mode for tools: Default, By usage, A-Z, Z-A, 0-9 A
 - Searchbar:  
 You can search for specific tools by their name using search icon in top left
 
-- RecyclerView + DiffUtilCallback: 
+- RecyclerView: 
 Load a lot of buttons in second, and keep them in memory!
 
 - Statistics: 

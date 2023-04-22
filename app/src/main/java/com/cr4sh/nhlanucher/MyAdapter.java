@@ -1,7 +1,6 @@
 package com.cr4sh.nhlanucher;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
@@ -14,11 +13,11 @@ import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
-    Context context;
+    MainActivity myActivity;
     List<Item> items;
 
-    public MyAdapter(Context context, List<Item> items) {
-        this.context = context;
+    public MyAdapter(MainActivity activity, List<Item> items) {
+        this.myActivity = activity;
         this.items = items;
     }
 
@@ -32,7 +31,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyViewHolder(LayoutInflater.from(context).inflate(R.layout.custom_button,parent,false));
+        return new MyViewHolder(LayoutInflater.from(myActivity).inflate(R.layout.custom_button,parent,false));
     }
 
     @Override
@@ -40,35 +39,38 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
         Item item = getItem(position);
 
+        MainUtils mainUtils = new MainUtils(myActivity);
+        MyPreferences myPreferences = new MyPreferences(myActivity);
+
         holder.nameView.setText(item.getName().toUpperCase());
         holder.descriptionView.setText(item.getDescription().toUpperCase());
 
-        @SuppressLint("DiscouragedApi") int imageResourceId = context.getResources().getIdentifier(item.getImage(), "drawable", context.getPackageName());
+        @SuppressLint("DiscouragedApi") int imageResourceId = myActivity.getResources().getIdentifier(item.getImage(), "drawable", myActivity.getPackageName());
         holder.imageView.setImageResource(imageResourceId);
 
-        holder.nameView.setTextColor(Color.parseColor(MainUtils.nameColor));
-        holder.descriptionView.setTextColor(Color.parseColor(MainUtils.descriptionColor));
+        holder.nameView.setTextColor(Color.parseColor(myPreferences.nameColor()));
+        holder.descriptionView.setTextColor(Color.parseColor(myPreferences.descriptionColor()));
 
         GradientDrawable drawable = new GradientDrawable();
-        drawable.setColor(Color.parseColor(MainUtils.buttonColor));
+        drawable.setColor(Color.parseColor(myPreferences.buttonColor()));
         drawable.setCornerRadius(5);
-        drawable.setStroke(2, Color.parseColor(MainUtils.strokeColor));
+        drawable.setStroke(2, Color.parseColor(myPreferences.strokeColor()));
         holder.itemView.setBackground(drawable);
-        holder.nameView.setTypeface(MainUtils.typeface);
-        holder.descriptionView.setTypeface(MainUtils.typeface);
+        holder.nameView.setTypeface(myPreferences.typeface());
+        holder.descriptionView.setTypeface(myPreferences.typeface());
 
         holder.itemView.setOnClickListener(v -> {
-            MainUtils.mainActivity.buttonUsage = item.getUsage();
-            MainUtils.buttonUsageIncrease(item.getName());
-            new Thread(() -> MainUtils.run_cmd(item.getCmd())).start();
+            myActivity.buttonUsage = item.getUsage();
+            mainUtils.buttonUsageIncrease(item.getName());
+            new Thread(() -> mainUtils.run_cmd(item.getCmd())).start();
         });
 
         holder.itemView.setOnLongClickListener(view -> {
-            MainUtils.mainActivity.buttonCategory = item.getCategory();
-            MainUtils.mainActivity.buttonName = item.getName();
-            MainUtils.mainActivity.buttonDescription = item.getDescription();
-            MainUtils.mainActivity.buttonCmd = item.getCmd();
-            MainUtils.mainActivity.registerForContextMenu(view);
+            myActivity.buttonCategory = item.getCategory();
+            myActivity.buttonName = item.getName();
+            myActivity.buttonDescription = item.getDescription();
+            myActivity.buttonCmd = item.getCmd();
+            myActivity.registerForContextMenu(view);
             return false;
         });
     }

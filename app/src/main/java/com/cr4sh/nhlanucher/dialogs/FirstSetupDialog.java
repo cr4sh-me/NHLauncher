@@ -14,6 +14,7 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import com.cr4sh.nhlanucher.MainActivity;
 import com.cr4sh.nhlanucher.MainUtils;
 import com.cr4sh.nhlanucher.R;
 
@@ -24,6 +25,8 @@ public class FirstSetupDialog extends AppCompatDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.first_setup_dialog, container, false);
+
+        MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
 
         setCancelable(false);
 
@@ -40,7 +43,7 @@ public class FirstSetupDialog extends AppCompatDialogFragment {
 
         setupButton.setOnClickListener(view12 -> {
             Objects.requireNonNull(getDialog()).cancel();
-            MainUtils.run_cmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit");
+            mainUtils.run_cmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit");
             firstSetupCompleted();
         });
 

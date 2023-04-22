@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import androidx.fragment.app.DialogFragment;
 
 import com.cr4sh.nhlanucher.DBBackup;
+import com.cr4sh.nhlanucher.MainActivity;
 import com.cr4sh.nhlanucher.MainUtils;
 import com.cr4sh.nhlanucher.R;
 
@@ -26,11 +27,14 @@ public class SettingsDialog extends DialogFragment {
     private String selectedSorting;
     private String selectedLanguage;
 
+    private MainUtils mainUtils;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.settings_dialog, container, false);
+
+        mainUtils = new MainUtils((MainActivity) requireActivity());
 
         final String[] SORTING_OPTIONS = {requireActivity().getResources().getString(R.string.sorting), requireActivity().getResources().getString(R.string.default_sorting), requireActivity().getResources().getString(R.string.by_usage), "A-Z", "Z-A", "0-9 A-Z", "9-0 Z-A"};
         final String[] LANGUAGE_OPTIONS = {requireActivity().getResources().getString(R.string.choose_lanuage), "English", "Polish"};
@@ -116,13 +120,13 @@ public class SettingsDialog extends DialogFragment {
             }
         });
 
-        runSetup.setOnClickListener(v -> MainUtils.run_cmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit"));
+        runSetup.setOnClickListener(v -> mainUtils.run_cmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit"));
 
         cancelButton.setOnClickListener(view12 -> dismiss());
         // DB BACKUP
 
         backupDb.setOnClickListener(v -> {
-            DBBackup dbb = new DBBackup(getContext());
+            DBBackup dbb = new DBBackup((MainActivity) requireActivity());
             new Thread(() -> {
                 Looper.prepare();
                 dbb.createBackup(getContext());
@@ -132,7 +136,7 @@ public class SettingsDialog extends DialogFragment {
 
 
         restoreDb.setOnClickListener(view1 -> {
-            DBBackup dbb = new DBBackup(getContext());
+            DBBackup dbb = new DBBackup((MainActivity) requireActivity());
             new Thread(() -> {
                 Looper.prepare();
                 dbb.restoreBackup(getContext());
@@ -151,8 +155,8 @@ public class SettingsDialog extends DialogFragment {
         editor.putString("sortingMode", sortingMode);
         editor.apply();
 
-        MainUtils.readSettings();
-        MainUtils.restartSpinner();
+//        mainUtils.readSettings();
+        mainUtils.restartSpinner();
     }
 
     private void saveNhlLanguage(String languageName, String languageLocale) {
@@ -163,9 +167,9 @@ public class SettingsDialog extends DialogFragment {
         editor.putString("languageLocale", languageLocale);
         editor.apply();
 
-        MainUtils.readSettings();
-        MainUtils.changeLanguage(languageLocale);
-        MainUtils.restartSpinner();
+//        mainUtils.readSettings();
+        mainUtils.changeLanguage(languageLocale);
+        mainUtils.restartSpinner();
         requireActivity().recreate();
 
     }

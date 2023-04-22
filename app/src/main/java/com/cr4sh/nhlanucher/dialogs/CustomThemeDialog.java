@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import androidx.fragment.app.DialogFragment;
 
 import com.cr4sh.nhlanucher.DialogUtils;
+import com.cr4sh.nhlanucher.MainActivity;
 import com.cr4sh.nhlanucher.MainUtils;
 import com.cr4sh.nhlanucher.R;
 
@@ -26,10 +27,14 @@ public class CustomThemeDialog extends DialogFragment {
     private String selectedTheme;
     private String selectedFont;
 
+    private MainUtils mainUtils;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.custom_theme_dialog, container, false);
+
+        mainUtils = new MainUtils((MainActivity) requireActivity());
 
         final String[] THEME_OPTIONS = {requireActivity().getResources().getString(R.string.choose_theme), "NHLauncher", "NetHunter", "Spaceship", "Mokambe", "Lime Gray", "UwU", "Tokyo", "Heaven's Gate", "Bricked", "Andrax"};
         final String[] FONT_OPTIONS = {requireActivity().getResources().getString(R.string.choose_font), "Roboto", "Default bold", "FiraCode", "FiraCode bold", "Montserrat", "Montserrat bold"};
@@ -147,9 +152,9 @@ public class CustomThemeDialog extends DialogFragment {
         editor.apply();
 
         // Restart dialog and apply changes!
-        MainUtils.readColors();
-        MainUtils.restartSpinner();
-        MainUtils.refreshFrame();
+//        mainUtils.readColors();
+        mainUtils.restartSpinner();
+        mainUtils.refreshFrame();
 
         DialogUtils dialogUtils = new DialogUtils(requireActivity().getSupportFragmentManager());
         Objects.requireNonNull(getDialog()).cancel();
@@ -163,7 +168,7 @@ public class CustomThemeDialog extends DialogFragment {
         editor.putString("fontName", fontName);
         editor.apply();
 
-        MainUtils.readColors();
-        MainUtils.restartSpinner();
+//        mainUtils.readColors();
+        mainUtils.restartSpinner();
     }
 }

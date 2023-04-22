@@ -28,7 +28,9 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.cr4sh.nhlanucher.DBHandler;
+import com.cr4sh.nhlanucher.MainActivity;
 import com.cr4sh.nhlanucher.MainUtils;
+import com.cr4sh.nhlanucher.MyPreferences;
 import com.cr4sh.nhlanucher.R;
 
 import java.util.Objects;
@@ -40,6 +42,9 @@ public class StatisticsDialog extends DialogFragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.statistics_dialog, container, false);
+
+        MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
+        MyPreferences myPreferences = new MyPreferences((MainActivity) requireActivity());
 
         String frameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("frameColor", "frame6");
         String nameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("nameColor", "#FFFFFF");
@@ -72,7 +77,7 @@ public class StatisticsDialog extends DialogFragment {
                     try (SQLiteOpenHelper dbHandler = new DBHandler(requireActivity());
                          SQLiteDatabase db = dbHandler.getReadableDatabase()) {
 
-                        String[] projection = {"SYSTEM", "CATEGORY", "FAVOURITE", "NAME", MainUtils.language, "CMD", "ICON", "USAGE"};
+                        String[] projection = {"SYSTEM", "CATEGORY", "FAVOURITE", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
                         String selection;
                         String[] selectionArgs;
 

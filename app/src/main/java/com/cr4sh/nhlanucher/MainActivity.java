@@ -33,6 +33,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+
+    private MainUtils mainUtils;
+    private MyPreferences myPreferences;
     public String buttonCategory;
     public String buttonName;
     public String buttonDescription;
@@ -56,9 +59,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         DBHandler mDbHandler = DBHandler.getInstance(this);
         mDatabase = mDbHandler.getDatabase();
+        myPreferences = new MyPreferences(this);
 
         itemList = new ArrayList<>();
         recyclerView = findViewById(R.id.recyclerView);
@@ -71,14 +74,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         recyclerView.setAdapter(adapter);
 
         // Get functions from this class
-        new MainUtils(this);
+//        new MainUtils(this);
+        mainUtils = new MainUtils(this);
 
         // Setup colors and settings
 
-        MainUtils.readColors();
-        MainUtils.readSettings();
-
-        MainUtils.changeLanguage(MainUtils.languageLocale);
+        mainUtils.changeLanguage(myPreferences.languageLocale());
 
         // Get the dialog and set it to not be cancelable
         this.setFinishOnTouchOutside(false);
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Set content view before dialogs below, so they wont appear twice!!
         // Check if setup has been completed
 
-        if (!MainUtils.isSetupCompleted) {
+        if (!myPreferences.isSetupCompleted()) {
             dialogUtils.openFirstSetupDialog();
         }
 
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Setting up spinner
         Spinner spinner = findViewById(R.id.categoriesSpinner);
-        MainUtils.createSpinner();
+        mainUtils.restartSpinner();
 
         // Check if there is any favourite tool in db, and open Favourite Tools category by default
         int isFavourite = 0;
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Toolbar toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
 
-        MainUtils.refreshFrame();
+        mainUtils.refreshFrame();
 
         SearchView searchView = findViewById(R.id.searchView);
 
@@ -150,12 +151,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 EditText searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
                 searchEditText.setFilters(filters);
 
-                MainUtils.deleteButtons();
+                mainUtils.deleteButtons();
 
                 TextView noToolsText = findViewById(R.id.messagebox);
                     Cursor cursor;
 
-                        String[] projection = {"CATEGORY", "NAME", MainUtils.language, "CMD", "ICON", "USAGE"};
+                        String[] projection = {"CATEGORY", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
 
                         // Add search filter to query
                         String selection = "NAME LIKE ?";
@@ -212,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             toolbar.setEnabled(true);
             spinner.setVisibility(View.VISIBLE);
             toolbar.setVisibility(View.VISIBLE);
-            MainUtils.restartSpinner();
+            mainUtils.restartSpinner();
             return false;
         });
 
@@ -243,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             if (requestCode == 101) {
                 boolean readExt = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                 if (!readExt) {
-                    MainUtils.takePermissions();
+                    mainUtils.takePermissions();
                 }
             }
         }
@@ -252,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
         String text = adapterView.getItemAtPosition(position).toString();
-        MainUtils.spinnerChanger(text);
+        mainUtils.spinnerChanger(text);
     }
 
 
@@ -266,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreateContextMenu(menu, v, menuInfo);
         // Set the color of the menu title
         SpannableString s = new SpannableString(getResources().getString(R.string.choose_option));
-        s.setSpan(new ForegroundColorSpan(Color.parseColor(MainUtils.nameColor)), 0, s.length(), 0);
+        s.setSpan(new ForegroundColorSpan(Color.parseColor(myPreferences.nameColor())), 0, s.length(), 0);
         Objects.requireNonNull(menu.setHeaderTitle(s));
         getMenuInflater().inflate(R.menu.options_menu, menu);
     }
@@ -279,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 dialogUtils.openEditableDialog(buttonName, buttonCmd);
                 return true;
             case R.id.option_2:
-                MainUtils.addFavourite();
+                mainUtils.addFavourite();
                 return true;
             case R.id.option_3:
                 if (!disableMenu){
