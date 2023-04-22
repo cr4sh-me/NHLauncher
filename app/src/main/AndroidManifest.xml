@@ -21,9 +21,10 @@
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
-        android:theme="@style/DialogActivityTheme"
-        tools:targetApi="tiramisu">
+        tools:targetApi="tiramisu"
+        android:theme="@style/DialogActivityTheme">
         <activity
+            android:theme="@style/DialogActivityTheme"
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"

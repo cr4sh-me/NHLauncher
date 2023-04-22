@@ -20,7 +20,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -59,9 +58,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Get the dialog and set it to not be cancelable
+        setFinishOnTouchOutside(false);
+
+        // Get classes
         DBHandler mDbHandler = DBHandler.getInstance(this);
         mDatabase = mDbHandler.getDatabase();
         myPreferences = new MyPreferences(this);
+
+        // Check for nethunter and terminal apps
+        PackageManager pm = getPackageManager();
+        try {
+            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
+            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
+        } catch (PackageManager.NameNotFoundException e) {
+            dialogUtils.openAppsDialog();
+        }
+
+        // Check if setup has been completed
+        if (!myPreferences.isSetupCompleted()) {
+            dialogUtils.openFirstSetupDialog();
+        }
+
+        // Check for permissions
+        if (!PermissionUtils.isPermissionsGranted(this)) {
+            dialogUtils.openPermissionsDialog();
+        }
 
         itemList = new ArrayList<>();
         recyclerView = findViewById(R.id.recyclerView);
@@ -74,37 +96,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         recyclerView.setAdapter(adapter);
 
         // Get functions from this class
-//        new MainUtils(this);
         mainUtils = new MainUtils(this);
 
         // Setup colors and settings
-
         mainUtils.changeLanguage(myPreferences.languageLocale());
-
-        // Get the dialog and set it to not be cancelable
-        this.setFinishOnTouchOutside(false);
-
-        // Check for nethunter and terminal apps
-        PackageManager pm = getPackageManager();
-        try {
-            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
-            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
-        } catch (PackageManager.NameNotFoundException e) {
-            dialogUtils.openAppsDialog();
-            return;
-        }
-
-        // Set content view before dialogs below, so they wont appear twice!!
-        // Check if setup has been completed
-
-        if (!myPreferences.isSetupCompleted()) {
-            dialogUtils.openFirstSetupDialog();
-        }
-
-        // Check for permissions
-        if (!PermissionUtils.isPermissionsGranted(this)) {
-            dialogUtils.openPermissionsDialog();
-        }
 
         // Setting up spinner
         Spinner spinner = findViewById(R.id.categoriesSpinner);
@@ -113,19 +108,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Check if there is any favourite tool in db, and open Favourite Tools category by default
         int isFavourite = 0;
 
-            Cursor cursor = mDatabase.rawQuery("SELECT Count(FAVOURITE) FROM TOOLS WHERE FAVOURITE=1;", null);
+        try (Cursor cursor = mDatabase.rawQuery("SELECT Count(FAVOURITE) FROM TOOLS WHERE FAVOURITE=1", null)) {
             if (cursor.moveToFirst()) {
                 isFavourite = cursor.getInt(0);
             }
-            // Close connection
-            cursor.close();
+        }
 
-            // Set category, so code below can run
-            if (isFavourite == 0) {
-                spinner.setSelection(1);
-            } else {
-                spinner.setSelection(0);
-            }
+        // Set category, so code below can run
+        spinner.setSelection(isFavourite == 0 ? 1 : 0);
 
         // Add onclick listener for toolbar
         Toolbar toolbar = findViewById(R.id.toolBar);
