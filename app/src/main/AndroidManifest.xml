@@ -24,8 +24,8 @@
         tools:targetApi="tiramisu"
         android:theme="@style/DialogActivityTheme">
         <activity
+            android:name=".SplashScreenActivity"
             android:theme="@style/DialogActivityTheme"
-            android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
@@ -34,6 +34,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Main activity -->
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
 
     </application>
 

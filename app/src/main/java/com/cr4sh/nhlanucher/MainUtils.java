@@ -30,7 +30,7 @@ import java.util.Objects;
 
 public class MainUtils extends AppCompatActivity {
 
-    private final List<String> valuesList;
+    private List<String> valuesList;
 
     private final List<Integer> imageList;
 
@@ -240,5 +240,22 @@ public class MainUtils extends AppCompatActivity {
         Locale newLocale = new Locale(languageCode);
         configuration.setLocale(newLocale);
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+        // Update valueList initialised before language changed!
+        valuesList = Arrays.asList(
+                mainActivity.getResources().getString(R.string.category_ft),
+                mainActivity.getResources().getString(R.string.category_01),
+                mainActivity.getResources().getString(R.string.category_02),
+                mainActivity.getResources().getString(R.string.category_03),
+                mainActivity.getResources().getString(R.string.category_04),
+                mainActivity.getResources().getString(R.string.category_05),
+                mainActivity.getResources().getString(R.string.category_06),
+                mainActivity.getResources().getString(R.string.category_07),
+                mainActivity.getResources().getString(R.string.category_08),
+                mainActivity.getResources().getString(R.string.category_09),
+                mainActivity.getResources().getString(R.string.category_10),
+                mainActivity.getResources().getString(R.string.category_11),
+                mainActivity.getResources().getString(R.string.category_12),
+                mainActivity.getResources().getString(R.string.category_13)
+        );
     }
 }

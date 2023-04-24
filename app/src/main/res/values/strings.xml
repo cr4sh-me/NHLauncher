@@ -101,5 +101,7 @@
     </string-array>
     <string name="get_out">Please choose 01–13 category!</string>
     <string name="restore_fail">Restore failed! Missing permissions…</string>
+    <string name="animate_buttons">Buttons animations</string>
+    <string name="enable_splash_screen">Enable splash screen</string>
 
 </resources>

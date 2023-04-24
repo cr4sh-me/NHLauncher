@@ -15,6 +15,8 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -57,6 +59,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.roll);
+        View rootView = findViewById(android.R.id.content);
+        rootView.startAnimation(anim);
 
         // Get the dialog and set it to not be cancelable
         setFinishOnTouchOutside(false);

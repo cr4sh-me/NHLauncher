@@ -15,7 +15,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 public class DBBackup {
-
     private final MainActivity mainActivity;
     private final MainUtils mainUtils;
     private final DialogUtils dialogUtils;

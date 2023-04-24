@@ -101,5 +101,7 @@
     <string name="allow">Zezwól</string>
     <string name="get_out">Wybierz kategorię od 01 do 13!</string>
     <string name="restore_fail">Przywracanie nieudane! Brak uprawnień…</string>
+    <string name="animate_buttons">Animacje przycisków</string>
+    <string name="enable_splash_screen">Włącz splash screen</string>
 
 </resources>

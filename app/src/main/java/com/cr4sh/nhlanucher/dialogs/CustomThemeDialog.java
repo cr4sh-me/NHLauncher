@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 
 import androidx.fragment.app.DialogFragment;
@@ -19,6 +21,7 @@ import androidx.fragment.app.DialogFragment;
 import com.cr4sh.nhlanucher.DialogUtils;
 import com.cr4sh.nhlanucher.MainActivity;
 import com.cr4sh.nhlanucher.MainUtils;
+import com.cr4sh.nhlanucher.MyPreferences;
 import com.cr4sh.nhlanucher.R;
 
 import java.util.Objects;
@@ -26,7 +29,6 @@ import java.util.Objects;
 public class CustomThemeDialog extends DialogFragment {
     private String selectedTheme;
     private String selectedFont;
-
     private MainUtils mainUtils;
 
     @Override
@@ -35,19 +37,30 @@ public class CustomThemeDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.custom_theme_dialog, container, false);
 
         mainUtils = new MainUtils((MainActivity) requireActivity());
+        MyPreferences myPreferences = new MyPreferences(requireActivity());
 
         final String[] THEME_OPTIONS = {requireActivity().getResources().getString(R.string.choose_theme), "NHLauncher", "NetHunter", "Spaceship", "Mokambe", "Lime Gray", "UwU", "Tokyo", "Heaven's Gate", "Bricked", "Andrax"};
         final String[] FONT_OPTIONS = {requireActivity().getResources().getString(R.string.choose_font), "Roboto", "Default bold", "FiraCode", "FiraCode bold", "Montserrat", "Montserrat bold"};
 
-        String frameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("frameColor", "frame6");
-        String nameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("nameColor", "#FFFFFF");
+        String frameColor = myPreferences.frameColor();
+        String nameColor = myPreferences.nameColor();
+        int splashDelay = myPreferences.splashDuration();
+        boolean buttonsAnimationCheckboxCheck = myPreferences.animateButtons();
         @SuppressLint("DiscouragedApi") int frame = requireActivity().getResources().getIdentifier(frameColor, "drawable", requireActivity().getPackageName());
 
         Spinner themeSpinner = view.findViewById(R.id.theme_spinner);
         Spinner fontSpinner = view.findViewById(R.id.font_spinner);
+        CheckBox splashScreen = view.findViewById(R.id.splash_screen_chck);
+        CheckBox buttonsAnimations = view.findViewById(R.id.animate_buttons_chck);
         Button cancelButton = view.findViewById(R.id.cancel_button);
 
+        splashScreen.setChecked(splashDelay == 800);
+
+        buttonsAnimations.setChecked(buttonsAnimationCheckboxCheck);
+
         view.setBackgroundResource(frame);
+        splashScreen.setButtonTintList(ColorStateList.valueOf(Color.parseColor(nameColor)));
+        buttonsAnimations.setButtonTintList(ColorStateList.valueOf(Color.parseColor(nameColor)));
         cancelButton.setTextColor(Color.parseColor(nameColor));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
@@ -133,8 +146,19 @@ public class CustomThemeDialog extends DialogFragment {
 
             }
         });
-
         cancelButton.setOnClickListener(view1 -> dismiss());
+
+        splashScreen.setOnCheckedChangeListener((compoundButton, b) -> {
+            if(b){
+                saveSplashScreen(800);
+            } else {
+                saveSplashScreen(0);
+            }
+        });
+
+
+        buttonsAnimations.setOnCheckedChangeListener((compoundButton, b) -> saveButtonAnimations(b));
+
         return view;
     }
 
@@ -152,7 +176,6 @@ public class CustomThemeDialog extends DialogFragment {
         editor.apply();
 
         // Restart dialog and apply changes!
-//        mainUtils.readColors();
         mainUtils.restartSpinner();
         mainUtils.refreshFrame();
 
@@ -168,7 +191,23 @@ public class CustomThemeDialog extends DialogFragment {
         editor.putString("fontName", fontName);
         editor.apply();
 
-//        mainUtils.readColors();
         mainUtils.restartSpinner();
     }
+
+    private void saveSplashScreen(int splashDuration){
+        // Save the font values
+        SharedPreferences prefs = requireActivity().getSharedPreferences("nhlSettings", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("splashDuration", splashDuration);
+        editor.apply();
+    }
+
+    private void saveButtonAnimations(boolean animateButtons){
+        // Save the font values
+        SharedPreferences prefs = requireActivity().getSharedPreferences("nhlSettings", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("animateButtons", animateButtons);
+        editor.apply();
+    }
+
 }

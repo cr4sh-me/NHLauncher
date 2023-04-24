@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,10 +39,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
-        Item item = getItem(position);
-
         MainUtils mainUtils = new MainUtils(myActivity);
         MyPreferences myPreferences = new MyPreferences(myActivity);
+
+        if(myPreferences.animateButtons()){
+            Animation fadeInAnimation = AnimationUtils.loadAnimation(myActivity, R.anim.panning);
+            holder.itemView.startAnimation(fadeInAnimation);
+        }
+
+        Item item = getItem(position);
+
+
 
         holder.nameView.setText(item.getName().toUpperCase());
         holder.descriptionView.setText(item.getDescription().toUpperCase());
