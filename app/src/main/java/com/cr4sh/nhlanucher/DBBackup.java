@@ -16,14 +16,14 @@ import java.io.FileOutputStream;
 
 public class DBBackup {
 
+    private final MainActivity mainActivity;
     private final MainUtils mainUtils;
     private final DialogUtils dialogUtils;
-
     public DBBackup(MainActivity activity) {
+        this.mainActivity = activity;
         this.mainUtils = new MainUtils(activity);
         this.dialogUtils = new DialogUtils(activity.getSupportFragmentManager());
     }
-
 
     public void createBackup(Context context) {
 
@@ -152,12 +152,14 @@ public class DBBackup {
             existingDB.close();
             Toast.makeText(context, context.getResources().getString(R.string.bp_restored), Toast.LENGTH_SHORT).show();
 
-            mainUtils.restartSpinner();
+            mainActivity.runOnUiThread(mainUtils::restartSpinner);
+
         } catch (SQLiteCantOpenDatabaseException e){
             Toast.makeText(context, context.getResources().getString(R.string.restore_fail), Toast.LENGTH_LONG).show();
             dialogUtils.openPermissionsDialog();
         } catch (Exception e){
             Toast.makeText(context, "E: " + e, Toast.LENGTH_LONG).show();
+            Log.d("DBBACKUPERR", "E: " + e);
         }
 
 
