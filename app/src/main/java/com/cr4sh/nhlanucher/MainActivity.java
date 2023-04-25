@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             dialogUtils.openAppsDialog();
         }
 
-        // Check if setup has been completed
+//         Check if setup has been completed
         if (!myPreferences.isSetupCompleted()) {
             dialogUtils.openFirstSetupDialog();
         }
