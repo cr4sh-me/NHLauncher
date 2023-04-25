@@ -40,7 +40,7 @@ public class CustomThemeDialog extends DialogFragment {
         MyPreferences myPreferences = new MyPreferences(requireActivity());
 
         final String[] THEME_OPTIONS = {requireActivity().getResources().getString(R.string.choose_theme), "NHLauncher", "NetHunter", "Spaceship", "Mokambe", "Lime Gray", "UwU", "Tokyo", "Heaven's Gate", "Bricked", "Andrax"};
-        final String[] FONT_OPTIONS = {requireActivity().getResources().getString(R.string.choose_font), "Roboto", "Default bold", "FiraCode", "FiraCode bold", "Montserrat", "Montserrat bold"};
+        final String[] FONT_OPTIONS = {requireActivity().getResources().getString(R.string.choose_font), "Roboto", "Roboto bold", "FiraCode", "FiraCode bold", "Montserrat", "Montserrat bold"};
 
         String frameColor = myPreferences.frameColor();
         String nameColor = myPreferences.nameColor();
@@ -126,7 +126,7 @@ public class CustomThemeDialog extends DialogFragment {
                     case "FiraCode":
                         saveFontSettings("firacode");
                         break;
-                    case "Default bold":
+                    case "Roboto bold":
                         saveFontSettings("roboto_bold");
                         break;
                     case "FiraCode bold":

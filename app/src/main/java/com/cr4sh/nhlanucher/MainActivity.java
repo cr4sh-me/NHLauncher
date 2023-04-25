@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     DialogUtils dialogUtils = new DialogUtils(this.getSupportFragmentManager());
 
     private RecyclerView recyclerView;
-    public static List<Item> itemList;
 
     @SuppressLint("Recycle")
     @Override
@@ -91,13 +91,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             dialogUtils.openPermissionsDialog();
         }
 
-        itemList = new ArrayList<>();
         recyclerView = findViewById(R.id.recyclerView);
 
         // Set the layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Set the adapter
+        // Set the adapter with empty itemList
+        List<Item> itemList = new ArrayList<>();
         MyAdapter adapter = new MyAdapter(this, itemList);
         recyclerView.setAdapter(adapter);
 
@@ -113,8 +113,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Check if there is any favourite tool in db, and open Favourite Tools category by default
         int isFavourite = 0;
-
-        try (Cursor cursor = mDatabase.rawQuery("SELECT Count(FAVOURITE) FROM TOOLS WHERE FAVOURITE=1", null)) {
+        String selection = "FAVOURITE = ?";
+        String[] selectionArgs = {"1"};
+        try (Cursor cursor = mDatabase.query("TOOLS", new String[]{"COUNT(FAVOURITE)"}, selection, selectionArgs, "FAVOURITE = 1", "FAVOURITE = 1", "1", "1")) {
             if (cursor.moveToFirst()) {
                 isFavourite = cursor.getInt(0);
             }
@@ -122,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Set category, so code below can run
         spinner.setSelection(isFavourite == 0 ? 1 : 0);
-
         // Add onclick listener for toolbar
         Toolbar toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @SuppressLint("SetTextI18n")
             @Override
             public boolean onQueryTextChange(String newText) {
-                itemList.clear();
+//                itemList.clear();
 
                 // Limit text input to 25 characters
                 InputFilter[] filters = new InputFilter[] { new InputFilter.LengthFilter(25) };
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                         String[] selectionArgs = {newText + "%"};
 
-                        if(newText.length() > 0){
+                        if(newText.length() > 0) {
 
                             recyclerView.setVisibility(View.VISIBLE);
 
@@ -167,12 +167,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             disableMenu = true;
 
                             cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, "NAME ASC", "15");
-
                             // Run OnUiThread to edit layout!
                             if (cursor.getCount() == 0) {
                                 runOnUiThread(() -> noToolsText.setText(getResources().getString(R.string.cant_found) + newText + "\n" + getResources().getString(R.string.check_your_query)));
                             }
-
+                            List<Item> newItemList = new ArrayList<>();
                             while (cursor.moveToNext()) {
                                 noToolsText.setText(null);
                                 String toolCategory = cursor.getString(0);
@@ -182,10 +181,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 String toolIcon = cursor.getString(4);
                                 int toolUsage = cursor.getInt(5);
 
+                                Log.d("TESTER", cursor.getString(1));
+
                                 Item item = new Item(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
+
                                 // Add the item to the itemList
-                                itemList.add(item);
+                                newItemList.add(item);
+
                             }
+                            adapter.updateData(newItemList);
                             cursor.close();
                             return true;
                         } else {

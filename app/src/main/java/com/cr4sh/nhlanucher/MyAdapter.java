@@ -49,8 +49,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
         Item item = getItem(position);
 
-
-
         holder.nameView.setText(item.getName().toUpperCase());
         holder.descriptionView.setText(item.getDescription().toUpperCase());
 
