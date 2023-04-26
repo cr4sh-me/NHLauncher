@@ -97,8 +97,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Set the adapter with empty itemList
-        List<Item> itemList = new ArrayList<>();
-        MyAdapter adapter = new MyAdapter(this, itemList);
+//        List<Item> itemList = new ArrayList<>();
+        MyAdapter adapter = new MyAdapter(this);
         recyclerView.setAdapter(adapter);
 
         // Get functions from this class

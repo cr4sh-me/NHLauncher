@@ -11,16 +11,17 @@ import android.view.animation.AnimationUtils;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     MainActivity myActivity;
-    List<Item> items;
+    List<Item> items = new ArrayList<>();
 
-    public MyAdapter(MainActivity activity, List<Item> items) {
+    public MyAdapter(MainActivity activity) {
         this.myActivity = activity;
-        this.items = items;
+//        this.items = items;
     }
 
     @SuppressLint("NotifyDataSetChanged")
