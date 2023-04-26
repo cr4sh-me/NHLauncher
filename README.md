@@ -49,7 +49,10 @@ Check which tools you use the most with Statistics feature!
 NHLauncher have Polish language!
 
 - Availability: 
-NHLauncher is available on older and newer android versions!
+NHLauncher is available on older and newer android versions! 
+
+- SplashScreen: 
+You can enable and disable themed SplashScreen! 
 
 ## How to request new tool/s
 If you like to request new tool for NHLauncher, first check all it functions on NetHunter platform.
