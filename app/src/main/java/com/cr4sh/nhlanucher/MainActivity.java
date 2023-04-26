@@ -157,7 +157,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         // Add search filter to query
                         String selection = "NAME LIKE ?";
 
-                        String[] selectionArgs = {newText + "%"};
+                        String[] selectionArgs = {"%" + newText + "%"};
+
+                        String orderBy = "CASE WHEN NAME LIKE '" + newText + "%' THEN 0 ELSE 1 END, " + // sort by first letter match
+                        "CASE WHEN NAME LIKE '%" + newText + "%' THEN 0 ELSE 1 END, " + // sort by containing newText
+                        "NAME ASC";
 
                         if(newText.length() > 0) {
 
@@ -166,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //                            menuItem.setEnabled(false);
                             disableMenu = true;
 
-                            cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, "NAME ASC", "15");
+                            cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, orderBy, "15");
                             // Run OnUiThread to edit layout!
                             if (cursor.getCount() == 0) {
                                 runOnUiThread(() -> noToolsText.setText(getResources().getString(R.string.cant_found) + newText + "\n" + getResources().getString(R.string.check_your_query)));
