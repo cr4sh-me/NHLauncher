@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/changeableTextView"
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         tools:ignore="VisualLintOverlap" />
 
     <androidx.appcompat.widget.SearchView
@@ -27,12 +27,12 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
-        app:menu="@menu/main_menu"
-        android:layout_height="45dp"
         android:layout_width="45dp"
-        android:layout_margin="10dp"
+        android:layout_height="45dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        app:menu="@menu/main_menu" />
 
     <RelativeLayout
         android:id="@+id/imageViewHeader"
@@ -43,10 +43,10 @@
             android:id="@+id/nhlauncher_logo"
             android:layout_width="250dp"
             android:layout_height="100dp"
-            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/nhlauncher"
+            android:layout_centerVertical="true"
             android:contentDescription="imageview"
+            android:src="@drawable/nhlauncher"
             tools:ignore="HardcodedText" />
 
         <Spinner
@@ -67,22 +67,22 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:nestedScrollingEnabled="true"
-            android:layout_above="@id/imageViewFooter"
-            android:layout_below="@+id/imageViewHeader"
-            tools:ignore="SpeakableTextPresentCheck"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/recyclerView"/>
-
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@id/imageViewFooter"
         android:layout_below="@+id/imageViewHeader"
+        android:nestedScrollingEnabled="true"
+        android:orientation="vertical"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
         android:id="@+id/messagebox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@id/imageViewFooter"
+        android:layout_below="@+id/imageViewHeader"
         android:gravity="top|center_horizontal"
         android:paddingHorizontal="25dp"
         android:paddingVertical="25dp"

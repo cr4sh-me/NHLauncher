@@ -30,15 +30,11 @@ import java.util.Objects;
 
 public class MainUtils extends AppCompatActivity {
 
-    private List<String> valuesList;
-
     private final List<Integer> imageList;
-
     private final SQLiteDatabase mDatabase;
-
     private final MainActivity mainActivity;
-
     private final MyPreferences myPreferences;
+    private List<String> valuesList;
 
 //    private final List<Item> itemList;
 
@@ -91,8 +87,8 @@ public class MainUtils extends AppCompatActivity {
 
     // Increase button usage by 1
     public void buttonUsageIncrease(String name) {
-            DBHandler.updateToolUsage(mDatabase, name, mainActivity.buttonUsage + 1);
-            restartSpinner();
+        DBHandler.updateToolUsage(mDatabase, name, mainActivity.buttonUsage + 1);
+        restartSpinner();
     }
 
     // Removes all views (buttons) in our RecyclerView
@@ -211,26 +207,26 @@ public class MainUtils extends AppCompatActivity {
     // Adds button to favourites bu updating FAVOURITE value
     public void addFavourite() {
 
-            Cursor cursor = mDatabase.query("TOOLS", new String[]{"FAVOURITE", "NAME"}, "NAME = ?", new String[]{mainActivity.buttonName}, null, null, null, null);
-            // Start iteration!
-            String isFavourite = null;
-            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                isFavourite = cursor.getString(0);
-            }
+        Cursor cursor = mDatabase.query("TOOLS", new String[]{"FAVOURITE", "NAME"}, "NAME = ?", new String[]{mainActivity.buttonName}, null, null, null, null);
+        // Start iteration!
+        String isFavourite = null;
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            isFavourite = cursor.getString(0);
+        }
 
-            assert isFavourite != null;
-            if (isFavourite.equals("1")) {
-                Toast.makeText(mainActivity, mainActivity.getResources().getString(R.string.removed_favourite), Toast.LENGTH_SHORT).show();
-                DBHandler.updateToolFavorite(mDatabase, mainActivity.buttonName, 0);
-            } else {
-                Toast.makeText(mainActivity, mainActivity.getResources().getString(R.string.added_favourite), Toast.LENGTH_SHORT).show();
-                DBHandler.updateToolFavorite(mDatabase, mainActivity.buttonName, 1);
-            }
+        assert isFavourite != null;
+        if (isFavourite.equals("1")) {
+            Toast.makeText(mainActivity, mainActivity.getResources().getString(R.string.removed_favourite), Toast.LENGTH_SHORT).show();
+            DBHandler.updateToolFavorite(mDatabase, mainActivity.buttonName, 0);
+        } else {
+            Toast.makeText(mainActivity, mainActivity.getResources().getString(R.string.added_favourite), Toast.LENGTH_SHORT).show();
+            DBHandler.updateToolFavorite(mDatabase, mainActivity.buttonName, 1);
+        }
 
-            restartSpinner();
+        restartSpinner();
 
-            // Close cursor
-            cursor.close();
+        // Close cursor
+        cursor.close();
     }
 
     // Changes app language

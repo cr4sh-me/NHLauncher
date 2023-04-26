@@ -34,7 +34,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyViewHolder(LayoutInflater.from(myActivity).inflate(R.layout.custom_button,parent,false));
+        return new MyViewHolder(LayoutInflater.from(myActivity).inflate(R.layout.custom_button, parent, false));
     }
 
     @Override
@@ -43,7 +43,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         MainUtils mainUtils = new MainUtils(myActivity);
         MyPreferences myPreferences = new MyPreferences(myActivity);
 
-        if(myPreferences.animateButtons()){
+        if (myPreferences.animateButtons()) {
             Animation fadeInAnimation = AnimationUtils.loadAnimation(myActivity, R.anim.panning);
             holder.itemView.startAnimation(fadeInAnimation);
         }

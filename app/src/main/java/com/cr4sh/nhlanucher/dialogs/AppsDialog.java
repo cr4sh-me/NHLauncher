@@ -14,7 +14,6 @@ public class AppsDialog extends DialogFragment {
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceStateExample) {
 
-
         // Set title and message
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         setCancelable(false);

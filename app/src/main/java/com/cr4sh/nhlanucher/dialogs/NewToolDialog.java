@@ -68,11 +68,11 @@ public class NewToolDialog extends AppCompatDialogFragment {
 
                     Cursor cursor;
                     String[] selectionArgs = {myName.getText().toString()};
-                    cursor = db.query("TOOLS", new String[]{ "NAME"}, "NAME LIKE ?", selectionArgs, null, null, null, null);
+                    cursor = db.query("TOOLS", new String[]{"NAME"}, "NAME LIKE ?", selectionArgs, null, null, null, null);
 
                     if (cursor.getCount() == 0) {
                         // What did you expect here ??
-                        DBHandler.insertTool(db, 0, category, 0, myName.getText().toString().trim(), myDescription.getText().toString().trim(), myDescription.getText().toString().trim(),  myCmd.getText().toString().trim(), "kali_menu", 0);
+                        DBHandler.insertTool(db, 0, category, 0, myName.getText().toString().trim(), myDescription.getText().toString().trim(), myDescription.getText().toString().trim(), myCmd.getText().toString().trim(), "kali_menu", 0);
 //                        MainUtils.refreshRecyclerViewData("13");
                         mainUtils.restartSpinner();
                         Objects.requireNonNull(getDialog()).cancel();

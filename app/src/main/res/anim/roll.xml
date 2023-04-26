@@ -6,17 +6,16 @@
         android:duration="300"
         android:fromXScale="1.0"
         android:fromYScale="0.0"
-        android:toXScale="1.0"
-        android:toYScale="1.0"
         android:pivotX="50%"
         android:pivotY="50%"
-        />
+        android:toXScale="1.0"
+        android:toYScale="1.0" />
 
     <!-- Alpha animation -->
     <alpha
         android:duration="300"
+        android:fillAfter="true"
         android:fromAlpha="0.0"
-        android:toAlpha="1.0"
-        android:fillAfter="true"/>
+        android:toAlpha="1.0" />
 
 </set>

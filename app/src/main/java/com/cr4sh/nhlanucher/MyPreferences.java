@@ -12,6 +12,7 @@ public class MyPreferences {
     private final SharedPreferences nhlPrefs;
     private final SharedPreferences setupPrefs;
     private final Context context;
+
     public MyPreferences(Context context) {
         this.context = context;
         customColorsPrefs = context.getSharedPreferences("customColors", Context.MODE_PRIVATE);
@@ -69,8 +70,12 @@ public class MyPreferences {
         return setupPrefs.getBoolean("isSetupCompleted", false);
     }
 
-    public int splashDuration() { return nhlPrefs.getInt("splashDuration", 800); }
+    public int splashDuration() {
+        return nhlPrefs.getInt("splashDuration", 800);
+    }
 
-    public boolean animateButtons() { return nhlPrefs.getBoolean("animateButtons", true); }
+    public boolean animateButtons() {
+        return nhlPrefs.getBoolean("animateButtons", true);
+    }
 
 }

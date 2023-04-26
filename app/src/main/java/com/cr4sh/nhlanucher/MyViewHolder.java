@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MyViewHolder extends RecyclerView.ViewHolder {
 
     ImageView imageView;
-    TextView nameView,descriptionView;
+    TextView nameView, descriptionView;
 
     public MyViewHolder(@NonNull View itemView) {
         super(itemView);

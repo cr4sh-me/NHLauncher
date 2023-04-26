@@ -18,6 +18,7 @@ public class DBBackup {
     private final MainActivity mainActivity;
     private final MainUtils mainUtils;
     private final DialogUtils dialogUtils;
+
     public DBBackup(MainActivity activity) {
         this.mainActivity = activity;
         this.mainUtils = new MainUtils(activity);
@@ -80,18 +81,19 @@ public class DBBackup {
                 // External storage not available, show an error message
                 Toast.makeText(context, context.getResources().getString(R.string.ex_storage), Toast.LENGTH_LONG).show();
             }
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             Toast.makeText(context, context.getResources().getString(R.string.backup_failed), Toast.LENGTH_LONG).show();
             dialogUtils.openPermissionsDialog();
-        } catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(context, "E: " + e, Toast.LENGTH_LONG).show();
         }
     }
+
     @SuppressLint("Range")
     public void restoreBackup(Context context) {
 
-        try{
-            @SuppressLint("SdCardPath") File file = new File( "/sdcard/NHLauncher/backup.db");
+        try {
+            @SuppressLint("SdCardPath") File file = new File("/sdcard/NHLauncher/backup.db");
 
             if (!file.exists()) {
                 Toast.makeText(context, context.getResources().getString(R.string.bf_not), Toast.LENGTH_LONG).show();
@@ -153,10 +155,10 @@ public class DBBackup {
 
             mainActivity.runOnUiThread(mainUtils::restartSpinner);
 
-        } catch (SQLiteCantOpenDatabaseException e){
+        } catch (SQLiteCantOpenDatabaseException e) {
             Toast.makeText(context, context.getResources().getString(R.string.restore_fail), Toast.LENGTH_LONG).show();
             dialogUtils.openPermissionsDialog();
-        } catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(context, "E: " + e, Toast.LENGTH_LONG).show();
             Log.d("DBBACKUPERR", "E: " + e);
         }

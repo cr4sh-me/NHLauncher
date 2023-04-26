@@ -3,18 +3,18 @@
     android:height="30dp"
     android:viewportWidth="135.47"
     android:viewportHeight="135.47">
-  <path
-      android:pathData="M22.31,8.32L113.15,8.32A14,14 0,0 1,127.15 22.32L127.15,113.16A14,14 0,0 1,113.15 127.16L22.31,127.16A14,14 0,0 1,8.31 113.16L8.31,22.32A14,14 0,0 1,22.31 8.32z"
-      android:strokeAlpha="0.3"
-      android:strokeWidth="5.2917"
-      android:fillColor="#fff"
-      android:strokeColor="#000"
-      android:fillAlpha="0.3"
-      android:strokeLineCap="round"/>
-  <path
-      android:pathData="M22.68,8.47L113.52,8.47A14,14 0,0 1,127.52 22.47L127.52,113.31A14,14 0,0 1,113.52 127.31L22.68,127.31A14,14 0,0 1,8.68 113.31L8.68,22.47A14,14 0,0 1,22.68 8.47z"
-      android:fillColor="#fff"/>
-  <path
-      android:fillColor="#FF000000"
-      android:pathData="m16.46,18.3v12.47h9.06v19.24h-9.06v12.47h30.59v-12.47h-9.06v-31.71h-13.03zM52.44,18.3v44.18h30.59v-44.18h-22.09zM88.42,18.3v12.47h9.06v19.24h-9.06v12.47h30.59v-12.47h-9.06v-31.71h-13.03zM63.32,30.77h8.83v19.24h-8.83zM88.42,72.99v44.18h30.59v-44.18h-22.09zM16.46,72.99v12.47h9.06v19.24h-9.06v12.47h30.59v-12.47h-9.06v-31.71h-13.03zM52.44,72.99v12.47h9.06v19.24h-9.06v12.47h30.59v-12.47h-9.06v-31.71h-13.03zM99.3,85.46h8.83v19.24h-8.83z"/>
+    <path
+        android:fillAlpha="0.3"
+        android:fillColor="#fff"
+        android:pathData="M22.31,8.32L113.15,8.32A14,14 0,0 1,127.15 22.32L127.15,113.16A14,14 0,0 1,113.15 127.16L22.31,127.16A14,14 0,0 1,8.31 113.16L8.31,22.32A14,14 0,0 1,22.31 8.32z"
+        android:strokeWidth="5.2917"
+        android:strokeAlpha="0.3"
+        android:strokeColor="#000"
+        android:strokeLineCap="round" />
+    <path
+        android:fillColor="#fff"
+        android:pathData="M22.68,8.47L113.52,8.47A14,14 0,0 1,127.52 22.47L127.52,113.31A14,14 0,0 1,113.52 127.31L22.68,127.31A14,14 0,0 1,8.68 113.31L8.68,22.47A14,14 0,0 1,22.68 8.47z" />
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="m16.46,18.3v12.47h9.06v19.24h-9.06v12.47h30.59v-12.47h-9.06v-31.71h-13.03zM52.44,18.3v44.18h30.59v-44.18h-22.09zM88.42,18.3v12.47h9.06v19.24h-9.06v12.47h30.59v-12.47h-9.06v-31.71h-13.03zM63.32,30.77h8.83v19.24h-8.83zM88.42,72.99v44.18h30.59v-44.18h-22.09zM16.46,72.99v12.47h9.06v19.24h-9.06v12.47h30.59v-12.47h-9.06v-31.71h-13.03zM52.44,72.99v12.47h9.06v19.24h-9.06v12.47h30.59v-12.47h-9.06v-31.71h-13.03zM99.3,85.46h8.83v19.24h-8.83z" />
 </vector>

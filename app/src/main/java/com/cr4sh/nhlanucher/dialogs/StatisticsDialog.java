@@ -44,7 +44,7 @@ public class StatisticsDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.statistics_dialog, container, false);
 
         MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
-        MyPreferences myPreferences = new MyPreferences((MainActivity) requireActivity());
+        MyPreferences myPreferences = new MyPreferences(requireActivity());
 
         String frameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("frameColor", "frame6");
         String nameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("nameColor", "#FFFFFF");
@@ -143,7 +143,7 @@ public class StatisticsDialog extends DialogFragment {
                                 countTextView.setTextColor(Color.parseColor(descColor));
                                 countTextView.setTextSize(16);
                                 countTextView.setTypeface(null, Typeface.BOLD);
-                                countTextView.setText(String.format(getResources().getString(R.string.usage) +  "%d", toolUsage));
+                                countTextView.setText(String.format(getResources().getString(R.string.usage) + "%d", toolUsage));
                                 countTextView.setGravity(Gravity.CENTER_VERTICAL);
                                 countTextView.setPadding(0, 0, 0, 0);
 

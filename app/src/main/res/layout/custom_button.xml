@@ -2,20 +2,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="90dp"
-    android:gravity="center_vertical"
     android:layout_marginHorizontal="10dp"
     android:layout_marginBottom="5dp"
+    android:gravity="center_vertical"
     android:padding="5dp">
 
     <ImageView
         android:id="@+id/button_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginEnd="16dp"
         android:contentDescription="@string/loading"
         android:paddingVertical="5dp"
         android:paddingStart="5dp"
-        android:layout_gravity="center"
         android:src="@drawable/kali_menu"
         tools:ignore="RtlSymmetry" />
 
@@ -27,22 +27,22 @@
         android:orientation="vertical">
 
         <TextView
-            android:textSize="12sp"
-            android:gravity="center"
             android:id="@+id/button_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="@string/loading"
+            android:textSize="12sp"
             android:textStyle="bold"
             tools:ignore="SmallSp" />
 
         <TextView
-            android:textSize="11sp"
-            android:gravity="center"
             android:id="@+id/button_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="@string/loading"
+            android:textSize="11sp"
             tools:ignore="SmallSp" />
     </LinearLayout>
 </LinearLayout>

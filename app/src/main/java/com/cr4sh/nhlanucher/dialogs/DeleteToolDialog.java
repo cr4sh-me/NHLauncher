@@ -65,7 +65,7 @@ public class DeleteToolDialog extends AppCompatDialogFragment {
                 }
 
                 assert isSystem != null;
-                if (isSystem.equals("1")){
+                if (isSystem.equals("1")) {
                     Toast.makeText(getActivity(), requireActivity().getResources().getString(R.string.cant_delete), Toast.LENGTH_SHORT).show();
                 } else {
                     DBHandler.deleteTool(db, name);

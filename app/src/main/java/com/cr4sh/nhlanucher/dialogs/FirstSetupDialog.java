@@ -55,6 +55,7 @@ public class FirstSetupDialog extends AppCompatDialogFragment {
         return view;
 
     }
+
     private void firstSetupCompleted() {
         SharedPreferences prefs = requireActivity().getSharedPreferences("setupSettings", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();

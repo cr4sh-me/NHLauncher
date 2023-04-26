@@ -10,15 +10,14 @@ import androidx.core.content.ContextCompat;
 
 public class PermissionUtils {
 
-    public static boolean isPermissionsGranted(Context context){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+    public static boolean isPermissionsGranted(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             return Environment.isExternalStorageManager();
         } else {
             int readExtStorage = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE);
             return readExtStorage == PackageManager.PERMISSION_GRANTED;
         }
     }
-
 
 
 }

@@ -8,41 +8,41 @@ import java.util.Objects;
  * @author kiva
  */
 public class SessionId {
-  /**
-   * Created a new session.
-   */
-  public static final SessionId NEW_SESSION = SessionId.of("new");
+    /**
+     * Created a new session.
+     */
+    public static final SessionId NEW_SESSION = SessionId.of("new");
 
-  private final String sessionId;
+    private final String sessionId;
 
-  SessionId(String sessionId) {
-    this.sessionId = sessionId;
-  }
+    SessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
 
-  public String getSessionId() {
-    return sessionId;
-  }
+    public static SessionId of(String sessionId) {
+        return new SessionId(sessionId);
+    }
 
-  @NonNull
-  @Override
-  public String toString() {
-    return "TerminalSession { id = " + sessionId + " }";
-  }
+    public String getSessionId() {
+        return sessionId;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    SessionId sessionId1 = (SessionId) o;
-    return Objects.equals(sessionId, sessionId1.sessionId);
-  }
+    @NonNull
+    @Override
+    public String toString() {
+        return "TerminalSession { id = " + sessionId + " }";
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(sessionId);
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SessionId sessionId1 = (SessionId) o;
+        return Objects.equals(sessionId, sessionId1.sessionId);
+    }
 
-  public static SessionId of(String sessionId) {
-    return new SessionId(sessionId);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(sessionId);
+    }
 }

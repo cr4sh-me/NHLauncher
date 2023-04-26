@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -36,22 +37,17 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    private MainUtils mainUtils;
-    private MyPreferences myPreferences;
+    public static boolean disableMenu = false;
     public String buttonCategory;
     public String buttonName;
     public String buttonDescription;
-
     public String buttonCmd;
     public int buttonUsage;
-
-    public static boolean disableMenu = false;
-
     public SQLiteDatabase mDatabase;
-
     // Access methods from DialogUtils
     DialogUtils dialogUtils = new DialogUtils(this.getSupportFragmentManager());
-
+    private MainUtils mainUtils;
+    private MyPreferences myPreferences;
     private RecyclerView recyclerView;
 
     @SuppressLint("Recycle")
@@ -143,69 +139,69 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //                itemList.clear();
 
                 // Limit text input to 25 characters
-                InputFilter[] filters = new InputFilter[] { new InputFilter.LengthFilter(25) };
+                InputFilter[] filters = new InputFilter[]{new InputFilter.LengthFilter(25)};
                 EditText searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
                 searchEditText.setFilters(filters);
 
                 mainUtils.deleteButtons();
 
                 TextView noToolsText = findViewById(R.id.messagebox);
-                    Cursor cursor;
+                Cursor cursor;
 
-                        String[] projection = {"CATEGORY", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
+                String[] projection = {"CATEGORY", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
 
-                        // Add search filter to query
-                        String selection = "NAME LIKE ?";
+                // Add search filter to query
+                String selection = "NAME LIKE ?";
 
-                        String[] selectionArgs = {"%" + newText + "%"};
+                String[] selectionArgs = {"%" + newText + "%"};
 
-                        String orderBy = "CASE WHEN NAME LIKE '" + newText + "%' THEN 0 ELSE 1 END, " + // sort by first letter match
+                String orderBy = "CASE WHEN NAME LIKE '" + newText + "%' THEN 0 ELSE 1 END, " + // sort by first letter match
                         "CASE WHEN NAME LIKE '%" + newText + "%' THEN 0 ELSE 1 END, " + // sort by containing newText
                         "NAME ASC";
 
-                        if(newText.length() > 0) {
+                if (newText.length() > 0) {
 
-                            recyclerView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
 
 //                            menuItem.setEnabled(false);
-                            disableMenu = true;
+                    disableMenu = true;
 
-                            cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, orderBy, "15");
-                            // Run OnUiThread to edit layout!
-                            if (cursor.getCount() == 0) {
-                                runOnUiThread(() -> noToolsText.setText(getResources().getString(R.string.cant_found) + newText + "\n" + getResources().getString(R.string.check_your_query)));
-                            }
-                            List<Item> newItemList = new ArrayList<>();
-                            while (cursor.moveToNext()) {
-                                noToolsText.setText(null);
-                                String toolCategory = cursor.getString(0);
-                                String toolName = cursor.getString(1);
-                                String toolDescription = cursor.getString(2);
-                                String toolCmd = cursor.getString(3);
-                                String toolIcon = cursor.getString(4);
-                                int toolUsage = cursor.getInt(5);
+                    cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, orderBy, "15");
+                    // Run OnUiThread to edit layout!
+                    if (cursor.getCount() == 0) {
+                        runOnUiThread(() -> noToolsText.setText(getResources().getString(R.string.cant_found) + newText + "\n" + getResources().getString(R.string.check_your_query)));
+                    }
+                    List<Item> newItemList = new ArrayList<>();
+                    while (cursor.moveToNext()) {
+                        noToolsText.setText(null);
+                        String toolCategory = cursor.getString(0);
+                        String toolName = cursor.getString(1);
+                        String toolDescription = cursor.getString(2);
+                        String toolCmd = cursor.getString(3);
+                        String toolIcon = cursor.getString(4);
+                        int toolUsage = cursor.getInt(5);
 
-                                Log.d("TESTER", cursor.getString(1));
+                        Log.d("TESTER", cursor.getString(1));
 
-                                Item item = new Item(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
+                        Item item = new Item(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
 
-                                // Add the item to the itemList
-                                newItemList.add(item);
+                        // Add the item to the itemList
+                        newItemList.add(item);
 
-                            }
-                            adapter.updateData(newItemList);
-                            cursor.close();
-                            return true;
-                        } else {
-                            runOnUiThread(() -> {
-                                disableMenu = false;
-                                noToolsText.setText(getResources().getString(R.string.no_newtext_entry));
-                                // Clear the list of items
-                                recyclerView.setVisibility(View.GONE);
+                    }
+                    adapter.updateData(newItemList);
+                    cursor.close();
+                    return true;
+                } else {
+                    runOnUiThread(() -> {
+                        disableMenu = false;
+                        noToolsText.setText(getResources().getString(R.string.no_newtext_entry));
+                        // Clear the list of items
+                        recyclerView.setVisibility(View.GONE);
 
-                            });
-                            return false;
-                        }
+                    });
+                    return false;
+                }
             }
         });
 
@@ -287,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 mainUtils.addFavourite();
                 return true;
             case R.id.option_3:
-                if (!disableMenu){
+                if (!disableMenu) {
                     dialogUtils.openNewToolDialog(buttonCategory);
                 } else {
                     Toast.makeText(this, getResources().getString(R.string.get_out), Toast.LENGTH_SHORT).show();
@@ -306,6 +302,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
+
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

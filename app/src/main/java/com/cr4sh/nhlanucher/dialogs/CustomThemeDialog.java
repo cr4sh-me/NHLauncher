@@ -149,7 +149,7 @@ public class CustomThemeDialog extends DialogFragment {
         cancelButton.setOnClickListener(view1 -> dismiss());
 
         splashScreen.setOnCheckedChangeListener((compoundButton, b) -> {
-            if(b){
+            if (b) {
                 saveSplashScreen(800);
             } else {
                 saveSplashScreen(0);
@@ -194,7 +194,7 @@ public class CustomThemeDialog extends DialogFragment {
         mainUtils.restartSpinner();
     }
 
-    private void saveSplashScreen(int splashDuration){
+    private void saveSplashScreen(int splashDuration) {
         // Save the font values
         SharedPreferences prefs = requireActivity().getSharedPreferences("nhlSettings", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -202,7 +202,7 @@ public class CustomThemeDialog extends DialogFragment {
         editor.apply();
     }
 
-    private void saveButtonAnimations(boolean animateButtons){
+    private void saveButtonAnimations(boolean animateButtons) {
         // Save the font values
         SharedPreferences prefs = requireActivity().getSharedPreferences("nhlSettings", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();

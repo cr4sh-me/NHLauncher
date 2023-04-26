@@ -4,8 +4,7 @@
     <item>
         <layer-list>
             <item>
-                <shape android:shape="rectangle">
-                </shape>
+                <shape android:shape="rectangle"></shape>
             </item>
         </layer-list>
     </item>
