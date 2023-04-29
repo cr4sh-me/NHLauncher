@@ -28,8 +28,6 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.cr4sh.nhlanucher.DBHandler;
-import com.cr4sh.nhlanucher.MainActivity;
-import com.cr4sh.nhlanucher.MainUtils;
 import com.cr4sh.nhlanucher.MyPreferences;
 import com.cr4sh.nhlanucher.R;
 
@@ -43,7 +41,7 @@ public class StatisticsDialog extends DialogFragment {
 
         View view = inflater.inflate(R.layout.statistics_dialog, container, false);
 
-        MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
+//        MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
         MyPreferences myPreferences = new MyPreferences(requireActivity());
 
         String frameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("frameColor", "frame6");

@@ -1,15 +1,11 @@
 package com.cr4sh.nhlanucher;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -17,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cr4sh.nhlanucher.bridge.Bridge;
@@ -154,27 +149,6 @@ public class MainUtils extends AppCompatActivity {
 
         }
         cursor.close();
-    }
-
-    // Using deprecated methods for older android versions!!!!!
-    public void takePermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            try {
-                // Open directly on NHLauncher app!
-                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                intent.addCategory("android.intent.category.DEFAULT");
-                Uri uri = Uri.fromParts("package", mainActivity.getPackageName(), null);
-                intent.setData(uri);
-                mainActivity.startActivityForResult(intent, 101);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                mainActivity.startActivityForResult(intent, 101);
-            }
-        } else {
-            ActivityCompat.requestPermissions(mainActivity, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
-        }
     }
 
     // Fills our spinner with text and images

@@ -24,7 +24,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public SQLiteDatabase mDatabase;
     // Access methods from DialogUtils
     DialogUtils dialogUtils = new DialogUtils(this.getSupportFragmentManager());
+    ActivityResultLauncher<Intent> requestPermissionLauncher;
     private MainUtils mainUtils;
     private MyPreferences myPreferences;
     private RecyclerView recyclerView;
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         DBHandler mDbHandler = DBHandler.getInstance(this);
         mDatabase = mDbHandler.getDatabase();
         myPreferences = new MyPreferences(this);
+        PermissionUtils permissionUtils = new PermissionUtils(this);
 
         // Check for nethunter and terminal apps
         PackageManager pm = getPackageManager();
@@ -82,8 +85,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             dialogUtils.openFirstSetupDialog();
         }
 
+        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        });
+
+
         // Check for permissions
-        if (!PermissionUtils.isPermissionsGranted(this)) {
+        if (!permissionUtils.isPermissionsGranted()) {
             dialogUtils.openPermissionsDialog();
         }
 
@@ -233,20 +240,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onDestroy();
         if (mDatabase != null) {
             mDatabase.close();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (grantResults.length > 0) {
-            if (requestCode == 101) {
-                boolean readExt = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                if (!readExt) {
-                    mainUtils.takePermissions();
-                }
-            }
         }
     }
 

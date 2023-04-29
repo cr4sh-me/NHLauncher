@@ -21,7 +21,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     public MyAdapter(MainActivity activity) {
         this.myActivity = activity;
-//        this.items = items;
     }
 
     @SuppressLint("NotifyDataSetChanged")

@@ -13,7 +13,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlanucher.MainActivity;
-import com.cr4sh.nhlanucher.MainUtils;
+import com.cr4sh.nhlanucher.PermissionUtils;
 import com.cr4sh.nhlanucher.R;
 
 import java.util.Objects;
@@ -23,8 +23,6 @@ public class PermissionDialog extends AppCompatDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.permissions_dialog, container, false);
-
-        MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
 
         setCancelable(false);
 
@@ -39,7 +37,9 @@ public class PermissionDialog extends AppCompatDialogFragment {
 
         allowButton.setOnClickListener(view12 -> {
             Objects.requireNonNull(getDialog()).cancel();
-            mainUtils.takePermissions();
+//            mainUtils.takePermissions();
+            PermissionUtils permissionUtils = new PermissionUtils((MainActivity) requireActivity());
+            permissionUtils.takePermissions();
         });
 
         return view;
