@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 
+import java.util.Locale;
+
 public class MyPreferences {
     private final SharedPreferences customColorsPrefs;
     private final SharedPreferences customFontsPrefs;
@@ -53,11 +55,19 @@ public class MyPreferences {
     }
 
     public String language() {
-        return nhlPrefs.getString("language", "DESCRIPTION_EN");
+        if (!Locale.getDefault().getLanguage().equals("pl")) {
+            return nhlPrefs.getString("language", "DESCRIPTION_EN");
+        } else {
+            return nhlPrefs.getString("language", "DESCRIPTION_PL");
+        }
     }
 
     public String languageLocale() {
-        return nhlPrefs.getString("languageLocale", "EN");
+        if (!Locale.getDefault().getLanguage().equals("pl")) {
+            return nhlPrefs.getString("languageLocale", "EN");
+        } else {
+            return nhlPrefs.getString("languageLocale", "PL");
+        }
     }
 
     public String sortingMode() {
