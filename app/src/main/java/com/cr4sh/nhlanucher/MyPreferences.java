@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 
-import java.util.Locale;
-
 public class MyPreferences {
     private final SharedPreferences customColorsPrefs;
     private final SharedPreferences customFontsPrefs;
@@ -55,11 +53,11 @@ public class MyPreferences {
     }
 
     public String language() {
-        return nhlPrefs.getString("language", "DESCRIPTION_" + Locale.getDefault().getLanguage());
+        return nhlPrefs.getString("language", "DESCRIPTION_EN");
     }
 
     public String languageLocale() {
-        return nhlPrefs.getString("languageLocale", Locale.getDefault().getLanguage());
+        return nhlPrefs.getString("languageLocale", "EN");
     }
 
     public String sortingMode() {

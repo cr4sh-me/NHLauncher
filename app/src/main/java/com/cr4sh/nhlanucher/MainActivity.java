@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
         } catch (PackageManager.NameNotFoundException e) {
             dialogUtils.openAppsDialog();
+            return;
         }
 
 //         Check if setup has been completed
