@@ -1,4 +1,4 @@
-package com.cr4sh.nhlanucher;
+package com.cr4sh.nhlauncher;
 
 import android.content.Context;
 import android.graphics.Color;

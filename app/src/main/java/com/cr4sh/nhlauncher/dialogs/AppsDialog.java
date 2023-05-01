@@ -1,4 +1,4 @@
-package com.cr4sh.nhlanucher.dialogs;
+package com.cr4sh.nhlauncher.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-import com.cr4sh.nhlanucher.R;
+import com.cr4sh.nhlauncher.R;
 
 public class AppsDialog extends DialogFragment {
 

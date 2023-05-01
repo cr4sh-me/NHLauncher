@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.cr4sh.nhlanucher'
+    namespace 'com.cr4sh.nhlauncher'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.cr4sh.nhlanucher"
+        applicationId "com.cr4sh.nhlauncher"
         minSdk 23
         targetSdk 33
         versionCode 1

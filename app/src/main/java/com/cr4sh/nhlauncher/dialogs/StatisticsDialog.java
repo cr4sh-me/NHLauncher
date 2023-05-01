@@ -1,4 +1,4 @@
-package com.cr4sh.nhlanucher.dialogs;
+package com.cr4sh.nhlauncher.dialogs;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -27,9 +27,9 @@ import android.widget.Toast;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
-import com.cr4sh.nhlanucher.DBHandler;
-import com.cr4sh.nhlanucher.MyPreferences;
-import com.cr4sh.nhlanucher.R;
+import com.cr4sh.nhlauncher.DBHandler;
+import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.R;
 
 import java.util.Objects;
 

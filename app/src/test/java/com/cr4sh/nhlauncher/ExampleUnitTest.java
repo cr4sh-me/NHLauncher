@@ -1,4 +1,4 @@
-package com.cr4sh.nhlanucher;
+package com.cr4sh.nhlauncher;
 
 import static org.junit.Assert.assertEquals;
 

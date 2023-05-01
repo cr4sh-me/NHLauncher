@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="horizontal"
-    android:paddingHorizontal="20dp">
+    android:paddingHorizontal="20dp"
+    tools:ignore="UseCompoundDrawables">
 
     <ImageView
         android:id="@+id/image_view"

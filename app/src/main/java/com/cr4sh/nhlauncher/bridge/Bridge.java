@@ -1,4 +1,4 @@
-package com.cr4sh.nhlanucher.bridge;
+package com.cr4sh.nhlauncher.bridge;
 
 import android.content.ComponentName;
 import android.content.Intent;

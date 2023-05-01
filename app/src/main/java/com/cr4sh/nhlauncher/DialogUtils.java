@@ -1,18 +1,18 @@
-package com.cr4sh.nhlanucher;
+package com.cr4sh.nhlauncher;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.FragmentManager;
 
-import com.cr4sh.nhlanucher.dialogs.AppsDialog;
-import com.cr4sh.nhlanucher.dialogs.CustomThemeDialog;
-import com.cr4sh.nhlanucher.dialogs.DeleteToolDialog;
-import com.cr4sh.nhlanucher.dialogs.EditableDialog;
-import com.cr4sh.nhlanucher.dialogs.FirstSetupDialog;
-import com.cr4sh.nhlanucher.dialogs.NewToolDialog;
-import com.cr4sh.nhlanucher.dialogs.PermissionDialog;
-import com.cr4sh.nhlanucher.dialogs.SettingsDialog;
-import com.cr4sh.nhlanucher.dialogs.StatisticsDialog;
+import com.cr4sh.nhlauncher.dialogs.AppsDialog;
+import com.cr4sh.nhlauncher.dialogs.CustomThemeDialog;
+import com.cr4sh.nhlauncher.dialogs.DeleteToolDialog;
+import com.cr4sh.nhlauncher.dialogs.EditableDialog;
+import com.cr4sh.nhlauncher.dialogs.FirstSetupDialog;
+import com.cr4sh.nhlauncher.dialogs.NewToolDialog;
+import com.cr4sh.nhlauncher.dialogs.PermissionDialog;
+import com.cr4sh.nhlauncher.dialogs.SettingsDialog;
+import com.cr4sh.nhlauncher.dialogs.StatisticsDialog;
 
 public class DialogUtils {
     private final FragmentManager fragmentManager;

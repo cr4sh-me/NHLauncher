@@ -1,4 +1,4 @@
-package com.cr4sh.nhlanucher;
+package com.cr4sh.nhlauncher;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cr4sh.nhlanucher.bridge.Bridge;
+import com.cr4sh.nhlauncher.bridge.Bridge;
 
 import java.util.ArrayList;
 import java.util.Arrays;
