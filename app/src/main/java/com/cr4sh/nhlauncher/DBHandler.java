@@ -135,6 +135,7 @@ public class DBHandler extends SQLiteOpenHelper {
         insertTool(db, 1, "01", 0, "sslscan", "SSLScan queries SSL services, such as HTTPS, in order to determine the ciphers that are supported", "SSLScan wysyła zapytania do usług SSL, takich jak HTTPS, w celu określenia obsługiwanych szyfrów", "sslscan -h", "kali_sslscan", 0);
         insertTool(db, 1, "01", 0, "sslyze", "SSLyze is a Python tool that can analyze the SSL configuration of a server by connecting to it", "SSLyze to narzędzie Pythona, które może analizować konfigurację SSL serwera, łącząc się z nim", "sslyze -h", "kali_sslyze", 0);
         insertTool(db, 1, "01", 0, "tlssled", "A script whose purpose is to evaluate the security of a target SSL/TLS (HTTPS) web server implementation", "Jego celem jest ocena bezpieczeństwa docelowej implementacji serwera sieciowego SSL/TLS (HTTPS)", "tlssled -h", "kali_menu", 0);
+        insertTool(db, 1, "01", 0, "whatweb", "Next generation web scanner", "Nowoczesny skaner stron internetowych", "whatweb -h", "kali_whatweb", 0);
 
         // Category 02
         insertTool(db, 1, "02", 0, "lynis", "Security auditing tool for Linux, macOS, and UNIX-based systems", "Narzędzie do audytu bezpieczeństwa dla systemów Linux, macOS i UNIX", "lynis -h", "kali_lynis", 0);
@@ -143,6 +144,8 @@ public class DBHandler extends SQLiteOpenHelper {
         insertTool(db, 1, "02", 0, "unix-privesc-check", "Shell script to check for simple privilege escalation vectors on Unix systems", "Skrypt powłoki do sprawdzania prostych wektorów eskalacji uprawnień w systemach Unix", "unix-privesc-check", "kali_unix_privesc_check", 0);
         insertTool(db, 1, "02", 0, "nikto", "Nikto web server scanner ", "Skaner serwera WWW Nikto", "nikto -h", "kali_nikto", 0);
         insertTool(db, 1, "02", 0, "bed", "BED is a program which is designed to check daemons for potential buffer overflows, format strings et. al", "Sprawdzanie demonów pod kątem potencjalnych przepełnień bufora, formatowania ciągów znaków i innych", "bed", "kali_bed", 0);
+        insertTool(db, 1, "02", 0, "wapiti", "A web application vulnerability scanner in Python", "Skaner podatności aplikacji internetowych w Pythonie", "wapiti -h", "kali_wapiti", 0);
+        insertTool(db, 1, "02", 0, "wapiti-getcookie", "A Wapiti utility to fetch cookies from a webpage and store them in the Wapiti JSON format", "Narzędzie Wapiti do pobierania plików cookie ze strony internetowej i przechowywania ich w formacie Wapiti JSON", "wapiti-getcookie -h", "kali_wapiti", 0);
         insertTool(db, 1, "02", 0, "gvm", "Run The Greenbone Vulnerability Manager on localhost", "Uruchom program Greenbone Vulnerability Manager na hoście lokalnym", "gvm-start --help", "kali_menu", 0);
         insertTool(db, 1, "02", 0, "cisco-auditing-tool", "Perl script which scans cisco routers for common vulnerabilities", "Skrypt Perla, który skanuje routery Cisco w poszukiwaniu typowych luk w zabezpieczeniach", "CAT -h", "kali_menu", 0);
         insertTool(db, 1, "02", 0, "cisco-global-exploiter", "Cisco Global Exploiter (CGE), is an advanced, simple and fast security testing tool", "Cisco Global Exploiter (CGE) to zaawansowane, proste i szybkie narzędzie do testowania bezpieczeństwa", "cge.pl -h", "kali_menu", 0);
@@ -203,7 +206,10 @@ public class DBHandler extends SQLiteOpenHelper {
         insertTool(db, 1, "04", 0, "sidguesser", "Guesses sids/instances against an Oracle database according to a predefined dictionary file", "Zgaduje sid/instancje w stosunku do bazy danych Oracle zgodnie z predefiniowanym plikiem słownika", "sidguess", "kali_sidguesser", 0);
         insertTool(db, 1, "04", 0, "oscanner", "Oscanner is an Oracle assessment framework developed in Java", "Oscanner to środowisko oceny firmy Oracle opracowane w Javie", "oscanner", "kali_oscanner", 0);
         insertTool(db, 1, "04", 0, "sqlninja", "SQL Injection Tool ", "Narzędzie do wstrzykiwania kodu SQL", "sqlninja", "kali_sqlninja", 0);
-        insertTool(db, 1, "04", 0, "mdb-sql", "mdb-sql is a utility program distributed with MDB Tools. ", "mdb-sql to program narzędziowy dystrybuowany z narzędziami MDB", "mdb-sql -h", "kali_mdb_sql", 0);
+        insertTool(db, 1, "04", 0, "mdb-sql", "mdb-sql is a utility program distributed with MDB Tools", "mdb-sql to program narzędziowy dystrybuowany z narzędziami MDB", "mdb-sql -h", "kali_mdb_sql", 0);
+        insertTool(db, 1, "04", 0, "hfind", "Lookup a hash value in a hash database", "Wyszukaj wartość hasha w bazie danych hashy", "hfind", "kali_hfind", 0);
+        insertTool(db, 1, "04", 0, "sqlsus", "MySQL injection and takeover tool, written in perl", "Narzędzie do wstrzykiwania i przejmowania MySQL, napisane w Perlu", "sqlsus -h", "kali_sqlsus", 0);
+        insertTool(db, 1, "04", 0, "sqlsus", "Populate a SQLite database with metadata from a disk image", "Wypełnij bazę danych metadanymi z obrazu dysku", "tsk_loaddb", "kali_tsk_loaddb", 0);
 
         // Category 05
         insertTool(db, 1, "05", 0, "hydra", "Very fast network login cracker with many protocols support", "Bardzo szybki cracker logowania do sieci z obsługą wielu protokołów", "hydra --help", "kali_hydra", 0);
@@ -281,6 +287,7 @@ public class DBHandler extends SQLiteOpenHelper {
         insertTool(db, 1, "08", 0, "metasploit framework", "Platform that supports vulnerability research, exploit development, and the creation of custom security tools.", "Platforma wspierająca badanie luk w zabezpieczeniach, opracowywanie exploitów i tworzenie niestandardowych narzędzi bezpieczeństwa", "msfdb init && msfconsole", "kali_metasploit_framework", 0);
         insertTool(db, 1, "08", 0, "crackmapexec", "A swiss army knife for pentesting Windows/Active Directory environments.", "Szwajcarski scyzoryk do pentestów środowisk Windows/Active Directory", "crackmapexec -h", "kali_crackmapexec", 0);
         insertTool(db, 1, "08", 0, "termineter", "Python Smart Meter Testing Framework", "Struktura testowania inteligentnych liczników Pythona", "termineter -h", "kali_termineter", 0);
+        insertTool(db, 1, "08", 0, "davtest", "Davetst exploits WebDAV folders ", "Davtest exploituje foldery WebDAV", "davtest", "kali_davtest", 0);
 
         // Category 09
         insertTool(db, 1, "09", 0, "minicom", "Friendly menu driven serial communication program", "Przyjazny program komunikacji szeregowej sterowany menu", "minicom -h", "kali_minicom", 0);
@@ -344,6 +351,13 @@ public class DBHandler extends SQLiteOpenHelper {
         insertTool(db, 1, "11", 0, "chkrootkit", "The chkrootkit security scanner searches for signs that the system is infected with a ‘rootkit’", "Skaner bezpieczeństwa chrootkit wyszukuje oznaki, że system jest zainfekowany rootkitem", "chkrootkit -h", "kali_chkrootkit", 0);
         insertTool(db, 1, "11", 0, "binwalk", "Tool for searching binary images for embedded files and executable code", "Narzędzie do wyszukiwania obrazów binarnych w poszukiwaniu osadzonych plików i kodu wykonywalnego", "binwalk -h", "kali_binwalk", 0);
         insertTool(db, 1, "11", 0, "hashdeep", "Compute MD5, SHA1, SHA256, tiger and whirlpool hashsums of arbitrary number of files recursively", "Oblicz rekurencyjnie sumy mieszające MD5, SHA1, SHA256, tygrysa i wiru dowolnej liczby plików", "hashdeep -h", "kali_hashdeep", 0);
+        insertTool(db, 1, "11", 0, "img_stat", "Display details of an image file", "Wyświetl szczegóły pliku obrazu", "img_stat", "kali_img_stat", 0);
+        insertTool(db, 1, "11", 0, "istat", "Display details of a meta-data structure (i.e. inode)", "Wyświetl szczegóły struktury metadanych (tj. i-węzła)", "istat", "kali_istat", 0);
+        insertTool(db, 1, "11", 0, "jadx", "Convert dalvik bytecode from various types of Android app files (APK, DEX, AAR, and ZIP)", "Konwertuj kod bajtowy dalvik z różnych typów plików aplikacji na Androida (APK, DEX, AAR i ZIP)", "jadx -h", "kali_jadx", 0);
+        insertTool(db, 1, "11", 0, "mactime", "Create an ASCII time line of file activity", "Utwórz oś czasu ASCII aktywności pliku", "mactime", "kali_mactime", 0);
+        insertTool(db, 1, "11", 0, "pdfid", "It scans files for specific PDF keywords to help identify documents that contain JS or perform an action when opened", "Skaunuj plik w poszukiwaniu określonych słów kluczowych w celu zidentyfikowania dokumentów PDF, które zawierają np. JS lub wykonują akcję po otwarciu", "pdfid -h", "kali_pdfid", 0);
+        insertTool(db, 1, "11", 0, "pdf-parser", "Parse a PDF document to identify the fundamental elements used in the analyzed file", "przeanalizuj dokument PDF, aby zidentyfikować podstawowe elementy w nim użyte", "pdf-parser -h", "kali_pdf_parser", 0);
+        insertTool(db, 1, "11", 0, "sigfind", "It finds a binary signature in a file", "To narzędzie znajduje binarny podpis w pliku", "sigfind", "kali_sigfind", 0);
 
         // Category 12
         insertTool(db, 1, "12", 0, "cutycapt", "Utility to capture WebKit's rendering of a web page", "Narzędzie do przechwytywania renderowania strony internetowej przez WebKit", "cutycapt --help", "kali_cutycapt", 0);
