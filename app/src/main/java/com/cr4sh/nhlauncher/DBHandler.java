@@ -106,7 +106,7 @@ public class DBHandler extends SQLiteOpenHelper {
         insertTool(db, 1, "01", 0, "urlcrazy", "Generate and test domain typos and variations to detect and perform typo squatting", "Generuj i testuj literówki i odmiany domeny, aby wykrywać i wykonywać przysiady literowe", "urlcrazy -h", "kali_menu", 0);
         insertTool(db, 1, "01", 0, "firewalk", "Determine what layer 4 protocols a given IP forwarding device will pass", "Określ, jakie protokoły warstwy 4 przejmie dane urządzenie przekazujące IP", "firewalk -h", "kali_menu", 0);
         insertTool(db, 1, "01", 0, "fragrouter", "Fragrouter is a network intrusion detection evasion toolkit", "Fragrouter to zestaw narzędzi do wykrywania włamań sieciowych służących do unikania ataków", "fragrouter --help", "kali_menu", 0);
-        insertTool(db, 1, "01", 0, "ftest", "A tool designed for testing firewall filtering policies and Intrusion Detection System (IDS) capabilities.", "Narzędzie przeznaczone do testowania zasad filtrowania zapory i możliwości systemu wykrywania włamań (IDS)", "ftest --help", "kali_menu", 0);
+        insertTool(db, 1, "01", 0, "ftest", "A tool designed for testing firewall filtering policies and Intrusion Detection System (IDS) capabilities", "Narzędzie przeznaczone do testowania zasad filtrowania zapory i możliwości systemu wykrywania włamań (IDS)", "ftest --help", "kali_menu", 0);
         insertTool(db, 1, "01", 0, "lbd", "Test to see if the target domain is using a load balancer", "Sprawdź, czy domena docelowa korzysta z systemu równoważenia obciążenia", "lbd", "kali_lbd", 0);
         insertTool(db, 1, "01", 0, "wafw00f", "This package identifies and fingerprints Web Application Firewall (WAF) products", "Ten pakiet identyfikuje i odciski palców produktów Web Application Firewall (WAF)", "wafw00f -h", "kali_wafw00f", 0);
         insertTool(db, 1, "01", 0, "arping", "The arping utility sends ARP and/or ICMP requests to the specified host and displays the replies", "Narzędzie arping wysyła żądania ARP i/lub ICMP do określonego hosta i wyświetla odpowiedzi", "arping --help", "kali_arping", 0);
@@ -202,7 +202,7 @@ public class DBHandler extends SQLiteOpenHelper {
         insertTool(db, 1, "03", 0, "apache-users", "This Perl script will enumerate the usernames on any system that uses Apache with the UserDir module", "Ten skrypt Perla wyliczy nazwy użytkowników w każdym systemie, który używa Apache z modułem UserDir", "apache-users -h", "kali_apache_users", 0);
 
         // Category 04
-        insertTool(db, 1, "04", 0, "tnscmd10g", "A tool to prod the oracle tnslsnr process on port 1521/tcp.", "Narzędzie do uruchamiania procesu Oracle tnslsnr na porcie 1521/tcp", "tnscmd10g", "kali_tnscmd10g", 0);
+        insertTool(db, 1, "04", 0, "tnscmd10g", "A tool to prod the oracle tnslsnr process on port 1521/tcp", "Narzędzie do uruchamiania procesu Oracle tnslsnr na porcie 1521/tcp", "tnscmd10g", "kali_tnscmd10g", 0);
         insertTool(db, 1, "04", 0, "sidguesser", "Guesses sids/instances against an Oracle database according to a predefined dictionary file", "Zgaduje sid/instancje w stosunku do bazy danych Oracle zgodnie z predefiniowanym plikiem słownika", "sidguess", "kali_sidguesser", 0);
         insertTool(db, 1, "04", 0, "oscanner", "Oscanner is an Oracle assessment framework developed in Java", "Oscanner to środowisko oceny firmy Oracle opracowane w Javie", "oscanner", "kali_oscanner", 0);
         insertTool(db, 1, "04", 0, "sqlninja", "SQL Injection Tool ", "Narzędzie do wstrzykiwania kodu SQL", "sqlninja", "kali_sqlninja", 0);
@@ -262,7 +262,7 @@ public class DBHandler extends SQLiteOpenHelper {
         insertTool(db, 1, "06", 0, "redfang", "fang is a small proof-of-concept application to find non discoveredable bluetooth devices", "fang to mała aplikacja sprawdzająca słuszność koncepcji do znajdowania niewykrywalnych urządzeń Bluetooth", "fang --help", "kali_menu", 0);
         insertTool(db, 1, "03", 0, "ubertooth util", "command line utility for Ubertooth Zero and Ubertooth One", "Narzędzie wiersza poleceń dla Ubertooth Zero i Ubertooth One", "ubertooth-util -h", "kali_menu", 0);
         insertTool(db, 1, "06", 0, "mfcuk", "Various tools based on and around libnfc and crapto1, with emphasis on Mifare Classic NXP/Philips RFID cards", "Różne narzędzia oparte na libnfc i crapto1 i wokół nich, z naciskiem na karty Mifare Classic NXP/Philips RFID", "mfcuk --help", "kali_menu", 0);
-        insertTool(db, 1, "06", 0, "mfoc", "This program allow one to recover authentication keys from MIFARE Classic card.", "Ten program pozwala odzyskać klucze uwierzytelniające z karty MIFARE Classic.", "mfoc --help", "kali_mfoc", 0);
+        insertTool(db, 1, "06", 0, "mfoc", "This program allow one to recover authentication keys from MIFARE Classic card", "Ten program pozwala odzyskać klucze uwierzytelniające z karty MIFARE Classic.", "mfoc --help", "kali_mfoc", 0);
         insertTool(db, 1, "06", 0, "mfterm", "The Mifare Terminal", "Terminal Mifare", "mfterm -h", "kali_mfterm", 0);
         insertTool(db, 1, "06", 0, "mifare-classic-format", "Libfreefare util. Erases mifare device", "Narzędzie Libfreefare. Usuwa urządzenie Mifare", "mifare-classic-format --help", "kali_menu", 0);
         insertTool(db, 1, "06", 0, "nfc-list", "Libnfc-bin util. List NFC targets", "Narzędzie Libnfc-bin. Lista celów NFC", "nfc-list --help", "kali_menu", 0);
@@ -284,8 +284,8 @@ public class DBHandler extends SQLiteOpenHelper {
         insertTool(db, 1, "08", 0, "searchsploit", "Search the exploitdb", "Przeszukaj exploitdb", "searchsploit", "kali_exploitdb", 0);
         insertTool(db, 1, "08", 0, "Msfpc", "msf payload creator", "twórca ładunku msf", "msfpc", "kali_msfpc", 0);
         insertTool(db, 1, "08", 0, "shellnoob", "A shellcode writing toolkit", "Zestaw narzędzi do pisania kodu powłoki", "shellnoob -i", "kali_shellnoob", 0);
-        insertTool(db, 1, "08", 0, "metasploit framework", "Platform that supports vulnerability research, exploit development, and the creation of custom security tools.", "Platforma wspierająca badanie luk w zabezpieczeniach, opracowywanie exploitów i tworzenie niestandardowych narzędzi bezpieczeństwa", "msfdb init && msfconsole", "kali_metasploit_framework", 0);
-        insertTool(db, 1, "08", 0, "crackmapexec", "A swiss army knife for pentesting Windows/Active Directory environments.", "Szwajcarski scyzoryk do pentestów środowisk Windows/Active Directory", "crackmapexec -h", "kali_crackmapexec", 0);
+        insertTool(db, 1, "08", 0, "metasploit framework", "Platform that supports vulnerability research, exploit development, and the creation of custom security tools", "Platforma wspierająca badanie luk w zabezpieczeniach, opracowywanie exploitów i tworzenie niestandardowych narzędzi bezpieczeństwa", "msfdb init && msfconsole", "kali_metasploit_framework", 0);
+        insertTool(db, 1, "08", 0, "crackmapexec", "A swiss army knife for pentesting Windows/Active Directory environments", "Szwajcarski scyzoryk do pentestów środowisk Windows/Active Directory", "crackmapexec -h", "kali_crackmapexec", 0);
         insertTool(db, 1, "08", 0, "termineter", "Python Smart Meter Testing Framework", "Struktura testowania inteligentnych liczników Pythona", "termineter -h", "kali_termineter", 0);
         insertTool(db, 1, "08", 0, "davtest", "Davetst exploits WebDAV folders ", "Davtest exploituje foldery WebDAV", "davtest", "kali_davtest", 0);
 
@@ -325,7 +325,7 @@ public class DBHandler extends SQLiteOpenHelper {
         insertTool(db, 1, "10", 0, "weevely", "Weaponized web shell", "Uzbrojona powłoka internetowa", "weevely", "kali_weevely", 0);
 
         insertTool(db, 1, "10", 0, "dbd", "A Netcat-clone, designed to be portable and offer strong encryption", "Klon Netcat, zaprojektowany z myślą o przenośności i oferujący silne szyfrowanie", "dbd -h", "kali_dbd", 0);
-        insertTool(db, 1, "10", 0, "sbd", "A Netcat-clone, designed to be portable and offer strong encryption.", "Klon Netcat, zaprojektowany z myślą o przenośności i oferujący silne szyfrowanie", "sbd -h", "kali_sbd", 0);
+        insertTool(db, 1, "10", 0, "sbd", "A Netcat-clone, designed to be portable and offer strong encryption", "Klon Netcat, zaprojektowany z myślą o przenośności i oferujący silne szyfrowanie", "sbd -h", "kali_sbd", 0);
         insertTool(db, 1, "10", 0, "dns2tcpc", "A tunneling tool that encapsulate TCP traffic over DNS", "Narzędzie do tunelowania, które hermetyzuje ruch TCP przez DNS", "dns2tcpc -h", "kali_dns2tcp", 0);
         insertTool(db, 1, "10", 0, "dns2tcpd", "A tunneling tool that encapsulate TCP traffic over DNS", "Narzędzie do tunelowania, które hermetyzuje ruch TCP przez DNS", "dns2tcpd -h", "kali_dns2tcp", 0);
         insertTool(db, 1, "10", 0, "iodine", "Iodine lets you tunnel IPv4 data through a DNS server", "Jod umożliwia tunelowanie danych IPv4 przez serwer DNS", "iodine -h", "kali_iodine", 0);
@@ -365,10 +365,12 @@ public class DBHandler extends SQLiteOpenHelper {
         insertTool(db, 1, "12", 0, "pipal", "It give you the stats and the information to help you analyse the passwords", "Daje ci statystyki i informacje, które pomogą ci przeanalizować hasła", "pipal -h", "kali_pipal", 0);
 
         // Category 13
-        insertTool(db, 1, "13", 0, "SET", "An tool aimed at penetration testing around Social-Engineering.", "Narzędzie mające na celu przeprowadzanie testów penetracyjnych dotyczących inżynierii społecznej", "setoolkit", "kali_set", 0);
+        insertTool(db, 1, "13", 0, "SET", "An tool aimed at penetration testing around Social-Engineering", "Narzędzie mające na celu przeprowadzanie testów penetracyjnych dotyczących inżynierii społecznej", "setoolkit", "kali_set", 0);
         insertTool(db, 1, "13", 0, "evilginx2", "Phishing login credentials along with session cookies, allowing for the bypass of 2FA", "Dane logowania do phishingu wraz z sesyjnymi plikami cookie, pozwalającymi na ominięcie 2FA", "evilginx2", "nhl_ginx", 0);
         insertTool(db, 1, "13", 0, "z-phisher", "An automated phishing tool with 30+ templates", "Zautomatyzowane narzędzie do phishingu z ponad 30 szablonami", "cd /root/zphisher && bash zphisher.sh", "nhl_zphisher", 0);
         insertTool(db, 1, "13", 0, "modlishka", "Reverse Proxy. 2FA authentication phishing", "Odwrotny serwer proxy. Wyłudzanie informacji o uwierzytelnianiu 2FA", "cd /root/Modlishka && ./dist/proxy -h", "kali_menu", 0);
+        insertTool(db, 1, "13", 0, "gophish", "Open-source phishing toolkit designed for businesses and penetration testers", "Zestaw narzędzi do phishingu typu open source przeznaczony dla firm i testerów penetracyjnych", "cd /root/gophish && ./gophish", "nhl_gophish", 0);
+        insertTool(db, 1, "13", 0, "maskphish", "Simple bash script to hide phishing URL under a normal looking URL", "prosty skrypt bash do ukrywania adresu URL phishingu pod normalnie wyglądającym adresem URL", "cd /root/maskphish && bash maskphish.sh", "nhl_maskphish", 0);
 
     }
 
