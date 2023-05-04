@@ -1,7 +1,8 @@
-# NHLauncher
+![nhlauncher](https://user-images.githubusercontent.com/111238843/236333484-35782200-224a-441d-9e8f-e2b54c86eeb1.png)
 
 ## What is NHLauncher?
 NHLauncher is an application that makes it easier and faster to launch pentesting tools.
+
 It uses NetHunter bridge for launching tools in nh terminal!
 
 ## Requirements 
@@ -11,7 +12,7 @@ It uses NetHunter bridge for launching tools in nh terminal!
 - New nethunter terminal and app, you can download sources and build them in android studio from here [nethunter](https://gitlab.com/kalilinux/nethunter/apps/kali-nethunter-app/-/tree/2023.1-dev-martin-neoterm), [terminal](https://gitlab.com/kalilinux/nethunter/apps/kali-nethunter-term/-/tree/2023.1-dev-martin-neoterm). These apps will come to next kali linux release probably...  
 - Brain (working one)
 
-## NHLauncher features
+## Main NHLauncher features
 - Editable commands:
 You can edit tool command by holding chosen button, and selecting appropriate option
 
@@ -25,7 +26,7 @@ You can your own button, by holding any button in chosen category, and clicking 
 You can delete button by holding it, and clicking appropriate option. Please note that you can only delete buttons that were created by you
 
 - Threading:  
-This app is running some tasks on threads, especially Sqlite queries, so you can operate slightly faster than without it
+This app is running some tasks on threads, especially Sqlite queries, so you can operate without freezing your main ui thread
 
 - Themes manager:  
 You can fully customize NHLauncher appearance by selecting theme manager from top right toolbar
@@ -36,8 +37,8 @@ You can customize NHLauncher settings, backup and restore your custom tools, fav
 - Sorting modes:  
 You can easily select sorting mode for tools: Default, By usage, A-Z, Z-A, 0-9 A-Z, 9-0 Z-A
 
-- Searchbar:  
-You can search for specific tools by their name using search icon in top left
+- Advanced searchbar:  
+You can search for specific tools by their name using search icon in top left. It displays tools with first character in name same as searched one first, then displays tools that contains your search character anywhere!
 
 - RecyclerView: 
 Load a lot of buttons in second, and keep them in memory!
@@ -86,7 +87,7 @@ Put tool name here...
 Put tool description here, please make sure it's not longer than 90 characters
 
 **COMMAND**
-Put tool command here, display it help message by default  
+Put tool command here, display it help message by default, for example: nmap --help
 
 **ICON:**
 You can also attach tool image as svg, so i can scale it and put to tools database.
