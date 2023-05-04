@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 
 import java.util.Locale;
 
+// This class read, store and return SharedPreferences
 public class MyPreferences {
     private final SharedPreferences customColorsPrefs;
     private final SharedPreferences customFontsPrefs;

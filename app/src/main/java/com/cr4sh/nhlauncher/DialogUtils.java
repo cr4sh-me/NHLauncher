@@ -14,6 +14,7 @@ import com.cr4sh.nhlauncher.dialogs.PermissionDialog;
 import com.cr4sh.nhlauncher.dialogs.SettingsDialog;
 import com.cr4sh.nhlauncher.dialogs.StatisticsDialog;
 
+// This class creates and opens Dialogs
 public class DialogUtils {
     private final FragmentManager fragmentManager;
 

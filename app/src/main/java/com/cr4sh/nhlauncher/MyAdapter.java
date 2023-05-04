@@ -24,6 +24,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     }
 
     @SuppressLint("NotifyDataSetChanged")
+    // Clear old data and display new!
     public void updateData(List<Item> newData) {
         items.clear();
         items.addAll(newData);
@@ -36,6 +37,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         return new MyViewHolder(LayoutInflater.from(myActivity).inflate(R.layout.custom_button, parent, false));
     }
 
+    // Used to create buttons, and set listeners for them
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
 

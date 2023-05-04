@@ -1,5 +1,6 @@
 package com.cr4sh.nhlauncher;
 
+// Store items data and return them
 public class Item {
 
     String category;

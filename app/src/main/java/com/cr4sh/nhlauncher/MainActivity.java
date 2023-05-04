@@ -45,9 +45,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public String buttonCmd;
     public int buttonUsage;
     public SQLiteDatabase mDatabase;
-    // Access methods from DialogUtils
-    DialogUtils dialogUtils = new DialogUtils(this.getSupportFragmentManager());
-    ActivityResultLauncher<Intent> requestPermissionLauncher;
+    public ActivityResultLauncher<Intent> requestPermissionLauncher;
+    private DialogUtils dialogUtils;
     private MainUtils mainUtils;
     private MyPreferences myPreferences;
     private RecyclerView recyclerView;
@@ -56,6 +55,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        dialogUtils = new DialogUtils(this.getSupportFragmentManager());
+
+        // Check for nethunter and terminal apps
+        PackageManager pm = getPackageManager();
+        try {
+            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
+            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
+        } catch (PackageManager.NameNotFoundException e) {
+            dialogUtils.openAppsDialog();
+            return;
+        }
+
         setContentView(R.layout.activity_main);
 
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.roll);
@@ -71,15 +83,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         myPreferences = new MyPreferences(this);
         PermissionUtils permissionUtils = new PermissionUtils(this);
 
-        // Check for nethunter and terminal apps
-        PackageManager pm = getPackageManager();
-        try {
-            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
-            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
-        } catch (PackageManager.NameNotFoundException e) {
-            dialogUtils.openAppsDialog();
-            return;
-        }
 
 //         Check if setup has been completed
         if (!myPreferences.isSetupCompleted()) {
@@ -167,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         "CASE WHEN NAME LIKE '%" + newText + "%' THEN 0 ELSE 1 END, " + // sort by containing newText
                         "NAME ASC";
 
+                Animation myAnimation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_in);
                 if (newText.length() > 0) {
 
                     recyclerView.setVisibility(View.VISIBLE);
@@ -175,6 +179,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     disableMenu = true;
 
                     cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, orderBy, "15");
+
+                    noToolsText.startAnimation(myAnimation);
                     // Run OnUiThread to edit layout!
                     if (cursor.getCount() == 0) {
                         runOnUiThread(() -> noToolsText.setText(getResources().getString(R.string.cant_found) + newText + "\n" + getResources().getString(R.string.check_your_query)));
@@ -201,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     cursor.close();
                     return true;
                 } else {
+                    noToolsText.startAnimation(myAnimation);
                     runOnUiThread(() -> {
                         disableMenu = false;
                         noToolsText.setText(getResources().getString(R.string.no_newtext_entry));
@@ -237,6 +244,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    // Close database on app close
     protected void onDestroy() {
         super.onDestroy();
         if (mDatabase != null) {
@@ -244,6 +252,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    // run spinnerChanger with selected position as parameter
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
         String text = adapterView.getItemAtPosition(position).toString();
@@ -256,6 +265,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    // Creates menu that is shown after longer button click
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -266,9 +276,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         getMenuInflater().inflate(R.menu.options_menu, menu);
     }
 
+    // Catches selections for menu above
     @SuppressLint("NonConstantResourceId")
     public boolean onContextItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.option_1:
                 dialogUtils.openEditableDialog(buttonName, buttonCmd);
@@ -291,12 +301,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+
+    // Creates toolbar menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
+    // Catches options for toolbar menu above
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

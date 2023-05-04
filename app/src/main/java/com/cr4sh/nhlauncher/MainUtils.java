@@ -7,6 +7,8 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -121,8 +123,9 @@ public class MainUtils extends AppCompatActivity {
         }
 
         cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, myPreferences.sortingMode(), null);
-
         if (cursor.getCount() == 0) {
+            Animation myAnimation = AnimationUtils.loadAnimation(mainActivity, R.anim.fade_in);
+            noToolsText.startAnimation(myAnimation);
             noToolsText.setText(resources.getString(R.string.no_fav_tools));
             layout.setVisibility(View.GONE);
         } else {

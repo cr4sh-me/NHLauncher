@@ -37,7 +37,6 @@ public class PermissionDialog extends AppCompatDialogFragment {
 
         allowButton.setOnClickListener(view12 -> {
             Objects.requireNonNull(getDialog()).cancel();
-//            mainUtils.takePermissions();
             PermissionUtils permissionUtils = new PermissionUtils((MainActivity) requireActivity());
             permissionUtils.takePermissions();
         });

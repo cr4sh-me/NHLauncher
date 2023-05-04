@@ -18,6 +18,7 @@ public class PermissionUtils {
         myActivity = activity;
     }
 
+    // Check is permissions for files granted
     public boolean isPermissionsGranted() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             return Environment.isExternalStorageManager();
@@ -27,6 +28,7 @@ public class PermissionUtils {
         }
     }
 
+    // Request permissions for files
     public void takePermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // Permission is not granted, request for it

@@ -72,7 +72,6 @@ public class DeleteToolDialog extends AppCompatDialogFragment {
                     Toast.makeText(getActivity(), requireActivity().getResources().getString(R.string.deleted), Toast.LENGTH_SHORT).show();
                 }
 
-//                ((MainActivity)getActivity()).restartSpinner();
                 mainUtils.restartSpinner();
                 // Close connection
                 cursor.close();

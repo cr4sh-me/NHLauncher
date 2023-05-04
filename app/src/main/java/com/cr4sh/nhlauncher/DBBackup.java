@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+// This class is backing up and restoring buttons
 public class DBBackup {
     private final MainActivity mainActivity;
     private final MainUtils mainUtils;

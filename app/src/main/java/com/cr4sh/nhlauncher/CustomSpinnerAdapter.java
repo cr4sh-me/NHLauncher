@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 
 import java.util.List;
 
+// This class creates our spinner with custom themes and styles
 public class CustomSpinnerAdapter extends ArrayAdapter<String> {
 
     private final List<Integer> imageList;

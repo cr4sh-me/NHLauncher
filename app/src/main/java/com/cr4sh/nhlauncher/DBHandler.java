@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+// This class creates database and all elements
 public class DBHandler extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "nhlauncherdb";
@@ -45,29 +46,34 @@ public class DBHandler extends SQLiteOpenHelper {
         db.update("TOOLS", toolValues, "NAME=?", new String[]{name});
     }
 
+    // Update FAVOURITE field
     public static void updateToolFavorite(SQLiteDatabase db, String name, int favorite) {
         ContentValues values = new ContentValues();
         values.put("FAVOURITE", favorite);
         db.update("TOOLS", values, "NAME=?", new String[]{name});
     }
 
+    // Update USAGE field
     public static void updateToolUsage(SQLiteDatabase db, String name, int usage) {
         ContentValues values = new ContentValues();
         values.put("USAGE", usage);
         db.update("TOOLS", values, "NAME=?", new String[]{name});
     }
 
+    // Update CMD field
     public static void updateToolCmd(SQLiteDatabase db, String name, String cmd) {
         ContentValues values = new ContentValues();
         values.put("CMD", cmd);
         db.update("TOOLS", values, "NAME=?", new String[]{name});
     }
 
+    // Removes given tool by it name
     public static void deleteTool(SQLiteDatabase db, String toolName) {
         db.delete("TOOLS", "name=?", new String[]{toolName});
 //        db.close();
     }
 
+    // Returns database instance, so we can reuse it
     public static synchronized DBHandler getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new DBHandler(context.getApplicationContext());
@@ -75,6 +81,7 @@ public class DBHandler extends SQLiteOpenHelper {
         return sInstance;
     }
 
+    // Initiate database, insert elements
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE TOOLS (_id INTEGER PRIMARY KEY AUTOINCREMENT, "

@@ -73,7 +73,6 @@ public class NewToolDialog extends AppCompatDialogFragment {
                     if (cursor.getCount() == 0) {
                         // What did you expect here ??
                         DBHandler.insertTool(db, 0, category, 0, myName.getText().toString().trim(), myDescription.getText().toString().trim(), myDescription.getText().toString().trim(), myCmd.getText().toString().trim(), "kali_menu", 0);
-//                        MainUtils.refreshRecyclerViewData("13");
                         mainUtils.restartSpinner();
                         Objects.requireNonNull(getDialog()).cancel();
                         Toast.makeText(requireActivity(), getResources().getString(R.string.added), Toast.LENGTH_SHORT).show();

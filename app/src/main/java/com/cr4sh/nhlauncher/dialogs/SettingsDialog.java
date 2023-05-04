@@ -123,8 +123,8 @@ public class SettingsDialog extends DialogFragment {
         runSetup.setOnClickListener(v -> mainUtils.run_cmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit"));
 
         cancelButton.setOnClickListener(view12 -> dismiss());
-        // DB BACKUP
 
+        // DB BACKUP
         backupDb.setOnClickListener(v -> {
             DBBackup dbb = new DBBackup((MainActivity) requireActivity());
             new Thread(() -> {
@@ -155,7 +155,6 @@ public class SettingsDialog extends DialogFragment {
         editor.putString("sortingMode", sortingMode);
         editor.apply();
 
-//        mainUtils.readSettings();
         mainUtils.restartSpinner();
     }
 
@@ -167,7 +166,6 @@ public class SettingsDialog extends DialogFragment {
         editor.putString("languageLocale", languageLocale);
         editor.apply();
 
-//        mainUtils.readSettings();
         mainUtils.changeLanguage(languageLocale);
         mainUtils.restartSpinner();
         requireActivity().recreate();

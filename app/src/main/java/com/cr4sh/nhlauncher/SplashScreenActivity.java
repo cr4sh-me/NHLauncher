@@ -10,9 +10,9 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+// This class is displaying a SplashScreen
 @SuppressLint("CustomSplashScreen")
 public class SplashScreenActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
