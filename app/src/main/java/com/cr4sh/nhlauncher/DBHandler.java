@@ -10,7 +10,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "nhlauncherdb";
     private static final int DB_VERSION = 1;
-
     private static DBHandler sInstance;
 
     public DBHandler(Context context) {

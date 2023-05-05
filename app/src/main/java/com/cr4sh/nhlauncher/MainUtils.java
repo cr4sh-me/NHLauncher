@@ -33,12 +33,9 @@ public class MainUtils extends AppCompatActivity {
     private final MyPreferences myPreferences;
     private List<String> valuesList;
 
-//    private final List<Item> itemList;
-
     public MainUtils(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         mDatabase = mainActivity.mDatabase;
-//        itemList = new ArrayList<>();
         myPreferences = new MyPreferences(mainActivity);
         valuesList = Arrays.asList(
                 mainActivity.getResources().getString(R.string.category_ft),
@@ -156,8 +153,6 @@ public class MainUtils extends AppCompatActivity {
 
     // Fills our spinner with text and images
     public void restartSpinner() {
-
-//        itemList.clear();
 
         Spinner spinner = mainActivity.findViewById(R.id.categoriesSpinner);
 
