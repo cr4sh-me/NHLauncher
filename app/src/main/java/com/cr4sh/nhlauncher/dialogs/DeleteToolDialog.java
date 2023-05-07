@@ -70,9 +70,9 @@ public class DeleteToolDialog extends AppCompatDialogFragment {
                 } else {
                     DBHandler.deleteTool(db, name);
                     Toast.makeText(getActivity(), requireActivity().getResources().getString(R.string.deleted), Toast.LENGTH_SHORT).show();
+                    mainUtils.restartSpinner();
                 }
 
-                mainUtils.restartSpinner();
                 // Close connection
                 cursor.close();
                 db.close();

@@ -294,6 +294,8 @@ public class DBHandler extends SQLiteOpenHelper {
         insertTool(db, 1, "08", 0, "crackmapexec", "A swiss army knife for pentesting Windows/Active Directory environments", "Szwajcarski scyzoryk do pentestów środowisk Windows/Active Directory", "crackmapexec -h", "kali_crackmapexec", 0);
         insertTool(db, 1, "08", 0, "termineter", "Python Smart Meter Testing Framework", "Struktura testowania inteligentnych liczników Pythona", "termineter -h", "kali_termineter", 0);
         insertTool(db, 1, "08", 0, "davtest", "Davetst exploits WebDAV folders ", "Davtest exploituje foldery WebDAV", "davtest", "kali_davtest", 0);
+        insertTool(db, 1, "08", 0, "pret", "Printer Exploitation Toolkit, supports ps, pjl and pcl language printers", "Zestaw Eksploatacji Drukarek, obsługuje języki drukarek ps, pjl i pcl", "python3 /root/PRET/pret.py -h", "nhl_pret", 0);
+
 
         // Category 09
         insertTool(db, 1, "09", 0, "minicom", "Friendly menu driven serial communication program", "Przyjazny program komunikacji szeregowej sterowany menu", "minicom -h", "kali_minicom", 0);

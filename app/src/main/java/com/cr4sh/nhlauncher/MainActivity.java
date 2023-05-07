@@ -1,8 +1,10 @@
 package com.cr4sh.nhlauncher;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -60,10 +62,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Check for nethunter and terminal apps
         PackageManager pm = getPackageManager();
+
         try {
+            // First, check if the com.offsec.nethunter and com.offsec.nhterm packages exist
             pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
             pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
+
+            // Then, check if the com.offsec.nhterm.ui.term.NeoTermRemoteInterface activity exists within com.offsec.nhterm
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName("com.offsec.nhterm", "com.offsec.nhterm.ui.term.NeoTermRemoteInterface"));
+            List<ResolveInfo> activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+            if (activities.isEmpty()) {
+                // The activity is missing
+                dialogUtils.openMissingActivityDialog();
+                return;
+            }
         } catch (PackageManager.NameNotFoundException e) {
+            // One of the packages is missing
             dialogUtils.openAppsDialog();
             return;
         }
@@ -84,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         PermissionUtils permissionUtils = new PermissionUtils(this);
 
 
-//         Check if setup has been completed
+        // Check if setup has been completed
         if (!myPreferences.isSetupCompleted()) {
             dialogUtils.openFirstSetupDialog();
         }
@@ -103,8 +119,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Set the layout manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Set the adapter with empty itemList
-//        List<Item> itemList = new ArrayList<>();
+        // Set the adapter for RecyclerView
         MyAdapter adapter = new MyAdapter(this);
         recyclerView.setAdapter(adapter);
 

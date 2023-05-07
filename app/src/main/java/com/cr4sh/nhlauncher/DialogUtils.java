@@ -9,6 +9,7 @@ import com.cr4sh.nhlauncher.dialogs.CustomThemeDialog;
 import com.cr4sh.nhlauncher.dialogs.DeleteToolDialog;
 import com.cr4sh.nhlauncher.dialogs.EditableDialog;
 import com.cr4sh.nhlauncher.dialogs.FirstSetupDialog;
+import com.cr4sh.nhlauncher.dialogs.MissingActivityDialog;
 import com.cr4sh.nhlauncher.dialogs.NewToolDialog;
 import com.cr4sh.nhlauncher.dialogs.PermissionDialog;
 import com.cr4sh.nhlauncher.dialogs.SettingsDialog;
@@ -23,46 +24,56 @@ public class DialogUtils {
     }
 
     public void openEditableDialog(String name, String cmd) {
-        EditableDialog editableDialog = new EditableDialog();
-        // Input as an argument.
-        Bundle args = new Bundle();
-        args.putString("name", name);
-        args.putString("cmd", cmd);
-        editableDialog.setArguments(args);
-        // Display our dialog!
-        editableDialog.show(fragmentManager, "EditableDialog");
+        new Thread(() -> {
+            EditableDialog editableDialog = new EditableDialog();
+            // Input as an argument.
+            Bundle args = new Bundle();
+            args.putString("name", name);
+            args.putString("cmd", cmd);
+            editableDialog.setArguments(args);
+            // Display our dialog!
+            editableDialog.show(fragmentManager, "EditableDialog");
+        }).start();
     }
 
     public void openNewToolDialog(String category) {
-        NewToolDialog ntDialog = new NewToolDialog();
-        // ARGS!
-        Bundle args = new Bundle();
-        args.putString("category", category);
-        ntDialog.setArguments(args);
-        // Display our dialog!
-        ntDialog.show(fragmentManager, "NewToolDialog");
+        new Thread(() -> {
+            NewToolDialog ntDialog = new NewToolDialog();
+            // ARGS!
+            Bundle args = new Bundle();
+            args.putString("category", category);
+            ntDialog.setArguments(args);
+            // Display our dialog!
+            ntDialog.show(fragmentManager, "NewToolDialog");
+        }).start();
     }
 
     public void openDeleteToolDialog(String name) {
-        DeleteToolDialog dtDialog = new DeleteToolDialog();
-        // ARGS!
-        Bundle args = new Bundle();
-        args.putString("name", name);
-        dtDialog.setArguments(args);
-        // Display our dialog!
-        dtDialog.show(fragmentManager, "DeleteToolDialog");
+        new Thread(() -> {
+            DeleteToolDialog dtDialog = new DeleteToolDialog();
+            // ARGS!
+            Bundle args = new Bundle();
+            args.putString("name", name);
+            dtDialog.setArguments(args);
+            // Display our dialog!
+            dtDialog.show(fragmentManager, "DeleteToolDialog");
+        }).start();
     }
 
     public void openAppsDialog() {
-        AppsDialog apDialog = new AppsDialog();
-        // Display our dialog!
-        apDialog.show(fragmentManager, "AppsDialog");
+        new Thread(() -> {
+            AppsDialog apDialog = new AppsDialog();
+            // Display our dialog!
+            apDialog.show(fragmentManager, "AppsDialog");
+        }).start();
     }
 
     public void openFirstSetupDialog() {
-        FirstSetupDialog fsDialog = new FirstSetupDialog();
-        // Display our dialog!
-        fsDialog.show(fragmentManager, "FirstSetupDialog");
+        new Thread(() -> {
+            FirstSetupDialog fsDialog = new FirstSetupDialog();
+            // Display our dialog!
+            fsDialog.show(fragmentManager, "FirstSetupDialog");
+        }).start();
     }
 
     public void openCustomThemesDialog() {
@@ -74,20 +85,35 @@ public class DialogUtils {
     }
 
     public void openSettingsDialog() {
-        SettingsDialog stDialog = new SettingsDialog();
-        // Display our dialog!
-        stDialog.show(fragmentManager, "SettingsDialog");
+        new Thread(() -> {
+            SettingsDialog stDialog = new SettingsDialog();
+            // Display our dialog!
+            stDialog.show(fragmentManager, "SettingsDialog");
+        }).start();
     }
 
     public void openPermissionsDialog() {
-        PermissionDialog pmDialog = new PermissionDialog();
-        // Display our dialog!
-        pmDialog.show(fragmentManager, "PermissionsDialog");
+        new Thread(() -> {
+            PermissionDialog pmDialog = new PermissionDialog();
+            // Display our dialog!
+            pmDialog.show(fragmentManager, "PermissionsDialog");
+        }).start();
     }
 
     public void openStatisticsDialog() {
-        StatisticsDialog statsDialog = new StatisticsDialog();
-        // Display our dialog!
-        statsDialog.show(fragmentManager, "PermissionsDialog");
+        new Thread(() -> {
+            StatisticsDialog statsDialog = new StatisticsDialog();
+            // Display our dialog!
+            statsDialog.show(fragmentManager, "PermissionsDialog");
+        }).start();
     }
+
+    public void openMissingActivityDialog(){
+        new Thread(() -> {
+            MissingActivityDialog maDialog = new MissingActivityDialog();
+            // Display our dialog!
+            maDialog.show(fragmentManager, "MissingActivityDialog");
+        }).start();
+    }
+
 }
