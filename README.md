@@ -9,7 +9,10 @@ It uses NetHunter bridge for launching tools in nh terminal!
 - Android 6.0+
 - Rooted android device (Its required for NetHunter installation)  
 - Full NetHunter installation  
-- New nethunter terminal and app, you can download sources and build them in android studio from here [nethunter](https://gitlab.com/kalilinux/nethunter/apps/kali-nethunter-app/-/tree/2023.1-dev-martin-neoterm), [terminal](https://gitlab.com/kalilinux/nethunter/apps/kali-nethunter-term/-/tree/2023.1-dev-martin-neoterm). These apps will come to next kali linux release probably...  
+- New nethunter terminal and app (2023.1), you can download them here:
+[download nethunter apk](https://github.com/cr4sh-me/NHLauncher/blob/main/nethunter.apk),
+[download terminal apk](https://github.com/cr4sh-me/NHLauncher/blob/main/terminal.apk). 
+Or you can download sources and build them in android studio from here [nethunter app source](https://gitlab.com/kalilinux/nethunter/apps/kali-nethunter-app/-/tree/2023.1-dev-martin-neoterm), [terminal app source](https://gitlab.com/kalilinux/nethunter/apps/kali-nethunter-term/-/tree/2023.1-dev-martin-neoterm). These apps will come to next kali linux release probably...  
 - Brain (working one)
 
 ## Main NHLauncher features
