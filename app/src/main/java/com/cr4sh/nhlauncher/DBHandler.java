@@ -289,13 +289,11 @@ public class DBHandler extends SQLiteOpenHelper {
         insertTool(db, 1, "08", 0, "beef start", "Run Beef-XSS framework on localhost", "Uruchom platformę Beef-XSS na hoście lokalnym", "beef-xss", "kali_beef_xss", 0);
         insertTool(db, 1, "08", 0, "searchsploit", "Search the exploitdb", "Przeszukaj exploitdb", "searchsploit", "kali_exploitdb", 0);
         insertTool(db, 1, "08", 0, "Msfpc", "msf payload creator", "twórca ładunku msf", "msfpc", "kali_msfpc", 0);
-        insertTool(db, 1, "08", 0, "shellnoob", "A shellcode writing toolkit", "Zestaw narzędzi do pisania kodu powłoki", "shellnoob -i", "kali_shellnoob", 0);
         insertTool(db, 1, "08", 0, "metasploit framework", "Platform that supports vulnerability research, exploit development, and the creation of custom security tools", "Platforma wspierająca badanie luk w zabezpieczeniach, opracowywanie exploitów i tworzenie niestandardowych narzędzi bezpieczeństwa", "msfdb init && msfconsole", "kali_metasploit_framework", 0);
         insertTool(db, 1, "08", 0, "crackmapexec", "A swiss army knife for pentesting Windows/Active Directory environments", "Szwajcarski scyzoryk do pentestów środowisk Windows/Active Directory", "crackmapexec -h", "kali_crackmapexec", 0);
         insertTool(db, 1, "08", 0, "termineter", "Python Smart Meter Testing Framework", "Struktura testowania inteligentnych liczników Pythona", "termineter -h", "kali_termineter", 0);
         insertTool(db, 1, "08", 0, "davtest", "Davetst exploits WebDAV folders ", "Davtest exploituje foldery WebDAV", "davtest", "kali_davtest", 0);
         insertTool(db, 1, "08", 0, "pret", "Printer Exploitation Toolkit, supports ps, pjl and pcl language printers", "Zestaw Eksploatacji Drukarek, obsługuje języki drukarek ps, pjl i pcl", "python3 /root/PRET/pret.py -h", "nhl_pret", 0);
-
 
         // Category 09
         insertTool(db, 1, "09", 0, "minicom", "Friendly menu driven serial communication program", "Przyjazny program komunikacji szeregowej sterowany menu", "minicom -h", "kali_minicom", 0);
