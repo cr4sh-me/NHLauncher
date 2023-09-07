@@ -204,7 +204,6 @@ public class DBHandler extends SQLiteOpenHelper {
         insertTool(db, 1, "03", 0, "dirb", "DIRB is a Web Content Scanner", "DIRB to skaner treści internetowych", "man dirb", "kali_dirb", 0);
         insertTool(db, 1, "03", 0, "dirbuster", "DirBuster is a java application designed to brute force directories and files names on web/application servers", "DirBuster to aplikacja Java przeznaczona do brutalnej siły katalogów i nazw plików na serwerach WWW/aplikacji", "dirbuster -h", "kali_dirbuster", 0);
         insertTool(db, 1, "03", 0, "ffuf", "ffuf is a fast web fuzzer written in Go that allows typical directory discovery", "ffuf to szybki fuzzer sieciowy napisany w Go, który umożliwia typowe wykrywanie katalogów", "ffuf -h", "kali_ffuf", 0);
-        insertTool(db, 1, "03", 0, "plecost", "Wordpress finger printer tool", "Narzędzie drukarki palca Wordpress", "plecost -h", "kali_menu", 0);
         insertTool(db, 1, "03", 0, "apache-users", "This Perl script will enumerate the usernames on any system that uses Apache with the UserDir module", "Ten skrypt Perla wyliczy nazwy użytkowników w każdym systemie, który używa Apache z modułem UserDir", "apache-users -h", "kali_apache_users", 0);
 
         // Category 04
