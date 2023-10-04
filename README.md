@@ -9,10 +9,7 @@ It uses NetHunter bridge for launching tools in nh terminal!
 - Android 6.0+
 - Rooted android device (Its required for NetHunter installation)  
 - Full NetHunter installation  
-- New nethunter terminal and app (2023.1), you can download them here:
-[download nethunter apk](https://github.com/cr4sh-me/NHLauncher/blob/main/nethunter.apk),
-[download terminal apk](https://github.com/cr4sh-me/NHLauncher/blob/main/terminal.apk). 
-Or you can download sources and build them in android studio from here [nethunter app source](https://gitlab.com/kalilinux/nethunter/apps/kali-nethunter-app/-/tree/2023.1-dev-martin-neoterm), [terminal app source](https://gitlab.com/kalilinux/nethunter/apps/kali-nethunter-term/-/tree/2023.1-dev-martin-neoterm). These apps will come to next kali linux release probably...  
+- New nethunter terminal and app (2023.1), you can download them from NetHunter store:
 - Brain (working one)
 
 ## Main NHLauncher features
@@ -56,7 +53,7 @@ NHLauncher have Polish language!
 NHLauncher is available on older and newer android versions! 
 
 - SplashScreen: 
-You can enable and disable themed SplashScreen! 
+Dynamic Themes support for A12+
 
 ## How to request new tool/s
 If you like to request new tool for NHLauncher, first check all it functions on NetHunter platform.
@@ -98,30 +95,6 @@ If you cant or dont want to add image, put `kali_menu` here
 
 **How to send request?**  
 Open new issue with [TOOL REQUEST] tag in name, and ill check it...
-
-## How to request new themes?
-
-**How to do it?**  
-`saveThemeSettings("{BUTTON_COLOR}", "{TOOL_NAME_COLOR}", "{TOOL_DESCRIPTION_COLOR}", "{frame_xml_filename}", "{BORDER_COLOR}", "nhlauncher");`  
-
-`saveThemeSettings("#4A4A4C", "#FFFFFF", "#e94b3c", "frame6", "#4A4A4C", "nhlauncher");`
-             
-**Border color**
-If you dont want to change border color of buttons, set this color same as BUTTON_COLOR
-            
-**WTF IS frame_xml_filename?**
-```
-<?xml version="1.0"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-  <solid android:color="{BACKGROUND_COLOR}"/>
-  <stroke android:width="5dp" android:color="{BACKGROUND_FRAME_COLOR}"/>
-</shape>
-```
-
-As you can see, all colors are in hex format...  
-
-**How to send request?**  
-Open new issue with [THEME REQUEST](https://github.com/cr4sh-me/NHLauncher/labels) label, and ill check it...
 
 ## Features request
 You can also send features request with [FEATURE REQUEST](https://github.com/cr4sh-me/NHLauncher/labels) label
