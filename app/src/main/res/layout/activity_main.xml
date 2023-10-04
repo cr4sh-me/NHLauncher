@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/changeableTextView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:ignore="VisualLintOverlap" />
+<!--    <TextView-->
+<!--        android:id="@+id/changeableTextView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        tools:ignore="VisualLintOverlap" />-->
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
@@ -37,23 +37,14 @@
     <RelativeLayout
         android:id="@+id/imageViewHeader"
         android:layout_width="match_parent"
-        android:layout_height="230dp">
-
-        <ImageView
-            android:id="@+id/nhlauncher_logo"
-            android:layout_width="250dp"
-            android:layout_height="100dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="imageview"
-            android:src="@drawable/nhlauncher"
-            tools:ignore="HardcodedText" />
+        android:layout_below="@id/searchView"
+        android:layout_height="80dp">
 
         <Spinner
             android:id="@+id/categoriesSpinner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/nhlauncher_logo"
+
             android:background="@drawable/spinner_bg"
             tools:ignore="DuplicateSpeakableTextCheck" />
 

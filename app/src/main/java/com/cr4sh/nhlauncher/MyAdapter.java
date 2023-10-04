@@ -1,12 +1,9 @@
 package com.cr4sh.nhlauncher;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,10 +41,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         MainUtils mainUtils = new MainUtils(myActivity);
         MyPreferences myPreferences = new MyPreferences(myActivity);
 
-        if (myPreferences.animateButtons()) {
-            Animation fadeInAnimation = AnimationUtils.loadAnimation(myActivity, R.anim.panning);
-            holder.itemView.startAnimation(fadeInAnimation);
-        }
+//        if (myPreferences.animateButtons()) {
+//            Animation fadeInAnimation = AnimationUtils.loadAnimation(myActivity, R.anim.panning);
+//            holder.itemView.startAnimation(fadeInAnimation);
+//        }
 
         Item item = getItem(position);
 
@@ -57,16 +54,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         @SuppressLint("DiscouragedApi") int imageResourceId = myActivity.getResources().getIdentifier(item.getImage(), "drawable", myActivity.getPackageName());
         holder.imageView.setImageResource(imageResourceId);
 
-        holder.nameView.setTextColor(Color.parseColor(myPreferences.nameColor()));
-        holder.descriptionView.setTextColor(Color.parseColor(myPreferences.descriptionColor()));
+//        holder.nameView.setTextColor(Color.parseColor(myPreferences.nameColor()));
+//        holder.descriptionView.setTextColor(Color.parseColor(myPreferences.descriptionColor()));
 
         GradientDrawable drawable = new GradientDrawable();
-        drawable.setColor(Color.parseColor(myPreferences.buttonColor()));
-        drawable.setCornerRadius(5);
-        drawable.setStroke(2, Color.parseColor(myPreferences.strokeColor()));
-        holder.itemView.setBackground(drawable);
-        holder.nameView.setTypeface(myPreferences.typeface());
-        holder.descriptionView.setTypeface(myPreferences.typeface());
+//        drawable.setColor(Color.parseColor(myPreferences.buttonColor()));
+//        drawable.setCornerRadius(5);
+//        drawable.setStroke(20);
+//        holder.itemView.setBackground(drawable);
+//        holder.nameView.setTypeface(myPreferences.typeface());
+//        holder.descriptionView.setTypeface(myPreferences.typeface());
 
         holder.itemView.setOnClickListener(v -> {
             myActivity.buttonUsage = item.getUsage();

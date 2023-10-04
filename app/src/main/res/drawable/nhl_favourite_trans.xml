@@ -5,9 +5,9 @@
     android:viewportHeight="24">
 
     <path
-        android:fillColor="#000000"
+        android:fillColor="@color/material_dynamic_primary80"
         android:pathData="M12,3.5 L15.07,9.5 L21.5,10.5 L17,14.5 L18.5,21 L12,18.5 L5.5,21 L7,14.5 L2.5,10.5 L8.93,9.5 L12,3.5 Z"
         android:strokeWidth="2"
-        android:strokeColor="#FFFFFF" />
+        android:strokeColor="@color/material_dynamic_secondary80" />
 
 </vector>

@@ -61,28 +61,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         dialogUtils = new DialogUtils(this.getSupportFragmentManager());
 
         // Check for nethunter and terminal apps
-        PackageManager pm = getPackageManager();
-
-        try {
-            // First, check if the com.offsec.nethunter and com.offsec.nhterm packages exist
-            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
-            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
-
-            // Then, check if the com.offsec.nhterm.ui.term.NeoTermRemoteInterface activity exists within com.offsec.nhterm
-            Intent intent = new Intent();
-            intent.setComponent(new ComponentName("com.offsec.nhterm", "com.offsec.nhterm.ui.term.NeoTermRemoteInterface"));
-            List<ResolveInfo> activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-
-            if (activities.isEmpty()) {
-                // The activity is missing
-                dialogUtils.openMissingActivityDialog();
-                return;
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            // One of the packages is missing
-            dialogUtils.openAppsDialog();
-            return;
-        }
+//        PackageManager pm = getPackageManager();
+//
+//        try {
+//            // First, check if the com.offsec.nethunter and com.offsec.nhterm packages exist
+//            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
+//            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
+//
+//            // Then, check if the com.offsec.nhterm.ui.term.NeoTermRemoteInterface activity exists within com.offsec.nhterm
+//            Intent intent = new Intent();
+//            intent.setComponent(new ComponentName("com.offsec.nhterm", "com.offsec.nhterm.ui.term.NeoTermRemoteInterface"));
+//            List<ResolveInfo> activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+//
+//            if (activities.isEmpty()) {
+//                // The activity is missing
+//                dialogUtils.openMissingActivityDialog();
+//                return;
+//            }
+//        } catch (PackageManager.NameNotFoundException e) {
+//            // One of the packages is missing
+//            dialogUtils.openAppsDialog();
+//            return;
+//        }
 
         setContentView(R.layout.activity_main);
 
@@ -148,8 +148,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Add onclick listener for toolbar
         Toolbar toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
-
-        mainUtils.refreshFrame();
 
         SearchView searchView = findViewById(R.id.searchView);
 
@@ -286,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreateContextMenu(menu, v, menuInfo);
         // Set the color of the menu title
         SpannableString s = new SpannableString(getResources().getString(R.string.choose_option));
-        s.setSpan(new ForegroundColorSpan(Color.parseColor(myPreferences.nameColor())), 0, s.length(), 0);
+//        s.setSpan(new ForegroundColorSpan(Color.parseColor(myPreferences.nameColor())), 0, s.length(), 0);
         Objects.requireNonNull(menu.setHeaderTitle(s));
         getMenuInflater().inflate(R.menu.options_menu, menu);
     }
@@ -333,8 +331,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 dialogUtils.openSettingsDialog();
                 return true;
             case R.id.menu_item_2:
-                closeOptionsMenu();
-                dialogUtils.openCustomThemesDialog();
+                Toast.makeText(this, "OOPS!", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_item_3:
                 dialogUtils.openStatisticsDialog();

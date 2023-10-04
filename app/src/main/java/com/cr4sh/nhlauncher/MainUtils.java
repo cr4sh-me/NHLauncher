@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -158,7 +157,7 @@ public class MainUtils extends AppCompatActivity {
 
         int selectedItemText = spinner.getSelectedItemPosition();
 
-        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mainActivity, valuesList, imageList, myPreferences.buttonColor(), myPreferences.nameColor());
+        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mainActivity, valuesList, imageList);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(mainActivity);
         spinner.setSelection(selectedItemText);
@@ -166,15 +165,6 @@ public class MainUtils extends AppCompatActivity {
     }
 
     // Refreshes our TextView that is responsible for app background
-    public void refreshFrame() {
-        @SuppressLint("DiscouragedApi") int frame = mainActivity.getResources().getIdentifier(myPreferences.frameColor(), "drawable", mainActivity.getPackageName());
-        @SuppressLint("DiscouragedApi") int logo = mainActivity.getResources().getIdentifier(myPreferences.logoIcon(), "drawable", mainActivity.getPackageName());
-        TextView changeableTextView = mainActivity.findViewById(R.id.changeableTextView);
-        ImageView changeableLogo = mainActivity.findViewById(R.id.nhlauncher_logo);
-        changeableTextView.setBackgroundResource(frame);
-        changeableLogo.setImageResource(logo);
-        changeableTextView.invalidate();
-    }
 
     // Adds button to favourites bu updating FAVOURITE value
     public void addFavourite() {

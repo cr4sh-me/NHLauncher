@@ -17,14 +17,10 @@ import java.util.List;
 public class CustomSpinnerAdapter extends ArrayAdapter<String> {
 
     private final List<Integer> imageList;
-    private final String backgroundColor;
-    private final String textColor;
 
-    public CustomSpinnerAdapter(Context context, List<String> values, List<Integer> imageList, String backgroundColor, String textColor) {
+    public CustomSpinnerAdapter(Context context, List<String> values, List<Integer> imageList) {
         super(context, R.layout.dropdown_items, values);
         this.imageList = imageList;
-        this.backgroundColor = backgroundColor;
-        this.textColor = textColor;
     }
 
     @Override
@@ -40,14 +36,15 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
         textView.setText(getItem(position));
 
         // set background color and text color for dropdown items and selected item in spinner
-        convertView.setBackgroundColor(Color.parseColor(backgroundColor));
-        textView.setTextColor(Color.parseColor(textColor));
+//        convertView.setBackgroundColor(Color.parseColor(backgroundColor));
+//        textView.setTextColor(Color.parseColor(textColor));
 
         return convertView;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         return getCustomView(position, parent);
     }
 
@@ -62,7 +59,7 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
         textView.setText(getItem(position));
 
         // Set text color of spinner
-        textView.setTextColor(Color.parseColor(textColor));
+//        textView.setTextColor(Color.parseColor(textColor));
 
         return view;
     }

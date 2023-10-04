@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.fragment.app.FragmentManager;
 
 import com.cr4sh.nhlauncher.dialogs.AppsDialog;
-import com.cr4sh.nhlauncher.dialogs.CustomThemeDialog;
 import com.cr4sh.nhlauncher.dialogs.DeleteToolDialog;
 import com.cr4sh.nhlauncher.dialogs.EditableDialog;
 import com.cr4sh.nhlauncher.dialogs.FirstSetupDialog;
@@ -35,6 +34,7 @@ public class DialogUtils {
             editableDialog.show(fragmentManager, "EditableDialog");
         }).start();
     }
+
 
     public void openNewToolDialog(String category) {
         new Thread(() -> {
@@ -73,14 +73,6 @@ public class DialogUtils {
             FirstSetupDialog fsDialog = new FirstSetupDialog();
             // Display our dialog!
             fsDialog.show(fragmentManager, "FirstSetupDialog");
-        }).start();
-    }
-
-    public void openCustomThemesDialog() {
-        new Thread(() -> {
-            CustomThemeDialog ctDialog = new CustomThemeDialog();
-            // Display our dialog!
-            ctDialog.show(fragmentManager, "CustomThemeDialog");
         }).start();
     }
 

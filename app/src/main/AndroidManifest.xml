@@ -14,6 +14,7 @@
     </queries>
 
     <application
+        android:name=".DynamicTheme"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
@@ -22,26 +23,17 @@
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
-        android:theme="@style/DialogActivityTheme"
+        android:theme="@style/Theme.NHL"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".SplashScreenActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/DialogActivityTheme"
-            tools:ignore="LockedOrientationActivity">
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- Main activity -->
-        <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-
     </application>
 
 </manifest>
