@@ -52,8 +52,8 @@ NHLauncher have Polish language!
 - Availability: 
 NHLauncher is available on older and newer android versions! 
 
-- SplashScreen: 
-Dynamic Themes support for A12+
+- Dynamic themes: 
+Dynamic themes support for A12+
 
 ## How to request new tool/s
 If you like to request new tool for NHLauncher, first check all it functions on NetHunter platform.
