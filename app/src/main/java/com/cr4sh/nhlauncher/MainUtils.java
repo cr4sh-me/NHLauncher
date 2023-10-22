@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -121,6 +122,7 @@ public class MainUtils extends AppCompatActivity {
         cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, myPreferences.sortingMode(), null);
         if (cursor.getCount() == 0) {
             Animation myAnimation = AnimationUtils.loadAnimation(mainActivity, R.anim.fade_in);
+            noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
             noToolsText.startAnimation(myAnimation);
             noToolsText.setText(resources.getString(R.string.no_fav_tools));
             layout.setVisibility(View.GONE);
@@ -157,12 +159,13 @@ public class MainUtils extends AppCompatActivity {
 
         int selectedItemText = spinner.getSelectedItemPosition();
 
-        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mainActivity, valuesList, imageList);
+        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mainActivity, valuesList, imageList, myPreferences.color20(), myPreferences.color80());
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(mainActivity);
         spinner.setSelection(selectedItemText);
 
     }
+
 
     // Refreshes our TextView that is responsible for app background
 

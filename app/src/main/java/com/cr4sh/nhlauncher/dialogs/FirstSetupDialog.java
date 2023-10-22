@@ -1,11 +1,7 @@
 package com.cr4sh.nhlauncher.dialogs;
 
-import static android.content.Context.MODE_PRIVATE;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,16 +26,8 @@ public class FirstSetupDialog extends AppCompatDialogFragment {
 
         setCancelable(false);
 
-        String frameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("frameColor", "frame6");
-        String nameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("nameColor", "#FFFFFF");
-        @SuppressLint("DiscouragedApi") int frame = requireActivity().getResources().getIdentifier(frameColor, "drawable", requireActivity().getPackageName());
-
         Button setupButton = view.findViewById(R.id.setup_button);
         Button cancelButton = view.findViewById(R.id.cancel_button);
-
-        view.setBackgroundResource(frame);
-        setupButton.setTextColor(Color.parseColor(nameColor));
-        cancelButton.setTextColor(Color.parseColor(nameColor));
 
         setupButton.setOnClickListener(view12 -> {
             Objects.requireNonNull(getDialog()).cancel();

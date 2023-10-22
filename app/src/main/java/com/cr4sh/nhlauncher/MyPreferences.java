@@ -2,7 +2,6 @@ package com.cr4sh.nhlauncher;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 
 import java.util.Locale;
 
@@ -10,17 +9,28 @@ import java.util.Locale;
 public class MyPreferences {
     private final SharedPreferences nhlPrefs;
     private final SharedPreferences setupPrefs;
+    private SharedPreferences customColorsPrefs;
     private final Context context;
 
     public MyPreferences(Context context) {
         this.context = context;
+        customColorsPrefs = context.getSharedPreferences("customColors", Context.MODE_PRIVATE);
         nhlPrefs = context.getSharedPreferences("nhlSettings", Context.MODE_PRIVATE);
         setupPrefs = context.getSharedPreferences("setupSettings", Context.MODE_PRIVATE);
     }
 
-//    public String buttonColor() {
-//        return customColorsPrefs.getString("buttonColor", "#4A4A4C");
-//    }
+    public String color80() {
+        return customColorsPrefs.getString("color80", "#cc270c");
+    }
+    public String color50() {
+        return customColorsPrefs.getString("color50", "#801908");
+    }
+    public String color20() {
+        return customColorsPrefs.getString("color20", "#330a03");
+    }
+    public String color100() {return customColorsPrefs.getString("color100", "#FF0000");}
+    public Boolean dynamicThemeBool() {return customColorsPrefs.getBoolean("dynamicThemeBool", false);}
+
 //
 //    public String nameColor() {
 //        return customColorsPrefs.getString("nameColor", "#FFFFFF");
@@ -74,13 +84,5 @@ public class MyPreferences {
     public boolean isSetupCompleted() {
         return setupPrefs.getBoolean("isSetupCompleted", false);
     }
-
-//    public int splashDuration() {
-//        return nhlPrefs.getInt("splashDuration", 800);
-//    }
-
-//    public boolean animateButtons() {
-//        return nhlPrefs.getBoolean("animateButtons", true);
-//    }
 
 }

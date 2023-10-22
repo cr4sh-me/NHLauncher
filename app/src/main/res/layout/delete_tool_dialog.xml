@@ -1,8 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/material_dynamic_secondary20"
+    >
 
     <TextView
         android:id="@+id/dialog_title"
@@ -37,18 +40,24 @@
 
 
         <Button
+            android:backgroundTint="@color/material_dynamic_secondary30"
+            android:textColor="@color/material_dynamic_secondary80"
             android:id="@+id/cancel_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/close" />
+            android:text="@string/close"
+            tools:ignore="ButtonStyle" />
 
         <Button
+            android:backgroundTint="@color/material_dynamic_secondary30"
+            android:textColor="@color/material_dynamic_secondary80"
             android:id="@+id/delete_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/delete" />
+            android:text="@string/delete"
+            tools:ignore="ButtonStyle" />
 
     </LinearLayout>
 

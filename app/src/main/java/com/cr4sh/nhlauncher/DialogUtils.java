@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.fragment.app.FragmentManager;
 
 import com.cr4sh.nhlauncher.dialogs.AppsDialog;
+import com.cr4sh.nhlauncher.dialogs.ButtonMenuDialog;
+import com.cr4sh.nhlauncher.dialogs.CustomThemeDialog;
 import com.cr4sh.nhlauncher.dialogs.DeleteToolDialog;
 import com.cr4sh.nhlauncher.dialogs.EditableDialog;
 import com.cr4sh.nhlauncher.dialogs.FirstSetupDialog;
@@ -13,10 +15,18 @@ import com.cr4sh.nhlauncher.dialogs.NewToolDialog;
 import com.cr4sh.nhlauncher.dialogs.PermissionDialog;
 import com.cr4sh.nhlauncher.dialogs.SettingsDialog;
 import com.cr4sh.nhlauncher.dialogs.StatisticsDialog;
+import com.cr4sh.nhlauncher.dialogs.ToolbarDialog;
 
 // This class creates and opens Dialogs
 public class DialogUtils {
+
     private final FragmentManager fragmentManager;
+
+    MainActivity myActivity;
+    public DialogUtils(FragmentManager fragmentManager, MainActivity activity) {
+        this.fragmentManager = fragmentManager;
+        this.myActivity = activity;
+    }
 
     public DialogUtils(FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
@@ -108,4 +118,31 @@ public class DialogUtils {
         }).start();
     }
 
+    public void openButtonMenuDialog(MainActivity myActivity) {
+        new Thread(() -> {
+            ButtonMenuDialog bmDialog = new ButtonMenuDialog(myActivity);
+            // ARGS!
+//            Bundle args = new Bundle();
+//            args.putString("category", category);
+//            bmDialog.setArguments(args);
+            // Display our dialog!
+            bmDialog.show(fragmentManager, "ButtonMenuDialog");
+        }).start();
+    }
+
+    public void openCustomThemesDialog() {
+        new Thread(() -> {
+            CustomThemeDialog ctDialog = new CustomThemeDialog();
+            // Display our dialog!
+            ctDialog.show(fragmentManager, "CustomThemeDialog");
+        }).start();
+    }
+
+    public void openToolbarDialog(MainActivity myActivity) {
+        new Thread(() -> {
+            ToolbarDialog tbDialog = new ToolbarDialog(myActivity);
+            // Display our dialog!
+            tbDialog.show(fragmentManager, "ToolbarDialog");
+        }).start();
+    }
 }

@@ -1,27 +1,43 @@
 package com.cr4sh.nhlauncher;
 
+import static androidx.core.view.ViewCompat.setBackground;
+
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,11 +45,18 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.ThemeUtils;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.search.SearchBar;
+
+import java.lang.reflect.Field;
+import java.net.CookieHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -53,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private MyPreferences myPreferences;
     private RecyclerView recyclerView;
 
-    @SuppressLint("Recycle")
+    @SuppressLint({"Recycle", "ResourceType"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,11 +107,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //            return;
 //        }
 
+        myPreferences = new MyPreferences(this);
+
+        // Check for dynamic colors
+
         setContentView(R.layout.activity_main);
 
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.roll);
         View rootView = findViewById(android.R.id.content);
         rootView.startAnimation(anim);
+
+        // Apply custom colors
+
+        rootView.setBackgroundColor(Color.parseColor(myPreferences.color20()));
+        Window window = this.getWindow();
+        window.setStatusBarColor(Color.parseColor(myPreferences.color20()));
+        window.setNavigationBarColor(Color.parseColor(myPreferences.color20()));
 
         // Get the dialog and set it to not be cancelable
         setFinishOnTouchOutside(false);
@@ -96,9 +130,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Get classes
         DBHandler mDbHandler = DBHandler.getInstance(this);
         mDatabase = mDbHandler.getDatabase();
-        myPreferences = new MyPreferences(this);
         PermissionUtils permissionUtils = new PermissionUtils(this);
-
 
         // Check if setup has been completed
         if (!myPreferences.isSetupCompleted()) {
@@ -146,10 +178,105 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Set category, so code below can run
         spinner.setSelection(isFavourite == 0 ? 1 : 0);
         // Add onclick listener for toolbar
-        Toolbar toolbar = findViewById(R.id.toolBar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = findViewById(R.id.toolBar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        ImageView toolbar = findViewById(R.id.toolBar);
+
+        toolbar.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+
 
         SearchView searchView = findViewById(R.id.searchView);
+
+        // Get the search icon field using reflection
+        try {
+            Field searchField = SearchView.class.getDeclaredField("mSearchButton");
+            searchField.setAccessible(true);
+            ImageView searchButton = (ImageView) searchField.get(searchView);
+            // Set your custom search icon here
+            assert searchButton != null;
+            searchButton.setColorFilter(Color.parseColor(myPreferences.color80()));
+
+            GradientDrawable drawableSearchView = new GradientDrawable();
+            drawableSearchView.setCornerRadius(100);
+            drawableSearchView.setStroke(8, Color.parseColor(myPreferences.color50()));
+
+            searchButton.setBackground(drawableSearchView);
+            searchButton.setImageResource(R.drawable.nhl_searchview);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+//
+//        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView icon = findViewById(com.google.android.material.R.id.search_button);
+//        Drawable whiteIcon = icon.getDrawable();
+//        whiteIcon.setTint(Color.parseColor(myPreferences.color80())); //Whatever color you want it to be
+//        GradientDrawable drawableSearchView = new GradientDrawable();
+//        drawable3.setColor(Color.parseColor(myPreferences.color50()));
+//        drawableSearchView.setCornerRadius(100);
+//        drawableSearchView.setStroke(8, Color.parseColor(myPreferences.color50()));
+//        icon.setImageDrawable(whiteIcon);
+//        icon.setBackground(drawableSearchView);
+//        icon.setBackground(hollowCircleDrawable);
+
+
+//        icon.setImageDrawable(drawable3);
+
+        @SuppressLint("UseCompatLoadingForDrawables") Drawable settingsIcon = getDrawable(R.drawable.nhl_settings);
+        assert settingsIcon != null;
+        settingsIcon.setTint(Color.parseColor(myPreferences.color80()));
+        toolbar.setImageDrawable(settingsIcon);
+
+        GradientDrawable drawableToolbar = new GradientDrawable();
+//        drawable3.setColor(Color.parseColor(myPreferences.color50()));
+        drawableToolbar.setCornerRadius(100);
+        drawableToolbar.setStroke(8, Color.parseColor(myPreferences.color50()));
+        toolbar.setBackground(drawableToolbar);
+
+
+
+
+
+        ImageView closeButton = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
+        closeButton.setColorFilter(Color.parseColor(myPreferences.color80()));
+
+        // Limit text input to 25 characters
+        InputFilter[] filters = new InputFilter[]{new InputFilter.LengthFilter(25)};
+        EditText searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        searchEditText.setFilters(filters);
+        searchEditText.setTextColor(Color.parseColor(myPreferences.color80()));
+        searchEditText.setHintTextColor(Color.parseColor(myPreferences.color80()));
+
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(Color.parseColor(myPreferences.color50()));
+        drawable.setCornerRadius(30);
+        searchEditText.setBackground(drawable);
+        searchEditText.setHint(getResources().getString(R.string.search_hint));
+
+//        int underlineColor = Color.parseColor("#YOUR_UNDERLINE_COLOR");
+        View searchPlate = searchView.findViewById(androidx.appcompat.R.id.search_plate);
+        searchPlate.setBackgroundColor(Color.TRANSPARENT);
+
+        Animation fadeOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out);
+        Animation fadeIn = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll);
+        Animation fdin = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_in);
+        Animation fadeInRecycler = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_in_recycler);
+
+
+
+// Customize the magnifier icon color
+//        ImageView searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_mag_icon);
+//        searchIcon.setBackgroundResource(R.drawable.searchview_underline);
+
+        try {
+            Field mDrawable = SearchView.class.getDeclaredField("mSearchHintIcon");
+            mDrawable.setAccessible(true);
+            Drawable drawable1 =  (Drawable)mDrawable.get(searchView);
+            assert drawable1 != null;
+            drawable1.setAlpha(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -161,12 +288,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public boolean onQueryTextChange(String newText) {
 //                itemList.clear();
-
-                // Limit text input to 25 characters
-                InputFilter[] filters = new InputFilter[]{new InputFilter.LengthFilter(25)};
-                EditText searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
-                searchEditText.setFilters(filters);
-
                 mainUtils.deleteButtons();
 
                 TextView noToolsText = findViewById(R.id.messagebox);
@@ -185,7 +306,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 Animation myAnimation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_in);
                 if (newText.length() > 0) {
-
                     recyclerView.setVisibility(View.VISIBLE);
 
 //                            menuItem.setEnabled(false);
@@ -193,6 +313,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                     cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, orderBy, "15");
 
+                    noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
                     noToolsText.startAnimation(myAnimation);
                     // Run OnUiThread to edit layout!
                     if (cursor.getCount() == 0) {
@@ -233,16 +354,59 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        searchView.setOnCloseListener(() -> {
-            if (!searchView.getQuery().toString().isEmpty()) {
+//        searchView.setOnCloseListener(() -> {
+//
+////            Animation slideAnimationOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out);
+////            searchPlate.startAnimation(slideAnimationOut);
+//
+//            spinner.setEnabled(true);
+//            toolbar.setEnabled(true);
+//            spinner.setVisibility(View.VISIBLE);
+//            toolbar.setVisibility(View.VISIBLE);
+//            mainUtils.restartSpinner();
+//            return false;
+//        });
+
+//        searchView.setOnCloseListener(() -> {
+//            spinner.setEnabled(true);
+//            toolbar.setEnabled(true);
+//            spinner.setVisibility(View.VISIBLE);
+//            toolbar.setVisibility(View.VISIBLE);
+//            mainUtils.restartSpinner();
+//            return false;
+//        });
+
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                // Apply fade-out animation to the searchPlate and set visibility to GONE after animation
+                View searchPlate = searchView.findViewById(androidx.appcompat.R.id.search_edit_frame);
+                searchPlate.startAnimation(fadeOut);
+                fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        mainUtils.restartSpinner();
+                        spinner.setEnabled(true);
+                        toolbar.setEnabled(true);
+//                        icon.startAnimation(fdin);
+                        spinner.startAnimation(fadeInRecycler);
+                        toolbar.startAnimation(fdin);
+                        spinner.setVisibility(View.VISIBLE);
+                        toolbar.setVisibility(View.VISIBLE);
+                        recyclerView.startAnimation(fadeInRecycler);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+                });
                 return false;
             }
-            spinner.setEnabled(true);
-            toolbar.setEnabled(true);
-            spinner.setVisibility(View.VISIBLE);
-            toolbar.setVisibility(View.VISIBLE);
-            mainUtils.restartSpinner();
-            return false;
         });
 
         searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
@@ -252,6 +416,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 toolbar.setEnabled(false);
                 spinner.setVisibility(View.GONE);
                 toolbar.setVisibility(View.GONE);
+//                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+//                searchView.setLayoutParams(layoutParams);
+                searchPlate.startAnimation(fadeIn);
+            }
+        });
+
+
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogUtils.openToolbarDialog(MainActivity.this);
             }
         });
 
@@ -284,10 +459,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreateContextMenu(menu, v, menuInfo);
         // Set the color of the menu title
         SpannableString s = new SpannableString(getResources().getString(R.string.choose_option));
-//        s.setSpan(new ForegroundColorSpan(Color.parseColor(myPreferences.nameColor())), 0, s.length(), 0);
         Objects.requireNonNull(menu.setHeaderTitle(s));
         getMenuInflater().inflate(R.menu.options_menu, menu);
     }
+
 
     // Catches selections for menu above
     @SuppressLint("NonConstantResourceId")
@@ -322,31 +497,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
+
     // Catches options for toolbar menu above
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_1:
-                dialogUtils.openSettingsDialog();
-                return true;
-            case R.id.menu_item_2:
-                Toast.makeText(this, "OOPS!", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.menu_item_3:
-                dialogUtils.openStatisticsDialog();
-                return true;
-            case R.id.menu_item_4:
-                // Just open link in browser
-                String url = "https://github.com/cr4sh-me/NHLauncher";
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(url));
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//    @SuppressLint("NonConstantResourceId")
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.menu_item_1:
+//                dialogUtils.openSettingsDialog();
+//                return true;
+//            case R.id.menu_item_2:
+//                dialogUtils.openCustomThemesDialog();
+//                return true;
+//            case R.id.menu_item_3:
+//                dialogUtils.openStatisticsDialog();
+//                return true;
+//            case R.id.menu_item_4:
+//                // Just open link in browser
+//                String url = "https://github.com/cr4sh-me/NHLauncher";
+//                Intent intent = new Intent(Intent.ACTION_VIEW);
+//                intent.setData(Uri.parse(url));
+//                startActivity(intent);
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 
 }
 

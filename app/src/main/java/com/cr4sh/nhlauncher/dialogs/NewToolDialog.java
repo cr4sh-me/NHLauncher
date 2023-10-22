@@ -1,13 +1,10 @@
 package com.cr4sh.nhlauncher.dialogs;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,17 +39,6 @@ public class NewToolDialog extends AppCompatDialogFragment {
         EditText myCmd = view.findViewById(R.id.textview3);
         Button cancelButton = view.findViewById(R.id.cancel_button);
         Button saveButton = view.findViewById(R.id.save_button);
-
-        String frameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("frameColor", "frame6");
-        String nameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("nameColor", "#FFFFFF");
-        @SuppressLint("DiscouragedApi") int frame = requireActivity().getResources().getIdentifier(frameColor, "drawable", requireActivity().getPackageName());
-
-        view.setBackgroundResource(frame);
-        myName.setTextColor(Color.parseColor(nameColor));
-        myDescription.setTextColor(Color.parseColor(nameColor));
-        myCmd.setTextColor(Color.parseColor(nameColor));
-        cancelButton.setTextColor(Color.parseColor(nameColor));
-        saveButton.setTextColor(Color.parseColor(nameColor));
 
         saveButton.setOnClickListener(view12 -> {
             // Idiot protection...

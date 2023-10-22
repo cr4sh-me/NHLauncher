@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<style name="Base.NHL.Light" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.NHL.Light" parent="Theme.Material3.DayNight.NoActionBar">
     <item name="android:statusBarColor">@android:color/transparent</item>
     <item name="android:navigationBarColor">@android:color/transparent</item>
-    <item name="android:colorBackground">@color/material_dynamic_primary80</item>
-</style>
-
-<style name="Base.NHL.Dark" parent="Theme.Material3.DayNight.NoActionBar">
-    <item name="android:statusBarColor">@android:color/transparent</item>
-    <item name="android:navigationBarColor">@android:color/transparent</item>
-    <item name="android:colorBackground">@color/material_dynamic_primary80</item>
-</style>
+    </style>
 
 <style name="Theme.NHL.Light" parent="Base.NHL.Light"/>
-<style name="Theme.NHL.Dark" parent="Base.NHL.Dark"/>
 
 <style name="Theme.NHL" parent="Theme.NHL.Light"/>
+
 </resources>
+

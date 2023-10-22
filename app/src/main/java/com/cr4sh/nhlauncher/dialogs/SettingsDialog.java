@@ -1,10 +1,8 @@
 package com.cr4sh.nhlauncher.dialogs;
 
-import static android.content.Context.MODE_PRIVATE;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Looper;
@@ -14,35 +12,37 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import androidx.core.widget.CompoundButtonCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.cr4sh.nhlauncher.DBBackup;
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MainUtils;
+import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
 
 public class SettingsDialog extends DialogFragment {
     private String selectedSorting;
     private String selectedLanguage;
-
     private MainUtils mainUtils;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.settings_dialog, container, false);
 
         mainUtils = new MainUtils((MainActivity) requireActivity());
+        MyPreferences myPreferences = new MyPreferences(requireActivity());
 
         final String[] SORTING_OPTIONS = {requireActivity().getResources().getString(R.string.sorting), requireActivity().getResources().getString(R.string.default_sorting), requireActivity().getResources().getString(R.string.by_usage), "A-Z", "Z-A", "0-9 A-Z", "9-0 Z-A"};
         final String[] LANGUAGE_OPTIONS = {requireActivity().getResources().getString(R.string.choose_lanuage), "English", "Polish"};
 
-        String frameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("frameColor", "frame6");
-        String nameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("nameColor", "#FFFFFF");
-        @SuppressLint("DiscouragedApi") int frame = requireActivity().getResources().getIdentifier(frameColor, "drawable", requireActivity().getPackageName());
 
+        TextView title = view.findViewById(R.id.dialog_title);
+        LinearLayout bkg = view.findViewById(R.id.custom_theme_dialog_background);
         Spinner sortingSpinner = view.findViewById(R.id.sorting_spinner);
         Spinner languageSpinner = view.findViewById(R.id.language_spinner);
         Button cancelButton = view.findViewById(R.id.cancel_button);
@@ -50,17 +50,25 @@ public class SettingsDialog extends DialogFragment {
         Button backupDb = view.findViewById(R.id.db_backup);
         Button restoreDb = view.findViewById(R.id.db_restore);
 
-        view.setBackgroundResource(frame);
-        runSetup.setTextColor(Color.parseColor(nameColor));
-        backupDb.setTextColor(Color.parseColor(nameColor));
-        restoreDb.setTextColor(Color.parseColor(nameColor));
-        cancelButton.setTextColor(Color.parseColor(nameColor));
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(),
                 android.R.layout.simple_spinner_dropdown_item, SORTING_OPTIONS);
 
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(),
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(requireActivity(),
                 android.R.layout.simple_spinner_dropdown_item, LANGUAGE_OPTIONS);
+
+        // Apply custom themes
+        bkg.setBackgroundColor(Color.parseColor(myPreferences.color20()));
+        title.setTextColor(Color.parseColor(myPreferences.color80()));
+
+        runSetup.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+        runSetup.setTextColor(Color.parseColor(myPreferences.color80()));
+        backupDb.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+        backupDb.setTextColor(Color.parseColor(myPreferences.color80()));
+        restoreDb.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+        restoreDb.setTextColor(Color.parseColor(myPreferences.color80()));
+
+        cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
+        cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
 
         sortingSpinner.setAdapter(adapter);
         sortingSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

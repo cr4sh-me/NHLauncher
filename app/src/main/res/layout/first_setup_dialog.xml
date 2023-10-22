@@ -2,7 +2,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/material_dynamic_secondary20">
 
     <TextView
         android:id="@+id/dialog_title"
@@ -28,6 +29,8 @@
         android:orientation="horizontal">
 
         <Button
+            android:backgroundTint="@color/material_dynamic_secondary30"
+            android:textColor="@color/material_dynamic_secondary80"
             android:id="@+id/cancel_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -35,6 +38,8 @@
             android:text="@string/cancel" />
 
         <Button
+            android:backgroundTint="@color/material_dynamic_secondary30"
+            android:textColor="@color/material_dynamic_secondary80"
             android:id="@+id/setup_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

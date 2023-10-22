@@ -3,26 +3,17 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:id="@+id/custom_theme_dialog_background">
+    android:id="@+id/custom_theme_dialog_background"
+    >
 
     <TextView
         android:id="@+id/dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/settings_manager"
+        android:text="@string/loading"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold" />
-
-    <Spinner
-        android:id="@+id/sorting_spinner"
-        android:layout_width="280dp"
-        android:layout_height="55dp" />
-
-    <Spinner
-        android:id="@+id/language_spinner"
-        android:layout_width="280dp"
-        android:layout_height="55dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,22 +22,28 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/run_setup"
+            android:id="@+id/option1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/run_setup" />
+            android:text="@string/edit_this_command" />
 
         <Button
-            android:id="@+id/db_backup"
+            android:id="@+id/option2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/backup_custom_tools" />
+            android:text="@string/favourite_add_delete" />
 
         <Button
-            android:id="@+id/db_restore"
+            android:id="@+id/option3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/restore_custom_tools" />
+            android:text="@string/add_new_button" />
+
+        <Button
+            android:id="@+id/option4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/delete_button" />
 
         <Button
             android:id="@+id/cancel_button"

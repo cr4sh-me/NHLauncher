@@ -1,12 +1,9 @@
 package com.cr4sh.nhlauncher.dialogs;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.annotation.SuppressLint;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,15 +42,6 @@ public class EditableDialog extends AppCompatDialogFragment {
         Button saveButton = view.findViewById(R.id.save_button);
 
         currentCommand.setText(requireActivity().getResources().getString(R.string.current_cmd) + cmd);
-
-        String frameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("frameColor", "frame6");
-        String nameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("nameColor", "#FFFFFF");
-        @SuppressLint("DiscouragedApi") int frame = requireActivity().getResources().getIdentifier(frameColor, "drawable", requireActivity().getPackageName());
-
-        view.setBackgroundResource(frame);
-        newCmd.setTextColor(Color.parseColor(nameColor));
-        cancelButton.setTextColor(Color.parseColor(nameColor));
-        saveButton.setTextColor(Color.parseColor(nameColor));
 
         saveButton.setOnClickListener(view12 -> {
             // Idiot protection...

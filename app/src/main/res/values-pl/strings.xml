@@ -104,4 +104,13 @@
     <string name="animate_buttons">Animacje przycisków</string>
     <string name="enable_splash_screen">Włącz splash screen</string>
     <string name="missing_activity_error">Zła wersja NetHunter terminal jest zainstalowana! Przeczytaj dokumentację na githubie…</string>
+    <string name="button_menu">Wybierz opcję</string>
+    <string name="options">opcje</string>
+    <string name="enable_dynamic_themes">Włącz dynamiczne kolory (Android 12+)</string>
+    <string name="hex_color">Wartość koloru hex</string>
+    <string name="color_info">Możesz tu wyłączyć kolory dynamiczne (A12+), i używać własnych kolorów material!</string>
+    <string name="apply_colors">Zapisz ustawienia</string>
+    <string name="search_tool_name">Wyszukaj nazwę narzędzia</string>
+    <string name="tools">Menu narzędzi</string>
+    <string name="search_hint">Wyszukaj narzędzia</string>
 </resources>

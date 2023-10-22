@@ -1,13 +1,10 @@
 package com.cr4sh.nhlauncher.dialogs;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,14 +41,6 @@ public class DeleteToolDialog extends AppCompatDialogFragment {
         Button deleteButton = view.findViewById(R.id.delete_button);
 
         text1.setText(requireActivity().getResources().getString(R.string.deleting) + name);
-
-        String frameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("frameColor", "frame6");
-        String nameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("nameColor", "#FFFFFF");
-        @SuppressLint("DiscouragedApi") int frame = requireActivity().getResources().getIdentifier(frameColor, "drawable", requireActivity().getPackageName());
-
-        view.setBackgroundResource(frame);
-        cancelButton.setTextColor(Color.parseColor(nameColor));
-        deleteButton.setTextColor(Color.parseColor(nameColor));
 
         deleteButton.setOnClickListener(view12 -> {
             // Some idiot protection

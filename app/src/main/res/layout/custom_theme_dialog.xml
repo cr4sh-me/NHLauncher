@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:id="@+id/custom_theme_dialog_background">
 
     <TextView
         android:id="@+id/dialog_title"
@@ -14,44 +15,93 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <Spinner
-        android:id="@+id/theme_spinner"
+    <TextView
+        android:id="@+id/text_second"
         android:layout_width="280dp"
         android:layout_height="55dp"
-        tools:ignore="DuplicateSpeakableTextCheck" />
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/color_info" />
 
-    <Spinner
-        android:id="@+id/font_spinner"
+    <CheckBox
+        android:id="@+id/dynamic_themes_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:text="@string/enable_dynamic_themes" />
+
+    <com.skydoves.colorpickerview.ColorPickerView
+        android:id="@+id/colorPickerView"
+        android:layout_width="300dp"
+        android:layout_height="300dp" />
+
+    <com.skydoves.colorpickerview.sliders.BrightnessSlideBar
+        android:layout_margin="10dp"
+        android:id="@+id/brightnessSlideBar"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+        <com.skydoves.colorpickerview.AlphaTileView
+            android:layout_margin="10dp"
+            android:id="@+id/alphaTileView1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+
+        <com.skydoves.colorpickerview.AlphaTileView
+            android:layout_margin="10dp"
+            android:layout_toEndOf="@id/alphaTileView1"
+            android:id="@+id/alphaTileView2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+        <com.skydoves.colorpickerview.AlphaTileView
+            android:layout_margin="10dp"
+            android:layout_toEndOf="@id/alphaTileView2"
+            android:id="@+id/alphaTileView3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+        <com.skydoves.colorpickerview.AlphaTileView
+            android:layout_margin="10dp"
+            android:layout_toEndOf="@id/alphaTileView3"
+            android:id="@+id/alphaTileView4"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+    </RelativeLayout>
+
+
+    <EditText
+        android:id="@+id/customHexColor"
         android:layout_width="280dp"
-        android:layout_height="55dp" />
-
-    <CheckBox
-        android:id="@+id/animate_buttons_chck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:text="@string/animate_buttons" />
-
-    <CheckBox
-        android:id="@+id/splash_screen_chck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:text="@string/enable_splash_screen" />
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:hint="@string/hex_color"
+        android:maxLength="25" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <Button
-            android:id="@+id/cancel_button"
-            android:layout_width="0dp"
+            android:backgroundTint="@color/material_dynamic_secondary30"
+            android:textColor="@color/material_dynamic_secondary80"
+            android:id="@+id/apply_custom_colors"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/close"
-            tools:ignore="VisualLintButtonSize" />
+            android:text="@string/apply_colors" />
+
+        <Button
+            android:backgroundTint="@color/material_dynamic_secondary30"
+            android:textColor="@color/material_dynamic_secondary80"
+            android:id="@+id/cancel_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/close" />
 
     </LinearLayout>
 

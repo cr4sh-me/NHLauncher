@@ -1,8 +1,11 @@
 package com.cr4sh.nhlauncher;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -40,11 +43,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
         MainUtils mainUtils = new MainUtils(myActivity);
         MyPreferences myPreferences = new MyPreferences(myActivity);
-
-//        if (myPreferences.animateButtons()) {
-//            Animation fadeInAnimation = AnimationUtils.loadAnimation(myActivity, R.anim.panning);
-//            holder.itemView.startAnimation(fadeInAnimation);
-//        }
+        DialogUtils dialogUtils = new DialogUtils(myActivity.getSupportFragmentManager());
 
         Item item = getItem(position);
 
@@ -52,16 +51,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         holder.descriptionView.setText(item.getDescription().toUpperCase());
 
         @SuppressLint("DiscouragedApi") int imageResourceId = myActivity.getResources().getIdentifier(item.getImage(), "drawable", myActivity.getPackageName());
+
+//        holder.imageView.setColorFilter(Color.parseColor(myPreferences.color80()), PorterDuff.Mode.MULTIPLY);
+//        holder.imageView.setColorFilter(Color.parseColor(myPreferences.color80()), PorterDuff.Mode.);
+
         holder.imageView.setImageResource(imageResourceId);
 
-//        holder.nameView.setTextColor(Color.parseColor(myPreferences.nameColor()));
-//        holder.descriptionView.setTextColor(Color.parseColor(myPreferences.descriptionColor()));
-
+        holder.nameView.setTextColor(Color.parseColor(myPreferences.color80()));
+        holder.descriptionView.setTextColor(Color.parseColor(myPreferences.color80()));
+//
         GradientDrawable drawable = new GradientDrawable();
 //        drawable.setColor(Color.parseColor(myPreferences.buttonColor()));
-//        drawable.setCornerRadius(5);
-//        drawable.setStroke(20);
-//        holder.itemView.setBackground(drawable);
+        drawable.setCornerRadius(60);
+        drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
+        holder.itemView.setBackground(drawable);
 //        holder.nameView.setTypeface(myPreferences.typeface());
 //        holder.descriptionView.setTypeface(myPreferences.typeface());
 
@@ -76,7 +79,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
             myActivity.buttonName = item.getName();
             myActivity.buttonDescription = item.getDescription();
             myActivity.buttonCmd = item.getCmd();
-            myActivity.registerForContextMenu(view);
+            dialogUtils.openButtonMenuDialog(myActivity);
             return false;
         });
     }

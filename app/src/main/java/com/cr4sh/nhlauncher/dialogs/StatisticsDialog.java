@@ -1,7 +1,5 @@
 package com.cr4sh.nhlauncher.dialogs;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -44,21 +42,26 @@ public class StatisticsDialog extends DialogFragment {
 //        MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
         MyPreferences myPreferences = new MyPreferences(requireActivity());
 
-        String frameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("frameColor", "frame6");
-        String nameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("nameColor", "#FFFFFF");
-        String descColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("descriptionColor", "#FFFFFF");
-        @SuppressLint("DiscouragedApi") int frame = requireActivity().getResources().getIdentifier(frameColor, "drawable", requireActivity().getPackageName());
 
+        TextView title = view.findViewById(R.id.dialog_title);
+        LinearLayout bkg = view.findViewById(R.id.custom_theme_dialog_background);
         Spinner statsSpinner = view.findViewById(R.id.stats_spinner);
         Button cancelButton = view.findViewById(R.id.cancel_button);
         LinearLayout layout = view.findViewById(R.id.stats_layout);
 
-        view.setBackgroundResource(frame);
-        cancelButton.setTextColor(Color.parseColor(nameColor));
-
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 requireActivity(), R.array.categories, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+        // Apply custom themes
+        bkg.setBackgroundColor(Color.parseColor(myPreferences.color20()));
+        title.setTextColor(Color.parseColor(myPreferences.color80()));
+
+        cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
+        cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
+
+
         statsSpinner.setAdapter(adapter);
 
         statsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -97,7 +100,6 @@ public class StatisticsDialog extends DialogFragment {
                             // If there are no tools, display a "NO TOOLS" message in the center of the layout
                             TextView noToolsTextView = new TextView(requireActivity());
                             noToolsTextView.setText(getResources().getString(R.string.no_tools_stat));
-                            noToolsTextView.setTextColor(Color.parseColor(nameColor));
                             noToolsTextView.setGravity(Gravity.CENTER);
                             noToolsTextView.setTextSize(16);
                             noToolsTextView.setTypeface(null, Typeface.BOLD);
@@ -128,7 +130,6 @@ public class StatisticsDialog extends DialogFragment {
                                 // Create a new TextView element for the tool name
                                 TextView nameTextView = new TextView(requireActivity());
                                 nameTextView.setText(toolName.toUpperCase());
-                                nameTextView.setTextColor(Color.parseColor(nameColor));
                                 nameTextView.setTextSize(16);
                                 nameTextView.setTypeface(null, Typeface.BOLD);
                                 nameTextView.setGravity(Gravity.CENTER);
@@ -138,7 +139,6 @@ public class StatisticsDialog extends DialogFragment {
 
                                 // Create a new TextView element for the tool usage count
                                 TextView countTextView = new TextView(requireActivity());
-                                countTextView.setTextColor(Color.parseColor(descColor));
                                 countTextView.setTextSize(16);
                                 countTextView.setTypeface(null, Typeface.BOLD);
                                 countTextView.setText(String.format(getResources().getString(R.string.usage) + "%d", toolUsage));

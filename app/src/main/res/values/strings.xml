@@ -104,5 +104,14 @@
     <string name="animate_buttons">Buttons animations</string>
     <string name="enable_splash_screen">Enable splash screen</string>
     <string name="missing_activity_error">Wrong NetHunter terminal version found! Please read documentation on github…</string>
+    <string name="button_menu">Choose option</string>
+    <string name="options">options</string>
+    <string name="enable_dynamic_themes">Enable dynamic colors (Android 12+)</string>
+    <string name="hex_color">Hex color value</string>
+    <string name="color_info">You can disable dynamic theme (A12+), and use custom material color here!</string>
+    <string name="apply_colors">Apply settings</string>
+    <string name="search_tool_name">Search tool name</string>
+    <string name="tools">Tools menu</string>
+    <string name="search_hint">Search for tools</string>
 
 </resources>

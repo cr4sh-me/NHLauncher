@@ -4,7 +4,12 @@
 
 <resources>
     <color name="transparent">#00000000</color>
-    <color name="material_dynamic_secondary80">#00ff00</color>
-    <color name="material_dynamic_primary60">#3ff3ff</color>
-    <color name="material_dynamic_primary80">#ff3333</color>
+<!--    <color name="material_dynamic_secondary80">#FF473A</color>-->
+<!--    <color name="material_dynamic_secondary20">#431919</color>-->
+<!--    <color name="material_dynamic_secondary30">#9A0C01</color>-->
+    <color name="material_dynamic_secondary80">#2196F3</color>
+    <color name="material_dynamic_secondary20">#32404A</color>
+    <color name="material_dynamic_secondary30">#496265</color>
+    <color name="nhl_dynamic_secondary80">#FDE300</color>
+    <color name="nhl_red">#FF0000</color>
 </resources>

@@ -4,7 +4,7 @@
     <!-- Translate (Slide) animation -->
     <translate
         android:duration="200"
-        android:fromYDelta="-100%"
+        android:fromYDelta="50%"
         android:toYDelta="0%" />
 
     <!-- Alpha animation -->
