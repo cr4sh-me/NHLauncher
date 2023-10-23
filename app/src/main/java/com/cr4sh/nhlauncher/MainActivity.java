@@ -1,43 +1,26 @@
 package com.cr4sh.nhlauncher;
 
-import static androidx.core.view.ViewCompat.setBackground;
-
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,18 +28,11 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.ThemeUtils;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.search.SearchBar;
-
 import java.lang.reflect.Field;
-import java.net.CookieHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -111,6 +87,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Check for dynamic colors
 
+//        if(myPreferences.dynamicThemeBool()){
+//            Toast.makeText(this, "THEMED", Toast.LENGTH_SHORT).show();
+//            setTheme(R.style.Themed_NHL);
+//        }
+
+
         setContentView(R.layout.activity_main);
 
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.roll);
@@ -123,8 +105,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Window window = this.getWindow();
         window.setStatusBarColor(Color.parseColor(myPreferences.color20()));
         window.setNavigationBarColor(Color.parseColor(myPreferences.color20()));
-
-        // Get the dialog and set it to not be cancelable
+//         Get the dialog and set it to not be cancelable
         setFinishOnTouchOutside(false);
 
         // Get classes
@@ -382,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public boolean onClose() {
                 // Apply fade-out animation to the searchPlate and set visibility to GONE after animation
                 View searchPlate = searchView.findViewById(androidx.appcompat.R.id.search_edit_frame);
-                searchPlate.startAnimation(fadeOut);
+                searchView.startAnimation(fadeOut);
                 fadeOut.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
@@ -394,7 +375,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         toolbar.startAnimation(fdin);
                         spinner.setVisibility(View.VISIBLE);
                         toolbar.setVisibility(View.VISIBLE);
-
                         recyclerView.startAnimation(fadeInRecycler);
                     }
 

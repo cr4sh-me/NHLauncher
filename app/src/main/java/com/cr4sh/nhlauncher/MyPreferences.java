@@ -3,13 +3,15 @@ package com.cr4sh.nhlauncher;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.core.content.ContextCompat;
+
 import java.util.Locale;
 
 // This class read, store and return SharedPreferences
 public class MyPreferences {
     private final SharedPreferences nhlPrefs;
     private final SharedPreferences setupPrefs;
-    private SharedPreferences customColorsPrefs;
+    private final SharedPreferences customColorsPrefs;
     private final Context context;
 
     public MyPreferences(Context context) {
@@ -20,13 +22,33 @@ public class MyPreferences {
     }
 
     public String color80() {
-        return customColorsPrefs.getString("color80", "#e60000");
+
+        if(dynamicThemeBool()){
+            int myColor = ContextCompat.getColor(context, com.google.android.material.R.color.material_dynamic_secondary80);
+            // Convert the integer color to hexadecimal
+            return String.format("#%06X", (0xFFFFFF & myColor));
+        } else {
+            return customColorsPrefs.getString("color80", "#e60000");
+        }
     }
     public String color50() {
-        return customColorsPrefs.getString("color50", "#660000");
+        if(dynamicThemeBool()){
+            int myColor = ContextCompat.getColor(context, com.google.android.material.R.color.material_dynamic_secondary50);
+            // Convert the integer color to hexadecimal
+            return String.format("#%06X", (0xFFFFFF & myColor));
+        } else {
+            return customColorsPrefs.getString("color50", "#660000");
+        }
     }
     public String color20() {
-        return customColorsPrefs.getString("color20", "#4c0000");
+
+        if(dynamicThemeBool()){
+            int myColor = ContextCompat.getColor(context, com.google.android.material.R.color.material_dynamic_secondary20);
+            // Convert the integer color to hexadecimal
+            return String.format("#%06X", (0xFFFFFF & myColor));
+        } else {
+            return customColorsPrefs.getString("color20", "#4c0000");
+        }
     }
     public String color100() {return customColorsPrefs.getString("color100", "#FF0000");}
     public Boolean dynamicThemeBool() {return customColorsPrefs.getBoolean("dynamicThemeBool", false);}
