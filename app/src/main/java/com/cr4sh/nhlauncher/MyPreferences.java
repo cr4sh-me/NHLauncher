@@ -20,13 +20,13 @@ public class MyPreferences {
     }
 
     public String color80() {
-        return customColorsPrefs.getString("color80", "#cc270c");
+        return customColorsPrefs.getString("color80", "#e60000");
     }
     public String color50() {
-        return customColorsPrefs.getString("color50", "#801908");
+        return customColorsPrefs.getString("color50", "#660000");
     }
     public String color20() {
-        return customColorsPrefs.getString("color20", "#330a03");
+        return customColorsPrefs.getString("color20", "#4c0000");
     }
     public String color100() {return customColorsPrefs.getString("color100", "#FF0000");}
     public Boolean dynamicThemeBool() {return customColorsPrefs.getBoolean("dynamicThemeBool", false);}

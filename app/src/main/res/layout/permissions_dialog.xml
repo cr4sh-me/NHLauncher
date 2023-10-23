@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@color/material_dynamic_secondary20">
+    android:id="@+id/custom_theme_dialog_background">
 
     <TextView
         android:id="@+id/dialog_title"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:hint="@string/perm_dialog" />
+        android:text="@string/perm_dialog" />
 
 
     <LinearLayout
@@ -30,8 +30,6 @@
         android:orientation="horizontal">
 
         <Button
-            android:backgroundTint="@color/material_dynamic_secondary30"
-            android:textColor="@color/material_dynamic_secondary80"
             android:id="@+id/allow_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

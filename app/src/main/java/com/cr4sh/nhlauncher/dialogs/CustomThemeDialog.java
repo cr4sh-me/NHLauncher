@@ -87,13 +87,6 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
 
         applyColors.setBackgroundColor(Color.parseColor(myPreferences.color50()));
         applyColors.setTextColor(Color.parseColor(myPreferences.color80()));
-//        option1.setTextColor(Color.parseColor(myPreferences.color80()));
-//        option2.setTextColor(Color.parseColor(myPreferences.color80()));
-//        option2.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-//        option3.setTextColor(Color.parseColor(myPreferences.color80()));
-//        option3.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-//        option4.setTextColor(Color.parseColor(myPreferences.color80()));
-//        option4.setBackgroundColor(Color.parseColor(myPreferences.color50()));
 
         cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
         cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));

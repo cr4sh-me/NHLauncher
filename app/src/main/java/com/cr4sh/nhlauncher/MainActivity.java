@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         try {
             Field mDrawable = SearchView.class.getDeclaredField("mSearchHintIcon");
             mDrawable.setAccessible(true);
-            Drawable drawable1 =  (Drawable)mDrawable.get(searchView);
+            Drawable drawable1 = (Drawable) mDrawable.get(searchView);
             assert drawable1 != null;
             drawable1.setAlpha(0);
         } catch (Exception e) {
@@ -386,14 +386,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 fadeOut.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
+
                         mainUtils.restartSpinner();
                         spinner.setEnabled(true);
                         toolbar.setEnabled(true);
-//                        icon.startAnimation(fdin);
                         spinner.startAnimation(fadeInRecycler);
                         toolbar.startAnimation(fdin);
                         spinner.setVisibility(View.VISIBLE);
                         toolbar.setVisibility(View.VISIBLE);
+
                         recyclerView.startAnimation(fadeInRecycler);
                     }
 

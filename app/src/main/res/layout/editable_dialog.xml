@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@color/material_dynamic_secondary20">
+    android:id="@+id/custom_theme_dialog_background">
 
     <TextView
         android:id="@+id/dialog_title"
@@ -20,7 +20,7 @@
         android:layout_height="55dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:hint="@string/loading" />
+        android:text="@string/loading" />
 
 
     <EditText
@@ -41,8 +41,6 @@
 
 
         <Button
-            android:backgroundTint="@color/material_dynamic_secondary30"
-            android:textColor="@color/material_dynamic_secondary80"
             android:id="@+id/cancel_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -50,8 +48,6 @@
             android:text="@string/close" />
 
         <Button
-            android:backgroundTint="@color/material_dynamic_secondary30"
-            android:textColor="@color/material_dynamic_secondary80"
             android:id="@+id/save_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

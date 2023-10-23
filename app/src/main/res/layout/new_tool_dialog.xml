@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@color/material_dynamic_secondary20">
+    android:id="@+id/custom_theme_dialog_background">
 
     <TextView
         android:id="@+id/dialog_title"
