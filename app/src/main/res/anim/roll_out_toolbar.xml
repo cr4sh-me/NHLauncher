@@ -4,12 +4,11 @@
     <!-- Translate (Slide) animation -->
     <translate
         android:duration="200"
-        android:fromXDelta="-50dp"
+        android:fromXDelta="100%"
         android:toXDelta="0%" />
 
-    <!-- Alpha animation -->
     <alpha
-        android:duration="200"
+        android:duration="300"
         android:fromAlpha="0.0"
         android:toAlpha="1.0" />
 

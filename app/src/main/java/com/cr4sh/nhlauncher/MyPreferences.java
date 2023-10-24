@@ -50,38 +50,18 @@ public class MyPreferences {
             return customColorsPrefs.getString("color20", "#4c0000");
         }
     }
-    public String color100() {return customColorsPrefs.getString("color100", "#FF0000");}
+    public String color100() {
+        if(dynamicThemeBool()){
+            int myColor = ContextCompat.getColor(context, com.google.android.material.R.color.material_dynamic_secondary80);
+            // Convert the integer color to hexadecimal
+            return String.format("#%06X", (0xFFFFFF & myColor));
+        } else {
+            return customColorsPrefs.getString("color100", "#FF0000");
+        }
+    }
     public Boolean dynamicThemeBool() {return customColorsPrefs.getBoolean("dynamicThemeBool", false);}
+    public Boolean advancedThemeBool() {return customColorsPrefs.getBoolean("advancedThemeBool", false);}
 
-//
-//    public String nameColor() {
-//        return customColorsPrefs.getString("nameColor", "#FFFFFF");
-//    }
-//
-//    public String descriptionColor() {
-//        return customColorsPrefs.getString("descriptionColor", "#e94b3c");
-//    }
-//
-//    public String strokeColor() {
-//        return customColorsPrefs.getString("strokeColor", "#4A4A4C");
-//    }
-//
-//    public String fontName() {
-//        return customFontsPrefs.getString("fontName", "roboto_bold");
-//    }
-//
-//    public String frameColor() {
-//        return customColorsPrefs.getString("frameColor", "frame6");
-//    }
-//
-//    public String logoIcon() {
-//        return customColorsPrefs.getString("logoIcon", "nhlauncher");
-//    }
-
-//    public Typeface typeface() {
-//        String font = fontName();
-//        return Typeface.createFromAsset(context.getAssets(), "font/" + font + ".ttf");
-//    }
 
     public String language() {
         if (!Locale.getDefault().getLanguage().equals("pl")) {

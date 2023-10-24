@@ -6,60 +6,13 @@
     android:layout_height="match_parent"
     >
 
-<!--    <TextView-->
-<!--        android:id="@+id/changeableTextView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        tools:ignore="VisualLintOverlap" />-->
-
-
-
-<!--    <androidx.appcompat.widget.Toolbar-->
-<!--        android:background="@drawable/border"-->
-<!--        android:id="@+id/toolBar"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentTop="true"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        android:layout_margin="10dp"-->
-<!--        app:menu="@menu/main_menu"-->
-<!--        />-->
-
-<!--    <RelativeLayout-->
-<!--        android:background="@drawable/border"-->
-<!--        android:id="@+id/managementBar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content">-->
-
-<!--        <androidx.appcompat.widget.SearchView-->
-<!--            android:id="@+id/searchView"-->
-<!--            android:layout_alignParentTop="true"-->
-<!--            android:layout_alignParentStart="true"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_margin="10dp"-->
-<!--            android:inputType="textNoSuggestions"-->
-<!--            />-->
-
-<!--        <ImageButton-->
-<!--            android:id="@+id/toolBar"-->
-<!--            android:layout_width="50dp"-->
-<!--            android:layout_height="50dp"-->
-<!--            android:layout_alignParentTop="true"-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:layout_margin="10dp"-->
-<!--            />-->
-
-<!--    </RelativeLayout>-->
-
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
+    <ImageButton
+        android:id="@+id/searchIcon"
+        android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="10dp"
-        android:inputType="textNoSuggestions" />
+        android:layout_alignParentStart="true"
+        android:layout_margin="10dp" />
 
     <ImageButton
         android:id="@+id/toolBar"
@@ -67,14 +20,26 @@
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="10dp"
-        app:menu="@menu/main_menu" />
+        android:layout_margin="10dp"/>
+
+    <EditText
+        android:maxLength="20"
+        android:id="@+id/search_edit_text"
+        android:paddingStart="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toEndOf="@id/searchIcon"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="@string/search_hint"
+        android:visibility="gone"
+        tools:ignore="RtlSymmetry" />
 
 
     <RelativeLayout
         android:id="@+id/imageViewHeader"
         android:layout_width="match_parent"
-        android:layout_below="@id/searchView"
+        android:layout_below="@id/searchIcon"
         android:layout_height="wrap_content">
 
         <Spinner

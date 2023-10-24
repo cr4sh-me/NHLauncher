@@ -1,6 +1,8 @@
 package com.cr4sh.nhlauncher;
 
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.fragment.app.FragmentManager;
 
@@ -12,10 +14,12 @@ import com.cr4sh.nhlauncher.dialogs.EditableDialog;
 import com.cr4sh.nhlauncher.dialogs.FirstSetupDialog;
 import com.cr4sh.nhlauncher.dialogs.MissingActivityDialog;
 import com.cr4sh.nhlauncher.dialogs.NewToolDialog;
+import com.cr4sh.nhlauncher.dialogs.NhlColorPickerDialog;
 import com.cr4sh.nhlauncher.dialogs.PermissionDialog;
 import com.cr4sh.nhlauncher.dialogs.SettingsDialog;
 import com.cr4sh.nhlauncher.dialogs.StatisticsDialog;
 import com.cr4sh.nhlauncher.dialogs.ToolbarDialog;
+import com.skydoves.colorpickerview.ColorPickerDialog;
 
 // This class creates and opens Dialogs
 public class DialogUtils {
@@ -145,4 +149,13 @@ public class DialogUtils {
             tbDialog.show(fragmentManager, "ToolbarDialog");
         }).start();
     }
+
+    public void openNhlColorPickerDialog(Button button, ImageView alpha) {
+        new Thread(() -> {
+            NhlColorPickerDialog nhlcpDialog = new NhlColorPickerDialog(button, alpha);
+            // Display our dialog!
+            nhlcpDialog.show(fragmentManager, "NhlColorPickerDialog");
+        }).start();
+    }
+
 }

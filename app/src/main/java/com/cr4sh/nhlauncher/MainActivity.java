@@ -1,6 +1,7 @@
 package com.cr4sh.nhlauncher;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,8 +9,9 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.text.InputFilter;
+import android.text.Editable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,11 +31,9 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -163,45 +164,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //        setSupportActionBar(toolbar);
 //        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        ImageView searchIcon = findViewById(R.id.searchIcon);
+        EditText searchEditText = findViewById(R.id.search_edit_text);
         ImageView toolbar = findViewById(R.id.toolBar);
 
+        searchIcon.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+        searchEditText.setHintTextColor(Color.parseColor(myPreferences.color80()));
+        searchEditText.setTextColor(Color.parseColor(myPreferences.color80()));
         toolbar.setBackgroundColor(Color.parseColor(myPreferences.color50()));
 
-
-        SearchView searchView = findViewById(R.id.searchView);
-
-        // Get the search icon field using reflection
-        try {
-            Field searchField = SearchView.class.getDeclaredField("mSearchButton");
-            searchField.setAccessible(true);
-            ImageView searchButton = (ImageView) searchField.get(searchView);
-            // Set your custom search icon here
-            assert searchButton != null;
-            searchButton.setColorFilter(Color.parseColor(myPreferences.color80()));
-
-            GradientDrawable drawableSearchView = new GradientDrawable();
-            drawableSearchView.setCornerRadius(100);
-            drawableSearchView.setStroke(8, Color.parseColor(myPreferences.color50()));
-
-            searchButton.setBackground(drawableSearchView);
-            searchButton.setImageResource(R.drawable.nhl_searchview);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-//
-//        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView icon = findViewById(com.google.android.material.R.id.search_button);
-//        Drawable whiteIcon = icon.getDrawable();
-//        whiteIcon.setTint(Color.parseColor(myPreferences.color80())); //Whatever color you want it to be
-//        GradientDrawable drawableSearchView = new GradientDrawable();
-//        drawable3.setColor(Color.parseColor(myPreferences.color50()));
-//        drawableSearchView.setCornerRadius(100);
-//        drawableSearchView.setStroke(8, Color.parseColor(myPreferences.color50()));
-//        icon.setImageDrawable(whiteIcon);
-//        icon.setBackground(drawableSearchView);
-//        icon.setBackground(hollowCircleDrawable);
-
-
-//        icon.setImageDrawable(drawable3);
+        @SuppressLint("UseCompatLoadingForDrawables") Drawable searchViewIcon = getDrawable(R.drawable.nhl_searchview);
+        assert searchViewIcon != null;
+        searchViewIcon.setTint(Color.parseColor(myPreferences.color80()));
+        searchIcon.setImageDrawable(searchViewIcon);
 
         @SuppressLint("UseCompatLoadingForDrawables") Drawable settingsIcon = getDrawable(R.drawable.nhl_settings);
         assert settingsIcon != null;
@@ -209,66 +184,116 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         toolbar.setImageDrawable(settingsIcon);
 
         GradientDrawable drawableToolbar = new GradientDrawable();
-//        drawable3.setColor(Color.parseColor(myPreferences.color50()));
         drawableToolbar.setCornerRadius(100);
         drawableToolbar.setStroke(8, Color.parseColor(myPreferences.color50()));
         toolbar.setBackground(drawableToolbar);
 
+        GradientDrawable drawableSearchIcon = new GradientDrawable();
+        drawableSearchIcon.setCornerRadius(100);
+        drawableSearchIcon.setStroke(8, Color.parseColor(myPreferences.color50()));
+        searchIcon.setBackground(drawableSearchIcon);
+
+        GradientDrawable drawableSearchEditText = new GradientDrawable();
+        drawableSearchEditText.setCornerRadius(100);
+        drawableSearchEditText.setColor(Color.parseColor(myPreferences.color50()));
+        drawableSearchEditText.setStroke(8, Color.parseColor(myPreferences.color50()));
+
+
+        // Setup animations
+        Animation roll = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll);
+        Animation rollOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out);
+        Animation rollToolbar = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_toolbar);
+        Animation rollOutToolbar = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out_toolbar);
+        Animation spinnerFadeIn = AnimationUtils.loadAnimation(MainActivity.this, R.anim.spinner_fade);
+        Animation spinnerFadeOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.spinner_fade_out);
+        Animation recyclerPullUp = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_up);
+        Animation recyclerPullDown = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_down);
 
 
 
+        searchIcon.setOnClickListener(v -> {
+            // Toggle visibility of the search EditText when the icon is clicked
+            if (searchEditText.getVisibility() == View.VISIBLE) {
 
-        ImageView closeButton = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
-        closeButton.setColorFilter(Color.parseColor(myPreferences.color80()));
+                // Close the keyboard if it's open
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
 
-        // Limit text input to 25 characters
-        InputFilter[] filters = new InputFilter[]{new InputFilter.LengthFilter(25)};
-        EditText searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
-        searchEditText.setFilters(filters);
-        searchEditText.setTextColor(Color.parseColor(myPreferences.color80()));
-        searchEditText.setHintTextColor(Color.parseColor(myPreferences.color80()));
+                // Show toolbar
+                toolbar.startAnimation(rollOutToolbar);
+                toolbar.setVisibility(View.VISIBLE);
 
-        GradientDrawable drawable = new GradientDrawable();
-        drawable.setColor(Color.parseColor(myPreferences.color50()));
-        drawable.setCornerRadius(30);
-        searchEditText.setBackground(drawable);
-        searchEditText.setHint(getResources().getString(R.string.search_hint));
-
-//        int underlineColor = Color.parseColor("#YOUR_UNDERLINE_COLOR");
-        View searchPlate = searchView.findViewById(androidx.appcompat.R.id.search_plate);
-        searchPlate.setBackgroundColor(Color.TRANSPARENT);
-
-        Animation fadeOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out);
-        Animation fadeIn = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll);
-        Animation fdin = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_in);
-        Animation fadeInRecycler = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_in_recycler);
+                // Show spinner
+                mainUtils.restartSpinner();
+                spinner.startAnimation(recyclerPullDown);
+                spinner.setVisibility(View.VISIBLE);
 
 
+                // Animate recyclerView
+                recyclerView.startAnimation(recyclerPullDown);
 
-// Customize the magnifier icon color
-//        ImageView searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_mag_icon);
-//        searchIcon.setBackgroundResource(R.drawable.searchview_underline);
+                // Animate searchbar
+                searchEditText.startAnimation(rollOut);
+                searchEditText.setVisibility(View.GONE);
+                searchEditText.setText(null);
 
-        try {
-            Field mDrawable = SearchView.class.getDeclaredField("mSearchHintIcon");
-            mDrawable.setAccessible(true);
-            Drawable drawable1 = (Drawable) mDrawable.get(searchView);
-            assert drawable1 != null;
-            drawable1.setAlpha(0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                // Change searchIcon background
+                drawableSearchIcon.setColor(Color.TRANSPARENT);
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                // Enable settings
+                toolbar.setEnabled(true);
+
+                // Enable spinner
+                spinner.setEnabled(true);
+
+            } else {
+
+                // Disable settings
+                toolbar.setEnabled(false);
+
+                // Disable spinner
+                spinner.setEnabled(false);
+
+                // Hide settings
+                toolbar.startAnimation(rollToolbar);
+                toolbar.setVisibility(View.GONE);
+
+                // Hide spinner
+                spinner.startAnimation(recyclerPullUp);
+                spinner.setVisibility(View.GONE);
+
+                // Animate recyclerView
+                recyclerView.startAnimation(recyclerPullUp);
+
+                // Show searchbar
+                searchEditText.startAnimation(roll);
+                searchEditText.setVisibility(View.VISIBLE);
+                searchEditText.requestFocus(); // Set focus when EditText is made visible
+
+                // Add searchbar background
+                searchEditText.setBackground(drawableSearchEditText);
+
+                // Change searchIcon background
+                drawableSearchIcon.setSize(10, 10);
+                drawableSearchIcon.setColor(Color.parseColor(myPreferences.color50()));
+
+//                    searchIcon.setBackground(drawableSearchEditText);
+
+                // Show the keyboard explicitly
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(searchEditText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
+
+        searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onQueryTextSubmit(String newText) {
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
             @SuppressLint("SetTextI18n")
             @Override
-            public boolean onQueryTextChange(String newText) {
-//                itemList.clear();
+            public void onTextChanged(CharSequence newText, int start, int before, int count) {
                 mainUtils.deleteButtons();
 
                 TextView noToolsText = findViewById(R.id.messagebox);
@@ -288,8 +313,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Animation myAnimation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_in);
                 if (newText.length() > 0) {
                     recyclerView.setVisibility(View.VISIBLE);
-
-//                            menuItem.setEnabled(false);
                     disableMenu = true;
 
                     cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, orderBy, "15");
@@ -320,7 +343,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                     adapter.updateData(newItemList);
                     cursor.close();
-                    return true;
+
+                    // Prevent newlines from being entered
+                    if (newText.toString().contains("\n")) {
+                        String filteredText = newText.toString().replace("\n", "");
+                        searchEditText.setText(filteredText);
+                        searchEditText.setSelection(filteredText.length());
+                    }
+
                 } else {
                     noToolsText.startAnimation(myAnimation);
                     runOnUiThread(() -> {
@@ -330,86 +360,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         recyclerView.setVisibility(View.GONE);
 
                     });
-                    return false;
                 }
             }
-        });
 
-//        searchView.setOnCloseListener(() -> {
-//
-////            Animation slideAnimationOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out);
-////            searchPlate.startAnimation(slideAnimationOut);
-//
-//            spinner.setEnabled(true);
-//            toolbar.setEnabled(true);
-//            spinner.setVisibility(View.VISIBLE);
-//            toolbar.setVisibility(View.VISIBLE);
-//            mainUtils.restartSpinner();
-//            return false;
-//        });
-
-//        searchView.setOnCloseListener(() -> {
-//            spinner.setEnabled(true);
-//            toolbar.setEnabled(true);
-//            spinner.setVisibility(View.VISIBLE);
-//            toolbar.setVisibility(View.VISIBLE);
-//            mainUtils.restartSpinner();
-//            return false;
-//        });
-
-
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
-            public boolean onClose() {
-                // Apply fade-out animation to the searchPlate and set visibility to GONE after animation
-                View searchPlate = searchView.findViewById(androidx.appcompat.R.id.search_edit_frame);
-                searchView.startAnimation(fadeOut);
-                fadeOut.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
+            public void afterTextChanged(Editable s) {
 
-                        mainUtils.restartSpinner();
-                        spinner.setEnabled(true);
-                        toolbar.setEnabled(true);
-                        spinner.startAnimation(fadeInRecycler);
-                        toolbar.startAnimation(fdin);
-                        spinner.setVisibility(View.VISIBLE);
-                        toolbar.setVisibility(View.VISIBLE);
-                        recyclerView.startAnimation(fadeInRecycler);
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-                });
-                return false;
             }
         });
 
-        searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
-            // If the search view has focus, disable and hide the spinner
-            if (hasFocus) {
-                spinner.setEnabled(false);
-                toolbar.setEnabled(false);
-                spinner.setVisibility(View.GONE);
-                toolbar.setVisibility(View.GONE);
-//                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-//                searchView.setLayoutParams(layoutParams);
-                searchPlate.startAnimation(fadeIn);
-            }
-        });
-
-
-        toolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogUtils.openToolbarDialog(MainActivity.this);
-            }
-        });
+        toolbar.setOnClickListener(v -> dialogUtils.openToolbarDialog(MainActivity.this));
 
     }
 
@@ -444,7 +404,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         getMenuInflater().inflate(R.menu.options_menu, menu);
     }
 
-
     // Catches selections for menu above
     @SuppressLint("NonConstantResourceId")
     public boolean onContextItemSelected(MenuItem item) {
@@ -469,41 +428,5 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 return super.onContextItemSelected(item);
         }
     }
-
-
-    // Creates toolbar menu
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-
-    // Catches options for toolbar menu above
-//    @SuppressLint("NonConstantResourceId")
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.menu_item_1:
-//                dialogUtils.openSettingsDialog();
-//                return true;
-//            case R.id.menu_item_2:
-//                dialogUtils.openCustomThemesDialog();
-//                return true;
-//            case R.id.menu_item_3:
-//                dialogUtils.openStatisticsDialog();
-//                return true;
-//            case R.id.menu_item_4:
-//                // Just open link in browser
-//                String url = "https://github.com/cr4sh-me/NHLauncher";
-//                Intent intent = new Intent(Intent.ACTION_VIEW);
-//                intent.setData(Uri.parse(url));
-//                startActivity(intent);
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
-
 }
 

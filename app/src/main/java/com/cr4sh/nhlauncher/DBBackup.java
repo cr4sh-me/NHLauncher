@@ -28,6 +28,8 @@ public class DBBackup {
 
     public void createBackup(Context context) {
 
+//        TODO Create themes backup
+
         try {
             // Create a new instance of your DBHandler class
             DBHandler dbHelper = new DBHandler(context);

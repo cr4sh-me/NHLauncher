@@ -113,5 +113,10 @@
     <string name="search_tool_name">Search tool name</string>
     <string name="tools">Tools menu</string>
     <string name="search_hint">Search for tools</string>
+    <string name="advanced_themes">Advanced mode</string>
+    <string name="hex_color1">Hex color1 value</string>
+    <string name="hex_color2">Hex color2 value</string>
+    <string name="hex_color3">Hex color3 value</string>
+    <string name="choose_color">Choose color</string>
 
 </resources>

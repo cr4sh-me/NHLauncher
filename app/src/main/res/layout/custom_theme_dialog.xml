@@ -1,108 +1,216 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/custom_theme_dialog_background"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:id="@+id/custom_theme_dialog_background">
+    android:layout_width="wrap_content">
 
-    <TextView
-        android:id="@+id/dialog_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/custom_theme_manager"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/text_second"
-        android:layout_width="280dp"
-        android:layout_height="55dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="@string/color_info" />
-
-    <CheckBox
-        android:id="@+id/dynamic_themes_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:text="@string/enable_dynamic_themes" />
-
-    <com.skydoves.colorpickerview.ColorPickerView
-        android:id="@+id/colorPickerView"
-        android:layout_width="300dp"
-        android:layout_height="300dp" />
-
-    <com.skydoves.colorpickerview.sliders.BrightnessSlideBar
-        android:layout_margin="10dp"
-        android:id="@+id/brightnessSlideBar"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
-        <com.skydoves.colorpickerview.AlphaTileView
-            android:layout_margin="10dp"
-            android:id="@+id/alphaTileView1"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
-
-        <com.skydoves.colorpickerview.AlphaTileView
-            android:layout_margin="10dp"
-            android:layout_toEndOf="@id/alphaTileView1"
-            android:id="@+id/alphaTileView2"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
-        <com.skydoves.colorpickerview.AlphaTileView
-            android:layout_margin="10dp"
-            android:layout_toEndOf="@id/alphaTileView2"
-            android:id="@+id/alphaTileView3"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
-        <com.skydoves.colorpickerview.AlphaTileView
-            android:layout_margin="10dp"
-            android:layout_toEndOf="@id/alphaTileView3"
-            android:id="@+id/alphaTileView4"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
-    </RelativeLayout>
-
-
-    <EditText
-        android:id="@+id/customHexColor"
-        android:layout_width="280dp"
-        android:layout_height="55dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:hint="@string/hex_color"
-        android:maxLength="25" />
-
+    <!-- Outer Container -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <Button
-            android:backgroundTint="@color/material_dynamic_secondary30"
-            android:textColor="@color/material_dynamic_secondary80"
-            android:id="@+id/apply_custom_colors"
+        <!-- Visible Content -->
+
+        <TextView
+            android:id="@+id/dialog_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/apply_colors" />
+            android:text="@string/custom_theme_manager"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-        <Button
-            android:backgroundTint="@color/material_dynamic_secondary30"
-            android:textColor="@color/material_dynamic_secondary80"
-            android:id="@+id/cancel_button"
+        <TextView
+            android:id="@+id/text_second"
+            android:layout_width="280dp"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/color_info" />
+
+        <CheckBox
+            android:id="@+id/dynamic_themes_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="@string/enable_dynamic_themes" />
+
+        <!-- Inner Container (To be hidden) -->
+        <LinearLayout
+            android:id="@+id/hiddenLayout"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <CheckBox
+                android:id="@+id/advanced_themes_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/advanced_themes" />
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/advancedLayout"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <!-- EditText for hex color value 1 -->
+                    <Button
+                        android:id="@+id/customHexColor1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="55dp"
+                        android:hint="@string/hex_color1"
+                        android:maxLength="25"
+                        android:layout_alignParentStart="true"
+                        android:layout_toStartOf="@+id/advancedAlphaTileView1"
+                        />
+
+                    <!-- AlphaTileView to the right of the EditText -->
+                    <ImageView
+                        android:id="@+id/advancedAlphaTileView1"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_centerVertical="true" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <!-- EditText for hex color value 1 -->
+                    <Button
+                        android:id="@+id/customHexColor2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="55dp"
+                        android:hint="@string/hex_color2"
+                        android:maxLength="25"
+                        android:layout_alignParentStart="true"
+                        android:layout_toStartOf="@+id/advancedAlphaTileView2"
+                        />
+
+                    <!-- AlphaTileView to the right of the EditText -->
+                    <ImageView
+                        android:background="@drawable/border"
+                        android:id="@+id/advancedAlphaTileView2"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_centerVertical="true" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <!-- EditText for hex color value 1 -->
+                    <Button
+                        android:id="@+id/customHexColor3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="55dp"
+                        android:hint="@string/hex_color3"
+                        android:maxLength="25"
+                        android:layout_alignParentStart="true"
+                        android:layout_toStartOf="@+id/advancedAlphaTileView3"
+                        />
+
+                    <!-- AlphaTileView to the right of the EditText -->
+                    <ImageView
+                        android:id="@+id/advancedAlphaTileView3"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_centerVertical="true" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <com.skydoves.colorpickerview.ColorPickerView
+                android:id="@+id/colorPickerView"
+                android:layout_width="300dp"
+                android:layout_height="300dp" />
+
+            <RelativeLayout
+                android:id="@+id/alphaLayout"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal">
+                <ImageView
+                    android:layout_margin="10dp"
+                    android:id="@+id/alphaTileView2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+                <ImageView
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@id/alphaTileView2"
+                    android:id="@+id/alphaTileView3"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+                <ImageView
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@id/alphaTileView3"
+                    android:id="@+id/alphaTileView4"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/customHexColor"
+                android:layout_width="280dp"
+                android:layout_height="55dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:hint="@string/hex_color"
+                android:maxLength="25" />
+
+            <!-- Add more items as needed -->
+
+        </LinearLayout>
+
+        <!-- Buttons and other visible items go here -->
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/close" />
+            android:layout_marginTop="16dp"
+            android:orientation="vertical">
+
+            <Button
+                android:backgroundTint="@color/material_dynamic_secondary30"
+                android:textColor="@color/material_dynamic_secondary80"
+                android:id="@+id/apply_custom_colors"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/apply_colors" />
+
+            <Button
+                android:backgroundTint="@color/material_dynamic_secondary30"
+                android:textColor="@color/material_dynamic_secondary80"
+                android:id="@+id/cancel_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/close" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>
