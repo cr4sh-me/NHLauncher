@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,6 @@ import androidx.core.widget.CompoundButtonCompat;
 import com.cr4sh.nhlauncher.DialogUtils;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
-import com.skydoves.colorpickerview.AlphaTileView;
 import com.skydoves.colorpickerview.ColorEnvelope;
 import com.skydoves.colorpickerview.ColorPickerView;
 import com.skydoves.colorpickerview.flag.BubbleFlag;
@@ -56,18 +54,22 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
 
         LinearLayout manualBox = view.findViewById(R.id.hiddenLayout);
         LinearLayout advancedMode = view.findViewById(R.id.advancedLayout);
-        RelativeLayout alphaLayout = view.findViewById(R.id.alphaLayout);
         TextView title = view.findViewById(R.id.dialog_title);
         TextView text2  = view.findViewById(R.id.text_second);
         ScrollView bkg = view.findViewById(R.id.custom_theme_dialog_background);
         ColorPickerView colorPickerView = view.findViewById(R.id.colorPickerView);
 //        ImageView alphaTileView1 = view.findViewById(R.id.alphaTileView1);
+
+        RelativeLayout alphaLayout = view.findViewById(R.id.alphaLayout);
+        ImageView alphaTileView1 = view.findViewById(R.id.alphaTileView1);
         ImageView alphaTileView2 = view.findViewById(R.id.alphaTileView2);
         ImageView alphaTileView3 = view.findViewById(R.id.alphaTileView3);
-        ImageView alphaTileView4 = view.findViewById(R.id.alphaTileView4);
-        ImageView aalphaTileView1 = view.findViewById(R.id.advancedAlphaTileView1);
-        ImageView aalphaTileView2 = view.findViewById(R.id.advancedAlphaTileView2);
-        ImageView aalphaTileView3 = view.findViewById(R.id.advancedAlphaTileView3);
+
+        RelativeLayout alphaLayoutAdv = view.findViewById(R.id.alphaLayoutAdv);
+        ImageView alphaTileViewAdv1 = view.findViewById(R.id.alphaTileViewAdv1);
+        ImageView alphaTileViewAdv2 = view.findViewById(R.id.alphaTileViewAdv2);
+        ImageView alphaTileViewAdv3 = view.findViewById(R.id.alphaTileViewAdv3);
+
         Button hexColorValue1 = view.findViewById(R.id.customHexColor1);
         Button hexColorValue2 = view.findViewById(R.id.customHexColor2);
         Button hexColorValue3 = view.findViewById(R.id.customHexColor3);
@@ -76,15 +78,6 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
         CheckBox advancedThemes = view.findViewById(R.id.advanced_themes_checkbox);
         Button applyColors = view.findViewById(R.id.apply_custom_colors);
         Button cancelButton = view.findViewById(R.id.cancel_button);
-
-
-        GradientDrawable imgBorder = new GradientDrawable();
-        GradientDrawable imgBorder2 = new GradientDrawable();
-        GradientDrawable imgBorder3 = new GradientDrawable();
-        GradientDrawable imgBorder4 = new GradientDrawable();
-        GradientDrawable imgBorder5 = new GradientDrawable();
-        GradientDrawable imgBorder6 = new GradientDrawable();
-        GradientDrawable imgBorder7 = new GradientDrawable();
 
         hexColorString = myPreferences.color100();
 
@@ -115,9 +108,10 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
             hexColorValue2.setText(myPreferences.color50());
             hexColorValue3.setText(myPreferences.color20());
 
-            aalphaTileView1.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.8f)));
-            aalphaTileView2.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.5f)));
-            aalphaTileView3.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.2f)));
+            alphaLayoutAdv.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorValue3.getText().toString(), 0.5f)));
+            alphaTileViewAdv1.setBackgroundColor(Color.parseColor(myPreferences.color80()));
+            alphaTileViewAdv2.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+            alphaTileViewAdv3.setBackgroundColor(Color.parseColor(myPreferences.color20()));
 
 
         } else {
@@ -126,7 +120,7 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
             alphaLayout.setVisibility(View.VISIBLE);
             hexColorValue.setVisibility(View.VISIBLE);
             colorPickerView.setVisibility(View.VISIBLE);
-//            colorPickerView.setInitialColor(Color.parseColor(myPreferences.color100()));
+            colorPickerView.setInitialColor(Color.parseColor(myPreferences.color100()));
         }
 
         // Apply custom themes
@@ -188,9 +182,10 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
                 hexColorValue2.setText(myPreferences.color50());
                 hexColorValue3.setText(myPreferences.color20());
 
-                aalphaTileView1.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.8f)));
-                aalphaTileView2.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.5f)));
-                aalphaTileView3.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.2f)));
+                alphaLayoutAdv.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorValue3.getText().toString(), 0.5f)));
+                alphaTileViewAdv1.setBackgroundColor(Color.parseColor(myPreferences.color80()));
+                alphaTileViewAdv2.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+                alphaTileViewAdv3.setBackgroundColor(Color.parseColor(myPreferences.color20()));
 
             } else {
                 advancedMode.setVisibility(View.GONE);
@@ -201,9 +196,9 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
             }
         });
 
-        hexColorValue1.setOnClickListener(v -> openPickerDialog(hexColorValue1, aalphaTileView1));
-        hexColorValue2.setOnClickListener(v -> openPickerDialog(hexColorValue2, aalphaTileView2));
-        hexColorValue3.setOnClickListener(v -> openPickerDialog(hexColorValue3, aalphaTileView3));
+        hexColorValue1.setOnClickListener(v -> openPickerDialog(hexColorValue1, alphaTileViewAdv1, myPreferences.color80()));
+        hexColorValue2.setOnClickListener(v -> openPickerDialog(hexColorValue2, alphaTileViewAdv2, myPreferences.color50()));
+        hexColorValue3.setOnClickListener(v -> openPickerDialog(hexColorValue3, alphaTileViewAdv3, myPreferences.color20()));
 
 
         colorPickerView.setColorListener((ColorListener) (color, fromUser) -> {
@@ -214,9 +209,9 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
 
             alphaLayout.setBackgroundColor(color);
 
-            alphaTileView2.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.8f)));
-            alphaTileView3.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.5f)));
-            alphaTileView4.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.2f)));
+            alphaTileView1.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.8f)));
+            alphaTileView2.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.5f)));
+            alphaTileView3.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.2f)));
 
 //            alphaTileView1.setBackgroundColor(color);
 //            alphaTileView2.setColorFilter(Color.parseColor(adjustColorBrightness(hexColorString, 0.8f)));
@@ -230,7 +225,7 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
                 Toast.makeText(requireActivity(), "Empty color values! Use brain...", Toast.LENGTH_SHORT).show();
             } else {
                 if(advancedThemes.isChecked()){
-                    String color100 = hexColorValue1.getText().toString();
+                    String color100 = myPreferences.color100();
                     String color80 = hexColorValue1.getText().toString();
                     String color50 = hexColorValue2.getText().toString();
                     String color20 = hexColorValue3.getText().toString();
@@ -253,10 +248,10 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
     }
 
     @SuppressLint("SetTextI18n")
-    private void openPickerDialog(Button button, ImageView alpha) {
+    private void openPickerDialog(Button button, ImageView alpha, String colorShade) {
 
         DialogUtils dialogUtils = new DialogUtils(requireActivity().getSupportFragmentManager());
-        dialogUtils.openNhlColorPickerDialog(button, alpha);
+        dialogUtils.openNhlColorPickerDialog(button, alpha, colorShade);
     }
 
     public static String adjustColorBrightness(String hexColor, float factor) {

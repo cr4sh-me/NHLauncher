@@ -150,9 +150,9 @@ public class DialogUtils {
         }).start();
     }
 
-    public void openNhlColorPickerDialog(Button button, ImageView alpha) {
+    public void openNhlColorPickerDialog(Button button, ImageView alpha, String colorShade) {
         new Thread(() -> {
-            NhlColorPickerDialog nhlcpDialog = new NhlColorPickerDialog(button, alpha);
+            NhlColorPickerDialog nhlcpDialog = new NhlColorPickerDialog(button, alpha, colorShade);
             // Display our dialog!
             nhlcpDialog.show(fragmentManager, "NhlColorPickerDialog");
         }).start();

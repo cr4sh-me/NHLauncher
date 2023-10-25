@@ -1,13 +1,15 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/custom_theme_dialog_background"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_width="wrap_content">
 
     <!-- Outer Container -->
     <LinearLayout
+        android:layout_gravity="center"
+        android:gravity="center"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_width="wrap_content"
+        android:padding="15dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <!-- Visible Content -->
@@ -38,9 +40,11 @@
 
         <!-- Inner Container (To be hidden) -->
         <LinearLayout
+            android:layout_gravity="center"
+            android:gravity="center"
             android:id="@+id/hiddenLayout"
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <CheckBox
@@ -51,42 +55,23 @@
                 android:text="@string/advanced_themes" />
 
             <LinearLayout
-                android:visibility="gone"
+                android:visibility="visible"
                 android:id="@+id/advancedLayout"
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                >
 
                     <!-- EditText for hex color value 1 -->
+
                     <Button
                         android:id="@+id/customHexColor1"
                         android:layout_width="wrap_content"
                         android:layout_height="55dp"
                         android:hint="@string/hex_color1"
                         android:maxLength="25"
-                        android:layout_alignParentStart="true"
-                        android:layout_toStartOf="@+id/advancedAlphaTileView1"
                         />
-
-                    <!-- AlphaTileView to the right of the EditText -->
-                    <ImageView
-                        android:id="@+id/advancedAlphaTileView1"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_centerVertical="true" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
 
                     <!-- EditText for hex color value 1 -->
                     <Button
@@ -95,56 +80,50 @@
                         android:layout_height="55dp"
                         android:hint="@string/hex_color2"
                         android:maxLength="25"
-                        android:layout_alignParentStart="true"
-                        android:layout_toStartOf="@+id/advancedAlphaTileView2"
                         />
 
-                    <!-- AlphaTileView to the right of the EditText -->
-                    <ImageView
-                        android:background="@drawable/border"
-                        android:id="@+id/advancedAlphaTileView2"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_centerVertical="true" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <!-- EditText for hex color value 1 -->
                     <Button
                         android:id="@+id/customHexColor3"
                         android:layout_width="wrap_content"
                         android:layout_height="55dp"
                         android:hint="@string/hex_color3"
                         android:maxLength="25"
-                        android:layout_alignParentStart="true"
-                        android:layout_toStartOf="@+id/advancedAlphaTileView3"
                         />
 
-                    <!-- AlphaTileView to the right of the EditText -->
-                    <ImageView
-                        android:id="@+id/advancedAlphaTileView3"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_centerVertical="true" />
 
+                <RelativeLayout
+                    android:id="@+id/alphaLayoutAdv"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal">
+                    <ImageView
+                        android:layout_margin="10dp"
+                        android:id="@+id/alphaTileViewAdv1"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"/>
+                    <ImageView
+                        android:layout_margin="10dp"
+                        android:layout_toEndOf="@id/alphaTileViewAdv1"
+                        android:id="@+id/alphaTileViewAdv2"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"/>
+                    <ImageView
+                        android:layout_margin="10dp"
+                        android:layout_toEndOf="@id/alphaTileViewAdv2"
+                        android:id="@+id/alphaTileViewAdv3"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"/>
                 </RelativeLayout>
+
 
             </LinearLayout>
 
             <com.skydoves.colorpickerview.ColorPickerView
                 android:id="@+id/colorPickerView"
-                android:layout_width="300dp"
-                android:layout_height="300dp" />
+                android:layout_width="270dp"
+                android:layout_height="270dp" />
 
             <RelativeLayout
                 android:id="@+id/alphaLayout"
@@ -155,6 +134,12 @@
                 android:gravity="center_horizontal">
                 <ImageView
                     android:layout_margin="10dp"
+                    android:id="@+id/alphaTileView1"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+                <ImageView
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@id/alphaTileView1"
                     android:id="@+id/alphaTileView2"
                     android:layout_width="50dp"
                     android:layout_height="50dp"/>
@@ -162,12 +147,6 @@
                     android:layout_margin="10dp"
                     android:layout_toEndOf="@id/alphaTileView2"
                     android:id="@+id/alphaTileView3"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"/>
-                <ImageView
-                    android:layout_margin="10dp"
-                    android:layout_toEndOf="@id/alphaTileView3"
-                    android:id="@+id/alphaTileView4"
                     android:layout_width="50dp"
                     android:layout_height="50dp"/>
             </RelativeLayout>

@@ -30,9 +30,11 @@ public class NhlColorPickerDialog extends AppCompatDialogFragment {
 
     Button button;
     ImageView alpha;
-        public NhlColorPickerDialog(Button button, ImageView alpha) {
+    String hexColorShade;
+        public NhlColorPickerDialog(Button button, ImageView alpha, String hexColorShade) {
         this.button = button;
         this.alpha = alpha;
+        this.hexColorShade = hexColorShade;
     }
 
     //    MainActivity myActivity;
@@ -80,9 +82,8 @@ public class NhlColorPickerDialog extends AppCompatDialogFragment {
         cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
         cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
 
+        colorPickerView.setInitialColor(Color.parseColor(hexColorShade));
         colorPickerView.attachBrightnessSlider(brightnessSlideBar);
-
-        colorPickerView.setInitialColor(Color.parseColor(button.getText().toString()));
 
         BubbleFlag at = new BubbleFlag(requireActivity());
         at.setFlagMode(FlagMode.ALWAYS);
@@ -90,8 +91,8 @@ public class NhlColorPickerDialog extends AppCompatDialogFragment {
 
         colorPickerView.setColorListener((ColorListener) (color, fromUser) -> {
             ColorEnvelope colorEnvelope = new ColorEnvelope(color);
-            hexColorValue.setText("#" + colorEnvelope.getHexCode());
             hexColorString = "#" + colorEnvelope.getHexCode();
+            hexColorValue.setText(hexColorString);
             alpha.setBackgroundColor(Color.parseColor(hexColorString));
 
         });
