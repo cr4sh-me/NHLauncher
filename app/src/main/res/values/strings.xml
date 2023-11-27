@@ -118,5 +118,6 @@
     <string name="hex_color2">Hex color2 value</string>
     <string name="hex_color3">Hex color3 value</string>
     <string name="choose_color">Choose color</string>
+    <string name="categories">Categories</string>
 
 </resources>

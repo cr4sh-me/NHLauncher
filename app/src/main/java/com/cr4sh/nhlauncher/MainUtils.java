@@ -8,9 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,48 +24,13 @@ import java.util.Objects;
 
 public class MainUtils extends AppCompatActivity {
 
-    private final List<Integer> imageList;
     private final SQLiteDatabase mDatabase;
     private final MainActivity mainActivity;
     private final MyPreferences myPreferences;
-    private List<String> valuesList;
-
     public MainUtils(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         mDatabase = mainActivity.mDatabase;
         myPreferences = new MyPreferences(mainActivity);
-        valuesList = Arrays.asList(
-                mainActivity.getResources().getString(R.string.category_ft),
-                mainActivity.getResources().getString(R.string.category_01),
-                mainActivity.getResources().getString(R.string.category_02),
-                mainActivity.getResources().getString(R.string.category_03),
-                mainActivity.getResources().getString(R.string.category_04),
-                mainActivity.getResources().getString(R.string.category_05),
-                mainActivity.getResources().getString(R.string.category_06),
-                mainActivity.getResources().getString(R.string.category_07),
-                mainActivity.getResources().getString(R.string.category_08),
-                mainActivity.getResources().getString(R.string.category_09),
-                mainActivity.getResources().getString(R.string.category_10),
-                mainActivity.getResources().getString(R.string.category_11),
-                mainActivity.getResources().getString(R.string.category_12),
-                mainActivity.getResources().getString(R.string.category_13)
-        );
-        imageList = Arrays.asList(
-                R.drawable.nhl_favourite_trans,
-                R.drawable.kali_info_gathering_trans,
-                R.drawable.kali_vuln_assessment_trans,
-                R.drawable.kali_web_application_trans,
-                R.drawable.kali_database_assessment_trans,
-                R.drawable.kali_password_attacks_trans,
-                R.drawable.kali_wireless_attacks_trans,
-                R.drawable.kali_reverse_engineering_trans,
-                R.drawable.kali_exploitation_tools_trans,
-                R.drawable.kali_sniffing_spoofing_trans,
-                R.drawable.kali_maintaining_access_trans,
-                R.drawable.kali_forensics_trans,
-                R.drawable.kali_reporting_tools_trans,
-                R.drawable.kali_social_engineering_trans
-        );
     }
 
     // MainUtils functions!!!
@@ -93,7 +55,7 @@ public class MainUtils extends AppCompatActivity {
 
     // Queries db for buttons with given categories and display them!
     @SuppressLint({"SetTextI18n", "Recycle"})
-    public void spinnerChanger(String category) {
+    public void spinnerChanger(int category) {
         // Obtain references to app resources and button layout
         Resources resources = mainActivity.getResources();
         RecyclerView layout = mainActivity.findViewById(R.id.recyclerView);
@@ -106,13 +68,13 @@ public class MainUtils extends AppCompatActivity {
         String selection;
         String[] selectionArgs;
 
-        if (category.contains("FT")) {
+        if (category == 0) {
             selection = "FAVOURITE = ?";
             selectionArgs = new String[]{"1"};
             // Disable creating new buttons in fav category
             MainActivity.disableMenu = true;
         } else {
-            String category_number = category.substring(0, 2);
+            String category_number = String.valueOf(category);
             selection = "CATEGORY = ?";
             selectionArgs = new String[]{category_number};
             // Enable creating new buttons in normal categories
@@ -121,9 +83,9 @@ public class MainUtils extends AppCompatActivity {
 
         cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, myPreferences.sortingMode(), null);
         if (cursor.getCount() == 0) {
-            Animation myAnimation = AnimationUtils.loadAnimation(mainActivity, R.anim.fade_in);
+//            Animation myAnimation = AnimationUtils.loadAnimation(mainActivity, R.anim.fade_in);
             noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
-            noToolsText.startAnimation(myAnimation);
+//            noToolsText.startAnimation(myAnimation);
             noToolsText.setText(resources.getString(R.string.no_fav_tools));
             layout.setVisibility(View.GONE);
         } else {
@@ -144,10 +106,7 @@ public class MainUtils extends AppCompatActivity {
                 newItemList.add(item);
 
             }
-
             ((MyAdapter) Objects.requireNonNull(layout.getAdapter())).updateData(newItemList);
-
-
         }
         cursor.close();
     }
@@ -155,17 +114,10 @@ public class MainUtils extends AppCompatActivity {
     // Fills our spinner with text and images
     public void restartSpinner() {
 
-        Spinner spinner = mainActivity.findViewById(R.id.categoriesSpinner);
+//        mainActivity.listViewCategories.setAdapter(mainActivity.adapter2);
 
-        int selectedItemText = spinner.getSelectedItemPosition();
-
-        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mainActivity, valuesList, imageList, myPreferences.color20(), myPreferences.color80());
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(mainActivity);
-        spinner.setSelection(selectedItemText);
-
+        spinnerChanger(mainActivity.currentCategoryNumber); // Just set to category chosen before
     }
-
 
     // Refreshes our TextView that is responsible for app background
 
@@ -202,21 +154,21 @@ public class MainUtils extends AppCompatActivity {
         configuration.setLocale(newLocale);
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
         // Update valueList initialised before language changed!
-        valuesList = Arrays.asList(
-                mainActivity.getResources().getString(R.string.category_ft),
-                mainActivity.getResources().getString(R.string.category_01),
-                mainActivity.getResources().getString(R.string.category_02),
-                mainActivity.getResources().getString(R.string.category_03),
-                mainActivity.getResources().getString(R.string.category_04),
-                mainActivity.getResources().getString(R.string.category_05),
-                mainActivity.getResources().getString(R.string.category_06),
-                mainActivity.getResources().getString(R.string.category_07),
-                mainActivity.getResources().getString(R.string.category_08),
-                mainActivity.getResources().getString(R.string.category_09),
-                mainActivity.getResources().getString(R.string.category_10),
-                mainActivity.getResources().getString(R.string.category_11),
-                mainActivity.getResources().getString(R.string.category_12),
-                mainActivity.getResources().getString(R.string.category_13)
-        );
+//        List<String> valuesList = Arrays.asList(
+//                mainActivity.getResources().getString(R.string.category_ft),
+//                mainActivity.getResources().getString(R.string.category_01),
+//                mainActivity.getResources().getString(R.string.category_02),
+//                mainActivity.getResources().getString(R.string.category_03),
+//                mainActivity.getResources().getString(R.string.category_04),
+//                mainActivity.getResources().getString(R.string.category_05),
+//                mainActivity.getResources().getString(R.string.category_06),
+//                mainActivity.getResources().getString(R.string.category_07),
+//                mainActivity.getResources().getString(R.string.category_08),
+//                mainActivity.getResources().getString(R.string.category_09),
+//                mainActivity.getResources().getString(R.string.category_10),
+//                mainActivity.getResources().getString(R.string.category_11),
+//                mainActivity.getResources().getString(R.string.category_12),
+//                mainActivity.getResources().getString(R.string.category_13)
+//        );
     }
 }

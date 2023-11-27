@@ -14,7 +14,6 @@ import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -22,8 +21,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,10 +39,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     public static boolean disableMenu = false;
     public String buttonCategory;
@@ -48,12 +53,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public int buttonUsage;
     public SQLiteDatabase mDatabase;
     public ActivityResultLauncher<Intent> requestPermissionLauncher;
+    public ListView listViewCategories;
+    public ListAdapter adapter2;
     private DialogUtils dialogUtils;
     private MainUtils mainUtils;
     private MyPreferences myPreferences;
     private RecyclerView recyclerView;
 
-    @SuppressLint({"Recycle", "ResourceType"})
+    public int currentCategoryNumber = 1;
+
+    @SuppressLint({"Recycle", "ResourceType", "CutPasteId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,9 +152,46 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Setup colors and settings
         mainUtils.changeLanguage(myPreferences.languageLocale());
 
-        // Setting up spinner
-        Spinner spinner = findViewById(R.id.categoriesSpinner);
-        mainUtils.restartSpinner();
+        // Setting up new spinner
+
+        List<String> valuesList = Arrays.asList(
+                getResources().getString(R.string.category_ft),
+                getResources().getString(R.string.category_01),
+                getResources().getString(R.string.category_02),
+                getResources().getString(R.string.category_03),
+                getResources().getString(R.string.category_04),
+                getResources().getString(R.string.category_05),
+                getResources().getString(R.string.category_06),
+                getResources().getString(R.string.category_07),
+                getResources().getString(R.string.category_08),
+                getResources().getString(R.string.category_09),
+                getResources().getString(R.string.category_10),
+                getResources().getString(R.string.category_11),
+                getResources().getString(R.string.category_12),
+                getResources().getString(R.string.category_13)
+        );
+        List<Integer> imageList = Arrays.asList(
+                R.drawable.nhl_favourite_trans,
+                R.drawable.kali_info_gathering_trans,
+                R.drawable.kali_vuln_assessment_trans,
+                R.drawable.kali_web_application_trans,
+                R.drawable.kali_database_assessment_trans,
+                R.drawable.kali_password_attacks_trans,
+                R.drawable.kali_wireless_attacks_trans,
+                R.drawable.kali_reverse_engineering_trans,
+                R.drawable.kali_exploitation_tools_trans,
+                R.drawable.kali_sniffing_spoofing_trans,
+                R.drawable.kali_maintaining_access_trans,
+                R.drawable.kali_forensics_trans,
+                R.drawable.kali_reporting_tools_trans,
+                R.drawable.kali_social_engineering_trans
+        );
+
+        adapter2 = new CustomSpinnerAdapter(this, valuesList, imageList, myPreferences.color20(), myPreferences.color80());
+        listViewCategories = findViewById(R.id.recyclerViewCategories);
+        listViewCategories.setAdapter(adapter2);
+//        Spinner spinner = findViewById(R.id.categoriesSpinner);
+//        mainUtils.restartSpinner();
 
         // Check if there is any favourite tool in db, and open Favourite Tools category by default
         int isFavourite = 0;
@@ -158,7 +204,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         // Set category, so code below can run
-        spinner.setSelection(isFavourite == 0 ? 1 : 0);
+//        spinner.setSelection(isFavourite == 0 ? 1 : 0);
+//        listViewCategories.setSelection(isFavourite == 0 ? 1 : 0);
+        mainUtils.spinnerChanger(isFavourite == 0 ? 1 : 0);
         // Add onclick listener for toolbar
 //        Toolbar toolbar = findViewById(R.id.toolBar);
 //        setSupportActionBar(toolbar);
@@ -167,6 +215,84 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         ImageView searchIcon = findViewById(R.id.searchIcon);
         EditText searchEditText = findViewById(R.id.search_edit_text);
         ImageView toolbar = findViewById(R.id.toolBar);
+        ImageView rollCategories = findViewById(R.id.showCategories);
+        RelativeLayout categoriesLayout = findViewById(R.id.categories_layout);
+        Button backButton = findViewById(R.id.goBackButton);
+        TextView noToolsText = findViewById(R.id.messagebox);
+
+
+        rollCategories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                dialogUtils.displayCategoriesDialog(MainActivity.this);
+//                setContentView(R.layout.categories_dialog);
+                noToolsText.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+                toolbar.setVisibility(View.GONE);
+                searchIcon.setVisibility(View.GONE);
+//                spinner.setVisibility(View.GONE);
+                categoriesLayout.setVisibility(View.VISIBLE);
+                rollCategories.setVisibility(View.GONE);
+            }
+        });
+
+        listViewCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Object selectedItem = adapterView.getItemAtPosition(position);
+
+                currentCategoryNumber = position;
+
+                noToolsText.setVisibility(View.VISIBLE);
+                categoriesLayout.setVisibility(View.GONE);
+                toolbar.setVisibility(View.VISIBLE);
+                searchIcon.setVisibility(View.VISIBLE);
+                rollCategories.setVisibility(View.VISIBLE);
+//                spinner.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
+                mainUtils.restartSpinner();
+
+                mainUtils.spinnerChanger(position);
+//                Toast.makeText(mainUtils, "spinnerChanger " + selectedItem, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+//        listViewCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+//                String text = adapterView.getItemAtPosition(position).toString();
+//                Toast.makeText(MainActivity.this, "text" + text, Toast.LENGTH_SHORT).show();
+//                mainUtils.spinnerChanger(text);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
+
+//        @Override
+//        public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+//            String text = adapterView.getItemAtPosition(position).toString();
+//            mainUtils.spinnerChanger(text);
+//        }
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                noToolsText.setVisibility(View.VISIBLE);
+                categoriesLayout.setVisibility(View.GONE);
+                toolbar.setVisibility(View.VISIBLE);
+                searchIcon.setVisibility(View.VISIBLE);
+                rollCategories.setVisibility(View.VISIBLE);
+//                spinner.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
+//                mainUtils.restartSpinner();
+            }
+        });
+
+//        CustomSpinnerAdapter adapter2 = new CustomSpinnerAdapter(this, valuesList, imageList, myPreferences.color20(), myPreferences.color80());
+//        listViewCategories.setAdapter(adapter2);
 
         searchIcon.setBackgroundColor(Color.parseColor(myPreferences.color50()));
         searchEditText.setHintTextColor(Color.parseColor(myPreferences.color80()));
@@ -182,6 +308,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         assert settingsIcon != null;
         settingsIcon.setTint(Color.parseColor(myPreferences.color80()));
         toolbar.setImageDrawable(settingsIcon);
+
+//        @SuppressLint("UseCompatLoadingForDrawables") Drawable categoriesIcon = getDrawable(R.drawable.nhl_settings);
+//        assert categoriesIcon != null;
+//        categoriesIcon.setTint(Color.parseColor(myPreferences.color80()));
+//        rollCategories.setImageDrawable(settingsIcon);
+
+//        rollCategories.setDr
 
         GradientDrawable drawableToolbar = new GradientDrawable();
         drawableToolbar.setCornerRadius(100);
@@ -199,6 +332,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         drawableSearchEditText.setStroke(8, Color.parseColor(myPreferences.color50()));
 
 
+
+
         // Setup animations
         Animation roll = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll);
         Animation rollOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out);
@@ -214,6 +349,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         searchIcon.setOnClickListener(v -> {
             // Toggle visibility of the search EditText when the icon is clicked
             if (searchEditText.getVisibility() == View.VISIBLE) {
+                // Is on
 
                 // Close the keyboard if it's open
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -224,18 +360,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 toolbar.setVisibility(View.VISIBLE);
 
                 // Show spinner
-                mainUtils.restartSpinner();
-                spinner.startAnimation(recyclerPullDown);
-                spinner.setVisibility(View.VISIBLE);
+
+//                mainUtils.restartSpinner();
+
+//                spinner.startAnimation(recyclerPullDown);
+//                spinner.setVisibility(View.VISIBLE);
 
 
                 // Animate recyclerView
-                recyclerView.startAnimation(recyclerPullDown);
+//                recyclerView.startAnimation(recyclerPullDown);
+
+
+                rollCategories.setVisibility(View.VISIBLE);
 
                 // Animate searchbar
-                searchEditText.startAnimation(rollOut);
-                searchEditText.setVisibility(View.GONE);
+
                 searchEditText.setText(null);
+                searchEditText.setEnabled(false);
+                searchEditText.setVisibility(View.GONE);
+                searchEditText.startAnimation(rollOut);
+//                searchEditText.setText(null);
 
                 // Change searchIcon background
                 drawableSearchIcon.setColor(Color.TRANSPARENT);
@@ -244,29 +388,34 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 toolbar.setEnabled(true);
 
                 // Enable spinner
-                spinner.setEnabled(true);
-
+//                spinner.setEnabled(true);
+                mainUtils.restartSpinner();
             } else {
+                // is off
 
                 // Disable settings
                 toolbar.setEnabled(false);
 
                 // Disable spinner
-                spinner.setEnabled(false);
+//                spinner.setEnabled(false);
 
                 // Hide settings
                 toolbar.startAnimation(rollToolbar);
                 toolbar.setVisibility(View.GONE);
 
+                rollCategories.startAnimation(rollToolbar);
+                rollCategories.setVisibility(View.GONE);
+
                 // Hide spinner
-                spinner.startAnimation(recyclerPullUp);
-                spinner.setVisibility(View.GONE);
+//                spinner.startAnimation(recyclerPullUp);
+//                spinner.setVisibility(View.GONE);
 
                 // Animate recyclerView
-                recyclerView.startAnimation(recyclerPullUp);
+//                recyclerView.startAnimation(recyclerPullUp);
 
                 // Show searchbar
                 searchEditText.startAnimation(roll);
+                searchEditText.setEnabled(true);
                 searchEditText.setVisibility(View.VISIBLE);
                 searchEditText.requestFocus(); // Set focus when EditText is made visible
 
@@ -294,9 +443,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @SuppressLint("SetTextI18n")
             @Override
             public void onTextChanged(CharSequence newText, int start, int before, int count) {
-                mainUtils.deleteButtons();
 
-                TextView noToolsText = findViewById(R.id.messagebox);
+//                mainUtils.deleteButtons();
+
+//                TextView noToolsText = findViewById(R.id.messagebox);
                 Cursor cursor;
 
                 String[] projection = {"CATEGORY", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
@@ -352,14 +502,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
 
                 } else {
-                    noToolsText.startAnimation(myAnimation);
-                    runOnUiThread(() -> {
-                        disableMenu = false;
-                        noToolsText.setText(getResources().getString(R.string.no_newtext_entry));
-                        // Clear the list of items
-                        recyclerView.setVisibility(View.GONE);
+//                    TODO fix this shit
+//                    noToolsText.startAnimation(myAnimation);
 
-                    });
+//                        disableMenu = false;
+//
+//                        // Clear the list of items
+//                        recyclerView.setVisibility(View.GONE);
+//                        noToolsText.setText(getResources().getString(R.string.no_newtext_entry));
+//                        Toast.makeText(MainActivity.this, "nigger", Toast.LENGTH_SHORT).show();
+
                 }
             }
 
@@ -382,17 +534,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     // run spinnerChanger with selected position as parameter
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-        String text = adapterView.getItemAtPosition(position).toString();
-        mainUtils.spinnerChanger(text);
-    }
+//    @Override
+//    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+//        String text = adapterView.getItemAtPosition(position).toString();
+//        mainUtils.spinnerChanger(text);
+//    }
 
 
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
 
-    }
+
+//    @Override
+//    public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//    }
 
     // Creates menu that is shown after longer button click
     @Override
