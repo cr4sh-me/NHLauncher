@@ -160,9 +160,9 @@ public class DialogUtils {
 
     public void displayCategoriesDialog(MainActivity myActivity) {
         new Thread(() -> {
-            CategoriesDialog catDialog = new CategoriesDialog(myActivity);
+//            CategoriesDialog catDialog = new CategoriesDialog(myActivity);
             // Display our dialog!
-            catDialog.show(fragmentManager, "CategoriesDialog");
+//            catDialog.show(fragmentManager, "CategoriesDialog");
         }).start();
     }
 }

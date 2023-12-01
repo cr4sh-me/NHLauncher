@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -14,21 +17,20 @@ import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +39,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,13 +57,13 @@ public class MainActivity extends AppCompatActivity {
     public int buttonUsage;
     public SQLiteDatabase mDatabase;
     public ActivityResultLauncher<Intent> requestPermissionLauncher;
-    public ListView listViewCategories;
-    public ListAdapter adapter2;
+    public RecyclerView listViewCategories;
+//    public ListAdapter adapter2;
     private DialogUtils dialogUtils;
     private MainUtils mainUtils;
     private MyPreferences myPreferences;
     private RecyclerView recyclerView;
-
+    public Button backButton;
     public int currentCategoryNumber = 1;
 
     @SuppressLint({"Recycle", "ResourceType", "CutPasteId"})
@@ -187,9 +191,18 @@ public class MainActivity extends AppCompatActivity {
                 R.drawable.kali_social_engineering_trans
         );
 
-        adapter2 = new CustomSpinnerAdapter(this, valuesList, imageList, myPreferences.color20(), myPreferences.color80());
+//        adapter2 = new CustomSpinnerAdapter(this, valuesList, imageList, myPreferences.color20(), myPreferences.color80());
         listViewCategories = findViewById(R.id.recyclerViewCategories);
+        CategoriesAdapter adapter2 = new CategoriesAdapter(this);
+
+        adapter2.updateData(valuesList, imageList);
         listViewCategories.setAdapter(adapter2);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        listViewCategories.setLayoutManager(layoutManager);
+
+
+
 //        Spinner spinner = findViewById(R.id.categoriesSpinner);
 //        mainUtils.restartSpinner();
 
@@ -216,46 +229,41 @@ public class MainActivity extends AppCompatActivity {
         EditText searchEditText = findViewById(R.id.search_edit_text);
         ImageView toolbar = findViewById(R.id.toolBar);
         ImageView rollCategories = findViewById(R.id.showCategories);
+
         RelativeLayout categoriesLayout = findViewById(R.id.categories_layout);
-        Button backButton = findViewById(R.id.goBackButton);
+        backButton = findViewById(R.id.goBackButton);
         TextView noToolsText = findViewById(R.id.messagebox);
 
+        rollCategories.setOnClickListener(view -> runOnUiThread(() -> {
+            categoriesLayout.setVisibility(View.VISIBLE);
+            searchIcon.setVisibility(View.GONE);
+            noToolsText.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
+            listViewCategories.setVisibility(View.VISIBLE);
+            toolbar.setVisibility(View.GONE);
+            rollCategories.setVisibility(View.GONE);
+        }));
 
-        rollCategories.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                dialogUtils.displayCategoriesDialog(MainActivity.this);
-//                setContentView(R.layout.categories_dialog);
-                noToolsText.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.GONE);
-                toolbar.setVisibility(View.GONE);
-                searchIcon.setVisibility(View.GONE);
-//                spinner.setVisibility(View.GONE);
-                categoriesLayout.setVisibility(View.VISIBLE);
-                rollCategories.setVisibility(View.GONE);
-            }
-        });
-
-        listViewCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Object selectedItem = adapterView.getItemAtPosition(position);
-
-                currentCategoryNumber = position;
-
-                noToolsText.setVisibility(View.VISIBLE);
-                categoriesLayout.setVisibility(View.GONE);
-                toolbar.setVisibility(View.VISIBLE);
-                searchIcon.setVisibility(View.VISIBLE);
-                rollCategories.setVisibility(View.VISIBLE);
-//                spinner.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.VISIBLE);
-                mainUtils.restartSpinner();
-
-                mainUtils.spinnerChanger(position);
-//                Toast.makeText(mainUtils, "spinnerChanger " + selectedItem, Toast.LENGTH_SHORT).show();
-            }
-        });
+//        listViewCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+////                Object selectedItem = adapterView.getItemAtPosition(position);
+//
+//                currentCategoryNumber = position;
+//
+//                noToolsText.setVisibility(View.VISIBLE);
+//                categoriesLayout.setVisibility(View.GONE);
+//                toolbar.setVisibility(View.VISIBLE);
+//                searchIcon.setVisibility(View.VISIBLE);
+//                rollCategories.setVisibility(View.VISIBLE);
+////                spinner.setVisibility(View.VISIBLE);
+//                recyclerView.setVisibility(View.VISIBLE);
+//                mainUtils.restartSpinner();
+//
+//                mainUtils.spinnerChanger(position);
+////                Toast.makeText(mainUtils, "spinnerChanger " + selectedItem, Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
 //        listViewCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 //            @Override
@@ -271,24 +279,16 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-//        @Override
-//        public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-//            String text = adapterView.getItemAtPosition(position).toString();
-//            mainUtils.spinnerChanger(text);
-//        }
 
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                noToolsText.setVisibility(View.VISIBLE);
-                categoriesLayout.setVisibility(View.GONE);
-                toolbar.setVisibility(View.VISIBLE);
-                searchIcon.setVisibility(View.VISIBLE);
-                rollCategories.setVisibility(View.VISIBLE);
-//                spinner.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.VISIBLE);
-//                mainUtils.restartSpinner();
-            }
+
+        backButton.setOnClickListener(view -> {
+            noToolsText.setVisibility(View.VISIBLE);
+            categoriesLayout.setVisibility(View.GONE);
+            toolbar.setVisibility(View.VISIBLE);
+            searchIcon.setVisibility(View.VISIBLE);
+            rollCategories.setVisibility(View.VISIBLE);
+            listViewCategories.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         });
 
 //        CustomSpinnerAdapter adapter2 = new CustomSpinnerAdapter(this, valuesList, imageList, myPreferences.color20(), myPreferences.color80());
@@ -308,6 +308,8 @@ public class MainActivity extends AppCompatActivity {
         assert settingsIcon != null;
         settingsIcon.setTint(Color.parseColor(myPreferences.color80()));
         toolbar.setImageDrawable(settingsIcon);
+
+
 
 //        @SuppressLint("UseCompatLoadingForDrawables") Drawable categoriesIcon = getDrawable(R.drawable.nhl_settings);
 //        assert categoriesIcon != null;
@@ -339,10 +341,10 @@ public class MainActivity extends AppCompatActivity {
         Animation rollOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out);
         Animation rollToolbar = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_toolbar);
         Animation rollOutToolbar = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out_toolbar);
-        Animation spinnerFadeIn = AnimationUtils.loadAnimation(MainActivity.this, R.anim.spinner_fade);
-        Animation spinnerFadeOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.spinner_fade_out);
-        Animation recyclerPullUp = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_up);
-        Animation recyclerPullDown = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_down);
+//        Animation spinnerFadeIn = AnimationUtils.loadAnimation(MainActivity.this, R.anim.spinner_fade);
+//        Animation spinnerFadeOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.spinner_fade_out);
+//        Animation recyclerPullUp = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_up);
+//        Animation recyclerPullDown = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_down);
 
 
 

@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cr4sh.nhlauncher.bridge.Bridge;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -45,12 +44,6 @@ public class MainUtils extends AppCompatActivity {
     public void buttonUsageIncrease(String name) {
         DBHandler.updateToolUsage(mDatabase, name, mainActivity.buttonUsage + 1);
         restartSpinner();
-    }
-
-    // Removes all views (buttons) in our RecyclerView
-    public void deleteButtons() {
-        RecyclerView layout = mainActivity.findViewById(R.id.recyclerView); // obtain a reference to the layout where the button will be added
-        layout.removeAllViews();
     }
 
     // Queries db for buttons with given categories and display them!
@@ -83,15 +76,18 @@ public class MainUtils extends AppCompatActivity {
 
         cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, myPreferences.sortingMode(), null);
         if (cursor.getCount() == 0) {
-//            Animation myAnimation = AnimationUtils.loadAnimation(mainActivity, R.anim.fade_in);
-            noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
-//            noToolsText.startAnimation(myAnimation);
-            noToolsText.setText(resources.getString(R.string.no_fav_tools));
-            layout.setVisibility(View.GONE);
+            mainActivity.runOnUiThread(() -> {
+                noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
+                noToolsText.setText(resources.getString(R.string.no_fav_tools));
+                layout.setVisibility(View.GONE);
+            });
         } else {
-            layout.scrollToPosition(0); // Scroll to first tool
-            noToolsText.setText(null);
-            layout.setVisibility(View.VISIBLE);
+            mainActivity.runOnUiThread(() -> {
+                layout.scrollToPosition(0); // Scroll to first tool
+                noToolsText.setText(null);
+                layout.setVisibility(View.VISIBLE);
+            });
+
             // Create a new itemList from the cursor data
             List<Item> newItemList = new ArrayList<>();
             while (cursor.moveToNext()) {
@@ -106,8 +102,7 @@ public class MainUtils extends AppCompatActivity {
                 newItemList.add(item);
 
             }
-            ((MyAdapter) Objects.requireNonNull(layout.getAdapter())).updateData(newItemList);
-        }
+            mainActivity.runOnUiThread(() -> ((MyAdapter) Objects.requireNonNull(layout.getAdapter())).updateData(newItemList));}
         cursor.close();
     }
 
@@ -153,22 +148,5 @@ public class MainUtils extends AppCompatActivity {
         Locale newLocale = new Locale(languageCode);
         configuration.setLocale(newLocale);
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-        // Update valueList initialised before language changed!
-//        List<String> valuesList = Arrays.asList(
-//                mainActivity.getResources().getString(R.string.category_ft),
-//                mainActivity.getResources().getString(R.string.category_01),
-//                mainActivity.getResources().getString(R.string.category_02),
-//                mainActivity.getResources().getString(R.string.category_03),
-//                mainActivity.getResources().getString(R.string.category_04),
-//                mainActivity.getResources().getString(R.string.category_05),
-//                mainActivity.getResources().getString(R.string.category_06),
-//                mainActivity.getResources().getString(R.string.category_07),
-//                mainActivity.getResources().getString(R.string.category_08),
-//                mainActivity.getResources().getString(R.string.category_09),
-//                mainActivity.getResources().getString(R.string.category_10),
-//                mainActivity.getResources().getString(R.string.category_11),
-//                mainActivity.getResources().getString(R.string.category_12),
-//                mainActivity.getResources().getString(R.string.category_13)
-//        );
     }
 }
