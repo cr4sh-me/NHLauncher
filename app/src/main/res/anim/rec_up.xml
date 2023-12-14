@@ -2,9 +2,10 @@
     android:interpolator="@android:anim/accelerate_decelerate_interpolator">
 
     <!-- Translate (Slide) animation -->
-    <translate
-        android:duration="200"
-        android:fromYDelta="20%"
-        android:toYDelta="0%" />
+
+    <alpha
+        android:duration="2000"
+        android:fromAlpha="1.0"
+        android:toAlpha="0.0" />
 
 </set>

@@ -5,10 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -17,19 +14,15 @@ import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,8 +32,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -231,10 +222,19 @@ public class MainActivity extends AppCompatActivity {
         ImageView rollCategories = findViewById(R.id.showCategories);
 
         RelativeLayout categoriesLayout = findViewById(R.id.categories_layout);
+        TextView categoriesLayoutTitle = findViewById(R.id.dialog_title);
         backButton = findViewById(R.id.goBackButton);
         TextView noToolsText = findViewById(R.id.messagebox);
 
+        categoriesLayoutTitle.setTextColor(Color.parseColor(myPreferences.color80()));
+        backButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
+        backButton.setTextColor(Color.parseColor(myPreferences.color50()));
+
+        Animation recUp = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_down);
+//        Animation recDown = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_up);
+
         rollCategories.setOnClickListener(view -> runOnUiThread(() -> {
+            categoriesLayout.startAnimation(recUp);
             categoriesLayout.setVisibility(View.VISIBLE);
             searchIcon.setVisibility(View.GONE);
             noToolsText.setVisibility(View.GONE);
@@ -282,6 +282,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         backButton.setOnClickListener(view -> {
+//            wait for animation finish
             noToolsText.setVisibility(View.VISIBLE);
             categoriesLayout.setVisibility(View.GONE);
             toolbar.setVisibility(View.VISIBLE);
@@ -298,6 +299,7 @@ public class MainActivity extends AppCompatActivity {
         searchEditText.setHintTextColor(Color.parseColor(myPreferences.color80()));
         searchEditText.setTextColor(Color.parseColor(myPreferences.color80()));
         toolbar.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+        rollCategories.setBackgroundColor(Color.parseColor(myPreferences.color50()));
 
         @SuppressLint("UseCompatLoadingForDrawables") Drawable searchViewIcon = getDrawable(R.drawable.nhl_searchview);
         assert searchViewIcon != null;
@@ -309,14 +311,10 @@ public class MainActivity extends AppCompatActivity {
         settingsIcon.setTint(Color.parseColor(myPreferences.color80()));
         toolbar.setImageDrawable(settingsIcon);
 
-
-
-//        @SuppressLint("UseCompatLoadingForDrawables") Drawable categoriesIcon = getDrawable(R.drawable.nhl_settings);
-//        assert categoriesIcon != null;
-//        categoriesIcon.setTint(Color.parseColor(myPreferences.color80()));
-//        rollCategories.setImageDrawable(settingsIcon);
-
-//        rollCategories.setDr
+        @SuppressLint("UseCompatLoadingForDrawables") Drawable categoriesIcon = getDrawable(R.drawable.three_lines);
+        assert categoriesIcon != null;
+        categoriesIcon.setTint(Color.parseColor(myPreferences.color80()));
+        rollCategories.setImageDrawable(categoriesIcon);
 
         GradientDrawable drawableToolbar = new GradientDrawable();
         drawableToolbar.setCornerRadius(100);
@@ -327,6 +325,11 @@ public class MainActivity extends AppCompatActivity {
         drawableSearchIcon.setCornerRadius(100);
         drawableSearchIcon.setStroke(8, Color.parseColor(myPreferences.color50()));
         searchIcon.setBackground(drawableSearchIcon);
+
+        GradientDrawable drawableRollCategories = new GradientDrawable();
+        drawableRollCategories.setCornerRadius(100);
+        drawableRollCategories.setStroke(8, Color.parseColor(myPreferences.color50()));
+        rollCategories.setBackground(drawableRollCategories);
 
         GradientDrawable drawableSearchEditText = new GradientDrawable();
         drawableSearchEditText.setCornerRadius(100);
@@ -361,18 +364,7 @@ public class MainActivity extends AppCompatActivity {
                 toolbar.startAnimation(rollOutToolbar);
                 toolbar.setVisibility(View.VISIBLE);
 
-                // Show spinner
-
-//                mainUtils.restartSpinner();
-
-//                spinner.startAnimation(recyclerPullDown);
-//                spinner.setVisibility(View.VISIBLE);
-
-
-                // Animate recyclerView
-//                recyclerView.startAnimation(recyclerPullDown);
-
-
+                rollCategories.startAnimation(rollOutToolbar);
                 rollCategories.setVisibility(View.VISIBLE);
 
                 // Animate searchbar
