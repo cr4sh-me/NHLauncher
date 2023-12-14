@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Base.NHL" parent="Theme.Material3.DayNight.NoActionBar">
-    <item name="android:statusBarColor">@android:color/transparent</item>
-    <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
-<!--    <style name="Themed.NHL" parent="Theme.Material3.DayNight.NoActionBar">-->
-<!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
-<!--        <item name="android:navigationBarColor">@android:color/transparent</item>-->
-<!--        <item name="android:colorBackground">@color/material_dynamic_secondary20</item>-->
-<!--        <item name="android:textColor">@color/material_dynamic_secondary50</item>-->
-<!--    </style>-->
+    <style name="NoDropdownArrowSpinner" parent="Widget.AppCompat.Spinner">
+        <item name="android:background">@color/transparent</item>
+        <item name="android:popupBackground">@color/transparent</item>
+    </style>
+
+
+
+    <!--    <style name="Themed.NHL" parent="Theme.Material3.DayNight.NoActionBar">-->
+    <!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
+    <!--        <item name="android:navigationBarColor">@android:color/transparent</item>-->
+    <!--        <item name="android:colorBackground">@color/material_dynamic_secondary20</item>-->
+    <!--        <item name="android:textColor">@color/material_dynamic_secondary50</item>-->
+    <!--    </style>-->
 
 </resources>
 

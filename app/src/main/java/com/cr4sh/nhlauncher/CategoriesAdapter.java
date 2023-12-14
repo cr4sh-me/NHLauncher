@@ -3,8 +3,10 @@ package com.cr4sh.nhlauncher;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,7 +49,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesViewHolder
 
         MainUtils mainUtils = new MainUtils(myActivity);
         MyPreferences myPreferences = new MyPreferences(myActivity);
-
         String categoryName = item.get(position);
         String categoryImage = String.valueOf(itemImg.get(position));
         holder.nameView.setText(categoryName);
@@ -61,8 +62,13 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesViewHolder
         holder.nameView.setTextColor(Color.parseColor(myPreferences.color80()));
 
 
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setCornerRadius(100);
+        drawable.setStroke(8, Color.parseColor(myPreferences.color50()));
+        holder.categoryLayout.setBackground(drawable);
+
+
         holder.itemView.setOnClickListener(v -> {
-            myActivity.changeCategoryPreview(categoryImage, categoryName);
             myActivity.backButton.callOnClick();
             mainUtils.spinnerChanger((position));
         });

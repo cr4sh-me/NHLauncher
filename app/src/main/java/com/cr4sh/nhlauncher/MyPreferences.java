@@ -23,7 +23,7 @@ public class MyPreferences {
 
     public String color80() {
 
-        if(dynamicThemeBool()){
+        if (dynamicThemeBool()) {
             int myColor = ContextCompat.getColor(context, com.google.android.material.R.color.material_dynamic_secondary80);
             // Convert the integer color to hexadecimal
             return String.format("#%06X", (0xFFFFFF & myColor));
@@ -31,8 +31,9 @@ public class MyPreferences {
             return customColorsPrefs.getString("color80", "#e60000");
         }
     }
+
     public String color50() {
-        if(dynamicThemeBool()){
+        if (dynamicThemeBool()) {
             int myColor = ContextCompat.getColor(context, com.google.android.material.R.color.material_dynamic_secondary50);
             // Convert the integer color to hexadecimal
             return String.format("#%06X", (0xFFFFFF & myColor));
@@ -40,9 +41,10 @@ public class MyPreferences {
             return customColorsPrefs.getString("color50", "#660000");
         }
     }
+
     public String color20() {
 
-        if(dynamicThemeBool()){
+        if (dynamicThemeBool()) {
             int myColor = ContextCompat.getColor(context, com.google.android.material.R.color.material_dynamic_secondary20);
             // Convert the integer color to hexadecimal
             return String.format("#%06X", (0xFFFFFF & myColor));
@@ -50,8 +52,9 @@ public class MyPreferences {
             return customColorsPrefs.getString("color20", "#4c0000");
         }
     }
+
     public String color100() {
-        if(dynamicThemeBool()){
+        if (dynamicThemeBool()) {
             int myColor = ContextCompat.getColor(context, com.google.android.material.R.color.material_dynamic_secondary80);
             // Convert the integer color to hexadecimal
             return String.format("#%06X", (0xFFFFFF & myColor));
@@ -59,8 +62,14 @@ public class MyPreferences {
             return customColorsPrefs.getString("color100", "#FF0000");
         }
     }
-    public Boolean dynamicThemeBool() {return customColorsPrefs.getBoolean("dynamicThemeBool", false);}
-    public Boolean advancedThemeBool() {return customColorsPrefs.getBoolean("advancedThemeBool", false);}
+
+    public Boolean dynamicThemeBool() {
+        return customColorsPrefs.getBoolean("dynamicThemeBool", false);
+    }
+
+    public Boolean advancedThemeBool() {
+        return customColorsPrefs.getBoolean("advancedThemeBool", false);
+    }
 
 
     public String language() {

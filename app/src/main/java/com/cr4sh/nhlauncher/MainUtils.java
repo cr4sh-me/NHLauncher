@@ -26,6 +26,7 @@ public class MainUtils extends AppCompatActivity {
     private final SQLiteDatabase mDatabase;
     private final MainActivity mainActivity;
     private final MyPreferences myPreferences;
+
     public MainUtils(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         mDatabase = mainActivity.mDatabase;
@@ -50,7 +51,8 @@ public class MainUtils extends AppCompatActivity {
     @SuppressLint({"SetTextI18n", "Recycle"})
     public void spinnerChanger(int category) {
 
-        mainActivity.changeCategoryPreview();
+        mainActivity.changeCategoryPreview(category); // Set category preview
+
         // Obtain references to app resources and button layout
         Resources resources = mainActivity.getResources();
         RecyclerView layout = mainActivity.findViewById(R.id.recyclerView);
@@ -104,7 +106,8 @@ public class MainUtils extends AppCompatActivity {
                 newItemList.add(item);
 
             }
-            mainActivity.runOnUiThread(() -> ((MyAdapter) Objects.requireNonNull(layout.getAdapter())).updateData(newItemList));}
+            mainActivity.runOnUiThread(() -> ((MyAdapter) Objects.requireNonNull(layout.getAdapter())).updateData(newItemList));
+        }
         cursor.close();
     }
 

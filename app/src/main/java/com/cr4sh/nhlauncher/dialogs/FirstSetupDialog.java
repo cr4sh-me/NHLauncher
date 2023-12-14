@@ -2,7 +2,6 @@ package com.cr4sh.nhlauncher.dialogs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.core.widget.CompoundButtonCompat;
 
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MainUtils;

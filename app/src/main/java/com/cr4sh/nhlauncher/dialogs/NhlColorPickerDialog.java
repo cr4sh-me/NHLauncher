@@ -31,16 +31,15 @@ public class NhlColorPickerDialog extends AppCompatDialogFragment {
     Button button;
     ImageView alpha;
     String hexColorShade;
-        public NhlColorPickerDialog(Button button, ImageView alpha, String hexColorShade) {
+    //    MainActivity myActivity;
+    String hexColorString;
+    MyPreferences myPreferences;
+
+    public NhlColorPickerDialog(Button button, ImageView alpha, String hexColorShade) {
         this.button = button;
         this.alpha = alpha;
         this.hexColorShade = hexColorShade;
     }
-
-    //    MainActivity myActivity;
-    String hexColorString;
-
-    MyPreferences myPreferences;
 
     //    public CustomThemeDialog(MainActivity activity) {
 //        this.myActivity = activity;

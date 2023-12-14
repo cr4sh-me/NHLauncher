@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/spinnerBackground"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
     tools:ignore="UseCompoundDrawables">
 
@@ -13,7 +13,7 @@
         android:layout_gravity="center"
         android:contentDescription="@string/loading"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="5dp" />
 
     <TextView
         android:id="@+id/text_view"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:padding="10dp"
-        android:textSize="18sp" />
+        android:padding="5dp"
+         />
 
 </LinearLayout>

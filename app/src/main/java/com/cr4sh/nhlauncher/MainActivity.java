@@ -23,7 +23,6 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -35,8 +34,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,15 +50,18 @@ public class MainActivity extends AppCompatActivity {
     public SQLiteDatabase mDatabase;
     public ActivityResultLauncher<Intent> requestPermissionLauncher;
     public RecyclerView listViewCategories;
-//    public ListAdapter adapter2;
+    public Button backButton;
+    public int currentCategoryNumber = 1;
+    List<String> valuesList;
+    List<Integer> imageList;
+    public ImageView toolbar;
+    TextView rollCategoriesText;
+    ImageView rollCategories;
     private DialogUtils dialogUtils;
     private MainUtils mainUtils;
     private MyPreferences myPreferences;
     private RecyclerView recyclerView;
-    public Button backButton;
-    public int currentCategoryNumber = 1;
-    TextView rollCategoriesText;
-    ImageView rollCategories;
+
     @SuppressLint({"Recycle", "ResourceType", "CutPasteId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Setting up new spinner
 
-        List<String> valuesList = Arrays.asList(
+        valuesList = Arrays.asList(
                 getResources().getString(R.string.category_ft),
                 getResources().getString(R.string.category_01),
                 getResources().getString(R.string.category_02),
@@ -167,10 +167,9 @@ public class MainActivity extends AppCompatActivity {
                 getResources().getString(R.string.category_09),
                 getResources().getString(R.string.category_10),
                 getResources().getString(R.string.category_11),
-                getResources().getString(R.string.category_12),
                 getResources().getString(R.string.category_13)
         );
-        List<Integer> imageList = Arrays.asList(
+        imageList = Arrays.asList(
                 R.drawable.nhl_favourite_trans,
                 R.drawable.kali_info_gathering_trans,
                 R.drawable.kali_vuln_assessment_trans,
@@ -198,7 +197,6 @@ public class MainActivity extends AppCompatActivity {
         listViewCategories.setLayoutManager(layoutManager);
 
 
-
 //        Spinner spinner = findViewById(R.id.categoriesSpinner);
 //        mainUtils.restartSpinner();
 
@@ -212,6 +210,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        rollCategories = findViewById(R.id.showCategoriesImage); // Init rollCategories before spinnerChanger method
+        rollCategoriesText = findViewById(R.id.showCategoriesText); // Init rollCategoruesText before spinnerChanger method
+
         // Set category, so code below can run
 //        spinner.setSelection(isFavourite == 0 ? 1 : 0);
 //        listViewCategories.setSelection(isFavourite == 0 ? 1 : 0);
@@ -223,10 +224,8 @@ public class MainActivity extends AppCompatActivity {
 
         ImageView searchIcon = findViewById(R.id.searchIcon);
         EditText searchEditText = findViewById(R.id.search_edit_text);
-        ImageView toolbar = findViewById(R.id.toolBar);
+        toolbar = findViewById(R.id.toolBar);
         LinearLayout rollCategoriesLayout = findViewById(R.id.showCategoriesLayout);
-        rollCategories = findViewById(R.id.showCategoriesImage);
-        rollCategoriesText = findViewById(R.id.showCategoriesText);
 
         RelativeLayout categoriesLayout = findViewById(R.id.categories_layout);
         TextView categoriesLayoutTitle = findViewById(R.id.dialog_title);
@@ -237,10 +236,12 @@ public class MainActivity extends AppCompatActivity {
         backButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
         backButton.setTextColor(Color.parseColor(myPreferences.color50()));
 
+
         Animation recUp = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_down);
 //        Animation recDown = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_up);
 
         rollCategoriesLayout.setOnClickListener(view -> runOnUiThread(() -> {
+            VibrationUtil.vibrate(MainActivity.this, 10);
             categoriesLayout.startAnimation(recUp);
             rollCategoriesLayout.setVisibility(View.GONE);
             categoriesLayout.setVisibility(View.VISIBLE);
@@ -286,7 +287,6 @@ public class MainActivity extends AppCompatActivity {
 //
 //            }
 //        });
-
 
 
         backButton.setOnClickListener(view -> {
@@ -346,8 +346,6 @@ public class MainActivity extends AppCompatActivity {
         drawableSearchEditText.setStroke(8, Color.parseColor(myPreferences.color50()));
 
 
-
-
         // Setup animations
         Animation roll = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll);
         Animation rollOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out);
@@ -359,11 +357,9 @@ public class MainActivity extends AppCompatActivity {
 //        Animation recyclerPullDown = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_down);
 
 
-
         searchIcon.setOnClickListener(v -> {
             // Toggle visibility of the search EditText when the icon is clicked
             if (searchEditText.getVisibility() == View.VISIBLE) {
-                // Is on
 
                 // Close the keyboard if it's open
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -388,15 +384,20 @@ public class MainActivity extends AppCompatActivity {
 
                 // Enable settings
                 toolbar.setEnabled(true);
+//                rollCategories.setEnabled(true);
 
                 // Enable spinner
 //                spinner.setEnabled(true);
                 mainUtils.restartSpinner();
             } else {
+
+                // TODO fix animation rollCategories can be clicked after searchview on
                 // is off
+
 
                 // Disable settings
                 toolbar.setEnabled(false);
+                rollCategories.setEnabled(false);
 
                 // Clear searchbar
                 searchEditText.setText(null);
@@ -409,12 +410,7 @@ public class MainActivity extends AppCompatActivity {
                 rollCategoriesLayout.startAnimation(rollToolbar);
                 rollCategoriesLayout.setVisibility(View.GONE);
 
-                // Hide spinner
-//                spinner.startAnimation(recyclerPullUp);
-//                spinner.setVisibility(View.GONE);
-
-                // Animate recyclerView
-//                recyclerView.startAnimation(recyclerPullUp);
+//                categoriesLayout.setVisibility(View.GONE);
 
                 // Show searchbar
                 searchEditText.startAnimation(roll);
@@ -428,8 +424,6 @@ public class MainActivity extends AppCompatActivity {
                 // Change searchIcon background
                 drawableSearchIcon.setSize(10, 10);
                 drawableSearchIcon.setColor(Color.parseColor(myPreferences.color50()));
-
-//                    searchIcon.setBackground(drawableSearchEditText);
 
                 // Show the keyboard explicitly
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -447,9 +441,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence newText, int start, int before, int count) {
 
-//                mainUtils.deleteButtons();
-
-//                TextView noToolsText = findViewById(R.id.messagebox);
                 Cursor cursor;
 
                 String[] projection = {"CATEGORY", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
@@ -506,12 +497,12 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
 //                    TODO fix this shit
-                    noToolsText.startAnimation(myAnimation);
-                        disableMenu = false;
-                        // Clear the list of items
-                        recyclerView.setVisibility(View.GONE);
-                        noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
-                        noToolsText.setText(getResources().getString(R.string.no_newtext_entry));
+//                    noToolsText.startAnimation(myAnimation);
+//                        disableMenu = false;
+//                        // Clear the list of items
+//                        recyclerView.setVisibility(View.GONE);
+//                        noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
+//                        noToolsText.setText(getResources().getString(R.string.no_newtext_entry));
                 }
             }
 
@@ -521,7 +512,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        toolbar.setOnClickListener(v -> dialogUtils.openToolbarDialog(MainActivity.this));
+        toolbar.setOnClickListener(v -> {
+            toolbar.setEnabled(false); // Prevent double open
+            dialogUtils.openToolbarDialog(MainActivity.this);
+        });
+
 
     }
 
@@ -539,8 +534,6 @@ public class MainActivity extends AppCompatActivity {
 //        String text = adapterView.getItemAtPosition(position).toString();
 //        mainUtils.spinnerChanger(text);
 //    }
-
-
 
 
 //    @Override
@@ -583,8 +576,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void changeCategoryPreview(String categoryImageView, String categoryTextView) {
-        @SuppressLint("DiscouragedApi") int imageResourceId = getResources().getIdentifier(categoryImageView, "drawable", getPackageName());
+    public void changeCategoryPreview(int position) {
+
+        String categoryTextView = valuesList.get(position);
+        int imageResourceId = imageList.get(position);
+
         rollCategories.setImageResource(imageResourceId);
         rollCategories.setColorFilter(Color.parseColor(myPreferences.color80()), PorterDuff.Mode.MULTIPLY);
         rollCategoriesText.setText(categoryTextView);

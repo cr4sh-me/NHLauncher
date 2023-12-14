@@ -113,4 +113,19 @@
     <string name="search_tool_name">Wyszukaj nazwę narzędzia</string>
     <string name="tools">Menu narzędzi</string>
     <string name="search_hint">Wyszukaj narzędzia</string>
+    <string name="advanced_themes">Tryb zaawansowany</string>
+    <string name="hex_color1">Wartość hex kolor1</string>
+    <string name="hex_color2">Wartość hex kolor2</string>
+    <string name="hex_color3">Wartość hex kolor3</string>
+    <string name="choose_color">Wybierz kolor</string>
+    <string name="categories">Kategorie</string>
+    <string name="all_categories">AC - Wszystkie Kategorie</string>
+    <string name="update_wait">Sprawdzam uaktualnienia...</string>
+    <string name="check_internet_connection">Sprawdź połączenie z internetem!</string>
+    <string name="current_app_version">"Obecna wersja: "</string>
+    <string name="new_app_version">"Nowa wersja: "</string>
+    <string name="update_avaiable">Aktualizacja dostępna!</string>
+    <string name="giga_chad">Witaj w wersji beta!</string>
+    <string name="already_updated">Wersja aktualna!</string>
+    <string name="something_fucked_up">Coś poszło nie tak!</string>
 </resources>

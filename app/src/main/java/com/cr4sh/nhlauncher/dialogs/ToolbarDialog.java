@@ -1,42 +1,30 @@
 package com.cr4sh.nhlauncher.dialogs;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-import com.cr4sh.nhlauncher.DBHandler;
 import com.cr4sh.nhlauncher.DialogUtils;
-import com.cr4sh.nhlauncher.Item;
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MainUtils;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 
 public class ToolbarDialog extends AppCompatDialogFragment {
-
     MainActivity myActivity;
-//
     public ToolbarDialog(MainActivity activity) {
         this.myActivity = activity;
     }
@@ -74,8 +62,6 @@ public class ToolbarDialog extends AppCompatDialogFragment {
         cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
 
 
-
-
 //        text1.setText(myActivity.buttonName.toUpperCase() + " " + requireActivity().getResources().getString(R.string.options).toUpperCase());
 
         option1.setOnClickListener(view1 -> {
@@ -89,7 +75,7 @@ public class ToolbarDialog extends AppCompatDialogFragment {
         });
 
         option3.setOnClickListener(view1 -> {
-            dialogUtils.openStatisticsDialog();
+            dialogUtils.openStatisticsDialog(myActivity);
             Objects.requireNonNull(getDialog()).cancel();
         });
 
@@ -101,7 +87,11 @@ public class ToolbarDialog extends AppCompatDialogFragment {
             Objects.requireNonNull(getDialog()).cancel();
         });
 
-        cancelButton.setOnClickListener(view1 -> Objects.requireNonNull(getDialog()).cancel());
+        cancelButton.setOnClickListener(view1 -> {
+            Objects.requireNonNull(getDialog()).cancel();
+        });
+
+        Objects.requireNonNull(getDialog()).setOnCancelListener(dialog -> myActivity.toolbar.setEnabled(true));
 
         return view;
 

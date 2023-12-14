@@ -1,26 +1,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/custom_theme_dialog_background"
-    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:orientation="horizontal">
 
     <!-- Outer Container -->
     <LinearLayout
-        android:orientation="vertical"
-        android:padding="16dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
-            android:layout_marginBottom="10dp"
             android:id="@+id/dialog_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:text="@string/choose_color"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <com.skydoves.colorpickerview.ColorPickerView
             android:id="@+id/colorPickerView"
@@ -28,18 +28,18 @@
             android:layout_height="300dp" />
 
         <com.skydoves.colorpickerview.sliders.BrightnessSlideBar
-            android:layout_margin="10dp"
-            app:selector_BrightnessSlider="@drawable/colorpickerview_wheel"
             android:id="@+id/brightnessBar"
             android:layout_width="match_parent"
-            android:layout_height="30dp"/>
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            app:selector_BrightnessSlider="@drawable/colorpickerview_wheel" />
 
         <EditText
-            android:enabled="false"
             android:id="@+id/customHexColor"
             android:layout_width="280dp"
             android:layout_height="55dp"
             android:layout_gravity="center"
+            android:enabled="false"
             android:gravity="center"
             android:hint="@string/hex_color"
             android:maxLength="25" />
@@ -51,20 +51,20 @@
             android:orientation="vertical">
 
             <Button
-                android:backgroundTint="@color/material_dynamic_secondary30"
-                android:textColor="@color/material_dynamic_secondary80"
                 android:id="@+id/apply_custom_colors"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/apply_colors" />
+                android:backgroundTint="@color/material_dynamic_secondary30"
+                android:text="@string/apply_colors"
+                android:textColor="@color/material_dynamic_secondary80" />
 
             <Button
-                android:backgroundTint="@color/material_dynamic_secondary30"
-                android:textColor="@color/material_dynamic_secondary80"
                 android:id="@+id/cancel_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/close" />
+                android:backgroundTint="@color/material_dynamic_secondary30"
+                android:text="@string/close"
+                android:textColor="@color/material_dynamic_secondary80" />
 
         </LinearLayout>
 

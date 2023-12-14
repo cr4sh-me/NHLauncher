@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/custom_theme_dialog_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-    android:id="@+id/custom_theme_dialog_background">
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/dialog_title"
@@ -14,10 +14,10 @@
         android:textStyle="bold" />
 
     <ListView
-        android:layout_above="@id/goBackButton"
         android:id="@+id/recyclerViewCategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@id/goBackButton"
         android:layout_below="@id/dialog_title"
         android:nestedScrollingEnabled="true">
 

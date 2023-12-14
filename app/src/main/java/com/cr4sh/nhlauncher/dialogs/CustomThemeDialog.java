@@ -36,10 +36,24 @@ import java.util.Objects;
 
 public class CustomThemeDialog extends AppCompatDialogFragment {
 
-//    MainActivity myActivity;
+    //    MainActivity myActivity;
     String hexColorString;
 
     MyPreferences myPreferences;
+
+    public static String adjustColorBrightness(String hexColor, float factor) {
+        // https://github.com/edelstone/tints-and-shades
+
+        int color = Color.parseColor(hexColor);
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+
+        double r_math = r * factor;
+        double g_math = g * factor;
+        double b_math = b * factor;
+        return String.format("#%02X%02X%02X", Math.round(r_math), Math.round(g_math), Math.round(b_math));
+    }
 
     //    public CustomThemeDialog(MainActivity activity) {
 //        this.myActivity = activity;
@@ -55,7 +69,7 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
         LinearLayout manualBox = view.findViewById(R.id.hiddenLayout);
         LinearLayout advancedMode = view.findViewById(R.id.advancedLayout);
         TextView title = view.findViewById(R.id.dialog_title);
-        TextView text2  = view.findViewById(R.id.text_second);
+        TextView text2 = view.findViewById(R.id.text_second);
         ScrollView bkg = view.findViewById(R.id.custom_theme_dialog_background);
         ColorPickerView colorPickerView = view.findViewById(R.id.colorPickerView);
 //        ImageView alphaTileView1 = view.findViewById(R.id.alphaTileView1);
@@ -82,7 +96,6 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
         hexColorString = myPreferences.color100();
 
 
-
         // Checkbox set
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
@@ -91,14 +104,14 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
             dynamicThemes.setEnabled(false);
         }
 
-        if(dynamicThemes.isChecked()){
+        if (dynamicThemes.isChecked()) {
             manualBox.setVisibility(View.GONE);
         } else {
             manualBox.setVisibility(View.VISIBLE);
             colorPickerView.setInitialColor(Color.parseColor(myPreferences.color100()));
         }
 
-        if(myPreferences.advancedThemeBool()){
+        if (myPreferences.advancedThemeBool()) {
             advancedThemes.setChecked(true);
             advancedMode.setVisibility(View.VISIBLE);
             alphaLayout.setVisibility(View.GONE);
@@ -130,8 +143,8 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
         dynamicThemes.setTextColor(Color.parseColor(myPreferences.color80()));
         advancedThemes.setTextColor(Color.parseColor(myPreferences.color80()));
 
-        int [][] states = {{android.R.attr.state_checked}, {}};
-        int [] colors = {Color.parseColor(myPreferences.color80()), Color.parseColor(myPreferences.color80())};
+        int[][] states = {{android.R.attr.state_checked}, {}};
+        int[] colors = {Color.parseColor(myPreferences.color80()), Color.parseColor(myPreferences.color80())};
         CompoundButtonCompat.setButtonTintList(dynamicThemes, new ColorStateList(states, colors));
         CompoundButtonCompat.setButtonTintList(advancedThemes, new ColorStateList(states, colors));
 
@@ -160,11 +173,10 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
         colorPickerView.setFlagView(at);
 
 
-
 //        colorPickerView.setPaletteDrawable(ContextCompat.getDrawable(requireActivity(), R.drawable.kali_hashid))
 
         dynamicThemes.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(isChecked){
+            if (isChecked) {
                 manualBox.setVisibility(View.GONE);
             } else {
                 manualBox.setVisibility(View.VISIBLE);
@@ -173,7 +185,7 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
         });
 
         advancedThemes.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(isChecked){
+            if (isChecked) {
                 advancedMode.setVisibility(View.VISIBLE);
                 alphaLayout.setVisibility(View.GONE);
                 hexColorValue.setVisibility(View.GONE);
@@ -218,13 +230,13 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
 //            alphaTileView3.setColorFilter(Color.parseColor(adjustColorBrightness(hexColorString, 0.6f)));
 //            alphaTileView4.setColorFilter(Color.parseColor(adjustColorBrightness(hexColorString, 0.2f)));
         });
-        
+
         applyColors.setOnClickListener(v -> {
 
-            if(hexColorValue1.getText().length() < 0 || hexColorValue1.getText().length() < 0 || hexColorValue1.getText().length() < 0){
+            if (hexColorValue1.getText().length() < 0 || hexColorValue1.getText().length() < 0 || hexColorValue1.getText().length() < 0) {
                 Toast.makeText(requireActivity(), "Empty color values! Use brain...", Toast.LENGTH_SHORT).show();
             } else {
-                if(advancedThemes.isChecked()){
+                if (advancedThemes.isChecked()) {
                     String color100 = myPreferences.color100();
                     String color80 = hexColorValue1.getText().toString();
                     String color50 = hexColorValue2.getText().toString();
@@ -240,7 +252,7 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
                 requireActivity().recreate();
             }
         });
-        
+
         cancelButton.setOnClickListener(view1 -> Objects.requireNonNull(getDialog()).cancel());
 
         return view;
@@ -253,22 +265,6 @@ public class CustomThemeDialog extends AppCompatDialogFragment {
         DialogUtils dialogUtils = new DialogUtils(requireActivity().getSupportFragmentManager());
         dialogUtils.openNhlColorPickerDialog(button, alpha, colorShade);
     }
-
-    public static String adjustColorBrightness(String hexColor, float factor) {
-        // https://github.com/edelstone/tints-and-shades
-
-            int color = Color.parseColor(hexColor);
-            int r = Color.red(color);
-            int g = Color.green(color);
-            int b = Color.blue(color);
-
-            double r_math = r * factor;
-            double g_math = g * factor;
-            double b_math = b * factor;
-            return String.format("#%02X%02X%02X", Math.round(r_math), Math.round(g_math), Math.round(b_math));
-        }
-
-
 
     private void saveColor80(String color100, String color80, String color50, String color20, boolean dynamicThemeBool, boolean advThemeBool) {
         // Save the color values and frame drawable to SharedPreferences

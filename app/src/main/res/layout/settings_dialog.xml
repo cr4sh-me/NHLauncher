@@ -1,9 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/custom_theme_dialog_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:id="@+id/custom_theme_dialog_background">
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/dialog_title"
@@ -15,20 +15,39 @@
         android:textStyle="bold" />
 
     <Spinner
+        android:layout_margin="5dp"
         android:id="@+id/sorting_spinner"
-        android:layout_width="280dp"
+        android:layout_width="match_parent"
         android:layout_height="55dp" />
 
     <Spinner
+        android:layout_margin="5dp"
         android:id="@+id/language_spinner"
-        android:layout_width="280dp"
+        android:layout_width="match_parent"
         android:layout_height="55dp" />
+
+    <TextView
+        android:maxLines="3"
+        android:padding="5dp"
+        android:layout_margin="10dp"
+        android:id="@+id/checkUpdate"
+        android:gravity="center"
+        android:text="@string/update_wait"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
         android:orientation="vertical">
+
+        <Button
+            android:visibility="gone"
+            android:id="@+id/update_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/update_button" />
 
         <Button
             android:id="@+id/run_setup"

@@ -1,13 +1,8 @@
 package com.cr4sh.nhlauncher.dialogs;
 
 import android.annotation.SuppressLint;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,16 +13,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-import com.cr4sh.nhlauncher.DBHandler;
 import com.cr4sh.nhlauncher.DialogUtils;
-import com.cr4sh.nhlauncher.Item;
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MainUtils;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -38,6 +29,7 @@ public class ButtonMenuDialog extends AppCompatDialogFragment {
     public ButtonMenuDialog(MainActivity activity) {
         this.myActivity = activity;
     }
+
     @SuppressLint("SetTextI18n")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -34,11 +34,14 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.dropdown_items, parent, false);
         }
 
-        TextView textView = convertView.findViewById(R.id.text_view);
         ImageView imageView = convertView.findViewById(R.id.image_view);
+        TextView textView = convertView.findViewById(R.id.text_view);
+
 
         imageView.setColorFilter(Color.parseColor(textColor), PorterDuff.Mode.MULTIPLY);
-        imageView.setImageResource(imageList.get(position));
+        if (!imageList.isEmpty()){
+            imageView.setImageResource(imageList.get(position));
+        }
         textView.setText(getItem(position));
 
         // set background color and text color for dropdown items and selected item in spinner
@@ -62,7 +65,11 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
         TextView textView = view.findViewById(R.id.text_view);
 
         imageView.setColorFilter(Color.parseColor(textColor), PorterDuff.Mode.MULTIPLY);
-        imageView.setImageResource(imageList.get(position));
+
+        if (!imageList.isEmpty()){
+            imageView.setImageResource(imageList.get(position));
+        }
+
         textView.setText(getItem(position));
 
         // Set text color of spinner

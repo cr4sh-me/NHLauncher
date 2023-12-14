@@ -19,7 +19,6 @@ import com.cr4sh.nhlauncher.dialogs.PermissionDialog;
 import com.cr4sh.nhlauncher.dialogs.SettingsDialog;
 import com.cr4sh.nhlauncher.dialogs.StatisticsDialog;
 import com.cr4sh.nhlauncher.dialogs.ToolbarDialog;
-import com.skydoves.colorpickerview.ColorPickerDialog;
 
 // This class creates and opens Dialogs
 public class DialogUtils {
@@ -27,6 +26,7 @@ public class DialogUtils {
     private final FragmentManager fragmentManager;
 
     MainActivity myActivity;
+
     public DialogUtils(FragmentManager fragmentManager, MainActivity activity) {
         this.fragmentManager = fragmentManager;
         this.myActivity = activity;
@@ -106,15 +106,15 @@ public class DialogUtils {
         }).start();
     }
 
-    public void openStatisticsDialog() {
+    public void openStatisticsDialog(MainActivity myActivity) {
         new Thread(() -> {
-            StatisticsDialog statsDialog = new StatisticsDialog();
+            StatisticsDialog statsDialog = new StatisticsDialog(myActivity);
             // Display our dialog!
             statsDialog.show(fragmentManager, "PermissionsDialog");
         }).start();
     }
 
-    public void openMissingActivityDialog(){
+    public void openMissingActivityDialog() {
         new Thread(() -> {
             MissingActivityDialog maDialog = new MissingActivityDialog();
             // Display our dialog!
@@ -155,14 +155,6 @@ public class DialogUtils {
             NhlColorPickerDialog nhlcpDialog = new NhlColorPickerDialog(button, alpha, colorShade);
             // Display our dialog!
             nhlcpDialog.show(fragmentManager, "NhlColorPickerDialog");
-        }).start();
-    }
-
-    public void displayCategoriesDialog(MainActivity myActivity) {
-        new Thread(() -> {
-//            CategoriesDialog catDialog = new CategoriesDialog(myActivity);
-            // Display our dialog!
-//            catDialog.show(fragmentManager, "CategoriesDialog");
         }).start();
     }
 }

@@ -2,10 +2,8 @@ package com.cr4sh.nhlauncher;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -75,6 +73,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         });
 
         holder.itemView.setOnLongClickListener(view -> {
+            VibrationUtil.vibrate(myActivity, 10);
             myActivity.buttonCategory = item.getCategory();
             myActivity.buttonName = item.getName();
             myActivity.buttonDescription = item.getDescription();

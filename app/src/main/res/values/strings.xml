@@ -119,5 +119,15 @@
     <string name="hex_color3">Hex color3 value</string>
     <string name="choose_color">Choose color</string>
     <string name="categories">Categories</string>
+    <string name="all_categories">AC - All Categories</string>
+    <string name="update_wait">Checking for updates...</string>
+    <string name="check_internet_connection">Check your internet connection!</string>
+    <string name="current_app_version">"Current version: "</string>
+    <string name="new_app_version">"New version: "</string>
+    <string name="update_avaiable">Update available!</string>
+    <string name="giga_chad">Welcome to beta version!</string>
+    <string name="already_updated">Already updated!</string>
+    <string name="something_fucked_up">Something went wrong!</string>
+    <string name="update_button">Download update!</string>
 
 </resources>
