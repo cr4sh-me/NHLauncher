@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -22,7 +23,9 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,13 +36,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-
     public static boolean disableMenu = false;
     public String buttonCategory;
     public String buttonName;
@@ -56,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     public Button backButton;
     public int currentCategoryNumber = 1;
-
+    TextView rollCategoriesText;
+    ImageView rollCategories;
     @SuppressLint({"Recycle", "ResourceType", "CutPasteId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,7 +224,9 @@ public class MainActivity extends AppCompatActivity {
         ImageView searchIcon = findViewById(R.id.searchIcon);
         EditText searchEditText = findViewById(R.id.search_edit_text);
         ImageView toolbar = findViewById(R.id.toolBar);
-        ImageView rollCategories = findViewById(R.id.showCategories);
+        LinearLayout rollCategoriesLayout = findViewById(R.id.showCategoriesLayout);
+        rollCategories = findViewById(R.id.showCategoriesImage);
+        rollCategoriesText = findViewById(R.id.showCategoriesText);
 
         RelativeLayout categoriesLayout = findViewById(R.id.categories_layout);
         TextView categoriesLayoutTitle = findViewById(R.id.dialog_title);
@@ -233,8 +240,9 @@ public class MainActivity extends AppCompatActivity {
         Animation recUp = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_down);
 //        Animation recDown = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_up);
 
-        rollCategories.setOnClickListener(view -> runOnUiThread(() -> {
+        rollCategoriesLayout.setOnClickListener(view -> runOnUiThread(() -> {
             categoriesLayout.startAnimation(recUp);
+            rollCategoriesLayout.setVisibility(View.GONE);
             categoriesLayout.setVisibility(View.VISIBLE);
             searchIcon.setVisibility(View.GONE);
             noToolsText.setVisibility(View.GONE);
@@ -283,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
 
         backButton.setOnClickListener(view -> {
 //            wait for animation finish
+            rollCategoriesLayout.setVisibility(View.VISIBLE);
             noToolsText.setVisibility(View.VISIBLE);
             categoriesLayout.setVisibility(View.GONE);
             toolbar.setVisibility(View.VISIBLE);
@@ -299,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
         searchEditText.setHintTextColor(Color.parseColor(myPreferences.color80()));
         searchEditText.setTextColor(Color.parseColor(myPreferences.color80()));
         toolbar.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        rollCategories.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+//        rollCategories.setBackgroundColor(Color.parseColor(myPreferences.color50()));
 
         @SuppressLint("UseCompatLoadingForDrawables") Drawable searchViewIcon = getDrawable(R.drawable.nhl_searchview);
         assert searchViewIcon != null;
@@ -311,10 +320,10 @@ public class MainActivity extends AppCompatActivity {
         settingsIcon.setTint(Color.parseColor(myPreferences.color80()));
         toolbar.setImageDrawable(settingsIcon);
 
-        @SuppressLint("UseCompatLoadingForDrawables") Drawable categoriesIcon = getDrawable(R.drawable.three_lines);
-        assert categoriesIcon != null;
-        categoriesIcon.setTint(Color.parseColor(myPreferences.color80()));
-        rollCategories.setImageDrawable(categoriesIcon);
+//        @SuppressLint("UseCompatLoadingForDrawables") Drawable categoriesIcon = getDrawable(R.drawable.three_lines);
+//        assert categoriesIcon != null;
+//        categoriesIcon.setTint(Color.parseColor(myPreferences.color80()));
+//        rollCategories.setImageDrawable(categoriesIcon);
 
         GradientDrawable drawableToolbar = new GradientDrawable();
         drawableToolbar.setCornerRadius(100);
@@ -329,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
         GradientDrawable drawableRollCategories = new GradientDrawable();
         drawableRollCategories.setCornerRadius(100);
         drawableRollCategories.setStroke(8, Color.parseColor(myPreferences.color50()));
-        rollCategories.setBackground(drawableRollCategories);
+        rollCategoriesLayout.setBackground(drawableRollCategories);
 
         GradientDrawable drawableSearchEditText = new GradientDrawable();
         drawableSearchEditText.setCornerRadius(100);
@@ -364,12 +373,11 @@ public class MainActivity extends AppCompatActivity {
                 toolbar.startAnimation(rollOutToolbar);
                 toolbar.setVisibility(View.VISIBLE);
 
-                rollCategories.startAnimation(rollOutToolbar);
-                rollCategories.setVisibility(View.VISIBLE);
+                rollCategoriesLayout.startAnimation(rollOutToolbar);
+                rollCategoriesLayout.setVisibility(View.VISIBLE);
 
                 // Animate searchbar
 
-                searchEditText.setText(null);
                 searchEditText.setEnabled(false);
                 searchEditText.setVisibility(View.GONE);
                 searchEditText.startAnimation(rollOut);
@@ -390,15 +398,16 @@ public class MainActivity extends AppCompatActivity {
                 // Disable settings
                 toolbar.setEnabled(false);
 
-                // Disable spinner
-//                spinner.setEnabled(false);
+                // Clear searchbar
+                searchEditText.setText(null);
+
 
                 // Hide settings
                 toolbar.startAnimation(rollToolbar);
                 toolbar.setVisibility(View.GONE);
 
-                rollCategories.startAnimation(rollToolbar);
-                rollCategories.setVisibility(View.GONE);
+                rollCategoriesLayout.startAnimation(rollToolbar);
+                rollCategoriesLayout.setVisibility(View.GONE);
 
                 // Hide spinner
 //                spinner.startAnimation(recyclerPullUp);
@@ -497,15 +506,12 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
 //                    TODO fix this shit
-//                    noToolsText.startAnimation(myAnimation);
-
-//                        disableMenu = false;
-//
-//                        // Clear the list of items
-//                        recyclerView.setVisibility(View.GONE);
-//                        noToolsText.setText(getResources().getString(R.string.no_newtext_entry));
-//                        Toast.makeText(MainActivity.this, "nigger", Toast.LENGTH_SHORT).show();
-
+                    noToolsText.startAnimation(myAnimation);
+                        disableMenu = false;
+                        // Clear the list of items
+                        recyclerView.setVisibility(View.GONE);
+                        noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
+                        noToolsText.setText(getResources().getString(R.string.no_newtext_entry));
                 }
             }
 
@@ -575,6 +581,14 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onContextItemSelected(item);
         }
+    }
+
+    public void changeCategoryPreview(String categoryImageView, String categoryTextView) {
+        @SuppressLint("DiscouragedApi") int imageResourceId = getResources().getIdentifier(categoryImageView, "drawable", getPackageName());
+        rollCategories.setImageResource(imageResourceId);
+        rollCategories.setColorFilter(Color.parseColor(myPreferences.color80()), PorterDuff.Mode.MULTIPLY);
+        rollCategoriesText.setText(categoryTextView);
+        rollCategoriesText.setTextColor(Color.parseColor(myPreferences.color80()));
     }
 }
 

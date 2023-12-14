@@ -41,6 +41,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesViewHolder
     }
 
     // Used to create buttons, and set listeners for them
+
     @Override
     public void onBindViewHolder(@NonNull CategoriesViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
@@ -50,7 +51,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesViewHolder
         String categoryName = item.get(position);
         String categoryImage = String.valueOf(itemImg.get(position));
         holder.nameView.setText(categoryName);
-
 
         // Load image dynamically based on categoryImage
         @SuppressLint("DiscouragedApi") int imageResourceId = myActivity.getResources().getIdentifier(categoryImage, "drawable", myActivity.getPackageName());
@@ -62,10 +62,10 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesViewHolder
 
 
         holder.itemView.setOnClickListener(v -> {
+            myActivity.changeCategoryPreview(categoryImage, categoryName);
             myActivity.backButton.callOnClick();
             mainUtils.spinnerChanger((position));
         });
-
 
     }
 

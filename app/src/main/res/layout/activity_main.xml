@@ -39,15 +39,41 @@
             android:visibility="gone"
             tools:ignore="RtlSymmetry" />
 
-                <ImageButton
-                    android:id="@+id/showCategories"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_toStartOf="@id/toolBar"
-                    />
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:id="@+id/showCategoriesLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_toStartOf="@+id/toolBar"
+            android:layout_toEndOf="@+id/searchIcon"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/showCategoriesImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/loading"
+                    android:gravity="center"
+                    android:padding="10dp" />
+
+                <TextView
+                    android:id="@+id/showCategoriesText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:textSize="18sp" />
+
+        </LinearLayout>
+
+
+
+
+
 
         <RelativeLayout
             android:visibility="gone"

@@ -49,6 +49,8 @@ public class MainUtils extends AppCompatActivity {
     // Queries db for buttons with given categories and display them!
     @SuppressLint({"SetTextI18n", "Recycle"})
     public void spinnerChanger(int category) {
+
+        mainActivity.changeCategoryPreview();
         // Obtain references to app resources and button layout
         Resources resources = mainActivity.getResources();
         RecyclerView layout = mainActivity.findViewById(R.id.recyclerView);
