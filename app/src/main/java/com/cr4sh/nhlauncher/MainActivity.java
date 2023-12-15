@@ -95,14 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
         myPreferences = new MyPreferences(this);
 
-        // Check for dynamic colors
-
-//        if(myPreferences.dynamicThemeBool()){
-//            Toast.makeText(this, "THEMED", Toast.LENGTH_SHORT).show();
-//            setTheme(R.style.Themed_NHL);
-//        }
-
-
         setContentView(R.layout.activity_main);
 
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.roll);
@@ -213,14 +205,7 @@ public class MainActivity extends AppCompatActivity {
         rollCategories = findViewById(R.id.showCategoriesImage); // Init rollCategories before spinnerChanger method
         rollCategoriesText = findViewById(R.id.showCategoriesText); // Init rollCategoruesText before spinnerChanger method
 
-        // Set category, so code below can run
-//        spinner.setSelection(isFavourite == 0 ? 1 : 0);
-//        listViewCategories.setSelection(isFavourite == 0 ? 1 : 0);
         mainUtils.spinnerChanger(isFavourite == 0 ? 1 : 0);
-        // Add onclick listener for toolbar
-//        Toolbar toolbar = findViewById(R.id.toolBar);
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         ImageView searchIcon = findViewById(R.id.searchIcon);
         EditText searchEditText = findViewById(R.id.search_edit_text);
@@ -241,74 +226,52 @@ public class MainActivity extends AppCompatActivity {
 //        Animation recDown = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_up);
 
         rollCategoriesLayout.setOnClickListener(view -> runOnUiThread(() -> {
-            VibrationUtil.vibrate(MainActivity.this, 10);
-            categoriesLayout.startAnimation(recUp);
-            rollCategoriesLayout.setVisibility(View.GONE);
-            categoriesLayout.setVisibility(View.VISIBLE);
-            searchIcon.setVisibility(View.GONE);
-            noToolsText.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.GONE);
-            listViewCategories.setVisibility(View.VISIBLE);
-            toolbar.setVisibility(View.GONE);
-            rollCategories.setVisibility(View.GONE);
+
+            // Check if searchView is not opened/
+            if(searchEditText.getVisibility() == View.GONE){
+                // Disable things
+                disableWhileAnimation(categoriesLayout);
+                disableWhileAnimation(searchIcon);
+                disableWhileAnimation(noToolsText);
+                disableWhileAnimation(searchIcon);
+                disableWhileAnimation(recyclerView);
+                disableWhileAnimation(toolbar);
+                disableWhileAnimation(rollCategories);
+                disableWhileAnimation(rollCategoriesLayout);
+
+                // Animation
+
+                VibrationUtil.vibrate(MainActivity.this, 10);
+                categoriesLayout.startAnimation(recUp);
+
+                // Enable things
+
+                enableAfterAnimation(categoriesLayout);
+                enableAfterAnimation(listViewCategories);
+            }
         }));
 
-//        listViewCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-////                Object selectedItem = adapterView.getItemAtPosition(position);
-//
-//                currentCategoryNumber = position;
-//
-//                noToolsText.setVisibility(View.VISIBLE);
-//                categoriesLayout.setVisibility(View.GONE);
-//                toolbar.setVisibility(View.VISIBLE);
-//                searchIcon.setVisibility(View.VISIBLE);
-//                rollCategories.setVisibility(View.VISIBLE);
-////                spinner.setVisibility(View.VISIBLE);
-//                recyclerView.setVisibility(View.VISIBLE);
-//                mainUtils.restartSpinner();
-//
-//                mainUtils.spinnerChanger(position);
-////                Toast.makeText(mainUtils, "spinnerChanger " + selectedItem, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-//        listViewCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-//                String text = adapterView.getItemAtPosition(position).toString();
-//                Toast.makeText(MainActivity.this, "text" + text, Toast.LENGTH_SHORT).show();
-//                mainUtils.spinnerChanger(text);
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//            }
-//        });
-
-
         backButton.setOnClickListener(view -> {
-//            wait for animation finish
-            rollCategoriesLayout.setVisibility(View.VISIBLE);
-            noToolsText.setVisibility(View.VISIBLE);
-            categoriesLayout.setVisibility(View.GONE);
-            toolbar.setVisibility(View.VISIBLE);
-            searchIcon.setVisibility(View.VISIBLE);
-            rollCategories.setVisibility(View.VISIBLE);
-            listViewCategories.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+            enableAfterAnimation(categoriesLayout);
+            enableAfterAnimation(searchIcon);
+            enableAfterAnimation(noToolsText);
+            enableAfterAnimation(searchIcon);
+            enableAfterAnimation(recyclerView);
+            enableAfterAnimation(toolbar);
+            enableAfterAnimation(rollCategories);
+            enableAfterAnimation(rollCategoriesLayout);
+
+            // Enable things
+
+            disableWhileAnimation(categoriesLayout);
+            disableWhileAnimation(listViewCategories);
         });
 
-//        CustomSpinnerAdapter adapter2 = new CustomSpinnerAdapter(this, valuesList, imageList, myPreferences.color20(), myPreferences.color80());
-//        listViewCategories.setAdapter(adapter2);
 
         searchIcon.setBackgroundColor(Color.parseColor(myPreferences.color50()));
         searchEditText.setHintTextColor(Color.parseColor(myPreferences.color80()));
         searchEditText.setTextColor(Color.parseColor(myPreferences.color80()));
         toolbar.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-//        rollCategories.setBackgroundColor(Color.parseColor(myPreferences.color50()));
 
         @SuppressLint("UseCompatLoadingForDrawables") Drawable searchViewIcon = getDrawable(R.drawable.nhl_searchview);
         assert searchViewIcon != null;
@@ -319,11 +282,6 @@ public class MainActivity extends AppCompatActivity {
         assert settingsIcon != null;
         settingsIcon.setTint(Color.parseColor(myPreferences.color80()));
         toolbar.setImageDrawable(settingsIcon);
-
-//        @SuppressLint("UseCompatLoadingForDrawables") Drawable categoriesIcon = getDrawable(R.drawable.three_lines);
-//        assert categoriesIcon != null;
-//        categoriesIcon.setTint(Color.parseColor(myPreferences.color80()));
-//        rollCategories.setImageDrawable(categoriesIcon);
 
         GradientDrawable drawableToolbar = new GradientDrawable();
         drawableToolbar.setCornerRadius(100);
@@ -351,77 +309,53 @@ public class MainActivity extends AppCompatActivity {
         Animation rollOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out);
         Animation rollToolbar = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_toolbar);
         Animation rollOutToolbar = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out_toolbar);
-//        Animation spinnerFadeIn = AnimationUtils.loadAnimation(MainActivity.this, R.anim.spinner_fade);
-//        Animation spinnerFadeOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.spinner_fade_out);
-//        Animation recyclerPullUp = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_up);
-//        Animation recyclerPullDown = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_down);
-
 
         searchIcon.setOnClickListener(v -> {
+            VibrationUtil.vibrate(MainActivity.this, 10);
+
             // Toggle visibility of the search EditText when the icon is clicked
             if (searchEditText.getVisibility() == View.VISIBLE) {
+
+                // Enable things
+                enableAfterAnimation(toolbar);
+                enableAfterAnimation(rollCategoriesLayout);
+                enableAfterAnimation(rollCategories);
+                enableAfterAnimation(searchEditText);
 
                 // Close the keyboard if it's open
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
 
-                // Show toolbar
-                toolbar.startAnimation(rollOutToolbar);
-                toolbar.setVisibility(View.VISIBLE);
-
+                // After animation
                 rollCategoriesLayout.startAnimation(rollOutToolbar);
-                rollCategoriesLayout.setVisibility(View.VISIBLE);
-
-                // Animate searchbar
-
-                searchEditText.setEnabled(false);
-                searchEditText.setVisibility(View.GONE);
+                toolbar.startAnimation(rollOutToolbar);
                 searchEditText.startAnimation(rollOut);
-//                searchEditText.setText(null);
 
-                // Change searchIcon background
+                // Disable things
+                disableWhileAnimation(searchEditText);
                 drawableSearchIcon.setColor(Color.TRANSPARENT);
 
-                // Enable settings
-                toolbar.setEnabled(true);
-//                rollCategories.setEnabled(true);
 
-                // Enable spinner
-//                spinner.setEnabled(true);
                 mainUtils.restartSpinner();
             } else {
 
-                // TODO fix animation rollCategories can be clicked after searchview on
-                // is off
-
-
-                // Disable settings
-                toolbar.setEnabled(false);
-                rollCategories.setEnabled(false);
+                // Disable things
+                disableWhileAnimation(toolbar);
+                disableWhileAnimation(rollCategoriesLayout);
+                disableWhileAnimation(searchEditText);
+                disableWhileAnimation(rollCategories);
 
                 // Clear searchbar
                 searchEditText.setText(null);
 
-
-                // Hide settings
                 toolbar.startAnimation(rollToolbar);
-                toolbar.setVisibility(View.GONE);
-
                 rollCategoriesLayout.startAnimation(rollToolbar);
-                rollCategoriesLayout.setVisibility(View.GONE);
-
-//                categoriesLayout.setVisibility(View.GONE);
-
-                // Show searchbar
                 searchEditText.startAnimation(roll);
-                searchEditText.setEnabled(true);
-                searchEditText.setVisibility(View.VISIBLE);
-                searchEditText.requestFocus(); // Set focus when EditText is made visible
 
-                // Add searchbar background
+                enableAfterAnimation(searchEditText);
+                searchEditText.requestFocus(); // Set focus when EditText is made visible
                 searchEditText.setBackground(drawableSearchEditText);
 
-                // Change searchIcon background
                 drawableSearchIcon.setSize(10, 10);
                 drawableSearchIcon.setColor(Color.parseColor(myPreferences.color50()));
 
@@ -514,10 +448,21 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar.setOnClickListener(v -> {
             toolbar.setEnabled(false); // Prevent double open
+            VibrationUtil.vibrate(MainActivity.this, 10);
             dialogUtils.openToolbarDialog(MainActivity.this);
         });
 
 
+    }
+
+    private void disableWhileAnimation(View v) {
+        v.setEnabled(false);
+        v.setVisibility(View.GONE);
+    }
+
+    private void enableAfterAnimation(View v) {
+        v.setEnabled(true);
+        v.setVisibility(View.VISIBLE);
     }
 
     // Close database on app close
@@ -528,18 +473,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // run spinnerChanger with selected position as parameter
-//    @Override
-//    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-//        String text = adapterView.getItemAtPosition(position).toString();
-//        mainUtils.spinnerChanger(text);
-//    }
-
-
-//    @Override
-//    public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//    }
 
     // Creates menu that is shown after longer button click
     @Override

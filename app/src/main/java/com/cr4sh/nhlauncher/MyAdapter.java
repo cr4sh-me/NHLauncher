@@ -3,6 +3,7 @@ package com.cr4sh.nhlauncher;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -13,14 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-
     MainActivity myActivity;
     List<Item> items = new ArrayList<>();
-
     public MyAdapter(MainActivity activity) {
         this.myActivity = activity;
     }
 
+    Handler handler = new Handler();
     @SuppressLint("NotifyDataSetChanged")
     // Clear old data and display new!
     public void updateData(List<Item> newData) {
@@ -90,5 +90,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     private Item getItem(int position) {
         return items.get(position);
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull MyViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+
+        // Vibrate when a view is detached (button is disappearing from the screen)
+        if (handler != null) {
+            handler.postDelayed(() -> VibrationUtil.vibrate(myActivity, 10), 0); // Adjust the delay time as needed
+        }
     }
 }
