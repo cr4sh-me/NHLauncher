@@ -1,0 +1,18 @@
+<!-- fragment_scrollable_buttons.xml -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_alignParentBottom="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.cr4sh.nhlauncher.CustomButton
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+</com.cr4sh.nhlauncher.CustomButton>
+
+
+
+</ScrollView>

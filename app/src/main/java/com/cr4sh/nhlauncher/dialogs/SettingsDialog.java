@@ -116,16 +116,11 @@ public class SettingsDialog extends DialogFragment{
         // Create an instance of UpdateChecker
         UpdateChecker updateChecker = new UpdateChecker((MainActivity) requireActivity());
 
-
-// Instantiate UpdateChecker
-        new Thread(() -> {
-            UpdateChecker.UpdateCheckResult updateResult = updateChecker.checkUpdate();
-
+        updateChecker.checkUpdateAsync(updateResult -> {
             // Run on the UI thread to update the UI components
             requireActivity().runOnUiThread(() -> {
                 checkUpdate.setText(updateResult.getMessage());
 
-                // Check for updates here, inside the UI thread
                 if (updateResult.isUpdateAvailable()) {
                     Toast.makeText(requireActivity(), requireActivity().getResources().getString(R.string.update_avaiable), Toast.LENGTH_SHORT).show();
                     updateButton.setVisibility(View.VISIBLE);
@@ -137,9 +132,8 @@ public class SettingsDialog extends DialogFragment{
                         rainbowColors[i] = Color.HSVToColor(new float[]{hue, 1.0f, 1.0f});
                     }
 
-                    // Initialize a ValueAnimator to smoothly transition between colors
                     ValueAnimator colorAnimator = ValueAnimator.ofArgb(rainbowColors);
-                    colorAnimator.setDuration(5000); // Adjust the duration as needed
+                    colorAnimator.setDuration(5000);
                     colorAnimator.setInterpolator(new LinearInterpolator());
                     colorAnimator.setRepeatCount(ValueAnimator.INFINITE);
                     colorAnimator.setRepeatMode(ValueAnimator.RESTART);
@@ -149,13 +143,13 @@ public class SettingsDialog extends DialogFragment{
                         updateButton.setBackgroundColor(animatedColor);
                     });
 
-                    // Start the color-changing effect
                     colorAnimator.start();
                 } else {
                     updateButton.setVisibility(View.GONE);
                 }
             });
-        }).start();
+        });
+
 
         updateButton.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_VIEW);

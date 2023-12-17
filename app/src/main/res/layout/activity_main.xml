@@ -5,72 +5,72 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/searchIcon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+    <LinearLayout
+        android:paddingHorizontal="10dp"
+        android:id="@+id/topBarContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp" />
+        android:layout_alignParentEnd="true">
 
-    <ImageButton
-        android:id="@+id/toolBar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp" />
+        <ImageButton
+            android:layout_margin="5dp"
+            android:id="@+id/searchIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
 
-    <EditText
-        android:id="@+id/search_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_toEndOf="@id/searchIcon"
-        android:hint="@string/search_hint"
-        android:maxLength="20"
-        android:paddingStart="16dp"
-        android:visibility="gone"
-        tools:ignore="RtlSymmetry" />
+        <EditText
+            android:layout_margin="5dp"
+            android:id="@+id/search_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_toEndOf="@id/searchIcon"
+            android:hint="@string/search_hint"
+            android:maxLength="20"
+            android:paddingStart="16dp"
+            android:visibility="gone"
+            tools:ignore="RtlSymmetry" />
 
+        <LinearLayout
+            android:layout_margin="5dp"
+            android:id="@+id/showCategoriesLayout"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:padding="5dp">
 
-    <LinearLayout
-        android:id="@+id/showCategoriesLayout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:layout_toStartOf="@+id/toolBar"
-        android:layout_toEndOf="@+id/searchIcon"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        tools:ignore="UseCompoundDrawables">
+            <ImageView
+                android:id="@+id/showCategoriesImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:contentDescription="@string/loading"
+                android:gravity="center" />
 
-        <ImageView
-            android:id="@+id/showCategoriesImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:contentDescription="@string/loading"
-            android:gravity="center" />
+            <TextView
+                android:id="@+id/showCategoriesText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1" />
 
-        <TextView
-            android:id="@+id/showCategoriesText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1" />
+        </LinearLayout>
 
+        <ImageButton
+            android:layout_margin="5dp"
+            android:id="@+id/toolBar"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
     </LinearLayout>
+
+
+
 
 
     <RelativeLayout
@@ -93,62 +93,78 @@
             android:id="@+id/recyclerViewCategories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/goBackButton"
+            android:layout_above="@id/btn_container"
             android:layout_below="@id/dialog_title"
             android:nestedScrollingEnabled="true">
 
         </androidx.recyclerview.widget.RecyclerView>
 
-        <Button
-            android:id="@+id/goBackButton"
+        <LinearLayout
+            android:id="@+id/btn_container"
+            android:gravity="center_horizontal"
+            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:text="@string/close" />
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/addons"
+                android:id="@+id/special_features_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_margin="5dp"
+                android:padding="5dp"
+                android:id="@+id/goBackButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/close"
+                android:layout_weight="1" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
 
-    <RelativeLayout
-        android:id="@+id/imageViewHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/searchIcon">
-        <!--            <Spinner-->
-        <!--                android:id="@+id/categoriesSpinner"-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:background="@drawable/spinner_bg"-->
-        <!--                android:padding="10dp"-->
-        <!--                tools:ignore="DuplicateSpeakableTextCheck" />-->
+<!--    <RelativeLayout-->
+<!--        android:id="@+id/imageViewHeader"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@id/toolBar">-->
 
-    </RelativeLayout>
+<!--    </RelativeLayout>-->
 
-
-    <LinearLayout
-        android:id="@+id/imageViewFooter"
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/imageViewFooter"
-        android:layout_below="@+id/imageViewHeader"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topBarContainer"
         android:layout_marginTop="10dp"
         android:nestedScrollingEnabled="true"
         android:orientation="vertical"
         tools:ignore="SpeakableTextPresentCheck" />
 
+    <!-- Container for the fragment -->
+    <FrameLayout
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/topBarContainer"
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
     <TextView
         android:id="@+id/messagebox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/imageViewFooter"
-        android:layout_below="@+id/imageViewHeader"
+        android:layout_below="@+id/topBarContainer"
         android:gravity="top|center_horizontal"
         android:paddingHorizontal="25dp"
         android:paddingVertical="25dp"

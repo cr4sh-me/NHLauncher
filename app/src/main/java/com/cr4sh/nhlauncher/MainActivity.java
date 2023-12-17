@@ -14,9 +14,11 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -32,6 +34,9 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,6 +46,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
+
+    public boolean isSpecialEnabled = false;
     public static boolean disableMenu = false;
     public String buttonCategory;
     public String buttonName;
@@ -51,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     public ActivityResultLauncher<Intent> requestPermissionLauncher;
     public RecyclerView listViewCategories;
     public Button backButton;
+    public Button specialButton;
     public int currentCategoryNumber = 1;
     List<String> valuesList;
     List<Integer> imageList;
@@ -97,9 +105,9 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        Animation anim = AnimationUtils.loadAnimation(this, R.anim.roll);
+//        Animation anim = AnimationUtils.loadAnimation(this, R.anim.roll);
         View rootView = findViewById(android.R.id.content);
-        rootView.startAnimation(anim);
+//        rootView.startAnimation(anim);
 
         // Apply custom colors
 
@@ -159,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 getResources().getString(R.string.category_09),
                 getResources().getString(R.string.category_10),
                 getResources().getString(R.string.category_11),
+                getResources().getString(R.string.category_12),
                 getResources().getString(R.string.category_13)
         );
         imageList = Arrays.asList(
@@ -214,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
 
         RelativeLayout categoriesLayout = findViewById(R.id.categories_layout);
         TextView categoriesLayoutTitle = findViewById(R.id.dialog_title);
+        specialButton = findViewById(R.id.special_features_button);
         backButton = findViewById(R.id.goBackButton);
         TextView noToolsText = findViewById(R.id.messagebox);
 
@@ -221,14 +231,29 @@ public class MainActivity extends AppCompatActivity {
         backButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
         backButton.setTextColor(Color.parseColor(myPreferences.color50()));
 
+        specialButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+        specialButton.setTextColor(Color.parseColor(myPreferences.color80()));
+
 
         Animation recUp = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_down);
 //        Animation recDown = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_up);
+
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) rollCategoriesLayout.getLayoutParams();
+
 
         rollCategoriesLayout.setOnClickListener(view -> runOnUiThread(() -> {
 
             // Check if searchView is not opened/
             if(searchEditText.getVisibility() == View.GONE){
+
+                if(isSpecialEnabled){
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.popBackStack();
+
+                    layoutParams.setMarginStart(dpToPixels(0));
+                    rollCategoriesLayout.setLayoutParams(layoutParams);
+                }
+
                 // Disable things
                 disableWhileAnimation(categoriesLayout);
                 disableWhileAnimation(searchIcon);
@@ -251,20 +276,49 @@ public class MainActivity extends AppCompatActivity {
             }
         }));
 
-        backButton.setOnClickListener(view -> {
-            enableAfterAnimation(categoriesLayout);
-            enableAfterAnimation(searchIcon);
-            enableAfterAnimation(noToolsText);
-            enableAfterAnimation(searchIcon);
-            enableAfterAnimation(recyclerView);
+        specialButton.setOnClickListener(v -> {
+            // TODO add special features option
+
             enableAfterAnimation(toolbar);
-            enableAfterAnimation(rollCategories);
             enableAfterAnimation(rollCategoriesLayout);
-
-            // Enable things
-
             disableWhileAnimation(categoriesLayout);
-            disableWhileAnimation(listViewCategories);
+
+            isSpecialEnabled = true;
+            backButton.callOnClick();
+//            disableWhileAnimation(searchIcon);
+//            disableWhileAnimation(recyclerView);
+//
+//            layoutParams.setMarginStart(dpToPixels(10));
+//            rollCategoriesLayout.setLayoutParams(layoutParams);
+//
+//
+//            openFragment(new SpecialFeaturesFragment());
+//
+//            changeCategoryPreview(15);
+
+        });
+
+        backButton.setOnClickListener(view -> {
+
+            enableAfterAnimation(toolbar);
+            enableAfterAnimation(rollCategoriesLayout);
+            disableWhileAnimation(categoriesLayout);
+            enableAfterAnimation(rollCategories);
+
+            if(!isSpecialEnabled) {
+                enableAfterAnimation(searchIcon);
+                enableAfterAnimation(recyclerView);
+                enableAfterAnimation(noToolsText);
+                enableAfterAnimation(rollCategories);
+            } else {
+                changeCategoryPreview(15);
+                disableWhileAnimation(searchIcon);
+                disableWhileAnimation(recyclerView);
+
+                layoutParams.setMarginStart(dpToPixels(10));
+                rollCategoriesLayout.setLayoutParams(layoutParams);
+                openFragment(new SpecialFeaturesFragment());
+            }
         });
 
 
@@ -473,7 +527,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     // Creates menu that is shown after longer button click
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -510,14 +563,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeCategoryPreview(int position) {
+        String categoryTextView;
+        int imageResourceId;
 
-        String categoryTextView = valuesList.get(position);
-        int imageResourceId = imageList.get(position);
+        if (position < 15) {
+            categoryTextView = valuesList.get(position);
+            imageResourceId = imageList.get(position);
+        } else {
+            categoryTextView = "Special Addons";
+            imageResourceId = R.drawable.nhl_favourite_trans;
+        }
 
+        // Set image resource and color filter
         rollCategories.setImageResource(imageResourceId);
         rollCategories.setColorFilter(Color.parseColor(myPreferences.color80()), PorterDuff.Mode.MULTIPLY);
+
+        // Set text and text color
         rollCategoriesText.setText(categoryTextView);
         rollCategoriesText.setTextColor(Color.parseColor(myPreferences.color80()));
+    }
+
+
+    private void openFragment(Fragment fragment) {
+        // Otwórz nowy widok fragmentu w kontenerze
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    public int dpToPixels(float dp) {
+        return Math.round(TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics()));
     }
 }
 

@@ -53,62 +53,63 @@ public class MainUtils extends AppCompatActivity {
 
         mainActivity.changeCategoryPreview(category); // Set category preview
 
-        // Obtain references to app resources and button layout
-        Resources resources = mainActivity.getResources();
-        RecyclerView layout = mainActivity.findViewById(R.id.recyclerView);
-        TextView noToolsText = mainActivity.findViewById(R.id.messagebox);
-        noToolsText.setText(null);
+            // Obtain references to app resources and button layout
+            Resources resources = mainActivity.getResources();
+            RecyclerView layout = mainActivity.findViewById(R.id.recyclerView);
+            TextView noToolsText = mainActivity.findViewById(R.id.messagebox);
+            noToolsText.setText(null);
 
-        Cursor cursor;
+            Cursor cursor;
 
-        String[] projection = {"CATEGORY", "FAVOURITE", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
-        String selection;
-        String[] selectionArgs;
+            String[] projection = {"CATEGORY", "FAVOURITE", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
+            String selection;
+            String[] selectionArgs;
 
-        if (category == 0) {
-            selection = "FAVOURITE = ?";
-            selectionArgs = new String[]{"1"};
-            // Disable creating new buttons in fav category
-            MainActivity.disableMenu = true;
-        } else {
-            String category_number = String.valueOf(category);
-            selection = "CATEGORY = ?";
-            selectionArgs = new String[]{category_number};
-            // Enable creating new buttons in normal categories
-            MainActivity.disableMenu = false;
-        }
-
-        cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, myPreferences.sortingMode(), null);
-        if (cursor.getCount() == 0) {
-            mainActivity.runOnUiThread(() -> {
-                noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
-                noToolsText.setText(resources.getString(R.string.no_fav_tools));
-                layout.setVisibility(View.GONE);
-            });
-        } else {
-            mainActivity.runOnUiThread(() -> {
-                layout.scrollToPosition(0); // Scroll to first tool
-                noToolsText.setText(null);
-                layout.setVisibility(View.VISIBLE);
-            });
-
-            // Create a new itemList from the cursor data
-            List<Item> newItemList = new ArrayList<>();
-            while (cursor.moveToNext()) {
-                String toolCategory = cursor.getString(0);
-                String toolName = cursor.getString(2);
-                String toolDescription = cursor.getString(3);
-                String toolCmd = cursor.getString(4);
-                String toolIcon = cursor.getString(5);
-                int toolUsage = cursor.getInt(6);
-
-                Item item = new Item(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
-                newItemList.add(item);
-
+            if (category == 0) {
+                selection = "FAVOURITE = ?";
+                selectionArgs = new String[]{"1"};
+                // Disable creating new buttons in fav category
+                MainActivity.disableMenu = true;
+            } else {
+                String category_number = String.valueOf(category);
+                selection = "CATEGORY = ?";
+                selectionArgs = new String[]{category_number};
+                // Enable creating new buttons in normal categories
+                MainActivity.disableMenu = false;
             }
-            mainActivity.runOnUiThread(() -> ((MyAdapter) Objects.requireNonNull(layout.getAdapter())).updateData(newItemList));
-        }
-        cursor.close();
+
+            cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, myPreferences.sortingMode(), null);
+            if (cursor.getCount() == 0) {
+                mainActivity.runOnUiThread(() -> {
+                    noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
+                    noToolsText.setText(resources.getString(R.string.no_fav_tools));
+                    layout.setVisibility(View.GONE);
+                });
+            } else {
+                mainActivity.runOnUiThread(() -> {
+                    layout.scrollToPosition(0); // Scroll to first tool
+                    noToolsText.setText(null);
+                    layout.setVisibility(View.VISIBLE);
+                });
+
+                // Create a new itemList from the cursor data
+                List<Item> newItemList = new ArrayList<>();
+                while (cursor.moveToNext()) {
+                    String toolCategory = cursor.getString(0);
+                    String toolName = cursor.getString(2);
+                    String toolDescription = cursor.getString(3);
+                    String toolCmd = cursor.getString(4);
+                    String toolIcon = cursor.getString(5);
+                    int toolUsage = cursor.getInt(6);
+
+                    Item item = new Item(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
+                    newItemList.add(item);
+
+                }
+                mainActivity.runOnUiThread(() -> ((MyAdapter) Objects.requireNonNull(layout.getAdapter())).updateData(newItemList));
+            }
+            cursor.close();
+
     }
 
     // Fills our spinner with text and images

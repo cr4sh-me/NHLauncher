@@ -69,6 +69,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesViewHolder
 
 
         holder.itemView.setOnClickListener(v -> {
+            myActivity.isSpecialEnabled = false;
             myActivity.backButton.callOnClick();
             mainUtils.spinnerChanger((position));
         });

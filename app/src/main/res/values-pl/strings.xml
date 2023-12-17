@@ -128,4 +128,7 @@
     <string name="giga_chad">Witaj w wersji beta!</string>
     <string name="already_updated">Wersja aktualna!</string>
     <string name="something_fucked_up">Coś poszło nie tak!</string>
+    <string name="update_button">Pobierz aktualizacje!</string>
+    <string name="enable_vibrations">Włącz wibracje</string>
+    <string name="addons">Dodatki</string>
 </resources>

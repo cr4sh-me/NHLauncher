@@ -130,5 +130,6 @@
     <string name="something_fucked_up">Something went wrong!</string>
     <string name="update_button">Download update!</string>
     <string name="enable_vibrations">Enable vibrations</string>
+    <string name="addons">Addons</string>
 
 </resources>
