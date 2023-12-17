@@ -9,7 +9,7 @@ It uses NetHunter bridge for launching tools in nh terminal!
 - Android 6.0+
 - Rooted android device (Its required for NetHunter installation)  
 - Full NetHunter installation  
-- New nethunter terminal and app (2023.1), you can download them from NetHunter store:
+- New nethunter terminal and app (2023.1+), you can download them from NetHunter store:
 - Brain (working one)
 
 ## Main NHLauncher features
@@ -50,10 +50,13 @@ Check which tools you use the most with Statistics feature!
 NHLauncher have Polish language!
 
 - Availability: 
-NHLauncher is available on older and newer android versions! 
+NHLauncher is available on older and newer android versions!
 
-- Dynamic themes: 
-Dynamic themes support for A12+
+- Modern look
+Have you ever seen UI like this before?
+
+- Special features
+NHLauncher contains some fixed NetHunter app features!
 
 ## How to request new tool/s
 If you like to request new tool for NHLauncher, first check all it functions on NetHunter platform.
@@ -62,7 +65,7 @@ Heres example of a request:
 (Second description is for Polish language!)
 `insertTool(db, 1, "{CATEGORY}", 0, "{NAME}", "{DESCRIPTION}", "{DESCRIPTION}", "{COMMAND}", "{ICON}", 0);`  
 
-`insertTool(db, 1, "01", 0, "nmap", "Network exploration tool and security / port scanner", "Network exploration tool and security / port scanner", "nmap -h", "kali_nmap", 0);`
+`insertTool(db, 1, "1", 0, "nmap", "Network exploration tool and security / port scanner", "Network exploration tool and security / port scanner", "nmap -h", "kali_nmap", 0);`
 
 **CATEGORY**:   
 choose one of these...  
@@ -91,7 +94,7 @@ Put tool command here, display it help message by default, for example: nmap --h
 
 **ICON:**
 You can also attach tool image as svg, so i can scale it and put to tools database.
-If you cant or dont want to add image, put `kali_menu` here  
+If you cant or don't want to add image, put `kali_menu` here  
 
 **How to send request?**  
 Open new issue with [TOOL REQUEST] tag in name, and ill check it...
