@@ -18,6 +18,7 @@ import com.cr4sh.nhlauncher.dialogs.NhlColorPickerDialog;
 import com.cr4sh.nhlauncher.dialogs.PermissionDialog;
 import com.cr4sh.nhlauncher.dialogs.SettingsDialog;
 import com.cr4sh.nhlauncher.dialogs.StatisticsDialog;
+import com.cr4sh.nhlauncher.dialogs.ThrottlingDialog;
 import com.cr4sh.nhlauncher.dialogs.ToolbarDialog;
 
 // This class creates and opens Dialogs
@@ -157,4 +158,13 @@ public class DialogUtils {
             nhlcpDialog.show(fragmentManager, "NhlColorPickerDialog");
         }).start();
     }
+
+    public void openThrottlingDialog() {
+        new Thread(() -> {
+            ThrottlingDialog thDialog = new ThrottlingDialog();
+            // Display our dialog!
+            thDialog.show(fragmentManager, "PermissionsDialog");
+        }).start();
+    }
+
 }

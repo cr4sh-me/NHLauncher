@@ -38,6 +38,7 @@ public class WPSAttack extends AppCompatActivity {
     private BroadcastReceiver wifiScanReceiver;
     private Button scanButton;
     TextView msg;
+    TextView msg2;
     MyPreferences myPreferences;
 
     private Handler countdownHandler; // Add this line
@@ -45,20 +46,41 @@ public class WPSAttack extends AppCompatActivity {
     private static final int SCAN_LIMIT = 4;
     private static final int COUNTDOWN_DURATION = 120; // in seconds
 
+    int isThrottleDisabled;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.wps_attack_layout);
 
+        try {
+            isThrottleDisabled = Settings.Global.getInt(this.getContentResolver(), "wifi_scan_throttle_enabled");
+        } catch (Settings.SettingNotFoundException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
         msg = findViewById(R.id.messageBox);
+        msg2 = findViewById(R.id.messageBox2);
 
         wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         buttonContainer = findViewById(R.id.buttonContainer);
 
         myPreferences = new MyPreferences(this);
+        DialogUtils dialogUtils = new DialogUtils(getSupportFragmentManager());
 
         msg.setTextColor(Color.parseColor(myPreferences.color80()));
+        msg2.setTextColor(Color.parseColor(myPreferences.color80()));
+
+        if(myPreferences.isThrottlingMessageShown()){
+            dialogUtils.openThrottlingDialog();
+        }
+
+        if(isThrottleDisabled == 1){
+            setMessage2("Wi-Fi throttling enabled");
+        } else {
+            setMessage2("Wi-Fi throttling disabled");
+        }
 
         View rootView = findViewById(android.R.id.content);
         rootView.setBackgroundColor(Color.parseColor(myPreferences.color20()));
@@ -107,9 +129,6 @@ public class WPSAttack extends AppCompatActivity {
                 try {
                     boolean success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
 
-                    // Check if Wi-Fi scan throttling is enabled
-//                    boolean isThrottleEnabled = Settings.Global.getInt(
-//                            getContentResolver(), "wifi_scan_throttle_enabled", 1) == 1;
 
                     if (success ) {
                         handleScanResults();
@@ -134,7 +153,7 @@ public class WPSAttack extends AppCompatActivity {
 //        };
 
         // Set the default message
-        setMessage("Please run scan.");
+        setMessage("Ready to scan");
     }
 
     private void handleScanResults() {
@@ -154,7 +173,7 @@ public class WPSAttack extends AppCompatActivity {
         }
 
         // Show the default message after displaying results
-        setMessage("Please run scan.");
+        setMessage("Ready to scan");
     }
 
 
@@ -221,36 +240,48 @@ public class WPSAttack extends AppCompatActivity {
     }
 
     private void startWifiScan() {
-        if (scanCount < SCAN_LIMIT) {
-            scanCount++;
-            // Continue with the scan
-            if (isLocationEnabled()) {
-                // Disable the scan button during scanning
-                enableScanButton(false);
-                // Show "Scanning" text
-                buttonContainer.removeAllViews();
-                setMessage("Scanning...");
-                // Start the Wi-Fi scan
-                boolean success = wifiManager.startScan();
-                if (!success) {
-                    // Scan failure handling
-                    scanFailure();
-                    // Enable the scan button in case of scan failure
-                    enableScanButton(true);
-                }
-            } else {
-                buttonContainer.removeAllViews();
-                setMessage("Location services are disabled. Please enable them to scan for networks.");
-            }
+        // Check if Wi-Fi scan throttling is disabled
+        if (isThrottleDisabled == 1) {
+            // Wi-Fi scan throttling is enabled, do not check scanCount
+            performWifiScan();
         } else {
-            // Reached scan limit, disable the scan button
-            enableScanButton(false);
-            // Display countdown message
-//            setMessage("Scan limit reached. Countdown: " + formatTime(COUNTDOWN_DURATION));
-            // Start the countdown
-            startCountdown();
+            // Wi-Fi scan throttling is enabled, check scanCount
+            if (scanCount < SCAN_LIMIT) {
+                performWifiScan();
+            } else {
+                // Reached scan limit, disable the scan button
+                enableScanButton(false);
+                // Display countdown message
+                // setMessage("Scan limit reached. Countdown: " + formatTime(COUNTDOWN_DURATION));
+                // Start the countdown
+                startCountdown();
+            }
         }
     }
+
+    private void performWifiScan() {
+        scanCount++;
+        // Continue with the scan
+        if (isLocationEnabled()) {
+            // Disable the scan button during scanning
+            enableScanButton(false);
+            // Show "Scanning" text
+            buttonContainer.removeAllViews();
+            setMessage("Scanning...");
+            // Start the Wi-Fi scan
+            boolean success = wifiManager.startScan();
+            if (!success) {
+                // Scan failure handling
+                scanFailure();
+                // Enable the scan button in case of scan failure
+                enableScanButton(true);
+            }
+        } else {
+            buttonContainer.removeAllViews();
+            setMessage("Please enable location services first!");
+        }
+    }
+
 
     private void startCountdown() {
         countdownHandler = new Handler();
@@ -276,7 +307,7 @@ public class WPSAttack extends AppCompatActivity {
             scanCount = 0;
             enableScanButton(true);
             // Show the default message after countdown completion
-            setMessage("Please run scan.");
+            setMessage("Ready to scan");
         }, (COUNTDOWN_DURATION + 1) * 1000); // Additional delay for the default message
     }
 
@@ -311,6 +342,11 @@ public class WPSAttack extends AppCompatActivity {
     private void setMessage(String message){
         msg.setVisibility(View.VISIBLE);
         msg.setText(message);
+    }
+
+    private void setMessage2(String message){
+        msg2.setVisibility(View.VISIBLE);
+        msg2.setText(message);
     }
 
     @Override

@@ -21,8 +21,6 @@ public class MyPreferences {
         setupPrefs = context.getSharedPreferences("setupSettings", Context.MODE_PRIVATE);
     }
 
-
-
     public String color80() {
 
         if (dynamicThemeBool()) {
@@ -97,6 +95,11 @@ public class MyPreferences {
     public boolean isSetupCompleted() {
         return setupPrefs.getBoolean("isSetupCompleted", false);
     }
+
+    public boolean isThrottlingMessageShown() {
+        return setupPrefs.getBoolean("isThrottlingMessageShown", false);
+    }
+
 
     public Boolean vibrationOn() {
         return nhlPrefs.getBoolean("vibrationsOn", false);
