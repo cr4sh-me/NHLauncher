@@ -20,6 +20,7 @@ import com.cr4sh.nhlauncher.dialogs.SettingsDialog;
 import com.cr4sh.nhlauncher.dialogs.StatisticsDialog;
 import com.cr4sh.nhlauncher.dialogs.ThrottlingDialog;
 import com.cr4sh.nhlauncher.dialogs.ToolbarDialog;
+import com.cr4sh.nhlauncher.dialogs.WpsCustomPinDialog;
 
 // This class creates and opens Dialogs
 public class DialogUtils {
@@ -167,4 +168,11 @@ public class DialogUtils {
         }).start();
     }
 
+    public void openWpsCustomPinDialog() {
+        new Thread(() -> {
+            WpsCustomPinDialog pinDialog = new WpsCustomPinDialog();
+            // Display our dialog!
+            pinDialog.show(fragmentManager, "PermissionsDialog");
+        }).start();
+    }
 }
