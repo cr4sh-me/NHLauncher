@@ -31,12 +31,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,7 +47,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    public boolean isSpecialEnabled = false;
+//    public boolean isSpecialEnabled = false;
     public static boolean disableMenu = false;
     public String buttonCategory;
     public String buttonName;
@@ -215,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
         rollCategoriesText = findViewById(R.id.showCategoriesText); // Init rollCategoruesText before spinnerChanger method
 
         mainUtils.spinnerChanger(isFavourite == 0 ? 1 : 0);
+        currentCategoryNumber = isFavourite == 0 ? 1 : 0;
 
         ImageView searchIcon = findViewById(R.id.searchIcon);
         EditText searchEditText = findViewById(R.id.search_edit_text);
@@ -246,13 +247,12 @@ public class MainActivity extends AppCompatActivity {
             // Check if searchView is not opened/
             if(searchEditText.getVisibility() == View.GONE){
 
-                if(isSpecialEnabled){
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.popBackStack();
-
-                    layoutParams.setMarginStart(dpToPixels(0));
-                    rollCategoriesLayout.setLayoutParams(layoutParams);
-                }
+//                if(isSpecialEnabled){
+////                    closeFragment();
+//
+//                    layoutParams.setMarginStart(dpToPixels(0));
+//                    rollCategoriesLayout.setLayoutParams(layoutParams);
+//                }
 
                 // Disable things
                 disableWhileAnimation(categoriesLayout);
@@ -283,8 +283,13 @@ public class MainActivity extends AppCompatActivity {
             enableAfterAnimation(rollCategoriesLayout);
             disableWhileAnimation(categoriesLayout);
 
-            isSpecialEnabled = true;
+
             backButton.callOnClick();
+
+            Intent intent = new Intent(this, SpecialFeaturesActivity.class);
+            startActivity(intent);
+
+
 //            disableWhileAnimation(searchIcon);
 //            disableWhileAnimation(recyclerView);
 //
@@ -292,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
 //            rollCategoriesLayout.setLayoutParams(layoutParams);
 //
 //
-//            openFragment(new SpecialFeaturesFragment());
+//            openFragment(new SpecialFeaturesFragment_bak());
 //
 //            changeCategoryPreview(15);
 
@@ -305,22 +310,29 @@ public class MainActivity extends AppCompatActivity {
             disableWhileAnimation(categoriesLayout);
             enableAfterAnimation(rollCategories);
 
-            if(!isSpecialEnabled) {
+
                 enableAfterAnimation(searchIcon);
                 enableAfterAnimation(recyclerView);
                 enableAfterAnimation(noToolsText);
                 enableAfterAnimation(rollCategories);
-            } else {
-                changeCategoryPreview(15);
-                disableWhileAnimation(searchIcon);
-                disableWhileAnimation(recyclerView);
 
-                layoutParams.setMarginStart(dpToPixels(10));
-                rollCategoriesLayout.setLayoutParams(layoutParams);
-                openFragment(new SpecialFeaturesFragment());
-            }
         });
+        // Handle back button press using OnBackPressedCallback
+//        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+//            @Override
+//            public void handleOnBackPressed() {
+//                // Get the current fragment
+//                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//
+//                // Check if the current fragment is an instance of your SpecialFeaturesFragment_bak
+//                if (currentFragment instanceof SpecialFeaturesFragment_bak) {
+//                    // Handle the back button press for your SpecialFeaturesFragment_bak
+//                    ((SpecialFeaturesFragment_bak) currentFragment).onBackPressed();
+//                }
+//            }
+//        };
 
+//        getOnBackPressedDispatcher().addCallback(this, callback);
 
         searchIcon.setBackgroundColor(Color.parseColor(myPreferences.color50()));
         searchEditText.setHintTextColor(Color.parseColor(myPreferences.color80()));
@@ -525,7 +537,35 @@ public class MainActivity extends AppCompatActivity {
         if (mDatabase != null) {
             mDatabase.close();
         }
+//        closeFragment();
     }
+
+//    @Override
+//    public void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        // Save fragment state if needed
+//    }
+
+    // Method to open a fragment
+//    private void openFragment() {
+//        toolbar.setEnabled(false);
+//        SpecialFeaturesFragment_bak fragment = new SpecialFeaturesFragment_bak();
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.fragment_container, fragment, "SpecialFeaturesFragment_bak")
+//                .addToBackStack(null) // Optional: Add the transaction to the back stack
+//                .commit();
+//    }
+//    public void closeFragment() {
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        Fragment fragment = fragmentManager.findFragmentByTag("SpecialFeaturesFragment_bak");
+//
+//        if (fragment != null) {
+//            fragmentManager.beginTransaction().remove(fragment).commit();
+//            // Optionally, pop the fragment from the back stack
+//            fragmentManager.popBackStack();
+//        }
+//        toolbar.setEnabled(true);
+//    }
 
     // Creates menu that is shown after longer button click
     @Override
@@ -562,6 +602,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
     public void changeCategoryPreview(int position) {
         String categoryTextView;
         int imageResourceId;
@@ -581,16 +623,6 @@ public class MainActivity extends AppCompatActivity {
         // Set text and text color
         rollCategoriesText.setText(categoryTextView);
         rollCategoriesText.setTextColor(Color.parseColor(myPreferences.color80()));
-    }
-
-
-    private void openFragment(Fragment fragment) {
-        // Otwórz nowy widok fragmentu w kontenerze
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
     }
 
     public int dpToPixels(float dp) {

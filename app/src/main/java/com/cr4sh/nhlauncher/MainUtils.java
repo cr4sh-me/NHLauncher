@@ -114,9 +114,6 @@ public class MainUtils extends AppCompatActivity {
 
     // Fills our spinner with text and images
     public void restartSpinner() {
-
-//        mainActivity.listViewCategories.setAdapter(mainActivity.adapter2);
-
         spinnerChanger(mainActivity.currentCategoryNumber); // Just set to category chosen before
     }
 

@@ -43,12 +43,12 @@
         tools:ignore="SpeakableTextPresentCheck">
 
         <LinearLayout
+            android:layout_marginHorizontal="10dp"
             android:id="@+id/buttonContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:orientation="vertical">
 
         </LinearLayout>
     </ScrollView>
@@ -82,7 +82,9 @@
         android:id="@+id/choiceContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginHorizontal="10dp"
+        android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/launchAttack"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -135,13 +137,13 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <CheckBox
-                android:id="@+id/custompin"
+                android:id="@+id/pbc"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_weight="1"
-                android:text="Custom PIN"
+                android:text="WPS Button"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
@@ -152,25 +154,27 @@
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <CheckBox
+            <Button
+                android:layout_marginBottom="5dp"
                 android:id="@+id/delay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="1"
-                android:text="Delay"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:text="Delay" />
 
-            <CheckBox
-                android:id="@+id/pbc"
+            <Button
+                android:layout_marginBottom="5dp"
+
+                android:id="@+id/custompin"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginEnd="20dp"
                 android:layout_weight="1"
-                android:text="WPS Button"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:text="Custom PIN"
+               />
 
         </LinearLayout>
     </LinearLayout>

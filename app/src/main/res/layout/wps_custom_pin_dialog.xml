@@ -6,8 +6,9 @@
     android:padding="16dp">
 
     <TextView
+        android:gravity="center"
         android:id="@+id/dialog_title"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:text="Custom pin"
         android:textAlignment="center"
@@ -15,6 +16,7 @@
         android:textStyle="bold" />
 
     <EditText
+        android:gravity="center"
         android:inputType="number"
         android:id="@+id/customPin"
         android:hint="Custom PIN"
@@ -41,8 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
-            android:maxLines="1"
-            android:text="@string/cancel" />
+            android:maxLines="1" />
 
     </LinearLayout>
 

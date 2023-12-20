@@ -152,12 +152,12 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <!-- Container for the fragment -->
-    <FrameLayout
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/topBarContainer"
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+<!--    <FrameLayout-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_below="@id/topBarContainer"-->
+<!--        android:id="@+id/fragment_container"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent" />-->
 
 
     <TextView

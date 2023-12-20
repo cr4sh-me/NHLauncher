@@ -27,12 +27,12 @@ public class DialogUtils {
 
     private final FragmentManager fragmentManager;
 
-    MainActivity myActivity;
+//    MainActivity myActivity;
 
-    public DialogUtils(FragmentManager fragmentManager, MainActivity activity) {
-        this.fragmentManager = fragmentManager;
-        this.myActivity = activity;
-    }
+//    public DialogUtils(FragmentManager fragmentManager, MainActivity activity) {
+//        this.fragmentManager = fragmentManager;
+//        this.myActivity = activity;
+//    }
 
     public DialogUtils(FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
@@ -168,9 +168,12 @@ public class DialogUtils {
         }).start();
     }
 
-    public void openWpsCustomPinDialog() {
+    public void openWpsCustomSetting(int number, WPSAttack activity) {
         new Thread(() -> {
-            WpsCustomPinDialog pinDialog = new WpsCustomPinDialog();
+            WpsCustomPinDialog pinDialog = new WpsCustomPinDialog(activity);
+            Bundle args = new Bundle();
+            args.putInt("option", number);
+            pinDialog.setArguments(args);
             // Display our dialog!
             pinDialog.show(fragmentManager, "PermissionsDialog");
         }).start();

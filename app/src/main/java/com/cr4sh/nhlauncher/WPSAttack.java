@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
@@ -15,11 +16,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,20 +37,17 @@ import androidx.core.widget.CompoundButtonCompat;
 
 import com.cr4sh.nhlauncher.bridge.Bridge;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class WPSAttack extends AppCompatActivity {
-    public CheckBox customPinCheckbox;
     private String pixieCMD = "";
     private String pixieforceCMD = "";
     private String bruteCMD = "";
     public String customPINCMD = "";
-    private String customPIN = "";
-    private String delayCMD = "";
-    private String delayTIME = "";
+    public String delayCMD = "";
     private String pbcCMD = "";
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private Button selectedButton = null; // Track the currently selected button
@@ -57,8 +59,6 @@ public class WPSAttack extends AppCompatActivity {
     MyPreferences myPreferences;
 
     private Handler countdownHandler; // Add this line
-    int scanCount = 0;
-    private static final int SCAN_LIMIT = 4;
     private static final int COUNTDOWN_DURATION = 120; // in seconds
     boolean isThrottleEnabled;
 
@@ -98,6 +98,12 @@ public class WPSAttack extends AppCompatActivity {
 
         setFinishOnTouchOutside(false);
 
+        LinearLayout choiceContainer = findViewById(R.id.choiceContainer);
+        GradientDrawable selectedDrawable = new GradientDrawable();
+        selectedDrawable.setCornerRadius(60);
+        selectedDrawable.setStroke(8, Color.parseColor(myPreferences.color50()));
+        choiceContainer.setBackground(selectedDrawable);
+
         TextView title = findViewById(R.id.wps_info);
         TextView description = findViewById(R.id.wps_info2);
 
@@ -117,15 +123,20 @@ public class WPSAttack extends AppCompatActivity {
         CheckBox pixieDustCheckbox = findViewById(R.id.pixie);
         CheckBox pixieForceCheckbox = findViewById(R.id.pixieforce);
         CheckBox bruteCheckbox = findViewById(R.id.brute);
-        customPinCheckbox = findViewById(R.id.custompin);
-        CheckBox delayCheckbox = findViewById(R.id.delay);
+        Button customPinCheckbox = findViewById(R.id.custompin);
+        Button delayCheckbox = findViewById(R.id.delay);
         CheckBox wpsButtonCheckbox = findViewById(R.id.pbc);
+
+        customPinCheckbox.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+        customPinCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
+
+        delayCheckbox.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+        delayCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
+
 
         pixieDustCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
         pixieForceCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
         bruteCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
-        customPinCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
-        delayCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
         wpsButtonCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
 
 
@@ -134,8 +145,6 @@ public class WPSAttack extends AppCompatActivity {
         CompoundButtonCompat.setButtonTintList(pixieDustCheckbox, new ColorStateList(states, colors));
         CompoundButtonCompat.setButtonTintList(pixieForceCheckbox, new ColorStateList(states, colors));
         CompoundButtonCompat.setButtonTintList(bruteCheckbox, new ColorStateList(states, colors));
-        CompoundButtonCompat.setButtonTintList(customPinCheckbox, new ColorStateList(states, colors));
-        CompoundButtonCompat.setButtonTintList(delayCheckbox, new ColorStateList(states, colors));
         CompoundButtonCompat.setButtonTintList(wpsButtonCheckbox, new ColorStateList(states, colors));
 
         pixieDustCheckbox.setOnClickListener( v -> {
@@ -156,28 +165,19 @@ public class WPSAttack extends AppCompatActivity {
             else
                 bruteCMD = "";
         });
-        customPinCheckbox.setOnClickListener( v -> {
-            if (customPinCheckbox.isChecked()) {
-                dialogUtils.openWpsCustomPinDialog();
-            }
-            else {
-                customPINCMD = "";
-                customPIN = "";
-//                WPSPinLayout.setVisibility(View.GONE);
+        customPinCheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogUtils.openWpsCustomSetting(1, WPSAttack.this);
             }
         });
-        delayCheckbox.setOnClickListener( v -> {
-            if (delayCheckbox.isChecked()) {
-                delayCMD = " -d ";
-//                DelayLayout.setVisibility(View.VISIBLE);
+        delayCheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogUtils.openWpsCustomSetting(2, WPSAttack.this);
             }
-            else {
-                delayCMD = "";
-                delayTIME = "";
-//                DelayLayout.setVisibility(View.GONE);
+        });
 
-            }
-        });
         wpsButtonCheckbox.setOnClickListener( v -> {
             if (wpsButtonCheckbox.isChecked()) {
                 pbcCMD = " --pbc";
@@ -186,15 +186,14 @@ public class WPSAttack extends AppCompatActivity {
                 pbcCMD = "";
         });
 
-
-
         enableScanButton(true);
 
         scanButton.setOnClickListener(v -> {
             checkThrottling();
             // Check for location permission before initiating the scan
             if (checkLocationPermission()) {
-                startWifiScan();
+//                startWifiScan();
+                performWifiScan();
             } else {
                 requestLocationPermission();
             }
@@ -202,12 +201,12 @@ public class WPSAttack extends AppCompatActivity {
 
         // Initialize cancel button
         cancelButton.setOnClickListener(v -> {
-//            stopCountdown(); // Stop countdown if the cancel button is pressed
-            Intent intent = new Intent(WPSAttack.this, MainActivity.class);
+            Intent intent = new Intent(WPSAttack.this, SpecialFeaturesActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             finish();
         });
+
 
         // Register BroadcastReceiver
         wifiScanReceiver = new BroadcastReceiver() {
@@ -215,30 +214,25 @@ public class WPSAttack extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 try {
                     boolean success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
-                    if (success ) {
+                    if (success) {
                         handleScanResults();
                     }
                 } finally {
                     // Enable the scan button after receiving scan results or handling throttling
-                    enableScanButton(true);
+//                    enableScanButton(true);
                 }
             }
         };
 
         launchAttackButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(selectedButton == null){
-                            Toast.makeText(WPSAttack.this, "No target selected!", Toast.LENGTH_SHORT).show();
-                        } else {
-//                            String ssid = extractSSID(selectedButton.getText().toString()); // Extract SSID from button text
-                            String bssid = extractBSSID(selectedButton.getText().toString()); // Extract SSID from button text
-
-                            run_cmd("python3 /sdcard/nh_files/modules/oneshot.py -b " + bssid +
-                                    " -i " + "wlan0" + pixieCMD + pixieforceCMD + bruteCMD + customPINCMD + customPIN + delayCMD + delayTIME + pbcCMD);
-
-                        }
+                v -> {
+                    if(selectedButton == null){
+                        Toast.makeText(WPSAttack.this, "No target selected!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        wifiManager.disconnect(); // disconnect from active ap to prevent issues
+                        String bssid = extractBSSID(selectedButton.getText().toString()); // Extract SSID from button text
+                        run_cmd("python3 /sdcard/nh_files/modules/oneshot.py -b " + bssid +
+                                " -i " + "wlan0" + pixieCMD + pixieforceCMD + bruteCMD + customPINCMD + delayCMD + pbcCMD);
                     }
                 }
         );
@@ -263,14 +257,13 @@ public class WPSAttack extends AppCompatActivity {
 
         if (!results.isEmpty()) {
             createButtons(results);
+            setMessage("Ready to scan");
         } else {
             // Handle the case where there are no Wi-Fi networks found
             buttonContainer.removeAllViews();
-            setMessage("No Wi-Fi networks found.");
+            setMessage("No WPS networks found!");
         }
-
-        // Show the default message after displaying results
-        setMessage("Ready to scan");
+        enableScanButton(true);
     }
 
 
@@ -278,32 +271,65 @@ public class WPSAttack extends AppCompatActivity {
     private void createButtons(List<ScanResult> results) {
         buttonContainer.removeAllViews(); // Clear previous buttons
 
+        int buttonCount = 4;
+        ScrollView scrollView = findViewById(R.id.scrollView2);
+        int scrollViewHeight = scrollView.getHeight();
+        int buttonPadding = 15;
+
+        // Sort the results by signal strength in descending order
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            results.sort((result1, result2) -> Integer.compare(result2.level, result1.level));
+        } else {
+            // For API levels below 24, use Collections.sort
+            Collections.sort(results, new Comparator<ScanResult>() {
+                @Override
+                public int compare(ScanResult result1, ScanResult result2) {
+                    return Integer.compare(result2.level, result1.level);
+                }
+            });
+        }
+
         for (ScanResult result : results) {
-            Button wifiButton = new Button(this);
-            wifiButton.setText("SSID: " + result.SSID + "\nMAC: " + result.BSSID + "\nWPS: " +
-                    (result.capabilities != null && result.capabilities.contains("WPS")) + "\nPower: " +
-                    result.level + " dBm");
-            wifiButton.setTextColor(Color.parseColor(myPreferences.color80()));
+            if (result.capabilities != null) {
+                Button wifiButton = new Button(this);
 
-            // Set the background drawable for each button
-            GradientDrawable drawable = new GradientDrawable();
-            drawable.setCornerRadius(60);  // You can adjust the corner radius as needed
-            drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
-            wifiButton.setBackground(drawable);
+                // Create a SpannableStringBuilder to apply styles to different parts of the text
+                SpannableStringBuilder ssb = new SpannableStringBuilder();
 
-            // Set layout parameters for the button
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            layoutParams.setMargins(0, 15, 0, 0);
-            wifiButton.setLayoutParams(layoutParams);
+                // Set bold style for SSID
+                String ssidText = result.SSID;
+                ssb.append(ssidText, new StyleSpan(Typeface.BOLD), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.append("\n");
+                ssb.append(result.BSSID);
+                ssb.append("\n");
+                ssb.append(String.valueOf(result.level)).append(" dBm");
 
-            // Add click listener to handle button selection
-            wifiButton.setOnClickListener(v -> handleButtonClick(wifiButton));
+                wifiButton.setText(ssb);
+                wifiButton.setTextColor(Color.parseColor(myPreferences.color80()));
 
-            // Add the button to the container
-            buttonContainer.addView(wifiButton);
+                // Set the background drawable for each button
+                GradientDrawable drawable = new GradientDrawable();
+                drawable.setCornerRadius(60);
+                drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
+                wifiButton.setBackground(drawable);
+
+                // Calculate button height dynamically
+                int buttonHeight = (scrollViewHeight / buttonCount) - buttonPadding;
+
+                // Set layout parameters for the button
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        buttonHeight
+                );
+                layoutParams.setMargins(0, (buttonPadding / 2), 0, (buttonPadding / 2));
+                wifiButton.setLayoutParams(layoutParams);
+
+                // Add click listener to handle button selection
+                wifiButton.setOnClickListener(v -> handleButtonClick(wifiButton));
+
+                // Add the button to the container
+                buttonContainer.addView(wifiButton);
+            }
         }
     }
 
@@ -331,12 +357,10 @@ public class WPSAttack extends AppCompatActivity {
         }
     }
 
-    private void scanFailure() {
-        buttonContainer.removeAllViews();
-        setMessage("Scan failed! Please try again...");
-    }
-
-
+//    private void scanFailure() {
+//        buttonContainer.removeAllViews();
+//        setMessage("Scan failed! Please try again...");
+//    }
 
     private boolean checkLocationPermission() {
         // Check if the ACCESS_FINE_LOCATION permission is granted
@@ -353,42 +377,18 @@ public class WPSAttack extends AppCompatActivity {
         return mode != Settings.Secure.LOCATION_MODE_OFF;
     }
 
-    private void startWifiScan() {
-        // Check if Wi-Fi scan throttling is disabled
-        if (!isThrottleEnabled) {
-            // Wi-Fi scan throttling is enabled, do not check scanCount
-            performWifiScan();
-        } else {
-            // Wi-Fi scan throttling is enabled, check scanCount
-            if (scanCount < SCAN_LIMIT) {
-                performWifiScan();
-            } else {
-                // Reached scan limit, disable the scan button
-                enableScanButton(false);
-                // Display countdown message
-                // setMessage("Scan limit reached. Countdown: " + formatTime(COUNTDOWN_DURATION));
-                // Start the countdown
-                startCountdown();
-            }
-        }
-    }
-
     private void performWifiScan() {
-        scanCount++;
+//        scanCount++;
         // Continue with the scan
         if (isLocationEnabled()) {
-            // Disable the scan button during scanning
-            enableScanButton(false);
-            // Show "Scanning" text
-            buttonContainer.removeAllViews();
-            setMessage("Scanning...");
             // Start the Wi-Fi scan
             boolean success = wifiManager.startScan();
             if (!success) {
-                // Scan failure handling
-                scanFailure();
-                // Enable the scan button in case of scan failure
-                enableScanButton(true);
+                startCountdown();
+            } else {
+                enableScanButton(false);
+                buttonContainer.removeAllViews();
+                setMessage("Scanning...");
             }
         } else {
             buttonContainer.removeAllViews();
@@ -399,8 +399,9 @@ public class WPSAttack extends AppCompatActivity {
 
     private void startCountdown() {
         countdownHandler = new Handler();
-
         final int countdownSeconds = COUNTDOWN_DURATION;
+
+        enableScanButton(false);
 
         // Update countdown message every second
         for (int i = 0; i <= COUNTDOWN_DURATION; i++) {
@@ -418,7 +419,7 @@ public class WPSAttack extends AppCompatActivity {
         // After the countdown completes, display the default message
         countdownHandler.postDelayed(() -> {
             // Countdown completed, reset scanCount and enable the scan button
-            scanCount = 0;
+//            scanCount = 0;
             enableScanButton(true);
             // Show the default message after countdown completion
             setMessage("Ready to scan");
@@ -440,27 +441,19 @@ public class WPSAttack extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, proceed with the operation
-                startWifiScan();
-            } else {
+            if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 // Permission denied, show a message or handle accordingly
                 buttonContainer.removeAllViews();
                 setMessage("Location permission denied. Cannot scan for networks.");
-                // Enable the scan button after handling permission denial
-                enableScanButton(true);
             }
         }
     }
 
     private void setMessage(String message){
         scanButton.setText(message);
-//        msg.setVisibility(View.VISIBLE);
-//        msg.setText(message);
     }
 
     private void setMessage2(String message){
-        msg2.setVisibility(View.VISIBLE);
         msg2.setText(message);
     }
 
@@ -470,12 +463,6 @@ public class WPSAttack extends AppCompatActivity {
         } else {
             isThrottleEnabled = true;
         }
-    }
-
-    private String extractSSID(String buttonText) {
-        String[] lines = buttonText.split("\n"); // Split the button text by newlines
-        String ssidLine = lines[0]; // SSID is the first line
-        return ssidLine.substring(ssidLine.indexOf(":") + 2); // Extract the SSID value
     }
 
     private String extractBSSID(String buttonText) {
