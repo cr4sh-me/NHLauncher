@@ -38,7 +38,6 @@ import androidx.core.widget.CompoundButtonCompat;
 import com.cr4sh.nhlauncher.bridge.Bridge;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -165,18 +164,8 @@ public class WPSAttack extends AppCompatActivity {
             else
                 bruteCMD = "";
         });
-        customPinCheckbox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogUtils.openWpsCustomSetting(1, WPSAttack.this);
-            }
-        });
-        delayCheckbox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogUtils.openWpsCustomSetting(2, WPSAttack.this);
-            }
-        });
+        customPinCheckbox.setOnClickListener(v -> dialogUtils.openWpsCustomSetting(1, WPSAttack.this));
+        delayCheckbox.setOnClickListener(v -> dialogUtils.openWpsCustomSetting(2, WPSAttack.this));
 
         wpsButtonCheckbox.setOnClickListener( v -> {
             if (wpsButtonCheckbox.isChecked()) {
@@ -212,14 +201,9 @@ public class WPSAttack extends AppCompatActivity {
         wifiScanReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                try {
-                    boolean success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
-                    if (success) {
-                        handleScanResults();
-                    }
-                } finally {
-                    // Enable the scan button after receiving scan results or handling throttling
-//                    enableScanButton(true);
+                boolean success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
+                if (success) {
+                    handleScanResults();
                 }
             }
         };
@@ -253,17 +237,20 @@ public class WPSAttack extends AppCompatActivity {
             // TODO: Handle the case where location permission is not granted
             return;
         }
-        List<ScanResult> results = wifiManager.getScanResults();
-
-        if (!results.isEmpty()) {
-            createButtons(results);
-            setMessage("Ready to scan");
-        } else {
-            // Handle the case where there are no Wi-Fi networks found
-            buttonContainer.removeAllViews();
-            setMessage("No WPS networks found!");
+        try {
+            List<ScanResult> results = wifiManager.getScanResults();
+            if (!results.isEmpty()) {
+                createButtons(results);
+                setMessage("Ready to scan");
+            } else {
+                // Handle the case where there are no Wi-Fi networks found
+                buttonContainer.removeAllViews();
+                setMessage("No WPS networks found!");
+            }
+            enableScanButton(true);
+        } catch (Exception e){
+            Toast.makeText(this, "E: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-        enableScanButton(true);
     }
 
 
@@ -281,16 +268,11 @@ public class WPSAttack extends AppCompatActivity {
             results.sort((result1, result2) -> Integer.compare(result2.level, result1.level));
         } else {
             // For API levels below 24, use Collections.sort
-            Collections.sort(results, new Comparator<ScanResult>() {
-                @Override
-                public int compare(ScanResult result1, ScanResult result2) {
-                    return Integer.compare(result2.level, result1.level);
-                }
-            });
+            Collections.sort(results, (result1, result2) -> Integer.compare(result2.level, result1.level));
         }
 
         for (ScanResult result : results) {
-            if (result.capabilities != null) {
+            if (result.capabilities != null && result.capabilities.contains("WPS")) {
                 Button wifiButton = new Button(this);
 
                 // Create a SpannableStringBuilder to apply styles to different parts of the text
@@ -382,13 +364,17 @@ public class WPSAttack extends AppCompatActivity {
         // Continue with the scan
         if (isLocationEnabled()) {
             // Start the Wi-Fi scan
-            boolean success = wifiManager.startScan();
-            if (!success) {
-                startCountdown();
-            } else {
-                enableScanButton(false);
-                buttonContainer.removeAllViews();
-                setMessage("Scanning...");
+            try{
+                boolean success = wifiManager.startScan();
+                if (!success && isThrottleEnabled) {
+                    startCountdown();
+                } else {
+                    enableScanButton(false);
+                    buttonContainer.removeAllViews();
+                    setMessage("Scanning...");
+                }
+            } catch (Exception e){
+                Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         } else {
             buttonContainer.removeAllViews();
@@ -411,9 +397,7 @@ public class WPSAttack extends AppCompatActivity {
 
             final int delay = i * 1000; // Delay increases every second
 
-            countdownHandler.postDelayed(() -> {
-                setMessage("Scan limit reached. Countdown: " + countdownMessage);
-            }, delay);
+            countdownHandler.postDelayed(() -> setMessage("Scan limit reached. Countdown: " + countdownMessage), delay);
         }
 
         // After the countdown completes, display the default message
@@ -465,14 +449,13 @@ public class WPSAttack extends AppCompatActivity {
         }
     }
 
-    private String extractBSSID(String buttonText) {
-        String[] lines = buttonText.split("\n"); // Split the button text by newlines
-        String bssidLine = lines[1]; // BSSID is the second line
-        return bssidLine.substring(bssidLine.indexOf(":") + 2); // Extract the BSSID value
+    private static String extractBSSID(String buttonText) {
+        String[] lines = buttonText.split("\n");
+        return lines[1].trim();
     }
 
     public void run_cmd(String cmd) {
-        @SuppressLint("SdCardPath") Intent intent = Bridge.createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd);
+        @SuppressLint("SdCardPath") Intent intent = Bridge.createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd ,true);
         startActivity(intent);
     }
 

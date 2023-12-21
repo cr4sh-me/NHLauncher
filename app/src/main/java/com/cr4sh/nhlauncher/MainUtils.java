@@ -37,7 +37,8 @@ public class MainUtils extends AppCompatActivity {
 
     // NetHunter bridge function
     public void run_cmd(String cmd) {
-        @SuppressLint("SdCardPath") Intent intent = Bridge.createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd);
+        @SuppressLint("SdCardPath") Intent intent = Bridge.createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd, true);
+//        intent.putExtra(EXTRA_FOREGOUND, true)
         mainActivity.startActivity(intent);
     }
 

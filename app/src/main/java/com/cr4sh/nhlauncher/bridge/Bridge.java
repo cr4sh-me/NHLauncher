@@ -45,8 +45,8 @@ public class Bridge {
         return createExecuteIntent(sessionId, executablePath, command, true);
     }
 
-    public static Intent createExecuteIntent(String executablePath, String command) {
-        return createExecuteIntent(SessionId.NEW_SESSION, executablePath, command);
+    public static Intent createExecuteIntent(String executablePath, String command, boolean foreground) {
+        return createExecuteIntent(SessionId.NEW_SESSION, executablePath, command, foreground);
     }
 
 }

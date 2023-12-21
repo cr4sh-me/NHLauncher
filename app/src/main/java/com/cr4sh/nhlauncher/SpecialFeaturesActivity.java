@@ -49,10 +49,10 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
         customButton2.setDescriptionColor(Color.parseColor(myPreferences.color80()));
 
         CustomButton customButton3 = findViewById(R.id.button3);
-        customButton3.setImageResource(R.drawable.kali_mdk3);
-        customButton3.setName("Fake Captive Portal AP");
+        customButton3.setImageResource(R.drawable.kali_tools);
+        customButton3.setName("Bluetooth Arsenal");
         customButton3.setNameColor(Color.parseColor(myPreferences.color80()));
-        customButton3.setDescription("Create Fake AP and steal credentials");
+        customButton3.setDescription("Bluetooth Arsenal");
         customButton3.setDescriptionColor(Color.parseColor(myPreferences.color80()));
 
 
@@ -69,13 +69,13 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        customButton2.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MDKDeauth.class);
-            startActivity(intent);
-        });
+//        customButton2.setOnClickListener(v -> {
+//            Intent intent = new Intent(this, MDKDeauth.class);
+//            startActivity(intent);
+//        });
 
         customButton3.setOnClickListener(v -> {
-            Intent intent = new Intent(this, FakeAP.class);
+            Intent intent = new Intent(this, BluetoothAttacks.class);
             startActivity(intent);
         });
 
