@@ -76,30 +76,61 @@
         app:layout_constraintTop_toBottomOf="@+id/bluebinderButton" />
 
     <LinearLayout
-        app:layout_constraintTop_toBottomOf="@id/servicesText"
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
         android:padding="15dp"
-        android:orientation="horizontal">
+        app:layout_constraintTop_toBottomOf="@id/servicesText">
 
         <TextView
             android:id="@+id/bt_if"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Bluetooth interface" />
+            android:text="Bluetooth interface"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <Spinner
+            android:id="@+id/hci_interface"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/hci_interface"
 
             android:spinnerMode="dropdown" />
 
     </LinearLayout>
 
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/scanButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        tools:ignore="SpeakableTextPresentCheck">
 
+        <LinearLayout
+            android:id="@+id/buttonContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/scanButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:text="Scan"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

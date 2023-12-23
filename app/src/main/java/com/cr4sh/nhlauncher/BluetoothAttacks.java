@@ -1,9 +1,11 @@
 package com.cr4sh.nhlauncher;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +30,17 @@ public class BluetoothAttacks extends AppCompatActivity {
         Window window = this.getWindow();
         window.setStatusBarColor(Color.parseColor(myPreferences.color20()));
         window.setNavigationBarColor(Color.parseColor(myPreferences.color20()));
+
+        Button cancelButton = findViewById(R.id.cancel_button);
+        cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
+        cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
+
+        cancelButton.setOnClickListener(v -> {
+            Intent intent = new Intent(BluetoothAttacks.this, SpecialFeaturesActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            finish();
+        });
 
         ViewPager2 viewPager2 = findViewById(R.id.pager);
         BluetoothPager adapter = new BluetoothPager(this);

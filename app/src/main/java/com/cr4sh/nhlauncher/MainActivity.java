@@ -277,8 +277,6 @@ public class MainActivity extends AppCompatActivity {
         }));
 
         specialButton.setOnClickListener(v -> {
-            // TODO add special features option
-
             enableAfterAnimation(toolbar);
             enableAfterAnimation(rollCategoriesLayout);
             disableWhileAnimation(categoriesLayout);
