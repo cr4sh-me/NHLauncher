@@ -3,9 +3,15 @@ package com.cr4sh.nhlauncher.BluetoothPager;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,20 +19,27 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.cr4sh.nhlauncher.CustomSpinnerAdapter;
+import com.cr4sh.nhlauncher.DialogUtils;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.bridge.Bridge;
 import com.cr4sh.nhlauncher.utils.ShellExecuter;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,20 +52,26 @@ public class BluetoothFragment1 extends Fragment {
     final ShellExecuter exe = new ShellExecuter();
     @SuppressLint("SdCardPath")
     private final String APP_SCRIPTS_PATH = "/data/data/com.offsec.nethunter/scripts";
+    private final String CHROOT_PATH = "/data/local/nhsystem/kali-arm64";
+    private Handler mainHandler;
     MyPreferences myPreferences;
+    ScrollView scrollView;
     private Button binderButton;
     private Button servicesButton;
+    private Button scanButton;
+    public String scanTime = "10";
     private Spinner ifaces;
     private String selected_iface;
-    String CHROOT_PATH = "/data/local/nhsystem/kali-arm64";
-    File bt_smd;
-    File bluebinder;
-
+    private File bt_smd;
+    private File bluebinder;
+    private LinearLayout buttonContainer;
     private ExecutorService executor;
-    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private Button selectedButton = null;
+    List<Integer> imageList;
     public BluetoothFragment1() {
         // Required empty public constructor
     }
+
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,27 +79,41 @@ public class BluetoothFragment1 extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.bt_layout1, container, false);
 
+        myPreferences = new MyPreferences(requireActivity());
         executor = Executors.newCachedThreadPool();
+        mainHandler = new Handler(Looper.getMainLooper());
         bt_smd = new File("/sys/module/hci_smd/parameters/hcismd_set");
         bluebinder = new File(CHROOT_PATH + "/usr/sbin/bluebinder");
 
-        myPreferences = new MyPreferences(requireActivity());
+        scrollView = view.findViewById(R.id.scrollView2);
+        buttonContainer = view.findViewById(R.id.buttonContainer);
 
-        TextView title = view.findViewById(R.id.bt_info);
         TextView description = view.findViewById(R.id.bt_info2);
         TextView interfacesText = view.findViewById(R.id.interfacesText);
         TextView servicesText = view.findViewById(R.id.servicesText);
-        Button scanButton = view.findViewById(R.id.scanButton);
+        TextView scanText = view.findViewById(R.id.scanText);
+
+        scanText.setTextColor(Color.parseColor(myPreferences.color80()));
+
+        scanButton = view.findViewById(R.id.scanButton);
+        Button scanTimeButton = view.findViewById(R.id.scanTime);
 
         scanButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
         scanButton.setTextColor(Color.parseColor(myPreferences.color80()));
 
+        scanTimeButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+        scanTimeButton.setTextColor(Color.parseColor(myPreferences.color80()));
 
         binderButton = view.findViewById(R.id.bluebinderButton);
         servicesButton = view.findViewById(R.id.btServicesButton);
         ifaces = view.findViewById(R.id.hci_interface);
+        LinearLayout ifacesContainer = view.findViewById(R.id.spinnerContainer);
+        setContainerBackground(ifacesContainer);
 
-        title.setTextColor(Color.parseColor(myPreferences.color80()));
+        imageList = List.of(
+                R.drawable.kali_wireless_attacks_trans
+        );
+
         description.setTextColor(Color.parseColor(myPreferences.color80()));
         interfacesText.setTextColor(Color.parseColor(myPreferences.color80()));
         servicesText.setTextColor(Color.parseColor(myPreferences.color80()));
@@ -104,15 +137,16 @@ public class BluetoothFragment1 extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int pos, long id) {
                 selected_iface = parentView.getItemAtPosition(pos).toString();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
                 // TODO document why this method is empty
             }
         });
 
-        binderButton.setOnClickListener( v -> {
+        binderButton.setOnClickListener(v -> {
             try {
-                lockBinderButtons(false, "Please wait...");
+                lockButton(false, "Please wait...", binderButton);
                 binderAction();
             } catch (ExecutionException | InterruptedException e) {
                 throw new RuntimeException(e);
@@ -121,16 +155,143 @@ public class BluetoothFragment1 extends Fragment {
 
         servicesButton.setOnClickListener(v -> {
             try {
-                lockServicesButton(false, "Please wait...");
+                lockButton(false, "Please wait...", servicesButton);
                 btServicesAction();
             } catch (ExecutionException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
         });
 
+        scanButton.setOnClickListener(v -> {
+            runBtScan();
+        });
+
+        DialogUtils dialogUtils = new DialogUtils(requireActivity().getSupportFragmentManager());
+
+        scanTimeButton.setOnClickListener(v -> {
+            dialogUtils.openScanTimeDialog(1, this);
+        });
+
         return view;
     }
 
+    @SuppressLint("SetTextI18n")
+    private void createButtons(String[] devices) {
+        buttonContainer.removeAllViews(); // Clear previous buttons
+
+        int buttonCount = 4;
+        int scrollViewHeight = scrollView.getHeight();
+        int buttonPadding = 15;
+
+        for (String device : devices) {
+            Button bluetoothButton = new Button(requireActivity());
+
+            String cleanText = device.replaceAll("[\\[\\]]", "");
+
+            // Assume MAC address is always 17 characters
+            String bluetooth_name = (cleanText.substring(18)).strip();
+            String bluetooth_address = (cleanText.substring(0, 18)).strip();
+
+            Log.d("HDH", bluetooth_name + " - " + bluetooth_address);
+
+
+            SpannableStringBuilder ssb = new SpannableStringBuilder();
+            // Set bold style for BT address
+            ssb.append(bluetooth_name, new StyleSpan(Typeface.BOLD), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssb.append("\n");
+            ssb.append(bluetooth_address);
+
+            bluetoothButton.setText(ssb);
+            bluetoothButton.setTextColor(Color.parseColor(myPreferences.color80()));
+
+            // Set the background drawable for each button
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setCornerRadius(60);
+            drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
+            bluetoothButton.setBackground(drawable);
+
+            // Calculate button height dynamically
+            int buttonHeight = (scrollViewHeight / buttonCount) - buttonPadding;
+
+            // Set layout parameters for the button
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    buttonHeight
+            );
+            layoutParams.setMargins(0, (buttonPadding / 2), 0, (buttonPadding / 2));
+            bluetoothButton.setLayoutParams(layoutParams);
+
+            // Add click listener to handle button selection
+            bluetoothButton.setOnClickListener(v -> handleButtonClick(bluetoothButton));
+
+            // Add the button to the container
+            buttonContainer.addView(bluetoothButton);
+        }
+    }
+
+    private void handleButtonClick(Button clickedButton) {
+        if (selectedButton != null) {
+            selectedButton.setTextColor(Color.parseColor(myPreferences.color80()));
+            // Change the background drawable for the previously selected button
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setCornerRadius(60);
+            drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
+            selectedButton.setBackground(drawable);
+        }
+
+        // If the clicked button is the same as the selected button, deselect it
+        if (selectedButton == clickedButton) {
+            selectedButton = null;
+        } else {
+            // Set the text and background color for the clicked button to indicate selection
+            clickedButton.setTextColor(Color.parseColor(myPreferences.color50()));
+            GradientDrawable selectedDrawable = new GradientDrawable();
+            selectedDrawable.setCornerRadius(60);
+            selectedDrawable.setStroke(8, Color.parseColor(myPreferences.color50()));
+            clickedButton.setBackground(selectedDrawable);
+            selectedButton = clickedButton;
+        }
+    }
+
+    private void runBtScan() {
+        if (!selected_iface.equals("None")) {
+            executor.submit(() -> {
+                try {
+                    Future<String> future1 = executor.submit(() -> exe.RunAsRootOutput(APP_SCRIPTS_PATH + "/bootkali custom_cmd hciconfig " + selected_iface + " | grep 'UP RUNNING' | cut -f2 -d$'\\t'"));
+                    String hci_current = future1.get();
+                    if (!hci_current.equals("UP RUNNING ")) {
+                        exe.RunAsRoot(new String[]{APP_SCRIPTS_PATH + "/bootkali custom_cmd hciconfig " + selected_iface + " up"});
+                    }
+
+                    mainHandler.post(() -> {
+                        buttonContainer.removeAllViews();
+                        lockButton(false, "Scanning...", scanButton);
+                    });
+
+                    Future<String> future2 = executor.submit(() -> exe.RunAsRootOutput(APP_SCRIPTS_PATH + "/bootkali custom_cmd hcitool -i " + selected_iface + " scan  --length " + scanTime + " | grep -A 1000 \"Scanning ...\" | awk '/Scanning .../{flag=1;next}/--/{flag=0}flag'\n"));
+                    String scanOutput = future2.get();
+                    Log.d("hcitool", scanOutput);
+
+                    if (!scanOutput.isEmpty()) {
+                        String[] devicesList = scanOutput.split("\n");
+                        Log.d("hcitool", "not empty: " + Arrays.toString(devicesList));
+                        mainHandler.post(() -> {
+                            createButtons(devicesList);
+                            lockButton(true, "Scan", scanButton);
+                        });
+                    } else {
+                        mainHandler.post(() -> {
+                            lockButton(true, "No devices found...", scanButton);
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        } else {
+            Toast.makeText(requireActivity(), "No selected interface!", Toast.LENGTH_SHORT).show();
+        }
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -147,7 +308,7 @@ public class BluetoothFragment1 extends Fragment {
             try {
                 boolean isBinderRunning = isBinderRunning();
                 mainHandler.post(() -> {
-                    lockBinderButtons(true, isBinderRunning ? "Stop Bluebinder" : "Start Bluebinder");
+                    lockButton(true, isBinderRunning ? "Stop Bluebinder" : "Start Bluebinder", binderButton);
                 });
             } catch (ExecutionException | InterruptedException e) {
                 throw new RuntimeException(e);
@@ -170,7 +331,7 @@ public class BluetoothFragment1 extends Fragment {
             try {
                 boolean isBtServicesRunning = isBtServicesRunning();
                 mainHandler.post(() -> {
-                    lockServicesButton(true, isBtServicesRunning ? "Stop BT Services" : "Start BT Services");
+                    lockButton(true, isBtServicesRunning ? "Stop BT Services" : "Start BT Services", servicesButton);
                 });
             } catch (ExecutionException | InterruptedException e) {
                 throw new RuntimeException(e);
@@ -253,7 +414,6 @@ public class BluetoothFragment1 extends Fragment {
     }
 
 
-
     @SuppressLint("SetTextI18n")
     private void btServicesAction() throws ExecutionException, InterruptedException {
 
@@ -286,7 +446,7 @@ public class BluetoothFragment1 extends Fragment {
 
     }
 
-    private void startBinder(){
+    private void startBinder() {
         if (bt_smd.exists()) {
             executor.execute(() -> {
                 exe.RunAsRoot(new String[]{"svc bluetooth disable"});
@@ -294,7 +454,7 @@ public class BluetoothFragment1 extends Fragment {
                 exe.RunAsRoot(new String[]{"echo 1 > " + bt_smd});
                 exe.RunAsRoot(new String[]{"svc bluetooth enable"});
             });
-        } else{
+        } else {
             executor.execute(() -> {
                 exe.RunAsRoot(new String[]{"svc bluetooth disable"});
             });
@@ -302,7 +462,7 @@ public class BluetoothFragment1 extends Fragment {
         }
     }
 
-    private void stopBinder(){
+    private void stopBinder() {
         if (bt_smd.exists()) {
             executor.execute(() -> {
                 exe.RunAsRoot(new String[]{"echo 0 > " + bt_smd});
@@ -314,7 +474,8 @@ public class BluetoothFragment1 extends Fragment {
             });
         }
     }
-    private void startBtServices(){
+
+    private void startBtServices() {
         executor.submit(() -> {
             exe.RunAsRoot(new String[]{APP_SCRIPTS_PATH + "/bootkali custom_cmd service dbus start"});
             exe.RunAsRoot(new String[]{APP_SCRIPTS_PATH + "/bootkali custom_cmd service bluetooth start"});
@@ -331,32 +492,17 @@ public class BluetoothFragment1 extends Fragment {
         });
     }
 
-    private void lockBinderButtons(boolean value, String binderButtonText) {
+    private void lockButton(boolean value, String binderButtonText, Button choosenButton) {
         mainHandler.post(() -> {
-            binderButton.setText(binderButtonText);
-            binderButton.setEnabled(value);
+            choosenButton.setEnabled(value);
+            choosenButton.setText(binderButtonText);
 
             if (value) {
-                binderButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-                binderButton.setTextColor(Color.parseColor(myPreferences.color80()));
+                choosenButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+                choosenButton.setTextColor(Color.parseColor(myPreferences.color80()));
             } else {
-                binderButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-                binderButton.setTextColor(Color.parseColor(myPreferences.color50()));
-            }
-        });
-    }
-
-    private void lockServicesButton(boolean value, String servicesButtonText) {
-        mainHandler.post(() -> {
-            servicesButton.setText(servicesButtonText);
-            servicesButton.setEnabled(value);
-
-            if (value) {
-                servicesButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-                servicesButton.setTextColor(Color.parseColor(myPreferences.color80()));
-            } else {
-                servicesButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-                servicesButton.setTextColor(Color.parseColor(myPreferences.color50()));
+                choosenButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
+                choosenButton.setTextColor(Color.parseColor(myPreferences.color50()));
             }
         });
     }
@@ -370,12 +516,14 @@ public class BluetoothFragment1 extends Fragment {
         if (outputHCI[0].isEmpty()) {
             mainHandler.post(() -> {
                 hciIfaces.add("None");
-                ifaces.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, hciIfaces));
+                CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(requireActivity(), hciIfaces, imageList, myPreferences.color20(), myPreferences.color80());
+                ifaces.setAdapter(customSpinnerAdapter);
             });
         } else {
             final String[] ifacesArray = outputHCI[0].split("\n");
             mainHandler.post(() -> {
-                ifaces.setAdapter(new ArrayAdapter<>(requireContext(),android.R.layout.simple_list_item_1, ifacesArray));
+                CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(requireActivity(), List.of(ifacesArray), imageList, myPreferences.color20(), myPreferences.color80());
+                ifaces.setAdapter(customSpinnerAdapter);
             });
         }
     }
@@ -390,35 +538,10 @@ public class BluetoothFragment1 extends Fragment {
         requireActivity().startActivity(intent);
     }
 
-
-
-//
-//    public void RunSetup() {
-//        run_cmd("echo -ne \"\\033]0;BT Arsenal Setup\\007\" && clear;if [[ -f /usr/bin/hciconfig && -f /usr/bin/l2ping && " +
-//                "-f /usr/bin/fang && -f /usr/bin/blueranger &&-f /usr/bin/bluelog && -f /usr/bin/sdptool && -f /usr/bin/spooftooph && -f /usr/bin/sox && -f /usr/include/bluetooth/bluetooth.h ]];then echo 'All packages are installed!'; else " +
-//                "apt-get update && apt-get install bluetooth bluez bluez-tools bluez-obexd libbluetooth3 sox spooftooph libglib2.0*-dev libsystemd-dev python3-dbus python3-bleuz" +
-//                "libbluetooth-dev redfang bluelog blueranger -y;fi;" +
-//                "if [[ -f /usr/bin/carwhisperer && -f /usr/bin/rfcomm_scan ]];then echo 'All scripts are installed!'; else " +
-//                "git clone https://github.com/yesimxev/carwhisperer-0.2 /root/carwhisperer;" +
-//                "cd /root/carwhisperer;make && make install;git clone https://github.com/yesimxev/bt_audit /root/bt_audit;cd /root/bt_audit/src;make;" +
-//                "cp rfcomm_scan /usr/bin/;fi;" +
-//                "if [[ -f /usr/lib/libglibutil.so ]]; then echo 'Libglibutil is installed!'; else git clone https://github.com/yesimxev/libglibutil /root/libglibutil;" +
-//                "cd /root/libglibutil;make && make install-dev;fi;" +
-//                "if [[ -f /usr/lib/libgbinder.so ]]; then echo 'Libgbinder is installed!'; else git clone https://github.com/yesimxev/libgbinder /root/libgbinder;" +
-//                "cd /root/libgbinder;make && make install-dev;fi;" +
-//                "if [[ -f /usr/sbin/bluebinder ]]; then echo 'Bluebinder is installed!'; else git clone https://github.com/yesimxev/bluebinder /root/bluebinder;" +
-//                "cd /root/bluebinder;make && make install;fi;" +
-//                "if [[ -f /root/badbt/btk_server.py ]]; then echo 'BadBT is installed!'; else git clone https://github.com/yesimxev/badbt /root/badbt && cp /root/badbt/org.thanhle.btkbservice.conf /etc/dbus-1/system.d/;fi;" +
-//                "if [[ ! \"`grep 'noplugin=input' /etc/init.d/bluetooth`\" == \"\" ]]; then echo 'Bluetooth service is patched!'; else echo 'Patching Bluetooth service..' && " +
-//                "sed -i -e 's/# NOPLUGIN_OPTION=.*/NOPLUGIN_OPTION=\"--noplugin=input\"/g' /etc/init.d/bluetooth;fi; echo 'Everything is installed!' && echo '\nPress any key to continue...' && read -s -n 1 && exit ");
-//    }
-//
-//    public void RunUpdate() {
-//        run_cmd("echo -ne \"\\033]0;BT Arsenal Update\\007\" && clear;apt-get update && apt-get install bluetooth bluez bluez-tools bluez-obexd libbluetooth3 sox spooftooph " +
-//                "libbluetooth-dev redfang bluelog blueranger libglib2.0*-dev libsystemd-dev python3-dbus python3-bleuz -y;if [[ -f /usr/bin/carwhisperer && -f /usr/bin/rfcomm_scan && -f /root/bluebinder && -f /root/libgbinder && -f /root/libglibutil ]];" +
-//                "then cd /root/carwhisperer/;git pull && make && make install;cd /root/bluebinder/;git pull && make && make install;cd /root/libgbinder/;git pull && make && " +
-//                "make install-dev;cd /root/libglibutil/;git pull && make && make install-dev;cd /root/bt_audit; git pull; cd src && make;" +
-//                "cp rfcomm_scan /usr/bin/;cd /root/badbt/;git pull;fi; echo 'Done! Closing in 3secs..'; sleep 3 && exit ");
-//    }
-
+    private void setContainerBackground(LinearLayout container) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setCornerRadius(60);
+        drawable.setStroke(8, Color.parseColor(myPreferences.color50()));
+        container.setBackground(drawable);
+    }
 }

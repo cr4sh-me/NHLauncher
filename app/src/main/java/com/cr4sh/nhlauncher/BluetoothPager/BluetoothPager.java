@@ -14,7 +14,7 @@ public class BluetoothPager extends FragmentStateAdapter {
     @Override
     public int getItemCount() {
         // Return the number of fragments
-        return 2;
+        return 5;
     }
 
     @NonNull
@@ -23,7 +23,14 @@ public class BluetoothPager extends FragmentStateAdapter {
         // Return the fragment for the given position
         if (position == 0) {
             return new BluetoothFragment1();
+        } else if (position == 1){
+            return  new BluetoothFragment2();
+        } else if (position == 2){
+            return new BluetoothFragment3();
+        } else if (position == 3){
+            return new BluetoothFragment4();
+        } else {
+            return new BluetoothFragment5();
         }
-        return new BluetoothFragment2();
     }
 }

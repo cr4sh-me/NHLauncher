@@ -5,31 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <TextView
-        android:id="@+id/bt_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginTop="32dp"
-        android:gravity="center"
-        android:text="Bluetooth Arsenal"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.157"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/bt_info2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:gravity="center"
-        android:text="Arsenal description soon..."
+        android:text="Perform various Bluetooth attacks using simple tools GUI. Internal bluetooth requires RFCOMM, UART H4, VHCI and BINDER_IPC enabled in kernel or bt_smd driver device"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bt_info" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/servicesText"
@@ -54,6 +39,18 @@
         tools:layout_editor_absoluteX="-16dp" />
 
 
+    <TextView
+        android:id="@+id/scanText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="Scan results"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerContainer" />
+
     <Button
         android:layout_marginHorizontal="10dp"
         android:id="@+id/bluebinderButton"
@@ -76,27 +73,21 @@
         app:layout_constraintTop_toBottomOf="@+id/bluebinderButton" />
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:layout_marginHorizontal="10dp"
+        android:id="@+id/spinnerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="15dp"
-        app:layout_constraintTop_toBottomOf="@id/servicesText">
-
-        <TextView
-            android:id="@+id/bt_if"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Bluetooth interface"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/servicesText">
 
         <Spinner
+            android:background="@color/transparent"
             android:id="@+id/hci_interface"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:spinnerMode="dropdown" />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
@@ -105,32 +96,53 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/scanButton"
+        app:layout_constraintBottom_toTopOf="@+id/bottomContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/scanText"
         tools:ignore="SpeakableTextPresentCheck">
 
         <LinearLayout
             android:id="@+id/buttonContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
+            android:layout_marginHorizontal="5dp"
             android:gravity="center"
             android:orientation="vertical">
 
         </LinearLayout>
     </ScrollView>
 
-    <Button
-        android:id="@+id/scanButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:text="Scan"
+    <LinearLayout
+        android:id="@+id/bottomContainer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
+            android:id="@+id/scanTime"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Scan Time" />
+
+        <Button
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/scanButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Scan"
+            />
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import androidx.fragment.app.FragmentManager;
 
+import com.cr4sh.nhlauncher.BluetoothPager.BluetoothFragment1;
 import com.cr4sh.nhlauncher.dialogs.AppsDialog;
 import com.cr4sh.nhlauncher.dialogs.ButtonMenuDialog;
 import com.cr4sh.nhlauncher.dialogs.CustomThemeDialog;
@@ -16,6 +17,7 @@ import com.cr4sh.nhlauncher.dialogs.MissingActivityDialog;
 import com.cr4sh.nhlauncher.dialogs.NewToolDialog;
 import com.cr4sh.nhlauncher.dialogs.NhlColorPickerDialog;
 import com.cr4sh.nhlauncher.dialogs.PermissionDialog;
+import com.cr4sh.nhlauncher.dialogs.ScanTimeDialog;
 import com.cr4sh.nhlauncher.dialogs.SettingsDialog;
 import com.cr4sh.nhlauncher.dialogs.StatisticsDialog;
 import com.cr4sh.nhlauncher.dialogs.ThrottlingDialog;
@@ -171,6 +173,17 @@ public class DialogUtils {
     public void openWpsCustomSetting(int number, WPSAttack activity) {
         new Thread(() -> {
             WpsCustomPinDialog pinDialog = new WpsCustomPinDialog(activity);
+            Bundle args = new Bundle();
+            args.putInt("option", number);
+            pinDialog.setArguments(args);
+            // Display our dialog!
+            pinDialog.show(fragmentManager, "PermissionsDialog");
+        }).start();
+    }
+
+    public void openScanTimeDialog(int number, BluetoothFragment1 activity) {
+        new Thread(() -> {
+            ScanTimeDialog pinDialog = new ScanTimeDialog(activity);
             Bundle args = new Bundle();
             args.putInt("option", number);
             pinDialog.setArguments(args);

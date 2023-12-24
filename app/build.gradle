@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.cr4sh.nhlauncher"
-        minSdk 23
+        minSdk 24
         targetSdk 33
         versionCode 3
         versionName "2.0"

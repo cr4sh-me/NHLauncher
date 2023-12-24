@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +32,9 @@ public class BluetoothAttacks extends AppCompatActivity {
         window.setStatusBarColor(Color.parseColor(myPreferences.color20()));
         window.setNavigationBarColor(Color.parseColor(myPreferences.color20()));
 
+        TextView title = findViewById(R.id.title);
+        title.setTextColor(Color.parseColor(myPreferences.color80()));
+
         Button cancelButton = findViewById(R.id.cancel_button);
         cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
         cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
@@ -45,6 +49,7 @@ public class BluetoothAttacks extends AppCompatActivity {
         ViewPager2 viewPager2 = findViewById(R.id.pager);
         BluetoothPager adapter = new BluetoothPager(this);
         viewPager2.setAdapter(adapter);
+        viewPager2.setOffscreenPageLimit(5);
 
         TabLayout tabs = findViewById(R.id.tabLayout);
 
@@ -52,10 +57,19 @@ public class BluetoothAttacks extends AppCompatActivity {
             // Set tab titles based on position
             switch (position) {
                 case 0:
-                    tab.setText("Services");
+                    tab.setText("Home");
                     break;
                 case 1:
-                    tab.setText("Attacks");
+                    tab.setText("Tools");
+                    break;
+                case 2:
+                    tab.setText("Spoof");
+                    break;
+                case 3:
+                    tab.setText("Bad Bluetooth");
+                    break;
+                case 4:
+                    tab.setText("Apple Juice");
                     break;
                 // Add more cases for additional tabs if needed
             }
