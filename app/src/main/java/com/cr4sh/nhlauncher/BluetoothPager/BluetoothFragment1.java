@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -33,8 +31,6 @@ import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.bridge.Bridge;
 import com.cr4sh.nhlauncher.utils.ShellExecuter;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,13 +49,14 @@ public class BluetoothFragment1 extends Fragment {
     @SuppressLint("SdCardPath")
     private final String APP_SCRIPTS_PATH = "/data/data/com.offsec.nethunter/scripts";
     private final String CHROOT_PATH = "/data/local/nhsystem/kali-arm64";
-    private Handler mainHandler;
+    public String scanTime = "10";
     MyPreferences myPreferences;
     ScrollView scrollView;
+    List<Integer> imageList;
+    private Handler mainHandler;
     private Button binderButton;
     private Button servicesButton;
     private Button scanButton;
-    public String scanTime = "10";
     private Spinner ifaces;
     private String selected_iface;
     private File bt_smd;
@@ -67,7 +64,7 @@ public class BluetoothFragment1 extends Fragment {
     private LinearLayout buttonContainer;
     private ExecutorService executor;
     private Button selectedButton = null;
-    List<Integer> imageList;
+
     public BluetoothFragment1() {
         // Required empty public constructor
     }
@@ -292,6 +289,7 @@ public class BluetoothFragment1 extends Fragment {
             Toast.makeText(requireActivity(), "No selected interface!", Toast.LENGTH_SHORT).show();
         }
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

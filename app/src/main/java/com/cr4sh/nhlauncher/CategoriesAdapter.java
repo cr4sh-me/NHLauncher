@@ -20,10 +20,15 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesViewHolder
     List<String> item = new ArrayList<>();
     List<Integer> itemImg = new ArrayList<>();
 
-    public CategoriesAdapter(MainActivity activity) {
-        this.myActivity = activity;
-        // Initialize the list
+    RecyclerView recyclerView;
 
+    public CategoriesAdapter(MainActivity activity, RecyclerView recyclerView) {
+        this.myActivity = activity;
+        this.recyclerView = recyclerView;
+
+        // Attaching custom snap helper
+        NHLSnapHelper snapHelper = new NHLSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -66,6 +71,18 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesViewHolder
         drawable.setCornerRadius(100);
         drawable.setStroke(8, Color.parseColor(myPreferences.color50()));
         holder.categoryLayout.setBackground(drawable);
+
+        int buttonCount = 9;
+        int buttonPadding = 25;
+        int buttonHeight = (recyclerView.getHeight() / buttonCount) - buttonPadding;
+
+        // Set layout parameters for the button
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                buttonHeight
+        );
+        layoutParams.setMargins(buttonPadding, (buttonPadding / 2), buttonPadding, (buttonPadding / 2));
+        holder.categoryLayout.setLayoutParams(layoutParams);
 
 
         holder.itemView.setOnClickListener(v -> {

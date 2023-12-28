@@ -90,7 +90,6 @@ public class BluetoothAttacks extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

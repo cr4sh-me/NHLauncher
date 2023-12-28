@@ -21,8 +21,8 @@ import java.util.Locale;
 
 public class ShellExecuter {
 
-    private SimpleDateFormat timeStamp = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     private final static String TAG = "ShellExecuter";
+    private final SimpleDateFormat timeStamp = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
 
     public ShellExecuter() {
 
@@ -100,7 +100,7 @@ public class ShellExecuter {
                 output = output + line + '\n';
             }
             /* remove the last \n */
-            if (output.length() > 0) output = output.substring(0,output.length()-1);
+            if (output.length() > 0) output = output.substring(0, output.length() - 1);
 
             br.close();
             // Lint says while does not loop here (probably because it doesn't do anything except shell error)
@@ -139,7 +139,7 @@ public class ShellExecuter {
                 output = output + line + '\n';
             }
             /* remove the last \n */
-            if (output.length() > 0) output = output.substring(0,output.length()-1);
+            if (output.length() > 0) output = output.substring(0, output.length() - 1);
             br.close();
             br = new BufferedReader(new InputStreamReader(stderr));
             while ((line = br.readLine()) != null) {
@@ -173,8 +173,8 @@ public class ShellExecuter {
             while ((line = br.readLine()) != null) {
                 final Spannable tempText = new SpannableString(line + "\n");
                 final Spannable timestamp = new SpannableString("[ " + timeStamp.format(new Date()) + " ]  ");
-                timestamp.setSpan(new ForegroundColorSpan(Color.parseColor("#FFD561")),0,timestamp.length(),0);
-                tempText.setSpan(new ForegroundColorSpan(line.startsWith("[!]")?Color.CYAN:line.startsWith("[+]")?Color.GREEN:line.startsWith("[-]")?Color.parseColor("#D81B60"):Color.WHITE),0,tempText.length(),0);
+                timestamp.setSpan(new ForegroundColorSpan(Color.parseColor("#FFD561")), 0, timestamp.length(), 0);
+                tempText.setSpan(new ForegroundColorSpan(line.startsWith("[!]") ? Color.CYAN : line.startsWith("[+]") ? Color.GREEN : line.startsWith("[-]") ? Color.parseColor("#D81B60") : Color.WHITE), 0, tempText.length(), 0);
                 viewLogger.post(() -> {
                     viewLogger.append(timestamp);
                     viewLogger.append(tempText);
@@ -237,7 +237,7 @@ public class ShellExecuter {
                 output = output + line + '\n';
             }
             /* remove the last \n */
-            if (output.length() > 0) output = output.substring(0,output.length()-1);
+            if (output.length() > 0) output = output.substring(0, output.length() - 1);
             br.close();
             br = new BufferedReader(new InputStreamReader(stderr));
             while ((line = br.readLine()) != null) {
@@ -282,12 +282,12 @@ public class ShellExecuter {
         new Thread(() -> {
             String output = "";
             try {
-                Process  p = Runtime.getRuntime().exec("su -mm -c " + command);
+                Process p = Runtime.getRuntime().exec("su -mm -c " + command);
                 p.waitFor();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    output = output +  line + "\n";
+                    output = output + line + "\n";
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -296,6 +296,7 @@ public class ShellExecuter {
             v.post(() -> v.setText(_output));
         }).start();
     }
+
     // WRAP THIS IN THE BACKGROUND IF POSIBLE WHE USING IT
     public String ReadFile_SYNC(String _path) {
         StringBuilder output = new StringBuilder();
@@ -314,12 +315,13 @@ public class ShellExecuter {
         }
         return output.toString();
     }
-    // SAVE FILE CONTENTS: (contents, fullFilePath)
-    public boolean SaveFileContents(String contents, String _path){
 
-        String _newCmd = "cat << 'EOF' > "+_path+"\n"+contents+"\nEOF";
+    // SAVE FILE CONTENTS: (contents, fullFilePath)
+    public boolean SaveFileContents(String contents, String _path) {
+
+        String _newCmd = "cat << 'EOF' > " + _path + "\n" + contents + "\nEOF";
         String _res = RunAsRootOutput(_newCmd);
-        if(_res.equals("")){ // no error we fine
+        if (_res.equals("")) { // no error we fine
             return true;
         } else {
             Log.d("ErrorSavingFile: ", "Error: " + _res);

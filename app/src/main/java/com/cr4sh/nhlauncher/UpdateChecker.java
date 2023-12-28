@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -32,34 +31,29 @@ public class UpdateChecker {
 
     public void checkUpdateAsync(UpdateCheckListener listener) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<UpdateCheckResult> future = executor.submit(new Callable<UpdateCheckResult>() {
-            @Override
-            public UpdateCheckResult call() throws Exception {
-                try {
-                    String latestVersion = getLatestAppVersion();
-                    return compareVersions(latestVersion);
-                } catch (IOException | JSONException e) {
-                    Log.e(TAG, "Error checking for updates", e);
-                    return new UpdateCheckResult(false, e.getMessage());
-                }
+        Future<?> future = executor.submit(() -> {
+            try {
+                String latestVersion = getLatestAppVersion();
+                UpdateCheckResult updateResult = compareVersions(latestVersion);
+                listener.onUpdateCheckCompleted(updateResult);
+            } catch (IOException | JSONException e) {
+                Log.e(TAG, "Error checking for updates", e);
+                listener.onUpdateCheckCompleted(new UpdateCheckResult(false, e.getMessage()));
             }
         });
 
         executor.shutdown();
 
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    UpdateCheckResult updateResult = future.get();
-                    listener.onUpdateCheckCompleted(updateResult);
-                } catch (Exception e) {
-                    Log.e(TAG, "Error getting update result", e);
-                    listener.onUpdateCheckCompleted(new UpdateCheckResult(false, e.getMessage()));
-                }
+        new Handler(Looper.getMainLooper()).post(() -> {
+            try {
+                future.get(); // Wait for the task to complete before calling onUpdateCheckCompleted
+            } catch (Exception e) {
+                Log.e(TAG, "Error getting update result", e);
+                listener.onUpdateCheckCompleted(new UpdateCheckResult(false, e.getMessage()));
             }
         });
     }
+
 
     private String getLatestAppVersion() throws IOException, JSONException {
         OkHttpClient client = new OkHttpClient();
@@ -129,21 +123,6 @@ public class UpdateChecker {
         void onUpdateCheckCompleted(UpdateCheckResult updateResult);
     }
 
-    public static class UpdateCheckResult {
-        private final boolean isUpdateAvailable;
-        private final String message;
-
-        public UpdateCheckResult(boolean isUpdateAvailable, String message) {
-            this.isUpdateAvailable = isUpdateAvailable;
-            this.message = message;
-        }
-
-        public boolean isUpdateAvailable() {
-            return isUpdateAvailable;
-        }
-
-        public String getMessage() {
-            return message;
-        }
+    public record UpdateCheckResult(boolean isUpdateAvailable, String message) {
     }
 }

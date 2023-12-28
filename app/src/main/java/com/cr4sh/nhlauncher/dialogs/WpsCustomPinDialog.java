@@ -48,19 +48,19 @@ public class WpsCustomPinDialog extends AppCompatDialogFragment {
         Button cancelButton = view.findViewById(R.id.cancel_button);
         EditText customPin = view.findViewById(R.id.customPin);
 
-        if (option == 1){
+        if (option == 1) {
             cancelButton.setText("Don't use custom PIN");
             title.setText("Custom PIN");
             customPin.setHint("Custom PIN");
-            if(!wpsAttack.customPINCMD.isEmpty()){
+            if (!wpsAttack.customPINCMD.isEmpty()) {
                 String customPINCMD = wpsAttack.customPINCMD;
-                customPin.setText( removePrefix(customPINCMD, " -p "));
+                customPin.setText(removePrefix(customPINCMD, " -p "));
             }
         } else {
             cancelButton.setText("Don't use custom delay");
             title.setText("Custom delay");
             customPin.setHint("Custom delay");
-            if(!wpsAttack.delayCMD.isEmpty()){
+            if (!wpsAttack.delayCMD.isEmpty()) {
                 String delayCMD = wpsAttack.delayCMD;
                 customPin.setText(removePrefix(delayCMD, " -d "));
             }
@@ -82,11 +82,11 @@ public class WpsCustomPinDialog extends AppCompatDialogFragment {
 
 
         setupButton.setOnClickListener(view12 -> {
-            if(customPin.getText().toString().isEmpty()){
+            if (customPin.getText().toString().isEmpty()) {
                 Toast.makeText(requireActivity(), "Empty input!", Toast.LENGTH_SHORT).show();
             } else {
                 Objects.requireNonNull(getDialog()).cancel();
-                if (option == 1){
+                if (option == 1) {
                     wpsAttack.customPINCMD = " -p " + customPin.getText().toString();
                 } else {
                     wpsAttack.delayCMD = " -d " + customPin.getText().toString();
@@ -96,7 +96,7 @@ public class WpsCustomPinDialog extends AppCompatDialogFragment {
 
         cancelButton.setOnClickListener(view12 -> {
             Objects.requireNonNull(getDialog()).cancel();
-            if (option == 1){
+            if (option == 1) {
                 wpsAttack.customPINCMD = "";
             } else {
                 wpsAttack.delayCMD = "";

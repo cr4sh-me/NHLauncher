@@ -36,11 +36,12 @@ import com.cr4sh.nhlauncher.UpdateChecker;
 import java.util.Arrays;
 import java.util.List;
 
-public class SettingsDialog extends DialogFragment{
+public class SettingsDialog extends DialogFragment {
     private String selectedSorting;
     private String selectedLanguage;
     private MainUtils mainUtils;
     private Button updateButton;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -119,7 +120,7 @@ public class SettingsDialog extends DialogFragment{
         updateChecker.checkUpdateAsync(updateResult -> {
             // Run on the UI thread to update the UI components
             requireActivity().runOnUiThread(() -> {
-                checkUpdate.setText(updateResult.getMessage());
+                checkUpdate.setText(updateResult.message());
 
                 if (updateResult.isUpdateAvailable()) {
                     Toast.makeText(requireActivity(), requireActivity().getResources().getString(R.string.update_avaiable), Toast.LENGTH_SHORT).show();
@@ -163,26 +164,16 @@ public class SettingsDialog extends DialogFragment{
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long i) {
                 selectedSorting = adapterView.getItemAtPosition(position).toString();
                 switch (selectedSorting) {
-                    case "Default":
-                    case "Domyślne":
-                        saveNhlSettings(null);
-                        break;
-                    case "By usage":
-                    case "Po użyciu":
-                        saveNhlSettings("USAGE DESC");
-                        break;
-                    case "A-Z":
-                        saveNhlSettings("CASE WHEN NAME GLOB '[A-Za-z]*' THEN 0 ELSE 1 END, NAME ASC");
-                        break;
-                    case "Z-A":
-                        saveNhlSettings("CASE WHEN NAME GLOB '[A-Za-z]*' THEN 0 ELSE 1 END, NAME DESC");
-                        break;
-                    case "0-9 A-Z":
-                        saveNhlSettings("CASE WHEN NAME GLOB '[0-9]*' THEN 0 ELSE 1 END, NAME ASC");
-                        break;
-                    case "9-0 Z-A":
-                        saveNhlSettings("CASE WHEN NAME GLOB '[0-9]*' THEN 0 ELSE 1 END, NAME COLLATE NOCASE DESC");
-                        break;
+                    case "Default", "Domyślne" -> saveNhlSettings(null);
+                    case "By usage", "Po użyciu" -> saveNhlSettings("USAGE DESC");
+                    case "A-Z" ->
+                            saveNhlSettings("CASE WHEN NAME GLOB '[A-Za-z]*' THEN 0 ELSE 1 END, NAME ASC");
+                    case "Z-A" ->
+                            saveNhlSettings("CASE WHEN NAME GLOB '[A-Za-z]*' THEN 0 ELSE 1 END, NAME DESC");
+                    case "0-9 A-Z" ->
+                            saveNhlSettings("CASE WHEN NAME GLOB '[0-9]*' THEN 0 ELSE 1 END, NAME ASC");
+                    case "9-0 Z-A" ->
+                            saveNhlSettings("CASE WHEN NAME GLOB '[0-9]*' THEN 0 ELSE 1 END, NAME COLLATE NOCASE DESC");
                 }
             }
 
@@ -198,14 +189,14 @@ public class SettingsDialog extends DialogFragment{
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 selectedLanguage = adapterView.getItemAtPosition(i).toString();
                 switch (selectedLanguage) {
-                    case "English":
+                    case "English" -> {
                         languageSpinner.setSelection(0);
                         saveNhlLanguage("DESCRIPTION_EN", "en");
-                        break;
-                    case "Polish":
+                    }
+                    case "Polish" -> {
                         languageSpinner.setSelection(0);
                         saveNhlLanguage("DESCRIPTION_PL", "pl");
-                        break;
+                    }
                 }
             }
 

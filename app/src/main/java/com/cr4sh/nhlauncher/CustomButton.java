@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,7 +35,7 @@ public class CustomButton extends LinearLayout {
         buttonView = findViewById(R.id.button_view);
         buttonIcon = findViewById(R.id.button_icon);
         buttonTextName = findViewById(R.id.button_name);
-        buttonTextDescription= findViewById(R.id.button_description);
+        buttonTextDescription = findViewById(R.id.button_description);
     }
 
     public void setImageResource(int resId) {

@@ -3,10 +3,10 @@
     android:id="@+id/spinnerBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    android:padding="5dp">
+    android:padding="10dp">
 
     <LinearLayout
+        android:id="@+id/categories_back"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"

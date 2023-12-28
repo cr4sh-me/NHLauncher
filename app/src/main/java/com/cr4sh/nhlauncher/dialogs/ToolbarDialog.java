@@ -24,9 +24,11 @@ import java.util.Objects;
 
 public class ToolbarDialog extends AppCompatDialogFragment {
     MainActivity myActivity;
+
     public ToolbarDialog(MainActivity activity) {
         this.myActivity = activity;
     }
+
     @SuppressLint("SetTextI18n")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -48,7 +48,7 @@ public class ScanTimeDialog extends AppCompatDialogFragment {
         Button cancelButton = view.findViewById(R.id.cancel_button);
         EditText customPin = view.findViewById(R.id.customPin);
 
-        if (option == 1){
+        if (option == 1) {
             cancelButton.setText("Use default (10s)");
             title.setText("Custom Scan Time");
             customPin.setHint("Scan Time");
@@ -70,12 +70,12 @@ public class ScanTimeDialog extends AppCompatDialogFragment {
 
 
         setupButton.setOnClickListener(view12 -> {
-            if(customPin.getText().toString().isEmpty()){
+            if (customPin.getText().toString().isEmpty()) {
                 Toast.makeText(requireActivity(), "Empty input!", Toast.LENGTH_SHORT).show();
             } else {
-                if (option == 1){
+                if (option == 1) {
                     int number = Integer.parseInt(customPin.getText().toString());
-                    if(number > 0){
+                    if (number > 0) {
                         wpsAttack.scanTime = customPin.getText().toString();
                         Objects.requireNonNull(getDialog()).cancel();
                     } else {
@@ -87,7 +87,7 @@ public class ScanTimeDialog extends AppCompatDialogFragment {
 
         cancelButton.setOnClickListener(view12 -> {
             Objects.requireNonNull(getDialog()).cancel();
-            if (option == 1){
+            if (option == 1) {
                 wpsAttack.scanTime = "15";
             }
         });

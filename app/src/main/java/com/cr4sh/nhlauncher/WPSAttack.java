@@ -36,30 +36,34 @@ import androidx.core.content.ContextCompat;
 import androidx.core.widget.CompoundButtonCompat;
 
 import com.cr4sh.nhlauncher.bridge.Bridge;
+import com.cr4sh.nhlauncher.utils.ToastUtils;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 public class WPSAttack extends AppCompatActivity {
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private static final int COUNTDOWN_DURATION = 120; // in seconds
+    public String customPINCMD = "";
+    public String delayCMD = "";
+    TextView msg2;
+    MyPreferences myPreferences;
+    boolean isThrottleEnabled;
     private String pixieCMD = "";
     private String pixieforceCMD = "";
     private String bruteCMD = "";
-    public String customPINCMD = "";
-    public String delayCMD = "";
     private String pbcCMD = "";
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private Button selectedButton = null; // Track the currently selected button
     private WifiManager wifiManager;
     private LinearLayout buttonContainer; // Container for dynamic buttons
     private BroadcastReceiver wifiScanReceiver;
     private Button scanButton;
-    TextView msg2;
-    MyPreferences myPreferences;
-
     private Handler countdownHandler; // Add this line
-    private static final int COUNTDOWN_DURATION = 120; // in seconds
-    boolean isThrottleEnabled;
+
+    private static String extractBSSID(String buttonText) {
+        String[] lines = buttonText.split("\n");
+        return lines[1].trim();
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,11 +83,11 @@ public class WPSAttack extends AppCompatActivity {
 
         checkThrottling();
 
-        if(!myPreferences.isThrottlingMessageShown() & isThrottleEnabled){
+        if (!myPreferences.isThrottlingMessageShown() & isThrottleEnabled) {
             dialogUtils.openThrottlingDialog();
         }
 
-        if(isThrottleEnabled){
+        if (isThrottleEnabled) {
             setMessage2("Wi-Fi throttling enabled");
         } else {
             setMessage2("Wi-Fi throttling disabled");
@@ -146,19 +150,19 @@ public class WPSAttack extends AppCompatActivity {
         CompoundButtonCompat.setButtonTintList(bruteCheckbox, new ColorStateList(states, colors));
         CompoundButtonCompat.setButtonTintList(wpsButtonCheckbox, new ColorStateList(states, colors));
 
-        pixieDustCheckbox.setOnClickListener( v -> {
+        pixieDustCheckbox.setOnClickListener(v -> {
             if (pixieDustCheckbox.isChecked())
                 pixieCMD = " -K";
             else
                 pixieCMD = "";
         });
-        pixieForceCheckbox.setOnClickListener( v -> {
+        pixieForceCheckbox.setOnClickListener(v -> {
             if (pixieForceCheckbox.isChecked())
                 pixieforceCMD = " -F";
             else
                 pixieforceCMD = "";
         });
-        bruteCheckbox.setOnClickListener( v -> {
+        bruteCheckbox.setOnClickListener(v -> {
             if (bruteCheckbox.isChecked())
                 bruteCMD = " -B";
             else
@@ -167,11 +171,10 @@ public class WPSAttack extends AppCompatActivity {
         customPinCheckbox.setOnClickListener(v -> dialogUtils.openWpsCustomSetting(1, WPSAttack.this));
         delayCheckbox.setOnClickListener(v -> dialogUtils.openWpsCustomSetting(2, WPSAttack.this));
 
-        wpsButtonCheckbox.setOnClickListener( v -> {
+        wpsButtonCheckbox.setOnClickListener(v -> {
             if (wpsButtonCheckbox.isChecked()) {
                 pbcCMD = " --pbc";
-            }
-            else
+            } else
                 pbcCMD = "";
         });
 
@@ -210,8 +213,9 @@ public class WPSAttack extends AppCompatActivity {
 
         launchAttackButton.setOnClickListener(
                 v -> {
-                    if(selectedButton == null){
-                        Toast.makeText(WPSAttack.this, "No target selected!", Toast.LENGTH_SHORT).show();
+                    if (selectedButton == null) {
+//                        Toast.makeText(WPSAttack.this, "No target selected!", Toast.LENGTH_SHORT).show();
+                        ToastUtils.showCustomToast(this, "No target selected!");
                     } else {
                         wifiManager.disconnect(); // disconnect from active ap to prevent issues
                         String bssid = extractBSSID(selectedButton.getText().toString()); // Extract SSID from button text
@@ -248,11 +252,10 @@ public class WPSAttack extends AppCompatActivity {
                 setMessage("No WPS networks found!");
             }
             enableScanButton(true);
-        } catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(this, "E: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-
 
     @SuppressLint("SetTextI18n")
     private void createButtons(List<ScanResult> results) {
@@ -264,12 +267,7 @@ public class WPSAttack extends AppCompatActivity {
         int buttonPadding = 15;
 
         // Sort the results by signal strength in descending order
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            results.sort((result1, result2) -> Integer.compare(result2.level, result1.level));
-        } else {
-            // For API levels below 24, use Collections.sort
-            Collections.sort(results, (result1, result2) -> Integer.compare(result2.level, result1.level));
-        }
+        results.sort((result1, result2) -> Integer.compare(result2.level, result1.level));
 
         for (ScanResult result : results) {
             if (result.capabilities != null && result.capabilities.contains("WPS")) {
@@ -339,11 +337,6 @@ public class WPSAttack extends AppCompatActivity {
         }
     }
 
-//    private void scanFailure() {
-//        buttonContainer.removeAllViews();
-//        setMessage("Scan failed! Please try again...");
-//    }
-
     private boolean checkLocationPermission() {
         // Check if the ACCESS_FINE_LOCATION permission is granted
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -364,7 +357,7 @@ public class WPSAttack extends AppCompatActivity {
         // Continue with the scan
         if (isLocationEnabled()) {
             // Start the Wi-Fi scan
-            try{
+            try {
                 boolean success = wifiManager.startScan();
                 if (!success && isThrottleEnabled) {
                     startCountdown();
@@ -373,7 +366,7 @@ public class WPSAttack extends AppCompatActivity {
                     buttonContainer.removeAllViews();
                     setMessage("Scanning...");
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         } else {
@@ -381,7 +374,6 @@ public class WPSAttack extends AppCompatActivity {
             setMessage("Please enable location services first!");
         }
     }
-
 
     private void startCountdown() {
         countdownHandler = new Handler();
@@ -433,11 +425,11 @@ public class WPSAttack extends AppCompatActivity {
         }
     }
 
-    private void setMessage(String message){
+    private void setMessage(String message) {
         scanButton.setText(message);
     }
 
-    private void setMessage2(String message){
+    private void setMessage2(String message) {
         msg2.setText(message);
     }
 
@@ -449,13 +441,8 @@ public class WPSAttack extends AppCompatActivity {
         }
     }
 
-    private static String extractBSSID(String buttonText) {
-        String[] lines = buttonText.split("\n");
-        return lines[1].trim();
-    }
-
     public void run_cmd(String cmd) {
-        @SuppressLint("SdCardPath") Intent intent = Bridge.createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd ,true);
+        @SuppressLint("SdCardPath") Intent intent = Bridge.createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd, true);
         startActivity(intent);
     }
 

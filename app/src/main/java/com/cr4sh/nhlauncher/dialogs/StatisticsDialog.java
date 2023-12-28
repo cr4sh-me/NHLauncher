@@ -39,9 +39,11 @@ import java.util.Objects;
 
 public class StatisticsDialog extends DialogFragment {
     MainActivity myActivity;
+
     public StatisticsDialog(MainActivity activity) {
         this.myActivity = activity;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

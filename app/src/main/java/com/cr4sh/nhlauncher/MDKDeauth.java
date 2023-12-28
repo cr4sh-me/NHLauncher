@@ -41,26 +41,25 @@ import java.util.List;
 import java.util.Locale;
 
 public class MDKDeauth extends AppCompatActivity {
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    //    int scanCount = 0;
+//    private static final int SCAN_LIMIT = 4;
+    private static final int COUNTDOWN_DURATION = 120; // in seconds
+    public String customPINCMD = "";
+    public String delayCMD = "";
+    TextView msg2;
+    MyPreferences myPreferences;
+    boolean isThrottleEnabled;
     private String pixieCMD = "";
     private String pixieforceCMD = "";
     private String bruteCMD = "";
-    public String customPINCMD = "";
-    public String delayCMD = "";
     private String pbcCMD = "";
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private Button selectedButton = null; // Track the currently selected button
     private WifiManager wifiManager;
     private LinearLayout buttonContainer; // Container for dynamic buttons
     private BroadcastReceiver wifiScanReceiver;
     private Button scanButton;
-    TextView msg2;
-    MyPreferences myPreferences;
-
     private Handler countdownHandler; // Add this line
-    //    int scanCount = 0;
-//    private static final int SCAN_LIMIT = 4;
-    private static final int COUNTDOWN_DURATION = 120; // in seconds
-    boolean isThrottleEnabled;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,11 +79,11 @@ public class MDKDeauth extends AppCompatActivity {
 
         checkThrottling();
 
-        if(!myPreferences.isThrottlingMessageShown() & isThrottleEnabled){
+        if (!myPreferences.isThrottlingMessageShown() & isThrottleEnabled) {
             dialogUtils.openThrottlingDialog();
         }
 
-        if(isThrottleEnabled){
+        if (isThrottleEnabled) {
             setMessage2("Wi-Fi throttling enabled");
         } else {
             setMessage2("Wi-Fi throttling disabled");
@@ -147,19 +146,19 @@ public class MDKDeauth extends AppCompatActivity {
         CompoundButtonCompat.setButtonTintList(bruteCheckbox, new ColorStateList(states, colors));
         CompoundButtonCompat.setButtonTintList(wpsButtonCheckbox, new ColorStateList(states, colors));
 
-        pixieDustCheckbox.setOnClickListener( v -> {
+        pixieDustCheckbox.setOnClickListener(v -> {
             if (pixieDustCheckbox.isChecked())
                 pixieCMD = " -K";
             else
                 pixieCMD = "";
         });
-        pixieForceCheckbox.setOnClickListener( v -> {
+        pixieForceCheckbox.setOnClickListener(v -> {
             if (pixieForceCheckbox.isChecked())
                 pixieforceCMD = " -F";
             else
                 pixieforceCMD = "";
         });
-        bruteCheckbox.setOnClickListener( v -> {
+        bruteCheckbox.setOnClickListener(v -> {
             if (bruteCheckbox.isChecked())
                 bruteCMD = " -B";
             else
@@ -178,11 +177,10 @@ public class MDKDeauth extends AppCompatActivity {
 ////            }
 //        });
 
-        wpsButtonCheckbox.setOnClickListener( v -> {
+        wpsButtonCheckbox.setOnClickListener(v -> {
             if (wpsButtonCheckbox.isChecked()) {
                 pbcCMD = " --pbc";
-            }
-            else
+            } else
                 pbcCMD = "";
         });
 
@@ -214,16 +212,16 @@ public class MDKDeauth extends AppCompatActivity {
         wifiScanReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                    boolean success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
-                    if (success) {
-                        handleScanResults();
-                    }
+                boolean success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
+                if (success) {
+                    handleScanResults();
+                }
             }
         };
 
         launchAttackButton.setOnClickListener(
                 v -> {
-                    if(selectedButton == null){
+                    if (selectedButton == null) {
                         Toast.makeText(MDKDeauth.this, "No target selected!", Toast.LENGTH_SHORT).show();
                     } else {
                         wifiManager.disconnect(); // disconnect from active ap to prevent issues
@@ -345,7 +343,6 @@ public class MDKDeauth extends AppCompatActivity {
     }
 
 
-
     private boolean checkLocationPermission() {
         // Check if the ACCESS_FINE_LOCATION permission is granted
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -453,11 +450,11 @@ public class MDKDeauth extends AppCompatActivity {
         }
     }
 
-    private void setMessage(String message){
+    private void setMessage(String message) {
         scanButton.setText(message);
     }
 
-    private void setMessage2(String message){
+    private void setMessage2(String message) {
         msg2.setText(message);
     }
 

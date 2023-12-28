@@ -52,20 +52,20 @@
         app:layout_constraintTop_toBottomOf="@+id/spinnerContainer" />
 
     <Button
-        android:layout_marginHorizontal="10dp"
         android:id="@+id/bluebinderButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
         android:text="@string/loading"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/interfacesText" />
 
     <Button
-        android:layout_marginHorizontal="10dp"
         android:id="@+id/btServicesButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
         android:text="@string/loading"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -73,10 +73,10 @@
         app:layout_constraintTop_toBottomOf="@+id/bluebinderButton" />
 
     <LinearLayout
-        android:layout_marginHorizontal="10dp"
         android:id="@+id/spinnerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -84,10 +84,10 @@
         app:layout_constraintTop_toBottomOf="@+id/servicesText">
 
         <Spinner
-            android:background="@color/transparent"
             android:id="@+id/hci_interface"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="@color/transparent" />
 
     </LinearLayout>
 
@@ -115,32 +115,31 @@
 
     <LinearLayout
         android:id="@+id/bottomContainer"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="5dp"
             android:id="@+id/scanTime"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:text="Scan Time" />
 
         <Button
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="10dp"
             android:id="@+id/scanButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:text="Scan"
-            />
+            android:text="Scan" />
 
     </LinearLayout>
 

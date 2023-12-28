@@ -9,6 +9,8 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.cr4sh.nhlauncher.utils.ToastUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -49,7 +51,7 @@ public class DBBackup {
                 if (!backupDir.exists()) {
                     if (!backupDir.mkdirs()) {
                         // Show an error message if the directory couldn't be created
-                        Toast.makeText(context, context.getResources().getString(R.string.err_backup_dir), Toast.LENGTH_LONG).show();
+                        ToastUtils.showCustomToast(context, context.getResources().getString(R.string.err_backup_dir));
                         return;
                     }
                 }
@@ -79,13 +81,15 @@ public class DBBackup {
                 db.close();
 
                 // Show a message indicating the backup was successful
-                Toast.makeText(context, context.getResources().getString(R.string.saved_to) + backupDir.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                ToastUtils.showCustomToast(context, context.getResources().getString(R.string.saved_to) + backupDir.getAbsolutePath());
+
             } else {
                 // External storage not available, show an error message
-                Toast.makeText(context, context.getResources().getString(R.string.ex_storage), Toast.LENGTH_LONG).show();
+                ToastUtils.showCustomToast(context, context.getResources().getString(R.string.ex_storage));
+
             }
         } catch (FileNotFoundException e) {
-            Toast.makeText(context, context.getResources().getString(R.string.backup_failed), Toast.LENGTH_LONG).show();
+            ToastUtils.showCustomToast(context, context.getResources().getString(R.string.backup_failed));
             dialogUtils.openPermissionsDialog();
         } catch (Exception e) {
             Toast.makeText(context, "E: " + e, Toast.LENGTH_LONG).show();
@@ -99,7 +103,7 @@ public class DBBackup {
             @SuppressLint("SdCardPath") File file = new File("/sdcard/NHLauncher/backup.db");
 
             if (!file.exists()) {
-                Toast.makeText(context, context.getResources().getString(R.string.bf_not), Toast.LENGTH_LONG).show();
+                ToastUtils.showCustomToast(context, context.getResources().getString(R.string.bf_not));
                 return;
             }
 
@@ -154,12 +158,11 @@ public class DBBackup {
             backupCursor.close();
             backupDB.close();
             existingDB.close();
-            Toast.makeText(context, context.getResources().getString(R.string.bp_restored), Toast.LENGTH_SHORT).show();
-
+            ToastUtils.showCustomToast(context, context.getResources().getString(R.string.bp_restored));
             mainActivity.runOnUiThread(mainUtils::restartSpinner);
 
         } catch (SQLiteCantOpenDatabaseException e) {
-            Toast.makeText(context, context.getResources().getString(R.string.restore_fail), Toast.LENGTH_LONG).show();
+            ToastUtils.showCustomToast(context, context.getResources().getString(R.string.restore_fail));
             dialogUtils.openPermissionsDialog();
         } catch (Exception e) {
             Toast.makeText(context, "E: " + e, Toast.LENGTH_LONG).show();

@@ -14,11 +14,11 @@
         android:paddingEnd="5dp" />
 
     <TextView
-        android:maxLines="1"
         android:id="@+id/text_view"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:gravity="center_vertical" />
+        android:gravity="center_vertical"
+        android:maxLines="1" />
 
 </LinearLayout>

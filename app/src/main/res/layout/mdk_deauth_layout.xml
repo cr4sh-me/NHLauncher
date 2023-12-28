@@ -5,14 +5,13 @@
     android:id="@+id/root_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <TextView
-        android:layout_margin="10dp"
         android:id="@+id/wps_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:gravity="center"
         android:text="WIFI Deauth"
         android:textStyle="bold"
@@ -21,10 +20,10 @@
         tools:ignore="MissingConstraints" />
 
     <TextView
-        android:layout_margin="10dp"
         android:id="@+id/wps_info2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:gravity="center"
         android:text="Disconnect clients from access point, requires monitor mode interface"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,10 +42,10 @@
         tools:ignore="SpeakableTextPresentCheck">
 
         <LinearLayout
-            android:layout_marginHorizontal="10dp"
             android:id="@+id/buttonContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -54,10 +53,10 @@
     </ScrollView>
 
     <TextView
-        android:layout_margin="5dp"
         android:id="@+id/messageBox2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:gravity="center"
         android:text="@string/loading"
         app:layout_constraintBottom_toTopOf="@+id/scanButton"
@@ -77,19 +76,18 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
         android:id="@+id/choiceContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
         android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/launchAttack"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="SpeakableTextPresentCheck">
-
 
 
         <LinearLayout
@@ -155,48 +153,46 @@
             android:orientation="horizontal">
 
             <Button
-                android:layout_marginBottom="5dp"
                 android:id="@+id/delay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_weight="1"
                 android:text="Delay" />
 
             <Button
-                android:layout_marginBottom="5dp"
-
                 android:id="@+id/custompin"
+
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
                 android:layout_weight="1"
-                android:text="Custom PIN"
-                />
+                android:text="Custom PIN" />
 
         </LinearLayout>
     </LinearLayout>
 
     <Button
-        android:layout_marginHorizontal="10dp"
         android:id="@+id/launchAttack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
         android:text="Launch attack"
         app:layout_constraintBottom_toTopOf="@+id/cancel_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
 
-
     <Button
-        android:layout_marginVertical="5dp"
-        android:layout_marginHorizontal="10dp"
         android:id="@+id/cancel_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="5dp"
         android:text="@string/cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

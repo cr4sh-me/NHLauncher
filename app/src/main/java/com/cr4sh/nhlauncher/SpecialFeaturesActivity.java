@@ -50,9 +50,9 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
 
         CustomButton customButton3 = findViewById(R.id.button3);
         customButton3.setImageResource(R.drawable.kali_tools);
-        customButton3.setName("Bluetooth Arsenal");
+        customButton3.setName("Bluetooth Toolkit");
         customButton3.setNameColor(Color.parseColor(myPreferences.color80()));
-        customButton3.setDescription("Bluetooth Arsenal");
+        customButton3.setDescription("PERFORM VARIOUS BLUETOOTH ATTACKS");
         customButton3.setDescriptionColor(Color.parseColor(myPreferences.color80()));
 
 

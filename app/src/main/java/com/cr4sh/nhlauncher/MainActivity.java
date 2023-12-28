@@ -31,12 +31,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,7 +44,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-//    public boolean isSpecialEnabled = false;
+    //    public boolean isSpecialEnabled = false;
     public static boolean disableMenu = false;
     public String buttonCategory;
     public String buttonName;
@@ -60,9 +57,9 @@ public class MainActivity extends AppCompatActivity {
     public Button backButton;
     public Button specialButton;
     public int currentCategoryNumber = 1;
+    public ImageView toolbar;
     List<String> valuesList;
     List<Integer> imageList;
-    public ImageView toolbar;
     TextView rollCategoriesText;
     ImageView rollCategories;
     private DialogUtils dialogUtils;
@@ -138,12 +135,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         recyclerView = findViewById(R.id.recyclerView);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Set the layout manager
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+//        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+//        FlexboxLayoutManager layoutManager1 = new FlexboxLayoutManager(this);
+////        layoutManager1.setFlexDirection(FlexDirection.ROW_REVERSE);
+//        layoutManager1.setJustifyContent(JustifyContent.FLEX_END);
+//        recyclerView.setLayoutManager(layoutManager1);
+
 
         // Set the adapter for RecyclerView
-        MyAdapter adapter = new MyAdapter(this);
+        MyAdapter adapter = new MyAdapter(this, recyclerView);
         recyclerView.setAdapter(adapter);
 
         // Get functions from this class
@@ -189,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        adapter2 = new CustomSpinnerAdapter(this, valuesList, imageList, myPreferences.color20(), myPreferences.color80());
         listViewCategories = findViewById(R.id.recyclerViewCategories);
-        CategoriesAdapter adapter2 = new CategoriesAdapter(this);
+        CategoriesAdapter adapter2 = new CategoriesAdapter(this, listViewCategories);
 
         adapter2.updateData(valuesList, imageList);
         listViewCategories.setAdapter(adapter2);
@@ -245,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
         rollCategoriesLayout.setOnClickListener(view -> runOnUiThread(() -> {
 
             // Check if searchView is not opened/
-            if(searchEditText.getVisibility() == View.GONE){
+            if (searchEditText.getVisibility() == View.GONE) {
 
 //                if(isSpecialEnabled){
 ////                    closeFragment();
@@ -309,10 +312,10 @@ public class MainActivity extends AppCompatActivity {
             enableAfterAnimation(rollCategories);
 
 
-                enableAfterAnimation(searchIcon);
-                enableAfterAnimation(recyclerView);
-                enableAfterAnimation(noToolsText);
-                enableAfterAnimation(rollCategories);
+            enableAfterAnimation(searchIcon);
+            enableAfterAnimation(recyclerView);
+            enableAfterAnimation(noToolsText);
+            enableAfterAnimation(rollCategories);
 
         });
         // Handle back button press using OnBackPressedCallback
@@ -538,6 +541,15 @@ public class MainActivity extends AppCompatActivity {
 //        closeFragment();
     }
 
+    private int measureViewHeight(View view) {
+        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(view.getWidth(), View.MeasureSpec.EXACTLY);
+        int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+
+        view.measure(widthMeasureSpec, heightMeasureSpec);
+        return view.getMeasuredHeight();
+    }
+
+
 //    @Override
 //    public void onSaveInstanceState(@NonNull Bundle outState) {
 //        super.onSaveInstanceState(outState);
@@ -599,7 +611,6 @@ public class MainActivity extends AppCompatActivity {
                 return super.onContextItemSelected(item);
         }
     }
-
 
 
     public void changeCategoryPreview(int position) {

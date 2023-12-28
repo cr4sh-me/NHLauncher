@@ -6,6 +6,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,14 +14,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     MainActivity myActivity;
     List<Item> items = new ArrayList<>();
-    public MyAdapter(MainActivity activity) {
+    Handler handler = new Handler();
+
+    RecyclerView recyclerView;
+
+    public MyAdapter(MainActivity activity, RecyclerView recyclerView) {
         this.myActivity = activity;
+        this.recyclerView = recyclerView;
+
+        // Attaching custom snap helper
+        NHLSnapHelper snapHelper = new NHLSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
     }
 
-    Handler handler = new Handler();
     @SuppressLint("NotifyDataSetChanged")
     // Clear old data and display new!
     public void updateData(List<Item> newData) {
@@ -65,6 +75,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         holder.itemView.setBackground(drawable);
 //        holder.nameView.setTypeface(myPreferences.typeface());
 //        holder.descriptionView.setTypeface(myPreferences.typeface());
+
+        int buttonCount = 7;
+        int buttonPadding = 25;
+        int buttonHeight = (recyclerView.getHeight() / buttonCount) - buttonPadding;
+
+        // Set layout parameters for the button
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                buttonHeight
+        );
+        layoutParams.setMargins(buttonPadding, (buttonPadding / 2), buttonPadding, (buttonPadding / 2));
+        holder.buttonView.setLayoutParams(layoutParams);
 
         holder.itemView.setOnClickListener(v -> {
             myActivity.buttonUsage = item.getUsage();

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -40,7 +39,7 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
 
 
         imageView.setColorFilter(Color.parseColor(textColor), PorterDuff.Mode.MULTIPLY);
-        if (!imageList.isEmpty()){
+        if (!imageList.isEmpty()) {
             imageView.setImageResource(imageList.get(position));
         }
         textView.setText(getItem(position));
@@ -67,7 +66,7 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
 
         imageView.setColorFilter(Color.parseColor(textColor), PorterDuff.Mode.MULTIPLY);
 
-        if (!imageList.isEmpty()){
+        if (!imageList.isEmpty()) {
             imageView.setImageResource(imageList.get(position));
         }
 

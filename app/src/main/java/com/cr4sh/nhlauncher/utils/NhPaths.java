@@ -6,15 +6,11 @@ import android.os.Environment;
 import android.view.Gravity;
 import android.widget.Toast;
 
-
 import java.io.File;
 
 
 public class NhPaths {
     private static final String TAG = "NhPaths";
-    private static NhPaths instance;
-    private SharedPreferences sharedPreferences;
-
     public static String APP;
     public static String APP_PATH;
     public static String APP_DATABASE_PATH;
@@ -24,7 +20,6 @@ public class NhPaths {
     public static String NH_SD_FOLDER_NAME;
     public static String SD_PATH;
     public static String APP_SD_FILES_PATH;
-    private static String BASE_PATH;
     public static String NH_SYSTEM_PATH;
     public static String ARCH_FOLDER;
     public static String CHROOT_SD_PATH;
@@ -36,30 +31,33 @@ public class NhPaths {
     public static String BUSYBOX;
     public static String MAGISK_DB_PATH;
     public static int GPS_PORT;
+    private static NhPaths instance;
+    private static String BASE_PATH;
+    private SharedPreferences sharedPreferences;
 
     private NhPaths() {
-        APP                             = "com.offsec.nethunter";                // Static app name seems to be needed as some weirdness with getting app name is going on ( sometimes we get: androidx.multidex )
-        APP_PATH                        = "/data/data/" + APP;                   // context.getApplicationContext().getFilesDir().getPath();
-        APP_DATABASE_PATH               = APP_PATH + "/databases";
-        APP_INITD_PATH                  = APP_PATH + "/etc/init.d";
-        APP_SCRIPTS_PATH                = APP_PATH + "/scripts";
-        APP_SCRIPTS_BIN_PATH            = APP_SCRIPTS_PATH + "/bin";
-        SD_PATH                         = getSdcardPath();
-        NH_SD_FOLDER_NAME               = "nh_files";
-        APP_SD_FILES_PATH               = SD_PATH + "/" + NH_SD_FOLDER_NAME;
-        APP_SD_FILES_IMG_PATH           = APP_SD_FILES_PATH + "/diskimage";
-        APP_SD_SQLBACKUP_PATH           = APP_SD_FILES_PATH + "/nh_sql_backups";
-        BASE_PATH                       = "/data/local";
-        NH_SYSTEM_PATH                  = BASE_PATH + "/nhsystem";
-        CHROOT_SUDO                     = "/usr/bin/sudo";
-        CHROOT_INITD_SCRIPT_PATH        = APP_INITD_PATH + "/80postservices";
-        CHROOT_SD_PATH                  = "/sdcard";
-        CHROOT_SYMLINK_PATH             = NH_SYSTEM_PATH + "/kalifs";
-        BUSYBOX                         = getBusyboxPath();
-        MAGISK_DB_PATH                  = "/data/adb/magisk.db";
+        APP = "com.offsec.nethunter";                // Static app name seems to be needed as some weirdness with getting app name is going on ( sometimes we get: androidx.multidex )
+        APP_PATH = "/data/data/" + APP;                   // context.getApplicationContext().getFilesDir().getPath();
+        APP_DATABASE_PATH = APP_PATH + "/databases";
+        APP_INITD_PATH = APP_PATH + "/etc/init.d";
+        APP_SCRIPTS_PATH = APP_PATH + "/scripts";
+        APP_SCRIPTS_BIN_PATH = APP_SCRIPTS_PATH + "/bin";
+        SD_PATH = getSdcardPath();
+        NH_SD_FOLDER_NAME = "nh_files";
+        APP_SD_FILES_PATH = SD_PATH + "/" + NH_SD_FOLDER_NAME;
+        APP_SD_FILES_IMG_PATH = APP_SD_FILES_PATH + "/diskimage";
+        APP_SD_SQLBACKUP_PATH = APP_SD_FILES_PATH + "/nh_sql_backups";
+        BASE_PATH = "/data/local";
+        NH_SYSTEM_PATH = BASE_PATH + "/nhsystem";
+        CHROOT_SUDO = "/usr/bin/sudo";
+        CHROOT_INITD_SCRIPT_PATH = APP_INITD_PATH + "/80postservices";
+        CHROOT_SD_PATH = "/sdcard";
+        CHROOT_SYMLINK_PATH = NH_SYSTEM_PATH + "/kalifs";
+        BUSYBOX = getBusyboxPath();
+        MAGISK_DB_PATH = "/data/adb/magisk.db";
 
         // This isn't really a path, but this is a convenient place to stick a config variable...
-        GPS_PORT                       = 10110;
+        GPS_PORT = 10110;
     }
 
     public static String CHROOT_PATH() {
@@ -67,11 +65,11 @@ public class NhPaths {
         return "/data/local/nhsystem" + "/" + "kali-arm64";
     }
 
-    private static String getSdcardPath(){
+    private static String getSdcardPath() {
         return Environment.getExternalStorageDirectory().toString();
     }
 
-    public static String getBusyboxPath(){
+    public static String getBusyboxPath() {
         String[] BB_PATHS = {
                 "/system/xbin/busybox_nh",
                 "/system/bin/busybox_nh",

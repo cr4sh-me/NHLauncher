@@ -23,11 +23,11 @@ public class BluetoothPager extends FragmentStateAdapter {
         // Return the fragment for the given position
         if (position == 0) {
             return new BluetoothFragment1();
-        } else if (position == 1){
-            return  new BluetoothFragment2();
-        } else if (position == 2){
+        } else if (position == 1) {
+            return new BluetoothFragment2();
+        } else if (position == 2) {
             return new BluetoothFragment3();
-        } else if (position == 3){
+        } else if (position == 3) {
             return new BluetoothFragment4();
         } else {
             return new BluetoothFragment5();

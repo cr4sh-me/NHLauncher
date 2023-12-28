@@ -29,11 +29,11 @@
         android:orientation="vertical">
 
         <Button
-            android:maxLines="1"
             android:id="@+id/setup_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
+            android:maxLines="1"
             android:text="@string/setup" />
 
         <Button

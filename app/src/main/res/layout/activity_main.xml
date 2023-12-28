@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root_container"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:paddingHorizontal="10dp"
         android:id="@+id/topBarContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentEnd="true"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp">
 
         <ImageButton
-            android:layout_margin="5dp"
             android:id="@+id/searchIcon"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:layout_margin="5dp" />
 
         <EditText
-            android:layout_margin="5dp"
             android:id="@+id/search_edit_text"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_margin="5dp"
             android:layout_toEndOf="@id/searchIcon"
             android:hint="@string/search_hint"
             android:maxLength="20"
@@ -34,10 +35,10 @@
             tools:ignore="RtlSymmetry" />
 
         <LinearLayout
-            android:layout_margin="5dp"
             android:id="@+id/showCategoriesLayout"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
@@ -63,14 +64,11 @@
         </LinearLayout>
 
         <ImageButton
-            android:layout_margin="5dp"
             android:id="@+id/toolBar"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:layout_margin="5dp" />
     </LinearLayout>
-
-
-
 
 
     <RelativeLayout
@@ -92,7 +90,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewCategories"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_above="@id/btn_container"
             android:layout_below="@id/dialog_title"
             android:nestedScrollingEnabled="true">
@@ -101,64 +99,45 @@
 
         <LinearLayout
             android:id="@+id/btn_container"
-            android:gravity="center_horizontal"
-            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal"
             android:orientation="horizontal">
 
             <Button
-                android:layout_marginHorizontal="5dp"
-                android:layout_marginTop="5dp"
-                android:text="@string/addons"
                 android:id="@+id/special_features_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Button
                 android:layout_marginHorizontal="5dp"
                 android:layout_marginTop="5dp"
-                android:layout_margin="5dp"
-                android:padding="5dp"
+                android:layout_weight="1"
+                android:text="@string/addons" />
+
+            <Button
                 android:id="@+id/goBackButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/close"
-                android:layout_weight="1" />
+                android:layout_margin="5dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:text="@string/close" />
 
         </LinearLayout>
 
     </RelativeLayout>
-
-
-<!--    <RelativeLayout-->
-<!--        android:id="@+id/imageViewHeader"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@id/toolBar">-->
-
-<!--    </RelativeLayout>-->
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/topBarContainer"
-        android:layout_marginTop="10dp"
         android:nestedScrollingEnabled="true"
         android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:ignore="SpeakableTextPresentCheck" />
-
-    <!-- Container for the fragment -->
-<!--    <FrameLayout-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:layout_below="@id/topBarContainer"-->
-<!--        android:id="@+id/fragment_container"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent" />-->
-
 
     <TextView
         android:id="@+id/messagebox"

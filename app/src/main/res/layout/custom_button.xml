@@ -1,18 +1,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/button_view"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/button_view"
     android:layout_width="match_parent"
-    android:layout_height="110dp"
+    android:layout_height="wrap_content"
     android:layout_marginHorizontal="10dp"
-    android:layout_marginBottom="10dp"
-    android:gravity="center_vertical">
+    android:layout_marginVertical="5dp"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
 
     <ImageView
         android:id="@+id/button_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="5dp"
         android:contentDescription="@string/loading"
         android:src="@drawable/kali_menu"
         tools:ignore="RtlSymmetry" />
@@ -20,17 +22,18 @@
     <LinearLayout
         android:id="@+id/btn_layout"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_weight="1"
+        android:gravity="center"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/button_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left"
+            android:gravity="start"
             android:text="@string/loading"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -40,9 +43,10 @@
             android:id="@+id/button_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left"
+            android:gravity="start"
             android:text="@string/loading"
             android:textSize="12sp"
             tools:ignore="SmallSp" />
     </LinearLayout>
+
 </LinearLayout>
