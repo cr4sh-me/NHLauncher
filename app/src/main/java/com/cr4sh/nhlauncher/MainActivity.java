@@ -37,6 +37,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cr4sh.nhlauncher.utils.ToastUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -135,15 +137,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         recyclerView = findViewById(R.id.recyclerView);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-//        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-//        FlexboxLayoutManager layoutManager1 = new FlexboxLayoutManager(this);
-////        layoutManager1.setFlexDirection(FlexDirection.ROW_REVERSE);
-//        layoutManager1.setJustifyContent(JustifyContent.FLEX_END);
-//        recyclerView.setLayoutManager(layoutManager1);
-
 
         // Set the adapter for RecyclerView
         MyAdapter adapter = new MyAdapter(this, recyclerView);
@@ -247,15 +240,8 @@ public class MainActivity extends AppCompatActivity {
 
         rollCategoriesLayout.setOnClickListener(view -> runOnUiThread(() -> {
 
-            // Check if searchView is not opened/
+            // Check if searchView is not opened, prevent opening 2 things at the same time
             if (searchEditText.getVisibility() == View.GONE) {
-
-//                if(isSpecialEnabled){
-////                    closeFragment();
-//
-//                    layoutParams.setMarginStart(dpToPixels(0));
-//                    rollCategoriesLayout.setLayoutParams(layoutParams);
-//                }
 
                 // Disable things
                 disableWhileAnimation(categoriesLayout);
@@ -401,7 +387,6 @@ public class MainActivity extends AppCompatActivity {
                 // Disable things
                 disableWhileAnimation(searchEditText);
                 drawableSearchIcon.setColor(Color.TRANSPARENT);
-
 
                 mainUtils.restartSpinner();
             } else {

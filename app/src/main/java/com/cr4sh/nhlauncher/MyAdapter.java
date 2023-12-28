@@ -19,7 +19,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     MainActivity myActivity;
     List<Item> items = new ArrayList<>();
     Handler handler = new Handler();
-
+    int height;
     RecyclerView recyclerView;
 
     public MyAdapter(MainActivity activity, RecyclerView recyclerView) {
@@ -42,6 +42,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        height = parent.getHeight();
         return new MyViewHolder(LayoutInflater.from(myActivity).inflate(R.layout.custom_button, parent, false));
     }
 
@@ -76,9 +77,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 //        holder.nameView.setTypeface(myPreferences.typeface());
 //        holder.descriptionView.setTypeface(myPreferences.typeface());
 
+
+
         int buttonCount = 7;
         int buttonPadding = 25;
-        int buttonHeight = (recyclerView.getHeight() / buttonCount) - buttonPadding;
+        int buttonHeight = (height / buttonCount) - buttonPadding;
 
         // Set layout parameters for the button
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(

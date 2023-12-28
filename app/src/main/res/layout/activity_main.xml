@@ -92,8 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/btn_container"
-            android:layout_below="@id/dialog_title"
-            android:nestedScrollingEnabled="true">
+            android:layout_below="@id/dialog_title">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -134,7 +133,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/topBarContainer"
-        android:nestedScrollingEnabled="true"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:ignore="SpeakableTextPresentCheck" />

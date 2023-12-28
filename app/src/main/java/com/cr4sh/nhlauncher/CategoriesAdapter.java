@@ -19,7 +19,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesViewHolder
     MainActivity myActivity;
     List<String> item = new ArrayList<>();
     List<Integer> itemImg = new ArrayList<>();
-
+    int height;
     RecyclerView recyclerView;
 
     public CategoriesAdapter(MainActivity activity, RecyclerView recyclerView) {
@@ -44,6 +44,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesViewHolder
     @NonNull
     @Override
     public CategoriesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        height = parent.getHeight();
         return new CategoriesViewHolder(LayoutInflater.from(myActivity).inflate(R.layout.custom_category_item, parent, false));
     }
 
@@ -74,7 +75,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesViewHolder
 
         int buttonCount = 9;
         int buttonPadding = 25;
-        int buttonHeight = (recyclerView.getHeight() / buttonCount) - buttonPadding;
+        int buttonHeight = (height / buttonCount) - buttonPadding;
 
         // Set layout parameters for the button
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
