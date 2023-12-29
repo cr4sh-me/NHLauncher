@@ -74,10 +74,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         drawable.setCornerRadius(60);
         drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
         holder.itemView.setBackground(drawable);
-//        holder.nameView.setTypeface(myPreferences.typeface());
-//        holder.descriptionView.setTypeface(myPreferences.typeface());
-
-
 
         int buttonCount = 7;
         int buttonPadding = 25;

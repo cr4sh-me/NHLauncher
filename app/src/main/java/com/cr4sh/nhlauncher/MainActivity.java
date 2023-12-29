@@ -37,8 +37,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cr4sh.nhlauncher.utils.ToastUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
