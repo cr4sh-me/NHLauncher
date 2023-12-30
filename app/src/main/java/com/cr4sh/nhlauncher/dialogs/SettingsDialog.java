@@ -28,10 +28,10 @@ import androidx.fragment.app.DialogFragment;
 import com.cr4sh.nhlauncher.CustomSpinnerAdapter;
 import com.cr4sh.nhlauncher.DBBackup;
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MainUtils;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.UpdateChecker;
+import com.cr4sh.nhlauncher.utils.MainUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,6 +51,7 @@ public class SettingsDialog extends DialogFragment {
         MyPreferences myPreferences = new MyPreferences(requireActivity());
 
         CheckBox vibrationsCheckbox = view.findViewById(R.id.vibrations_checkbox);
+        CheckBox newButtonsStyle = view.findViewById(R.id.newbuttons_checkbox);
         TextView title = view.findViewById(R.id.dialog_title);
         LinearLayout bkg = view.findViewById(R.id.custom_theme_dialog_background);
         Spinner sortingSpinner = view.findViewById(R.id.sorting_spinner);
@@ -93,9 +94,11 @@ public class SettingsDialog extends DialogFragment {
 
         // Apply custom themes
         vibrationsCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
+        newButtonsStyle.setTextColor(Color.parseColor(myPreferences.color80()));
         int[][] states = {{android.R.attr.state_checked}, {}};
         int[] colors = {Color.parseColor(myPreferences.color80()), Color.parseColor(myPreferences.color80())};
         CompoundButtonCompat.setButtonTintList(vibrationsCheckbox, new ColorStateList(states, colors));
+        CompoundButtonCompat.setButtonTintList(newButtonsStyle, new ColorStateList(states, colors));
 
         bkg.setBackgroundColor(Color.parseColor(myPreferences.color20()));
         title.setTextColor(Color.parseColor(myPreferences.color80()));
@@ -111,7 +114,9 @@ public class SettingsDialog extends DialogFragment {
         cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
 
         vibrationsCheckbox.setChecked(myPreferences.vibrationOn());
+        newButtonsStyle.setChecked(myPreferences.isNewButtonStyleActive());
 
+        newButtonsStyle.setOnCheckedChangeListener(((buttonView, isChecked) -> saveNewButtonPref(isChecked)));
         vibrationsCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> saveVibrationsPref(isChecked));
 
         // Create an instance of UpdateChecker
@@ -253,7 +258,7 @@ public class SettingsDialog extends DialogFragment {
         editor.apply();
 
         mainUtils.changeLanguage(languageLocale);
-        mainUtils.restartSpinner();
+//        mainUtils.restartSpinner();
         requireActivity().recreate();
     }
 
@@ -263,7 +268,15 @@ public class SettingsDialog extends DialogFragment {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("vibrationsOn", vibrations);
         editor.apply();
+    }
 
+    private void saveNewButtonPref(boolean active) {
+        // Save the color values and frame drawable to SharedPreferences
+        SharedPreferences prefs = requireActivity().getSharedPreferences("nhlSettings", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("isNewButtonStyleActive", active);
+        editor.apply();
+        requireActivity().recreate();
     }
 }
 

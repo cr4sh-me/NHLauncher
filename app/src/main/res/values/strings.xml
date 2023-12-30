@@ -131,5 +131,16 @@
     <string name="update_button">Download update!</string>
     <string name="enable_vibrations">Enable vibrations</string>
     <string name="addons">Addons</string>
+    <string name="bluetooth_toolkit">Bluetooth Toolkit</string>
+    <string name="perform_various_bluetooth_attacks_using_simple_tools_gui_internal_bluetooth_requires_rfcomm_uart_h4_vhci_and_binder_ipc_enabled_in_kernel_or_bt_smd_driver_device">Perform various Bluetooth attacks using simple tools GUI. Internal bluetooth requires RFCOMM, UART H4, VHCI and BINDER_IPC enabled in kernel or bt_smd driver device</string>
+    <string name="interfaces">Interfaces</string>
+    <string name="services">Services</string>
+    <string name="scan_time">Scan Time</string>
+    <string name="scan">Scan</string>
+    <string name="scan_results">Scan results</string>
+    <string name="wifi_throttling_warning">WiFi Throttling warning!</string>
+    <string name="it_looks_like_you_have_wi_fi_throttling_enabled_it_limit_scanning_to_4_times_per_2_minutes_you_can_disable_it_for_unlimited_scanning_here_developer_options_networking_wi_fi_scan_throttling"><![CDATA[It looks like you have Wi-Fi throttling enabled, it limit scanning to 4 times per 2 minutes. You can disable it for unlimited scanning here: Developer Options > Networking > Wi-Fi scan throttling]]></string>
+    <string name="open_settings">Open settings</string>
+    <string name="use_new_buttons_style">Use new buttons style</string>
 
 </resources>

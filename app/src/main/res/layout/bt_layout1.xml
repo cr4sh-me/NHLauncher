@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:gravity="center"
-        android:text="Perform various Bluetooth attacks using simple tools GUI. Internal bluetooth requires RFCOMM, UART H4, VHCI and BINDER_IPC enabled in kernel or bt_smd driver device"
+        android:text="@string/perform_various_bluetooth_attacks_using_simple_tools_gui_internal_bluetooth_requires_rfcomm_uart_h4_vhci_and_binder_ipc_enabled_in_kernel_or_bt_smd_driver_device"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="5dp"
-        android:text="Interfaces"
+        android:text="@string/interfaces"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@+id/btServicesButton"
         tools:layout_editor_absoluteX="0dp" />
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="5dp"
-        android:text="Services"
+        android:text="@string/services"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@+id/bt_info2"
         tools:layout_editor_absoluteX="-16dp" />
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="5dp"
-        android:text="Scan results"
+        android:text="@string/scan_results"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -87,7 +87,8 @@
             android:id="@+id/hci_interface"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/transparent" />
+            android:background="@color/transparent"
+            tools:ignore="TouchTargetSizeCheck" />
 
     </LinearLayout>
 
@@ -130,7 +131,8 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
-            android:text="Scan Time" />
+            android:text="@string/scan_time"
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/scanButton"
@@ -139,7 +141,8 @@
             android:layout_marginStart="5dp"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:text="Scan" />
+            android:text="@string/scan"
+            tools:ignore="ButtonStyle" />
 
     </LinearLayout>
 

@@ -14,11 +14,9 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -37,10 +35,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cr4sh.nhlauncher.utils.DialogUtils;
+import com.cr4sh.nhlauncher.utils.MainUtils;
+import com.cr4sh.nhlauncher.utils.PermissionUtils;
+import com.cr4sh.nhlauncher.utils.VibrationUtil;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -66,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private MainUtils mainUtils;
     private MyPreferences myPreferences;
     private RecyclerView recyclerView;
+    public ExecutorService executor;
 
     @SuppressLint({"Recycle", "ResourceType", "CutPasteId"})
     @Override
@@ -73,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         dialogUtils = new DialogUtils(this.getSupportFragmentManager());
+
+        executor = Executors.newCachedThreadPool();
 
         // Check for nethunter and terminal apps
 //        PackageManager pm = getPackageManager();
@@ -136,8 +144,18 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
 
+//        recyclerView.setItemViewCacheSize(5); // Experiment with different values
+
+
+//        if (recyclerView.getOnFlingListener() == null) {
+//            // Attach NHLSnapHelper only if it hasn't been attached before
+//            NHLSnapHelper snapHelper = new NHLSnapHelper();
+//            snapHelper.attachToRecyclerView(recyclerView);
+//        }
+////        recyclerView.setLayoutManager(new NHLLinearLayoutManager(this, NHLLinearLayoutManager.VERTICAL, false));
+
         // Set the adapter for RecyclerView
-        MyAdapter adapter = new MyAdapter(this, recyclerView);
+        MyAdapter adapter = new MyAdapter(this);
         recyclerView.setAdapter(adapter);
 
         // Get functions from this class
@@ -183,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        adapter2 = new CustomSpinnerAdapter(this, valuesList, imageList, myPreferences.color20(), myPreferences.color80());
         listViewCategories = findViewById(R.id.recyclerViewCategories);
-        CategoriesAdapter adapter2 = new CategoriesAdapter(this, listViewCategories);
+        CategoriesAdapter adapter2 = new CategoriesAdapter(this);
 
         adapter2.updateData(valuesList, imageList);
         listViewCategories.setAdapter(adapter2);
@@ -231,10 +249,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         Animation recUp = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_down);
-//        Animation recDown = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_up);
-
-        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) rollCategoriesLayout.getLayoutParams();
-
 
         rollCategoriesLayout.setOnClickListener(view -> runOnUiThread(() -> {
 
@@ -273,19 +287,6 @@ public class MainActivity extends AppCompatActivity {
 
             Intent intent = new Intent(this, SpecialFeaturesActivity.class);
             startActivity(intent);
-
-
-//            disableWhileAnimation(searchIcon);
-//            disableWhileAnimation(recyclerView);
-//
-//            layoutParams.setMarginStart(dpToPixels(10));
-//            rollCategoriesLayout.setLayoutParams(layoutParams);
-//
-//
-//            openFragment(new SpecialFeaturesFragment_bak());
-//
-//            changeCategoryPreview(15);
-
         });
 
         backButton.setOnClickListener(view -> {
@@ -302,22 +303,6 @@ public class MainActivity extends AppCompatActivity {
             enableAfterAnimation(rollCategories);
 
         });
-        // Handle back button press using OnBackPressedCallback
-//        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
-//            @Override
-//            public void handleOnBackPressed() {
-//                // Get the current fragment
-//                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-//
-//                // Check if the current fragment is an instance of your SpecialFeaturesFragment_bak
-//                if (currentFragment instanceof SpecialFeaturesFragment_bak) {
-//                    // Handle the back button press for your SpecialFeaturesFragment_bak
-//                    ((SpecialFeaturesFragment_bak) currentFragment).onBackPressed();
-//                }
-//            }
-//        };
-
-//        getOnBackPressedDispatcher().addCallback(this, callback);
 
         searchIcon.setBackgroundColor(Color.parseColor(myPreferences.color50()));
         searchEditText.setHintTextColor(Color.parseColor(myPreferences.color80()));
@@ -367,6 +352,9 @@ public class MainActivity extends AppCompatActivity {
             // Toggle visibility of the search EditText when the icon is clicked
             if (searchEditText.getVisibility() == View.VISIBLE) {
 
+                // Clear searchbar, every close
+                searchEditText.setText(null);
+
                 // Enable things
                 enableAfterAnimation(toolbar);
                 enableAfterAnimation(rollCategoriesLayout);
@@ -394,9 +382,6 @@ public class MainActivity extends AppCompatActivity {
                 disableWhileAnimation(rollCategoriesLayout);
                 disableWhileAnimation(searchEditText);
                 disableWhileAnimation(rollCategories);
-
-                // Clear searchbar
-                searchEditText.setText(null);
 
                 toolbar.startAnimation(rollToolbar);
                 rollCategoriesLayout.startAnimation(rollToolbar);
@@ -479,14 +464,6 @@ public class MainActivity extends AppCompatActivity {
                         searchEditText.setSelection(filteredText.length());
                     }
 
-                } else {
-//                    TODO fix this shit
-//                    noToolsText.startAnimation(myAnimation);
-//                        disableMenu = false;
-//                        // Clear the list of items
-//                        recyclerView.setVisibility(View.GONE);
-//                        noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
-//                        noToolsText.setText(getResources().getString(R.string.no_newtext_entry));
                 }
             }
 
@@ -521,44 +498,12 @@ public class MainActivity extends AppCompatActivity {
         if (mDatabase != null) {
             mDatabase.close();
         }
-//        closeFragment();
-    }
-
-    private int measureViewHeight(View view) {
-        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(view.getWidth(), View.MeasureSpec.EXACTLY);
-        int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-
-        view.measure(widthMeasureSpec, heightMeasureSpec);
-        return view.getMeasuredHeight();
+        if(!executor.isShutdown()){
+            executor.shutdown();
+        }
     }
 
 
-//    @Override
-//    public void onSaveInstanceState(@NonNull Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        // Save fragment state if needed
-//    }
-
-    // Method to open a fragment
-//    private void openFragment() {
-//        toolbar.setEnabled(false);
-//        SpecialFeaturesFragment_bak fragment = new SpecialFeaturesFragment_bak();
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.fragment_container, fragment, "SpecialFeaturesFragment_bak")
-//                .addToBackStack(null) // Optional: Add the transaction to the back stack
-//                .commit();
-//    }
-//    public void closeFragment() {
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        Fragment fragment = fragmentManager.findFragmentByTag("SpecialFeaturesFragment_bak");
-//
-//        if (fragment != null) {
-//            fragmentManager.beginTransaction().remove(fragment).commit();
-//            // Optionally, pop the fragment from the back stack
-//            fragmentManager.popBackStack();
-//        }
-//        toolbar.setEnabled(true);
-//    }
 
     // Creates menu that is shown after longer button click
     @Override
@@ -574,24 +519,29 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.option_1:
+            case R.id.option_1 -> {
                 dialogUtils.openEditableDialog(buttonName, buttonCmd);
                 return true;
-            case R.id.option_2:
+            }
+            case R.id.option_2 -> {
                 mainUtils.addFavourite();
                 return true;
-            case R.id.option_3:
+            }
+            case R.id.option_3 -> {
                 if (!disableMenu) {
                     dialogUtils.openNewToolDialog(buttonCategory);
                 } else {
                     Toast.makeText(this, getResources().getString(R.string.get_out), Toast.LENGTH_SHORT).show();
                 }
                 return true;
-            case R.id.option_4:
+            }
+            case R.id.option_4 -> {
                 dialogUtils.openDeleteToolDialog(buttonName);
                 return true;
-            default:
+            }
+            default -> {
                 return super.onContextItemSelected(item);
+            }
         }
     }
 
@@ -615,11 +565,6 @@ public class MainActivity extends AppCompatActivity {
         // Set text and text color
         rollCategoriesText.setText(categoryTextView);
         rollCategoriesText.setTextColor(Color.parseColor(myPreferences.color80()));
-    }
-
-    public int dpToPixels(float dp) {
-        return Math.round(TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics()));
     }
 }
 

@@ -14,10 +14,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-import com.cr4sh.nhlauncher.DialogUtils;
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
+import com.cr4sh.nhlauncher.utils.DialogUtils;
 
 import java.util.Objects;
 
@@ -88,9 +88,7 @@ public class ToolbarDialog extends AppCompatDialogFragment {
             Objects.requireNonNull(getDialog()).cancel();
         });
 
-        cancelButton.setOnClickListener(view1 -> {
-            Objects.requireNonNull(getDialog()).cancel();
-        });
+        cancelButton.setOnClickListener(view1 -> Objects.requireNonNull(getDialog()).cancel());
 
         Objects.requireNonNull(getDialog()).setOnCancelListener(dialog -> myActivity.toolbar.setEnabled(true));
 

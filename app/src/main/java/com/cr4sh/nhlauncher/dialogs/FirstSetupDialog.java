@@ -14,9 +14,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MainUtils;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
+import com.cr4sh.nhlauncher.utils.MainUtils;
 
 import java.util.Objects;
 

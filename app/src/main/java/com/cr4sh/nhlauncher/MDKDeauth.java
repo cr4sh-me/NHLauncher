@@ -36,6 +36,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.widget.CompoundButtonCompat;
 
 import com.cr4sh.nhlauncher.bridge.Bridge;
+import com.cr4sh.nhlauncher.utils.DialogUtils;
 
 import java.util.List;
 import java.util.Locale;
@@ -79,7 +80,7 @@ public class MDKDeauth extends AppCompatActivity {
 
         checkThrottling();
 
-        if (!myPreferences.isThrottlingMessageShown() & isThrottleEnabled) {
+        if (myPreferences.isThrottlingMessageShown() & isThrottleEnabled) {
             dialogUtils.openThrottlingDialog();
         }
 

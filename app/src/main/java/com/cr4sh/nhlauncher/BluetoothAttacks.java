@@ -56,21 +56,12 @@ public class BluetoothAttacks extends AppCompatActivity {
         new TabLayoutMediator(tabs, viewPager2, (tab, position) -> {
             // Set tab titles based on position
             switch (position) {
-                case 0:
-                    tab.setText("Home");
-                    break;
-                case 1:
-                    tab.setText("Tools");
-                    break;
-                case 2:
-                    tab.setText("Spoof");
-                    break;
-                case 3:
-                    tab.setText("Bad Bluetooth");
-                    break;
-                case 4:
-                    tab.setText("Apple Juice");
-                    break;
+                case 0 -> tab.setText("Home");
+                case 1 -> tab.setText("Tools");
+                case 2 -> tab.setText("Spoof");
+                case 3 -> tab.setText("Bad Bluetooth");
+                case 4 -> tab.setText("Apple Juice");
+
                 // Add more cases for additional tabs if needed
             }
         }).attach();

@@ -22,9 +22,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.core.widget.CompoundButtonCompat;
 
-import com.cr4sh.nhlauncher.DialogUtils;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
+import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.skydoves.colorpickerview.ColorEnvelope;
 import com.skydoves.colorpickerview.ColorPickerView;
 import com.skydoves.colorpickerview.flag.BubbleFlag;

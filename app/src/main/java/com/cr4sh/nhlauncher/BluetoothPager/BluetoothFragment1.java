@@ -26,10 +26,10 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.cr4sh.nhlauncher.CustomSpinnerAdapter;
-import com.cr4sh.nhlauncher.DialogUtils;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.bridge.Bridge;
+import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.ShellExecuter;
 
 import java.io.File;
@@ -48,7 +48,6 @@ public class BluetoothFragment1 extends Fragment {
     final ShellExecuter exe = new ShellExecuter();
     @SuppressLint("SdCardPath")
     private final String APP_SCRIPTS_PATH = "/data/data/com.offsec.nethunter/scripts";
-    private final String CHROOT_PATH = "/data/local/nhsystem/kali-arm64";
     public String scanTime = "10";
     MyPreferences myPreferences;
     ScrollView scrollView;
@@ -80,6 +79,7 @@ public class BluetoothFragment1 extends Fragment {
         executor = Executors.newCachedThreadPool();
         mainHandler = new Handler(Looper.getMainLooper());
         bt_smd = new File("/sys/module/hci_smd/parameters/hcismd_set");
+        String CHROOT_PATH = "/data/local/nhsystem/kali-arm64";
         bluebinder = new File(CHROOT_PATH + "/usr/sbin/bluebinder");
 
         scrollView = view.findViewById(R.id.scrollView2);
@@ -159,15 +159,11 @@ public class BluetoothFragment1 extends Fragment {
             }
         });
 
-        scanButton.setOnClickListener(v -> {
-            runBtScan();
-        });
+        scanButton.setOnClickListener(v -> runBtScan());
 
         DialogUtils dialogUtils = new DialogUtils(requireActivity().getSupportFragmentManager());
 
-        scanTimeButton.setOnClickListener(v -> {
-            dialogUtils.openScanTimeDialog(1, this);
-        });
+        scanTimeButton.setOnClickListener(v -> dialogUtils.openScanTimeDialog(1, this));
 
         return view;
     }
@@ -277,9 +273,7 @@ public class BluetoothFragment1 extends Fragment {
                             lockButton(true, "Scan", scanButton);
                         });
                     } else {
-                        mainHandler.post(() -> {
-                            lockButton(true, "No devices found...", scanButton);
-                        });
+                        mainHandler.post(() -> lockButton(true, "No devices found...", scanButton));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -305,9 +299,7 @@ public class BluetoothFragment1 extends Fragment {
         executor.submit(() -> {
             try {
                 boolean isBinderRunning = isBinderRunning();
-                mainHandler.post(() -> {
-                    lockButton(true, isBinderRunning ? "Stop Bluebinder" : "Start Bluebinder", binderButton);
-                });
+                mainHandler.post(() -> lockButton(true, isBinderRunning ? "Stop Bluebinder" : "Start Bluebinder", binderButton));
             } catch (ExecutionException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -328,9 +320,7 @@ public class BluetoothFragment1 extends Fragment {
         executor.submit(() -> {
             try {
                 boolean isBtServicesRunning = isBtServicesRunning();
-                mainHandler.post(() -> {
-                    lockButton(true, isBtServicesRunning ? "Stop BT Services" : "Start BT Services", servicesButton);
-                });
+                mainHandler.post(() -> lockButton(true, isBtServicesRunning ? "Stop BT Services" : "Start BT Services", servicesButton));
             } catch (ExecutionException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -453,18 +443,14 @@ public class BluetoothFragment1 extends Fragment {
                 exe.RunAsRoot(new String[]{"svc bluetooth enable"});
             });
         } else {
-            executor.execute(() -> {
-                exe.RunAsRoot(new String[]{"svc bluetooth disable"});
-            });
+            executor.execute(() -> exe.RunAsRoot(new String[]{"svc bluetooth disable"}));
             run_cmd("echo -ne \"\\033]0;Bluebinder\\007\" && clear;bluebinder || bluebinder;exit");
         }
     }
 
     private void stopBinder() {
         if (bt_smd.exists()) {
-            executor.execute(() -> {
-                exe.RunAsRoot(new String[]{"echo 0 > " + bt_smd});
-            });
+            executor.execute(() -> exe.RunAsRoot(new String[]{"echo 0 > " + bt_smd}));
         } else {
             executor.execute(() -> {
                 exe.RunAsRoot(new String[]{APP_SCRIPTS_PATH + "/bootkali custom_cmd pkill bluebinder;exit"});

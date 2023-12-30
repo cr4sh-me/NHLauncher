@@ -41,12 +41,12 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
         customButton1.setDescription("USE ONESHOT SCRIPT TO PERFORM WPS ATTACKS");
         customButton1.setDescriptionColor(Color.parseColor(myPreferences.color80()));
 
-        CustomButton customButton2 = findViewById(R.id.button2);
-        customButton2.setImageResource(R.drawable.kali_mdk3);
-        customButton2.setName("WIFI DEAUTH");
-        customButton2.setNameColor(Color.parseColor(myPreferences.color80()));
-        customButton2.setDescription("USE MDK4 TO DISCONNECT CLIENTS FROM AP");
-        customButton2.setDescriptionColor(Color.parseColor(myPreferences.color80()));
+//        CustomButton customButton2 = findViewById(R.id.button2);
+//        customButton2.setImageResource(R.drawable.kali_mdk3);
+//        customButton2.setName("WIFI DEAUTH");
+//        customButton2.setNameColor(Color.parseColor(myPreferences.color80()));
+//        customButton2.setDescription("USE MDK4 TO DISCONNECT CLIENTS FROM AP");
+//        customButton2.setDescriptionColor(Color.parseColor(myPreferences.color80()));
 
         CustomButton customButton3 = findViewById(R.id.button3);
         customButton3.setImageResource(R.drawable.kali_tools);
@@ -60,7 +60,7 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
         drawable.setCornerRadius(60);
         drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
         customButton1.setBackground(drawable);
-        customButton2.setBackground(drawable);
+//        customButton2.setBackground(drawable);
         customButton3.setBackground(drawable);
 
 

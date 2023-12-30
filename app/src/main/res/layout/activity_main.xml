@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_container"
@@ -14,7 +14,10 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:orientation="horizontal"
-        android:paddingHorizontal="10dp">
+        android:paddingHorizontal="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/searchIcon"
@@ -87,14 +90,14 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.cr4sh.nhlauncher.FastScrollRecyclerView
             android:id="@+id/recyclerViewCategories"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/btn_container"
             android:layout_below="@id/dialog_title">
 
-        </androidx.recyclerview.widget.RecyclerView>
+        </com.cr4sh.nhlauncher.FastScrollRecyclerView>
 
         <LinearLayout
             android:id="@+id/btn_container"
@@ -108,33 +111,35 @@
                 android:id="@+id/special_features_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
-                android:layout_marginTop="5dp"
                 android:layout_weight="1"
-                android:text="@string/addons" />
+                android:layout_marginHorizontal="5dp"
+                android:text="@string/addons"
+                tools:ignore="ButtonStyle" />
 
             <Button
                 android:id="@+id/goBackButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_marginHorizontal="5dp"
-                android:layout_marginTop="5dp"
                 android:layout_weight="1"
-                android:padding="5dp"
-                android:text="@string/close" />
+                android:layout_marginHorizontal="5dp"
+                android:text="@string/close"
+                tools:ignore="ButtonStyle" />
 
         </LinearLayout>
 
     </RelativeLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.cr4sh.nhlauncher.FastScrollRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_below="@+id/topBarContainer"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBarContainer"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
@@ -146,6 +151,9 @@
         android:paddingHorizontal="25dp"
         android:paddingVertical="25dp"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topBarContainer" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

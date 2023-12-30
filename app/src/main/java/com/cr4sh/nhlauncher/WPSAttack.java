@@ -36,6 +36,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.widget.CompoundButtonCompat;
 
 import com.cr4sh.nhlauncher.bridge.Bridge;
+import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
 
 import java.util.List;
@@ -83,7 +84,7 @@ public class WPSAttack extends AppCompatActivity {
 
         checkThrottling();
 
-        if (!myPreferences.isThrottlingMessageShown() & isThrottleEnabled) {
+        if (myPreferences.isThrottlingMessageShown() & isThrottleEnabled) {
             dialogUtils.openThrottlingDialog();
         }
 

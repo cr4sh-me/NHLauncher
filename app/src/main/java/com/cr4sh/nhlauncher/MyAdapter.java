@@ -4,31 +4,34 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cr4sh.nhlauncher.utils.DialogUtils;
+import com.cr4sh.nhlauncher.utils.MainUtils;
+import com.cr4sh.nhlauncher.utils.VibrationUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-    MainActivity myActivity;
-    List<Item> items = new ArrayList<>();
-    Handler handler = new Handler();
-    int height;
-    RecyclerView recyclerView;
+    private final MainActivity myActivity;
+    private final List<Item> items = new ArrayList<>();
+    private final Handler handler = new Handler();
+    private int originalHeight;
+    private int height;
+    private int margin;
+    private GradientDrawable drawable;
+    private MyPreferences myPreferences;
 
-    public MyAdapter(MainActivity activity, RecyclerView recyclerView) {
+
+    public MyAdapter(MainActivity activity) {
         this.myActivity = activity;
-        this.recyclerView = recyclerView;
-
-        // Attaching custom snap helper
-        NHLSnapHelper snapHelper = new NHLSnapHelper();
-        snapHelper.attachToRecyclerView(recyclerView);
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -42,7 +45,23 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        height = parent.getHeight();
+        myPreferences = new MyPreferences(myActivity);
+
+        originalHeight = parent.getMeasuredHeight();
+        margin = 20;
+        height = (originalHeight / 8) - margin; // Button height without margin
+
+        drawable = new GradientDrawable();
+        if(myPreferences.isNewButtonStyleActive()){
+            drawable.setColor(Color.parseColor(myPreferences.color50()));
+            drawable.setCornerRadius(60);
+        } else {
+            drawable.setCornerRadius(60);
+            drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
+        }
+        drawable.setBounds(0, 0, 0, height); // Set bounds for the drawable
+
+
         return new MyViewHolder(LayoutInflater.from(myActivity).inflate(R.layout.custom_button, parent, false));
     }
 
@@ -51,7 +70,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         MainUtils mainUtils = new MainUtils(myActivity);
-        MyPreferences myPreferences = new MyPreferences(myActivity);
         DialogUtils dialogUtils = new DialogUtils(myActivity.getSupportFragmentManager());
 
         Item item = getItem(position);
@@ -68,24 +86,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
         holder.nameView.setTextColor(Color.parseColor(myPreferences.color80()));
         holder.descriptionView.setTextColor(Color.parseColor(myPreferences.color80()));
-//
-        GradientDrawable drawable = new GradientDrawable();
-//        drawable.setColor(Color.parseColor(myPreferences.buttonColor()));
-        drawable.setCornerRadius(60);
-        drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
+
         holder.itemView.setBackground(drawable);
 
-        int buttonCount = 7;
-        int buttonPadding = 25;
-        int buttonHeight = (height / buttonCount) - buttonPadding;
+        RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
+        params.setMargins(margin, (margin / 2), margin, (margin/2));
+        holder.buttonView.setLayoutParams(params);
 
-        // Set layout parameters for the button
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                buttonHeight
-        );
-        layoutParams.setMargins(buttonPadding, (buttonPadding / 2), buttonPadding, (buttonPadding / 2));
-        holder.buttonView.setLayoutParams(layoutParams);
+        Log.d("MyAdapter", "Parent height: " + originalHeight);
+        Log.d("MyAdapter", "Button height with margin: " + (height + margin));
 
         holder.itemView.setOnClickListener(v -> {
             myActivity.buttonUsage = item.getUsage();
@@ -116,10 +125,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     @Override
     public void onViewDetachedFromWindow(@NonNull MyViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-
         // Vibrate when a view is detached (button is disappearing from the screen)
-        if (handler != null) {
-            handler.postDelayed(() -> VibrationUtil.vibrate(myActivity, 10), 0); // Adjust the delay time as needed
-        }
+        handler.postDelayed(() -> VibrationUtil.vibrate(myActivity, 10), 0);
     }
 }

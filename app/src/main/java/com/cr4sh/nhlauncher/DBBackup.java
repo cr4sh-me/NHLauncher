@@ -9,6 +9,8 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.cr4sh.nhlauncher.utils.DialogUtils;
+import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
 
 import java.io.File;
