@@ -31,6 +31,8 @@
             android:orientation="vertical">
 
             <com.cr4sh.nhlauncher.CustomButton
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="5dp"
                 android:id="@+id/button1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -41,6 +43,8 @@
 <!--                android:layout_height="wrap_content" />-->
 
             <com.cr4sh.nhlauncher.CustomButton
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="5dp"
                 android:id="@+id/button3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

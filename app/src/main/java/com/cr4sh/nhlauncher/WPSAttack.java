@@ -19,6 +19,7 @@ import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -238,19 +239,44 @@ public class WPSAttack extends AppCompatActivity {
 
     private void handleScanResults() {
         // Retrieve the scan results
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Handle the case where location permission is not granted
-            return;
-        }
         try {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
             List<ScanResult> results = wifiManager.getScanResults();
             if (!results.isEmpty()) {
-                createButtons(results);
-                setMessage("Ready to scan");
+                Log.d("ResultsScan", "results found : " + results);
+                // Check if there are any WPS networks
+                boolean hasWpsNetworks = false;
+                for (ScanResult result : results) {
+                    if (result.capabilities != null && result.capabilities.contains("WPS")) {
+                        hasWpsNetworks = true;
+                        break;  // Break out of the loop since we found at least one WPS network
+                    }
+                }
+                if (hasWpsNetworks) {
+                    // There is at least one WPS network in the results
+                    createButtons(results);
+                    setMessage("Ready to scan");
+                } else {
+                    // Handle the case where there are no WPS networks found
+                    buttonContainer.removeAllViews();
+                    setMessage("No WPS networks found!");
+                }
             } else {
                 // Handle the case where there are no Wi-Fi networks found
+
+                Log.d("ResultsScan", "results not found : " + results);
+
                 buttonContainer.removeAllViews();
-                setMessage("No WPS networks found!");
+                setMessage("No WiFi networks found!");
             }
             enableScanButton(true);
         } catch (Exception e) {
@@ -368,6 +394,7 @@ public class WPSAttack extends AppCompatActivity {
                     setMessage("Scanning...");
                 }
             } catch (Exception e) {
+                buttonContainer.removeAllViews();
                 Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         } else {

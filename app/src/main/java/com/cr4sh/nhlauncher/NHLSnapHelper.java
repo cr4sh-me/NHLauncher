@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,6 +26,21 @@ public class NHLSnapHelper extends LinearSnapHelper {
     public void attachToRecyclerView(@Nullable RecyclerView recyclerView)
             throws IllegalStateException {
         super.attachToRecyclerView(recyclerView);
+
+        assert recyclerView != null;
+        recyclerView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(@NonNull View view) {
+                // Do nothing when attached
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(@NonNull View view) {
+                if(!executorService.isShutdown()){
+                    executorService.shutdown();
+                }
+            }
+        });
     }
 
     @Override

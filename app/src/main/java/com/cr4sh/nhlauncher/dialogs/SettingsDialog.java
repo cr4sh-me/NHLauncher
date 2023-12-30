@@ -258,7 +258,6 @@ public class SettingsDialog extends DialogFragment {
         editor.apply();
 
         mainUtils.changeLanguage(languageLocale);
-//        mainUtils.restartSpinner();
         requireActivity().recreate();
     }
 

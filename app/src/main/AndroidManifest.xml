@@ -45,10 +45,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SpecialFeaturesActivity"></activity>
-        <activity android:name=".WPSAttack"></activity>
-        <activity android:name=".MDKDeauth"></activity>
-        <activity android:name=".BluetoothAttacks"></activity>
+        <activity android:name=".SpecialFeaturesActivity">
+
+        </activity>
+        <activity android:name=".WPSAttack">
+
+        </activity>
+        <activity android:name=".MDKDeauth">
+
+        </activity>
+        <activity android:name=".BluetoothAttacks">
+
+        </activity>
     </application>
 
 </manifest>

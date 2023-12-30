@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,9 +37,18 @@ import com.cr4sh.nhlauncher.R;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+// TODO replace statistic dialog with full screen activity
 
 public class StatisticsDialog extends DialogFragment {
     MainActivity myActivity;
+
+    ExecutorService executor;
+    Future<Void> backgroundTask;
 
     public StatisticsDialog(MainActivity activity) {
         this.myActivity = activity;
@@ -49,10 +59,9 @@ public class StatisticsDialog extends DialogFragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.statistics_dialog, container, false);
+        executor = Executors.newSingleThreadExecutor();
 
-//        MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
         MyPreferences myPreferences = new MyPreferences(requireActivity());
-
 
         TextView title = view.findViewById(R.id.dialog_title);
         LinearLayout bkg = view.findViewById(R.id.custom_theme_dialog_background);
@@ -60,7 +69,6 @@ public class StatisticsDialog extends DialogFragment {
         Button cancelButton = view.findViewById(R.id.cancel_button);
         LinearLayout layout = view.findViewById(R.id.stats_layout);
 
-        // Apply custom themes
         bkg.setBackgroundColor(Color.parseColor(myPreferences.color20()));
         title.setTextColor(Color.parseColor(myPreferences.color80()));
 
@@ -109,117 +117,137 @@ public class StatisticsDialog extends DialogFragment {
         drawableToolbar.setStroke(8, Color.parseColor(myPreferences.color50()));
         statsSpinner.setBackground(drawableToolbar);
 
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        view.setLayoutParams(params);
+
+
+
         Animation anim = AnimationUtils.loadAnimation(myActivity, R.anim.fade_in);
-
-//        ArrayAdapter<String> defaultAdapter = new ArrayAdapter<>(myActivity, android.R.layout.simple_spinner_item, myActivity.valuesList);
-//        defaultAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        statsSpinner.setAdapter(defaultAdapter);
-
 
         statsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @SuppressLint({"DefaultLocale", "SetTextI18n"})
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view2, int i, long l) {
+                if (backgroundTask != null && !backgroundTask.isDone()) {
+                    // Cancel the previous task if still running
+                    backgroundTask.cancel(true);
+                }
 
                 layout.removeAllViews();
 
                 String category = adapterView.getItemAtPosition(i).toString();
 
-                new Thread(() -> {
-                    Cursor cursor = null;
-                    try (SQLiteOpenHelper dbHandler = new DBHandler(requireActivity());
-                         SQLiteDatabase db = dbHandler.getReadableDatabase()) {
+                // Create a Callable task
+                Callable<Void> task = () -> {
+                    try {
+                        Cursor cursor = null;
+                        try (SQLiteOpenHelper dbHandler = new DBHandler(requireActivity());
+                             SQLiteDatabase db = dbHandler.getReadableDatabase()) {
 
-                        String[] projection = {"SYSTEM", "CATEGORY", "FAVOURITE", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
-                        String selection;
-                        String[] selectionArgs;
+                            String[] projection = {"SYSTEM", "CATEGORY", "FAVOURITE", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
+                            String selection;
+                            String[] selectionArgs;
 
-                        if (category.contains("FT")) {
-                            selection = "FAVOURITE = ? AND USAGE > ?";
-                            selectionArgs = new String[]{"1", "0"};
-                        } else if (category.contains("AC -")) {
-                            selection = "USAGE > ?";
-                            selectionArgs = new String[]{"0"};
-                        } else {
-                            String category_number = category.substring(0, 2);
-                            selection = "CATEGORY = ? AND USAGE > ?";
-                            selectionArgs = new String[]{category_number, "0"};
-                        }
+                            if (category.contains("FT")) {
+                                selection = "FAVOURITE = ? AND USAGE > ?";
+                                selectionArgs = new String[]{"1", "0"};
+                            } else if (category.contains("AC -")) {
+                                selection = "USAGE > ?";
+                                selectionArgs = new String[]{"0"};
+                            } else {
+                                String category_number = category.substring(0, 2);
+                                String out = category_number.replaceFirst("^0+(?!$)", "");
+                                Log.d("LogShit", out);
+                                selection = "CATEGORY = ? AND USAGE > ?";
+                                selectionArgs = new String[]{out, "0"};
+                            }
 
-                        cursor = db.query("TOOLS", projection, selection, selectionArgs, null, null, "USAGE DESC", null);
+                            cursor = db.query("TOOLS", projection, selection, selectionArgs, null, null, "USAGE DESC", null);
 
-                        if (cursor.getCount() == 0) {
-                            // If there are no tools, display a "NO TOOLS" message in the center of the layout
-                            TextView noToolsTextView = new TextView(requireActivity());
-                            noToolsTextView.startAnimation(anim);
-                            noToolsTextView.setText(getResources().getString(R.string.no_tools_stat));
-                            noToolsTextView.setGravity(Gravity.CENTER);
-                            noToolsTextView.setTextColor(Color.parseColor(myPreferences.color80()));
-                            noToolsTextView.setTypeface(null, Typeface.BOLD);
-                            requireActivity().runOnUiThread(() -> layout.addView(noToolsTextView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)));
-                        } else {
-                            // If there are no favorites, display a message in the center of the layout
-                            while (cursor.moveToNext()) {
-                                String toolName = cursor.getString(3);
-                                String toolIcon = cursor.getString(6);
-                                int toolUsage = cursor.getInt(7);
+                            Log.d("CategorySelected", "Selected Category: " + cursor.getCount());
 
-                                // Create a new LinearLayout to hold all elements for the tool
-                                LinearLayout toolLayout = new LinearLayout(requireActivity());
-                                toolLayout.setOrientation(LinearLayout.HORIZONTAL);
-                                toolLayout.setPadding(16, 16, 16, 16);
-                                toolLayout.setGravity(Gravity.CENTER_VERTICAL);
+                            if (cursor.getCount() == 0) {
+                                // If there are no tools, display a "NO TOOLS" message in the center of the layout
+                                TextView noToolsTextView = new TextView(requireActivity());
+                                noToolsTextView.startAnimation(anim);
+                                noToolsTextView.setText(getResources().getString(R.string.no_tools_stat));
+                                noToolsTextView.setGravity(Gravity.CENTER);
+                                noToolsTextView.setTextColor(Color.parseColor(myPreferences.color80()));
+                                noToolsTextView.setTypeface(null, Typeface.BOLD);
+                                requireActivity().runOnUiThread(() -> layout.addView(noToolsTextView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)));
+                            } else {
+                                // If there are no favorites, display a message in the center of the layout
+                                while (cursor.moveToNext()) {
+                                    String toolName = cursor.getString(3);
+                                    String toolIcon = cursor.getString(6);
+                                    int toolUsage = cursor.getInt(7);
 
-                                // Create a new ImageView for the tool icon
-                                ImageView imageView = new ImageView(requireActivity());
-                                @SuppressLint("DiscouragedApi") int icon = requireActivity().getResources().getIdentifier(toolIcon, "drawable", requireActivity().getPackageName());
-                                Drawable image = ResourcesCompat.getDrawable(requireActivity().getResources(), icon, null);
-                                imageView.setImageDrawable(image);
-                                imageView.setPadding(0, 0, 16, 0);
+                                    // Create a new LinearLayout to hold all elements for the tool
+                                    LinearLayout toolLayout = new LinearLayout(requireActivity());
+                                    toolLayout.setOrientation(LinearLayout.HORIZONTAL);
+                                    toolLayout.setPadding(16, 16, 16, 16);
+                                    toolLayout.setGravity(Gravity.CENTER_VERTICAL);
 
-                                // Add the ImageView to the LinearLayout
-                                toolLayout.addView(imageView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0));
+                                    // Create a new ImageView for the tool icon
+                                    ImageView imageView = new ImageView(requireActivity());
+                                    @SuppressLint("DiscouragedApi") int icon = requireActivity().getResources().getIdentifier(toolIcon, "drawable", requireActivity().getPackageName());
+                                    Drawable image = ResourcesCompat.getDrawable(requireActivity().getResources(), icon, null);
+                                    imageView.setImageDrawable(image);
+                                    imageView.setPadding(0, 0, 16, 0);
 
-                                // Create a new TextView element for the tool name
-                                TextView nameTextView = new TextView(requireActivity());
-                                nameTextView.setText(toolName.toUpperCase());
-                                nameTextView.setTextColor(Color.parseColor(myPreferences.color80()));
-                                nameTextView.setTypeface(null, Typeface.BOLD);
-                                nameTextView.setGravity(Gravity.CENTER);
+                                    // Add the ImageView to the LinearLayout
+                                    toolLayout.addView(imageView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0));
 
-                                // Add the TextView to the LinearLayout
-                                toolLayout.addView(nameTextView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+                                    // Create a new TextView element for the tool name
+                                    TextView nameTextView = new TextView(requireActivity());
+                                    nameTextView.setText(toolName.toUpperCase());
+                                    nameTextView.setTextColor(Color.parseColor(myPreferences.color80()));
+                                    nameTextView.setTypeface(null, Typeface.BOLD);
+                                    nameTextView.setGravity(Gravity.CENTER);
 
-                                // Create a new TextView element for the tool usage count
-                                TextView countTextView = new TextView(requireActivity());
-                                countTextView.setTypeface(null, Typeface.BOLD);
-                                countTextView.setText(String.format(getResources().getString(R.string.usage) + "%d", toolUsage));
-                                countTextView.setTextColor(Color.parseColor(myPreferences.color80()));
-                                countTextView.setGravity(Gravity.CENTER_VERTICAL);
-                                countTextView.setPadding(0, 0, 0, 0);
+                                    // Add the TextView to the LinearLayout
+                                    toolLayout.addView(nameTextView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
-                                // Add the TextView to the LinearLayout
-                                toolLayout.addView(countTextView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0));
+                                    // Create a new TextView element for the tool usage count
+                                    TextView countTextView = new TextView(requireActivity());
+                                    countTextView.setTypeface(null, Typeface.BOLD);
+                                    countTextView.setText(String.format(getResources().getString(R.string.usage) + "%d", toolUsage));
+                                    countTextView.setTextColor(Color.parseColor(myPreferences.color80()));
+                                    countTextView.setGravity(Gravity.CENTER_VERTICAL);
+                                    countTextView.setPadding(0, 0, 0, 0);
 
-                                // Add the LinearLayout to the layout
-                                requireActivity().runOnUiThread(() -> layout.addView(toolLayout));
+                                    // Add the TextView to the LinearLayout
+                                    toolLayout.addView(countTextView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0));
+
+                                    // Add the LinearLayout to the layout
+                                    requireActivity().runOnUiThread(() -> layout.addView(toolLayout));
+                                }
+                            }
+
+                        } catch (SQLiteException e) {
+                            // Display error
+                            requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(), "Error: " + e, Toast.LENGTH_SHORT).show());
+                        } finally {
+                            if (cursor != null) {
+                                cursor.close();
                             }
                         }
-
-                    } catch (SQLiteException e) {
-                        // Display error
-                        requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(), "Error: " + e, Toast.LENGTH_SHORT).show());
-                    } finally {
-                        if (cursor != null) {
-                            cursor.close();
-                        }
+                    } catch (Exception e) {
+                        Log.e("BackgroundTask", "Error in background task", e);
                     }
-                }).start();
+
+                    return null; // return value is Void as the result is not used
+                };
+
+                // Submit the task to the executor
+                backgroundTask = executor.submit(task);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
 
@@ -228,4 +256,10 @@ public class StatisticsDialog extends DialogFragment {
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Shutdown the executor when the view is destroyed
+        executor.shutdown();
+    }
 }

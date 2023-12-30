@@ -1,8 +1,11 @@
 package com.cr4sh.nhlauncher;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -79,43 +82,39 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         dialogUtils = new DialogUtils(this.getSupportFragmentManager());
-
         executor = Executors.newCachedThreadPool();
 
         // Check for nethunter and terminal apps
-//        PackageManager pm = getPackageManager();
-//
-//        try {
-//            // First, check if the com.offsec.nethunter and com.offsec.nhterm packages exist
-//            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
-//            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
-//
-//            // Then, check if the com.offsec.nhterm.ui.term.NeoTermRemoteInterface activity exists within com.offsec.nhterm
-//            Intent intent = new Intent();
-//            intent.setComponent(new ComponentName("com.offsec.nhterm", "com.offsec.nhterm.ui.term.NeoTermRemoteInterface"));
-//            List<ResolveInfo> activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-//
-//            if (activities.isEmpty()) {
-//                // The activity is missing
-//                dialogUtils.openMissingActivityDialog();
-//                return;
-//            }
-//        } catch (PackageManager.NameNotFoundException e) {
-//            // One of the packages is missing
-//            dialogUtils.openAppsDialog();
-//            return;
-//        }
+        PackageManager pm = getPackageManager();
+
+        try {
+            // First, check if the com.offsec.nethunter and com.offsec.nhterm packages exist
+            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
+            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
+
+            // Then, check if the com.offsec.nhterm.ui.term.NeoTermRemoteInterface activity exists within com.offsec.nhterm
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName("com.offsec.nhterm", "com.offsec.nhterm.ui.term.NeoTermRemoteInterface"));
+            List<ResolveInfo> activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+            if (activities.isEmpty()) {
+                // The activity is missing
+                dialogUtils.openMissingActivityDialog();
+                return;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            // One of the packages is missing
+            dialogUtils.openAppsDialog();
+            return;
+        }
 
         myPreferences = new MyPreferences(this);
 
         setContentView(R.layout.activity_main);
 
-//        Animation anim = AnimationUtils.loadAnimation(this, R.anim.roll);
         View rootView = findViewById(android.R.id.content);
-//        rootView.startAnimation(anim);
 
         // Apply custom colors
-
         rootView.setBackgroundColor(Color.parseColor(myPreferences.color20()));
         Window window = this.getWindow();
         window.setStatusBarColor(Color.parseColor(myPreferences.color20()));
@@ -143,16 +142,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         recyclerView = findViewById(R.id.recyclerView);
-
-//        recyclerView.setItemViewCacheSize(5); // Experiment with different values
-
-
-//        if (recyclerView.getOnFlingListener() == null) {
-//            // Attach NHLSnapHelper only if it hasn't been attached before
-//            NHLSnapHelper snapHelper = new NHLSnapHelper();
-//            snapHelper.attachToRecyclerView(recyclerView);
-//        }
-////        recyclerView.setLayoutManager(new NHLLinearLayoutManager(this, NHLLinearLayoutManager.VERTICAL, false));
 
         // Set the adapter for RecyclerView
         MyAdapter adapter = new MyAdapter(this);
@@ -550,13 +539,8 @@ public class MainActivity extends AppCompatActivity {
         String categoryTextView;
         int imageResourceId;
 
-        if (position < 15) {
-            categoryTextView = valuesList.get(position);
-            imageResourceId = imageList.get(position);
-        } else {
-            categoryTextView = "Special Addons";
-            imageResourceId = R.drawable.nhl_favourite_trans;
-        }
+        categoryTextView = valuesList.get(position);
+        imageResourceId = imageList.get(position);
 
         // Set image resource and color filter
         rollCategories.setImageResource(imageResourceId);

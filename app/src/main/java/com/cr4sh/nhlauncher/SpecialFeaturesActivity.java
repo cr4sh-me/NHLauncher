@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cr4sh.nhlauncher.utils.ToastUtils;
+
 public class SpecialFeaturesActivity extends AppCompatActivity {
 
     @Override
@@ -75,8 +77,9 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
 //        });
 
         customButton3.setOnClickListener(v -> {
-            Intent intent = new Intent(this, BluetoothAttacks.class);
-            startActivity(intent);
+            ToastUtils.showCustomToast(this, "Coming soon...");
+//            Intent intent = new Intent(this, BluetoothAttacks.class);
+//            startActivity(intent);
         });
 
         cancelButton.setOnClickListener(v -> {
