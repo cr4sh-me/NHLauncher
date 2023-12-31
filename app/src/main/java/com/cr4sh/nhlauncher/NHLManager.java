@@ -1,5 +1,6 @@
 package com.cr4sh.nhlauncher;
 
+// Store MainActivity
 public class NHLManager {
     private static NHLManager instance;
     private MainActivity mainActivity;

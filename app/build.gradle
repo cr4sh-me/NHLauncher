@@ -29,7 +29,16 @@ android {
     buildFeatures {
         viewBinding true
     }
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile).tap {
+            configureEach {
+                options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+            }
+        }
+    }
 }
+
+
 
 
 dependencies {

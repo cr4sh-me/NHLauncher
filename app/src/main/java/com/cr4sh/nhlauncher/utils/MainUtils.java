@@ -14,7 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cr4sh.nhlauncher.DBHandler;
+import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.ButtonsRecycler.Item;
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.ButtonsRecycler.MyAdapter;

@@ -235,8 +235,8 @@ public class SettingsFragment2 extends Fragment {
                     String color20 = adjustColorBrightness(hexColorString, 0.2f);
                     saveColor80(color100, color80, color50, color20, dynamicThemes.isChecked(), advancedThemes.isChecked());
                 }
-                requireActivity().recreate(); // recreate this activity
                 mainActivity.recreate(); // recreate MainActivity below
+                requireActivity().recreate(); // recreate this activity AFTER to prevent closing db for stats
             }
         });
 

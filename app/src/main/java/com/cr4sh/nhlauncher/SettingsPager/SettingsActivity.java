@@ -20,6 +20,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    public Button cancelButton;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
         TextView title = findViewById(R.id.title);
         title.setTextColor(Color.parseColor(myPreferences.color80()));
 
-        Button cancelButton = findViewById(R.id.cancel_button);
+        cancelButton = findViewById(R.id.cancel_button);
         cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
         cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
 

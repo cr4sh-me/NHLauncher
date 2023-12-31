@@ -3,6 +3,7 @@ package com.cr4sh.nhlauncher.utils;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +39,9 @@ public class ToastUtils {
         text.setText(message);
         text.setTextColor(Color.parseColor(myPreferences.color80()));
 
-        // Create and show the toast
         Toast toast = new Toast(context);
+        toast.setGravity(Gravity.BOTTOM, 0, 150);
+        // Create and show the toast
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);
         toast.show();

@@ -23,7 +23,7 @@ import android.widget.Toast;
 import androidx.core.widget.CompoundButtonCompat;
 import androidx.fragment.app.Fragment;
 
-import com.cr4sh.nhlauncher.DBBackup;
+import com.cr4sh.nhlauncher.Database.DBBackup;
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;

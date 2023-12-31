@@ -160,5 +160,7 @@
     <string name="choose_language">Choose language</string>
     <string name="you_can_customize_your_nhlauncher_theme_here">You can customize your NHLauncher theme here</string>
     <string name="check_your_tools_usage_statistics">Check your tools usage statistics!</string>
+    <string name="open_source_libraries_in_nhlauncher">Open source libraries in NHLauncher</string>
+    <string name="nhlauncher_github">NHLauncher GitHub</string>
 
 </resources>

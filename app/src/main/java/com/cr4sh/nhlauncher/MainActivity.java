@@ -40,6 +40,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cr4sh.nhlauncher.ButtonsRecycler.Item;
 import com.cr4sh.nhlauncher.ButtonsRecycler.MyAdapter;
 import com.cr4sh.nhlauncher.CategoriesRecycler.CategoriesAdapter;
+import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.SettingsPager.SettingsActivity;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.MainUtils;

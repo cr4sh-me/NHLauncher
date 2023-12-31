@@ -99,7 +99,6 @@ public class MyPreferences {
     public boolean isThrottlingMessageShown() {
         return !setupPrefs.getBoolean("isThrottlingMessageShown", false);
     }
-
     public boolean vibrationOn() {
         return nhlPrefs.getBoolean("vibrationsOn", false);
     }

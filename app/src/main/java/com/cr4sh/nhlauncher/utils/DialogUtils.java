@@ -11,7 +11,6 @@ import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.WPSAttack;
 import com.cr4sh.nhlauncher.dialogs.AppsDialog;
 import com.cr4sh.nhlauncher.dialogs.ButtonMenuDialog;
-import com.cr4sh.nhlauncher.dialogs.CustomThemeDialog;
 import com.cr4sh.nhlauncher.dialogs.DeleteToolDialog;
 import com.cr4sh.nhlauncher.dialogs.EditableDialog;
 import com.cr4sh.nhlauncher.dialogs.FirstSetupDialog;
@@ -20,10 +19,7 @@ import com.cr4sh.nhlauncher.dialogs.NewToolDialog;
 import com.cr4sh.nhlauncher.dialogs.NhlColorPickerDialog;
 import com.cr4sh.nhlauncher.dialogs.PermissionDialog;
 import com.cr4sh.nhlauncher.dialogs.ScanTimeDialog;
-import com.cr4sh.nhlauncher.dialogs.SettingsDialog;
-import com.cr4sh.nhlauncher.dialogs.StatisticsDialog;
 import com.cr4sh.nhlauncher.dialogs.ThrottlingDialog;
-import com.cr4sh.nhlauncher.dialogs.ToolbarDialog;
 import com.cr4sh.nhlauncher.dialogs.WpsCustomPinDialog;
 
 // This class creates and opens Dialogs
@@ -96,13 +92,7 @@ public class DialogUtils {
         }).start();
     }
 
-    public void openSettingsDialog() {
-        new Thread(() -> {
-            SettingsDialog stDialog = new SettingsDialog();
-            // Display our dialog!
-            stDialog.show(fragmentManager, "SettingsDialog");
-        }).start();
-    }
+
 
     public void openPermissionsDialog() {
         new Thread(() -> {
@@ -112,13 +102,7 @@ public class DialogUtils {
         }).start();
     }
 
-    public void openStatisticsDialog(MainActivity myActivity) {
-        new Thread(() -> {
-            StatisticsDialog statsDialog = new StatisticsDialog(myActivity);
-            // Display our dialog!
-            statsDialog.show(fragmentManager, "PermissionsDialog");
-        }).start();
-    }
+
 
     public void openMissingActivityDialog() {
         new Thread(() -> {
@@ -140,21 +124,6 @@ public class DialogUtils {
         }).start();
     }
 
-    public void openCustomThemesDialog() {
-        new Thread(() -> {
-            CustomThemeDialog ctDialog = new CustomThemeDialog();
-            // Display our dialog!
-            ctDialog.show(fragmentManager, "CustomThemeDialog");
-        }).start();
-    }
-
-    public void openToolbarDialog(MainActivity myActivity) {
-        new Thread(() -> {
-            ToolbarDialog tbDialog = new ToolbarDialog(myActivity);
-            // Display our dialog!
-            tbDialog.show(fragmentManager, "ToolbarDialog");
-        }).start();
-    }
 
     public void openNhlColorPickerDialog(Button button, ImageView alpha, String colorShade) {
         new Thread(() -> {

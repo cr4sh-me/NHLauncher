@@ -1,7 +1,6 @@
 package com.cr4sh.nhlauncher.SettingsPager;
 
 import android.annotation.SuppressLint;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -24,7 +23,6 @@ import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.StatsRecycler.StatsAdapter;
 import com.cr4sh.nhlauncher.StatsRecycler.StatsItem;
-
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
@@ -50,7 +48,9 @@ public class SettingsFragment3 extends Fragment {
         View view = inflater.inflate(R.layout.settings_layout3, container, false);
 
         myPreferences = new MyPreferences(requireActivity());
+
         mDatabase = mainActivity.mDatabase;
+
 
         LinearLayout spinnerBg1 = view.findViewById(R.id.spinnerBg1);
         TextView title = view.findViewById(R.id.bt_info2);
@@ -89,9 +89,6 @@ public class SettingsFragment3 extends Fragment {
 
     @SuppressLint({"SetTextI18n", "Recycle"})
     public void spinnerChanger(int category) {
-
-        // Obtain references to app resources and button layout
-        Resources resources = mainActivity.getResources();
 
         Cursor cursor;
 
