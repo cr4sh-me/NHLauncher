@@ -26,7 +26,7 @@ You can your own button, by holding any button in chosen category, and clicking 
 You can delete button by holding it, and clicking appropriate option. Please note that you can only delete buttons that were created by you
 
 - Threading:  
-This app is running some tasks on threads, especially Sqlite queries, so you can operate without freezing your main ui thread
+This app is using ExecutorService for some tasks, especially Sqlite queries, so you can operate without freezing your main ui thread
 
 - Themes manager:  
 You can fully customize NHLauncher appearance by selecting theme manager from top right toolbar

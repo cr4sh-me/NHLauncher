@@ -20,6 +20,20 @@
         <item>13 - Inżynieria Społeczna</item>
     </string-array>
 
+    <string-array name="languages">
+        <item>Angielski</item>
+        <item>Polski</item>
+    </string-array>
+
+    <string-array name="sorting">
+        <item>Domyślne</item>
+        <item>Po użyciu</item>
+        <item>A-Z</item>
+        <item>Z-A</item>
+        <item>0–9 A-Z</item>
+        <item>9–0 Z-A</item>
+    </string-array>
+
     <string name="category_ft">FT - Ulubione narzędzia</string>
     <string name="category_01">01 - Zbieranie Informacji</string>
     <string name="category_02">02 - Analiza Podatności</string>
@@ -120,7 +134,7 @@
     <string name="choose_color">Wybierz kolor</string>
     <string name="categories">Kategorie</string>
     <string name="all_categories">AC - Wszystkie Kategorie</string>
-    <string name="update_wait">Sprawdzam uaktualnienia...</string>
+    <string name="update_wait">Sprawdzam uaktualnienia…</string>
     <string name="check_internet_connection">Sprawdź połączenie z internetem!</string>
     <string name="current_app_version">"Obecna wersja: "</string>
     <string name="new_app_version">"Nowa wersja: "</string>

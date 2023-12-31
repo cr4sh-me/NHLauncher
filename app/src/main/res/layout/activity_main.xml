@@ -91,6 +91,7 @@
             android:textStyle="bold" />
 
         <com.cr4sh.nhlauncher.FastScrollRecyclerView
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:id="@+id/recyclerViewCategories"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -143,17 +144,18 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/messagebox"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/topBarContainer"
-        android:gravity="top|center_horizontal"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:paddingHorizontal="25dp"
         android:paddingVertical="25dp"
         android:textSize="18sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topBarContainer" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

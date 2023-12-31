@@ -15,9 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cr4sh.nhlauncher.DBHandler;
-import com.cr4sh.nhlauncher.Item;
+import com.cr4sh.nhlauncher.ButtonsRecycler.Item;
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyAdapter;
+import com.cr4sh.nhlauncher.ButtonsRecycler.MyAdapter;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.bridge.Bridge;

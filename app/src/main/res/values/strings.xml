@@ -27,6 +27,20 @@
     <string name="restore_custom_tools">Restore custom tools</string>
     <string name="cancel">Cancel</string>
 
+    <string-array name="languages">
+        <item>English</item>
+        <item>Polish</item>
+    </string-array>
+
+    <string-array name="sorting">
+        <item>Default</item>
+        <item>By usage</item>
+        <item>A-Z</item>
+        <item>Z-A</item>
+        <item>0–9 A-Z</item>
+        <item>9–0 Z-A</item>
+    </string-array>
+
     <string name="category_ft">FT - Favourite Tools</string>
     <string name="category_01">01 - Information Gathering</string>
     <string name="category_02">02 - Vulnerability Analysis</string>
@@ -71,8 +85,8 @@
     <string name="apps_error">NetHunter and/or NetHunter Terminal app is not installed! Please read NHLauncher documentation and use your brain…</string>
     <string name="choose_theme">Choose theme:</string>
     <string name="choose_font">Choose font:</string>
-    <string name="sorting">Choose sorting:</string>
-    <string name="choose_lanuage">Choose language:</string>
+    <string name="sorting">Choose sorting</string>
+    <string name="choose_lanuage">Choose language</string>
     <string name="default_sorting">Default</string>
     <string name="by_usage">By usage</string>
     <string name="first_setup">If you running NHLauncher for the first time, please run setup to install all tools that this launcher have. It require internet connection and some disk space. You can run it later from settings!</string>
@@ -120,7 +134,7 @@
     <string name="choose_color">Choose color</string>
     <string name="categories">Categories</string>
     <string name="all_categories">AC - All Categories</string>
-    <string name="update_wait">Checking for updates...</string>
+    <string name="update_wait">Checking for updates…</string>
     <string name="check_internet_connection">Check your internet connection!</string>
     <string name="current_app_version">"Current version: "</string>
     <string name="new_app_version">"New version: "</string>
@@ -142,5 +156,9 @@
     <string name="it_looks_like_you_have_wi_fi_throttling_enabled_it_limit_scanning_to_4_times_per_2_minutes_you_can_disable_it_for_unlimited_scanning_here_developer_options_networking_wi_fi_scan_throttling"><![CDATA[It looks like you have Wi-Fi throttling enabled, it limit scanning to 4 times per 2 minutes. You can disable it for unlimited scanning here: Developer Options > Networking > Wi-Fi scan throttling]]></string>
     <string name="open_settings">Open settings</string>
     <string name="use_new_buttons_style">Use new buttons style</string>
+    <string name="you_can_customize_your_nhlauncher_feedback_here">You can customize your NHLauncher feedback here</string>
+    <string name="choose_language">Choose language</string>
+    <string name="you_can_customize_your_nhlauncher_theme_here">You can customize your NHLauncher theme here</string>
+    <string name="check_your_tools_usage_statistics">Check your tools usage statistics!</string>
 
 </resources>

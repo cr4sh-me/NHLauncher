@@ -66,9 +66,17 @@ public class UpdateChecker {
                 JSONObject json = new JSONObject(responseBody);
                 return json.getString("tag_name");
             } else {
+
                 int responseCode = response.code();
-                Log.e(TAG, "Failed to retrieve the latest app version. HTTP Code: " + responseCode);
-                throw new IOException("Failed to retrieve the latest app version. HTTP Code: " + responseCode);
+                if (responseCode == 403) {
+                    // Handle 403 error (Forbidden)
+                    Log.e(TAG, "Too many requests! Error 403");
+                    throw new IOException("API limit exceed. Try again later!");
+                } else {
+                    // Handle other HTTP errors
+                    Log.e(TAG, "Failed to retrieve app version. HTTP Code: " + responseCode);
+                    throw new IOException("Failed to retrieve app version. HTTP Code: " + responseCode);
+                }
             }
         } catch (UnknownHostException | SocketTimeoutException e) {
             Log.e(TAG, "Error checking for updates", e);

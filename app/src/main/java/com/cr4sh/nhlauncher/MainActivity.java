@@ -35,9 +35,12 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cr4sh.nhlauncher.ButtonsRecycler.Item;
+import com.cr4sh.nhlauncher.ButtonsRecycler.MyAdapter;
+import com.cr4sh.nhlauncher.CategoriesRecycler.CategoriesAdapter;
+import com.cr4sh.nhlauncher.SettingsPager.SettingsActivity;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.PermissionUtils;
@@ -76,11 +79,16 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     public ExecutorService executor;
 
+    // TODO replace new Thread() with ExecutorService
+    // TODO replace oroginal toasts with custom one
+    // TODO translation
+    // TODO test app stability
     @SuppressLint({"Recycle", "ResourceType", "CutPasteId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        NHLManager.getInstance().setMainActivity(this);
         dialogUtils = new DialogUtils(this.getSupportFragmentManager());
         executor = Executors.newCachedThreadPool();
 
@@ -144,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
 
         // Set the adapter for RecyclerView
-        MyAdapter adapter = new MyAdapter(this);
+        MyAdapter adapter = new MyAdapter();
         recyclerView.setAdapter(adapter);
 
         // Get functions from this class
@@ -190,13 +198,18 @@ public class MainActivity extends AppCompatActivity {
 
 //        adapter2 = new CustomSpinnerAdapter(this, valuesList, imageList, myPreferences.color20(), myPreferences.color80());
         listViewCategories = findViewById(R.id.recyclerViewCategories);
-        CategoriesAdapter adapter2 = new CategoriesAdapter(this);
+        CategoriesAdapter adapter2 = new CategoriesAdapter();
 
+        // Fill categories recycler
         adapter2.updateData(valuesList, imageList);
         listViewCategories.setAdapter(adapter2);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        listViewCategories.setLayoutManager(layoutManager);
+        // Initialise categories
+
+
+
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//        listViewCategories.setLayoutManager(layoutManager);
 
 
 //        Spinner spinner = findViewById(R.id.categoriesSpinner);
@@ -463,9 +476,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         toolbar.setOnClickListener(v -> {
-            toolbar.setEnabled(false); // Prevent double open
+//            toolbar.setEnabled(false); // Prevent double open
             VibrationUtil.vibrate(MainActivity.this, 10);
-            dialogUtils.openToolbarDialog(MainActivity.this);
+//            dialogUtils.openToolbarDialog(MainActivity.this);
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         });
 
 

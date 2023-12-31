@@ -25,7 +25,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".DynamicTheme"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
@@ -45,17 +44,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SpecialFeaturesActivity">
-
+        <activity android:name=".SpecialFeaturesActivity"
+            android:exported="false">
         </activity>
-        <activity android:name=".WPSAttack">
-
+        <activity android:name=".WPSAttack"
+            android:exported="false">
         </activity>
-        <activity android:name=".MDKDeauth">
-
+        <activity android:name=".MDKDeauth"
+            android:exported="false">
         </activity>
-        <activity android:name=".BluetoothAttacks">
-
+        <activity android:name=".BluetoothPager.BluetoothActivity"
+            android:exported="false">
+        </activity>
+        <activity android:name=".SettingsPager.SettingsActivity"
+            android:exported="false">
         </activity>
     </application>
 

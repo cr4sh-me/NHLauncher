@@ -47,7 +47,7 @@ public class SettingsDialog extends DialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.settings_dialog, container, false);
 
-        mainUtils = new MainUtils((MainActivity) requireActivity());
+//        mainUtils = new MainUtils(requireContext());
         MyPreferences myPreferences = new MyPreferences(requireActivity());
 
         CheckBox vibrationsCheckbox = view.findViewById(R.id.vibrations_checkbox);
@@ -217,7 +217,7 @@ public class SettingsDialog extends DialogFragment {
 
         // DB BACKUP
         backupDb.setOnClickListener(v -> {
-            DBBackup dbb = new DBBackup((MainActivity) requireActivity());
+            DBBackup dbb = new DBBackup();
             new Thread(() -> {
                 Looper.prepare();
                 dbb.createBackup(getContext());
@@ -227,7 +227,7 @@ public class SettingsDialog extends DialogFragment {
 
 
         restoreDb.setOnClickListener(view1 -> {
-            DBBackup dbb = new DBBackup((MainActivity) requireActivity());
+            DBBackup dbb = new DBBackup();
             new Thread(() -> {
                 Looper.prepare();
                 dbb.restoreBackup(getContext());

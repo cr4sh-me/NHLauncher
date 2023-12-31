@@ -20,14 +20,13 @@ import java.io.FileOutputStream;
 
 // This class is backing up and restoring buttons
 public class DBBackup {
-    private final MainActivity mainActivity;
+    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
     private final MainUtils mainUtils;
     private final DialogUtils dialogUtils;
 
-    public DBBackup(MainActivity activity) {
-        this.mainActivity = activity;
-        this.mainUtils = new MainUtils(activity);
-        this.dialogUtils = new DialogUtils(activity.getSupportFragmentManager());
+    public DBBackup() {
+        this.mainUtils = new MainUtils(mainActivity);
+        this.dialogUtils = new DialogUtils(mainActivity.getSupportFragmentManager());
     }
 
     public void createBackup(Context context) {
