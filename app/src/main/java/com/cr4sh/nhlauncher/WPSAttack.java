@@ -212,7 +212,6 @@ public class WPSAttack extends AppCompatActivity {
         launchAttackButton.setOnClickListener(
                 v -> {
                     if (selectedButton == null) {
-//                        Toast.makeText(WPSAttack.this, "No target selected!", Toast.LENGTH_SHORT).show();
                         ToastUtils.showCustomToast(this, "No target selected!");
                     } else {
                         wifiManager.disconnect(); // disconnect from active ap to prevent issues
@@ -276,7 +275,7 @@ public class WPSAttack extends AppCompatActivity {
             }
             enableScanButton(true);
         } catch (Exception e) {
-            Toast.makeText(this, "E: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            ToastUtils.showCustomToast(this, "E: " + e.getMessage());
         }
     }
 
@@ -392,7 +391,7 @@ public class WPSAttack extends AppCompatActivity {
                 }
             } catch (Exception e) {
                 buttonContainer.removeAllViews();
-                Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                ToastUtils.showCustomToast(this, "E: " + e.getMessage());
             }
         } else {
             buttonContainer.removeAllViews();

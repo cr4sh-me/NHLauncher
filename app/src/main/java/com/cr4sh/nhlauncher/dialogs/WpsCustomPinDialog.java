@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.WPSAttack;
+import com.cr4sh.nhlauncher.utils.ToastUtils;
 
 import java.util.Objects;
 
@@ -83,7 +84,7 @@ public class WpsCustomPinDialog extends AppCompatDialogFragment {
 
         setupButton.setOnClickListener(view12 -> {
             if (customPin.getText().toString().isEmpty()) {
-                Toast.makeText(requireActivity(), "Empty input!", Toast.LENGTH_SHORT).show();
+                ToastUtils.showCustomToast(requireActivity(),"Empty input!");
             } else {
                 Objects.requireNonNull(getDialog()).cancel();
                 if (option == 1) {

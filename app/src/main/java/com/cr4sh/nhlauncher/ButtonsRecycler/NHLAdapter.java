@@ -114,7 +114,7 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder> {
         holder.itemView.setOnClickListener(v -> {
             myActivity.buttonUsage = item.getUsage();
             mainUtils.buttonUsageIncrease(item.getName());
-            new Thread(() -> mainUtils.run_cmd(item.getCmd())).start();
+            myActivity.executor.execute(()-> mainUtils.run_cmd(item.getCmd()));
         });
 
         holder.itemView.setOnLongClickListener(view -> {

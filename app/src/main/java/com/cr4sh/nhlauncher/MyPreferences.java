@@ -106,4 +106,5 @@ public class MyPreferences {
     public boolean isNewButtonStyleActive() {
         return nhlPrefs.getBoolean("isNewButtonStyleActive", false);
     }
+
 }

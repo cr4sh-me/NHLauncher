@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
+import com.cr4sh.nhlauncher.utils.ToastUtils;
 
 import java.util.Objects;
 
@@ -54,7 +54,7 @@ public class ThrottlingDialog extends AppCompatDialogFragment {
             Objects.requireNonNull(getDialog()).cancel();
             Intent intent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS);
             startActivity(intent);
-            Toast.makeText(requireActivity(), "Set Wi-Fi scan throttling to off", Toast.LENGTH_SHORT).show();
+            ToastUtils.showCustomToast(requireContext(), "Set Wi-Fi scan throttling to off");
             firstSetupCompleted();
         });
 

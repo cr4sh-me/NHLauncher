@@ -25,6 +25,8 @@ import com.cr4sh.nhlauncher.bridge.Bridge;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class MainUtils extends AppCompatActivity {
 
@@ -56,7 +58,6 @@ public class MainUtils extends AppCompatActivity {
     // Queries db for buttons with given categories and display them!
     @SuppressLint({"SetTextI18n", "Recycle"})
     public void spinnerChanger(int category) {
-
         mainActivity.changeCategoryPreview(category); // Set category preview
 
         // Obtain references to app resources and button layout
@@ -64,8 +65,6 @@ public class MainUtils extends AppCompatActivity {
         RecyclerView layout = mainActivity.findViewById(R.id.recyclerView);
         TextView noToolsText = mainActivity.findViewById(R.id.messagebox);
         noToolsText.setText(null);
-
-        Cursor cursor;
 
         String[] projection = {"CATEGORY", "FAVOURITE", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
         String selection;
@@ -83,45 +82,50 @@ public class MainUtils extends AppCompatActivity {
             // Enable creating new buttons in normal categories
             MainActivity.disableMenu = false;
         }
+        Future<List<NHLItem>> future = mainActivity.executor.submit(() -> {
+            Cursor cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, myPreferences.sortingMode(), null);
 
-        cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, myPreferences.sortingMode(), null);
-        if (cursor.getCount() == 0) {
-            mainActivity.runOnUiThread(() -> {
-                noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
-                noToolsText.setText(resources.getString(R.string.no_fav_tools));
-                layout.setVisibility(View.GONE);
-            });
-        } else {
-            mainActivity.runOnUiThread(() -> {
-//                layout.scrollToPosition(0); // Scroll to first tool
-                noToolsText.setText(null);
-                layout.setVisibility(View.VISIBLE);
-            });
-
-            // Create a new itemList from the cursor data
             List<NHLItem> newItemList = new ArrayList<>();
-            while (cursor.moveToNext()) {
-                String toolCategory = cursor.getString(0);
-                String toolName = cursor.getString(2);
-                String toolDescription = cursor.getString(3);
-                String toolCmd = cursor.getString(4);
-                String toolIcon = cursor.getString(5);
-                int toolUsage = cursor.getInt(6);
+            if (cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    String toolCategory = cursor.getString(0);
+                    String toolName = cursor.getString(2);
+                    String toolDescription = cursor.getString(3);
+                    String toolCmd = cursor.getString(4);
+                    String toolIcon = cursor.getString(5);
+                    int toolUsage = cursor.getInt(6);
 
-                NHLItem item = new NHLItem(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
-                newItemList.add(item);
-
+                    NHLItem item = new NHLItem(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
+                    newItemList.add(item);
+                }
             }
+            cursor.close();
+            return newItemList;
+        });
+
+        try {
+            List<NHLItem> newItemList = future.get();
             mainActivity.runOnUiThread(() -> {
-                RecyclerView.Adapter adapter = layout.getAdapter();
-                if (adapter instanceof NHLAdapter) {
-                    ((NHLAdapter) adapter).updateData(newItemList);
+                if (newItemList.isEmpty()) {
+                    noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
+                    noToolsText.setText(resources.getString(R.string.no_fav_tools));
+                    layout.setVisibility(View.GONE);
+                } else {
+                    // layout.scrollToPosition(0); // Scroll to first tool
+                    noToolsText.setText(null);
+                    layout.setVisibility(View.VISIBLE);
+
+                    RecyclerView.Adapter<?> adapter = layout.getAdapter();
+                    if (adapter instanceof NHLAdapter) {
+                        ((NHLAdapter) adapter).updateData(newItemList);
+                    }
                 }
             });
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace(); // Handle exceptions appropriately
         }
-        cursor.close();
-
     }
+
 
     // Fills our spinner with text and images
     public void restartSpinner() {
@@ -142,10 +146,10 @@ public class MainUtils extends AppCompatActivity {
 
         assert isFavourite != null;
         if (isFavourite.equals("1")) {
-            Toast.makeText(mainActivity, mainActivity.getResources().getString(R.string.removed_favourite), Toast.LENGTH_SHORT).show();
+            ToastUtils.showCustomToast(mainActivity, mainActivity.getResources().getString(R.string.removed_favourite));
             DBHandler.updateToolFavorite(mDatabase, mainActivity.buttonName, 0);
         } else {
-            Toast.makeText(mainActivity, mainActivity.getResources().getString(R.string.added_favourite), Toast.LENGTH_SHORT).show();
+            ToastUtils.showCustomToast(mainActivity, mainActivity.getResources().getString(R.string.added_favourite));
             DBHandler.updateToolFavorite(mDatabase, mainActivity.buttonName, 1);
         }
 

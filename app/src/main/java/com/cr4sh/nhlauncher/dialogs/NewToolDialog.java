@@ -23,6 +23,7 @@ import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.MainUtils;
+import com.cr4sh.nhlauncher.utils.ToastUtils;
 
 import java.util.Objects;
 
@@ -70,11 +71,11 @@ public class NewToolDialog extends AppCompatDialogFragment {
         saveButton.setOnClickListener(view12 -> {
             // Idiot protection...
             if (myName.getText().toString().isEmpty()) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.name_empty), Toast.LENGTH_SHORT).show();
+                ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.name_empty));
             } else if (myDescription.getText().toString().isEmpty()) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.desc_empty), Toast.LENGTH_SHORT).show();
+                ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.desc_empty));
             } else if (myCmd.getText().toString().isEmpty()) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.cmd_empty), Toast.LENGTH_SHORT).show();
+                ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.cmd_empty));
             } else {
                 try (SQLiteOpenHelper dbHandler = new DBHandler(requireActivity());
                      SQLiteDatabase db = dbHandler.getReadableDatabase()) {
@@ -88,14 +89,14 @@ public class NewToolDialog extends AppCompatDialogFragment {
                         DBHandler.insertTool(db, 0, category, 0, myName.getText().toString().trim(), myDescription.getText().toString().trim(), myDescription.getText().toString().trim(), myCmd.getText().toString().trim(), "kali_menu", 0);
                         mainUtils.restartSpinner();
                         Objects.requireNonNull(getDialog()).cancel();
-                        Toast.makeText(requireActivity(), getResources().getString(R.string.added), Toast.LENGTH_SHORT).show();
+                        ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.added));
                     } else {
-                        Toast.makeText(requireActivity(), getResources().getString(R.string.name_exist), Toast.LENGTH_SHORT).show();
+                        ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.name_exist));
                     }
 
                 } catch (SQLException e) {
                     // Handle the exception here, for example:
-                    Toast.makeText(getActivity(), "E: " + e, Toast.LENGTH_SHORT).show();
+                    ToastUtils.showCustomToast(requireActivity(), "E: " + e);
                 }
             }
 

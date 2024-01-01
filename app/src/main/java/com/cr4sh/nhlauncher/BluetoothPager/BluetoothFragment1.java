@@ -31,6 +31,7 @@ import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.bridge.Bridge;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.ShellExecuter;
+import com.cr4sh.nhlauncher.utils.ToastUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -280,7 +281,7 @@ public class BluetoothFragment1 extends Fragment {
                 }
             });
         } else {
-            Toast.makeText(requireActivity(), "No selected interface!", Toast.LENGTH_SHORT).show();
+            ToastUtils.showCustomToast(requireActivity(), "no selected interface!");
         }
     }
 
@@ -397,7 +398,7 @@ public class BluetoothFragment1 extends Fragment {
             });
 
         } else {
-            Toast.makeText(requireActivity().getApplicationContext(), "Bluebinder is not installed. Launch setup first...", Toast.LENGTH_SHORT).show();
+            ToastUtils.showCustomToast(requireActivity(), "Bluebinder is not installed. Launch setup first...");
         }
     }
 

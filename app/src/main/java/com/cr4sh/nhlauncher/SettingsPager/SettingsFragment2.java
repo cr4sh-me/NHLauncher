@@ -27,6 +27,7 @@ import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
+import com.cr4sh.nhlauncher.utils.ToastUtils;
 import com.skydoves.colorpickerview.ColorEnvelope;
 import com.skydoves.colorpickerview.ColorPickerView;
 import com.skydoves.colorpickerview.flag.BubbleFlag;
@@ -220,7 +221,7 @@ public class SettingsFragment2 extends Fragment {
         applyColors.setOnClickListener(v -> {
 
             if (hexColorValue1.getText().length() < 0 || hexColorValue1.getText().length() < 0 || hexColorValue1.getText().length() < 0) {
-                Toast.makeText(requireActivity(), "Empty color values! Use brain...", Toast.LENGTH_SHORT).show();
+                ToastUtils.showCustomToast(requireActivity(), "Empty color values! Use brain...");
             } else {
                 if (advancedThemes.isChecked()) {
                     String color100 = myPreferences.color100();

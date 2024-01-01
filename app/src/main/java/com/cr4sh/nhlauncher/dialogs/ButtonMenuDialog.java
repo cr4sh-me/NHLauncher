@@ -18,6 +18,7 @@ import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.MainUtils;
+import com.cr4sh.nhlauncher.utils.ToastUtils;
 
 import java.util.Objects;
 
@@ -81,7 +82,7 @@ public class ButtonMenuDialog extends AppCompatDialogFragment {
             if (!MainActivity.disableMenu) {
                 dialogUtils.openNewToolDialog(myActivity.buttonCategory);
             } else {
-                Toast.makeText(myActivity, getResources().getString(R.string.get_out), Toast.LENGTH_SHORT).show();
+                ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.get_out));
             }
             Objects.requireNonNull(getDialog()).cancel();
         });

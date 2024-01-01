@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.cr4sh.nhlauncher.BluetoothPager.BluetoothFragment1;
 import com.cr4sh.nhlauncher.MainActivity;
+import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.WPSAttack;
 import com.cr4sh.nhlauncher.dialogs.AppsDialog;
 import com.cr4sh.nhlauncher.dialogs.ButtonMenuDialog;
@@ -26,20 +27,14 @@ import com.cr4sh.nhlauncher.dialogs.WpsCustomPinDialog;
 public class DialogUtils {
 
     private final FragmentManager fragmentManager;
-
-//    MainActivity myActivity;
-
-//    public DialogUtils(FragmentManager fragmentManager, MainActivity activity) {
-//        this.fragmentManager = fragmentManager;
-//        this.myActivity = activity;
-//    }
+    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
 
     public DialogUtils(FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
     }
 
     public void openEditableDialog(String name, String cmd) {
-        new Thread(() -> {
+        mainActivity.executor.execute(()->{
             EditableDialog editableDialog = new EditableDialog();
             // Input as an argument.
             Bundle args = new Bundle();
@@ -48,12 +43,12 @@ public class DialogUtils {
             editableDialog.setArguments(args);
             // Display our dialog!
             editableDialog.show(fragmentManager, "EditableDialog");
-        }).start();
+        });
     }
 
 
     public void openNewToolDialog(String category) {
-        new Thread(() -> {
+        mainActivity.executor.execute(()->{
             NewToolDialog ntDialog = new NewToolDialog();
             // ARGS!
             Bundle args = new Bundle();
@@ -61,11 +56,11 @@ public class DialogUtils {
             ntDialog.setArguments(args);
             // Display our dialog!
             ntDialog.show(fragmentManager, "NewToolDialog");
-        }).start();
+        });
     }
 
     public void openDeleteToolDialog(String name) {
-        new Thread(() -> {
+        mainActivity.executor.execute(()-> {
             DeleteToolDialog dtDialog = new DeleteToolDialog();
             // ARGS!
             Bundle args = new Bundle();
@@ -73,47 +68,47 @@ public class DialogUtils {
             dtDialog.setArguments(args);
             // Display our dialog!
             dtDialog.show(fragmentManager, "DeleteToolDialog");
-        }).start();
+        });
     }
 
     public void openAppsDialog() {
-        new Thread(() -> {
+        mainActivity.executor.execute(()-> {
             AppsDialog apDialog = new AppsDialog();
             // Display our dialog!
             apDialog.show(fragmentManager, "AppsDialog");
-        }).start();
+        });
     }
 
     public void openFirstSetupDialog() {
-        new Thread(() -> {
+        mainActivity.executor.execute(()-> {
             FirstSetupDialog fsDialog = new FirstSetupDialog();
             // Display our dialog!
             fsDialog.show(fragmentManager, "FirstSetupDialog");
-        }).start();
+        });
     }
 
 
 
     public void openPermissionsDialog() {
-        new Thread(() -> {
+        mainActivity.executor.execute(()-> {
             PermissionDialog pmDialog = new PermissionDialog();
             // Display our dialog!
             pmDialog.show(fragmentManager, "PermissionsDialog");
-        }).start();
+        });
     }
 
 
 
     public void openMissingActivityDialog() {
-        new Thread(() -> {
+        mainActivity.executor.execute(()-> {
             MissingActivityDialog maDialog = new MissingActivityDialog();
             // Display our dialog!
             maDialog.show(fragmentManager, "MissingActivityDialog");
-        }).start();
+        });
     }
 
     public void openButtonMenuDialog(MainActivity myActivity) {
-        new Thread(() -> {
+        mainActivity.executor.execute(()-> {
             ButtonMenuDialog bmDialog = new ButtonMenuDialog(myActivity);
             // ARGS!
 //            Bundle args = new Bundle();
@@ -121,45 +116,45 @@ public class DialogUtils {
 //            bmDialog.setArguments(args);
             // Display our dialog!
             bmDialog.show(fragmentManager, "ButtonMenuDialog");
-        }).start();
+        });
     }
 
 
     public void openNhlColorPickerDialog(Button button, ImageView alpha, String colorShade) {
-        new Thread(() -> {
+        mainActivity.executor.execute(()-> {
             NhlColorPickerDialog nhlcpDialog = new NhlColorPickerDialog(button, alpha, colorShade);
             // Display our dialog!
             nhlcpDialog.show(fragmentManager, "NhlColorPickerDialog");
-        }).start();
+        });
     }
 
     public void openThrottlingDialog() {
-        new Thread(() -> {
+        mainActivity.executor.execute(()-> {
             ThrottlingDialog thDialog = new ThrottlingDialog();
             // Display our dialog!
             thDialog.show(fragmentManager, "PermissionsDialog");
-        }).start();
+        });
     }
 
     public void openWpsCustomSetting(int number, WPSAttack activity) {
-        new Thread(() -> {
+        mainActivity.executor.execute(()-> {
             WpsCustomPinDialog pinDialog = new WpsCustomPinDialog(activity);
             Bundle args = new Bundle();
             args.putInt("option", number);
             pinDialog.setArguments(args);
             // Display our dialog!
             pinDialog.show(fragmentManager, "PermissionsDialog");
-        }).start();
+        });
     }
 
     public void openScanTimeDialog(int number, BluetoothFragment1 activity) {
-        new Thread(() -> {
+        mainActivity.executor.execute(()-> {
             ScanTimeDialog pinDialog = new ScanTimeDialog(activity);
             Bundle args = new Bundle();
             args.putInt("option", number);
             pinDialog.setArguments(args);
             // Display our dialog!
             pinDialog.show(fragmentManager, "PermissionsDialog");
-        }).start();
+        });
     }
 }

@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import com.cr4sh.nhlauncher.BluetoothPager.BluetoothFragment1;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
+import com.cr4sh.nhlauncher.utils.ToastUtils;
 
 import java.util.Objects;
 
@@ -71,7 +72,7 @@ public class ScanTimeDialog extends AppCompatDialogFragment {
 
         setupButton.setOnClickListener(view12 -> {
             if (customPin.getText().toString().isEmpty()) {
-                Toast.makeText(requireActivity(), "Empty input!", Toast.LENGTH_SHORT).show();
+                ToastUtils.showCustomToast(requireActivity(), "Empty input");
             } else {
                 if (option == 1) {
                     int number = Integer.parseInt(customPin.getText().toString());
@@ -79,7 +80,7 @@ public class ScanTimeDialog extends AppCompatDialogFragment {
                         wpsAttack.scanTime = customPin.getText().toString();
                         Objects.requireNonNull(getDialog()).cancel();
                     } else {
-                        Toast.makeText(requireActivity(), "Are you dumb?", Toast.LENGTH_SHORT).show();
+                        ToastUtils.showCustomToast(requireActivity(), "Are you dumb?");
                     }
                 }
             }

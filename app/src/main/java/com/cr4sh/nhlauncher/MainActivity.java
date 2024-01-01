@@ -32,15 +32,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cr4sh.nhlauncher.ButtonsRecycler.NHLItem;
 import com.cr4sh.nhlauncher.ButtonsRecycler.NHLAdapter;
+import com.cr4sh.nhlauncher.ButtonsRecycler.NHLItem;
 import com.cr4sh.nhlauncher.CategoriesRecycler.CategoriesAdapter;
 import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.SettingsPager.SettingsActivity;
@@ -58,8 +57,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -86,9 +87,8 @@ public class MainActivity extends AppCompatActivity {
     private MyPreferences myPreferences;
     private RecyclerView recyclerView;
     public ExecutorService executor;
+    public Handler handler;
 
-    // TODO replace new Thread() with ExecutorService
-    // TODO replace oroginal toasts with custom one
     // TODO translation
     // TODO test app stability
     @SuppressLint({"Recycle", "ResourceType", "CutPasteId"})
@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         NHLManager.getInstance().setMainActivity(this);
         dialogUtils = new DialogUtils(this.getSupportFragmentManager());
         executor = Executors.newCachedThreadPool();
+        handler = new Handler(Looper.getMainLooper());
 
         // Check for nethunter and terminal apps
         PackageManager pm = getPackageManager();
@@ -249,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
         specialButton = findViewById(R.id.special_features_button);
         backButton = findViewById(R.id.goBackButton);
         TextView noToolsText = findViewById(R.id.messagebox);
+        noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
 
         categoriesLayoutTitle.setTextColor(Color.parseColor(myPreferences.color80()));
         backButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
@@ -417,65 +419,75 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @SuppressLint("SetTextI18n")
-            @Override
             public void onTextChanged(CharSequence newText, int start, int before, int count) {
-
-                Cursor cursor;
-
-                String[] projection = {"CATEGORY", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
-
-                // Add search filter to query
-                String selection = "NAME LIKE ?";
-
-                String[] selectionArgs = {"%" + newText + "%"};
-
-                String orderBy = "CASE WHEN NAME LIKE '" + newText + "%' THEN 0 ELSE 1 END, " + // sort by first letter match
-                        "CASE WHEN NAME LIKE '%" + newText + "%' THEN 0 ELSE 1 END, " + // sort by containing newText
-                        "NAME ASC";
-
-                Animation myAnimation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_in);
                 if (newText.length() > 0) {
                     recyclerView.setVisibility(View.VISIBLE);
                     disableMenu = true;
 
-                    cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, orderBy, "15");
+                    Future<List<NHLItem>> future = executor.submit(() -> {
+                        Cursor cursor;
 
-                    noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
-                    noToolsText.startAnimation(myAnimation);
-                    // Run OnUiThread to edit layout!
-                    if (cursor.getCount() == 0) {
-                        runOnUiThread(() -> noToolsText.setText(getResources().getString(R.string.cant_found) + newText + "\n" + getResources().getString(R.string.check_your_query)));
+                        String[] projection = {"CATEGORY", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
+
+                        // Add search filter to query
+                        String selection = "NAME LIKE ?";
+
+                        String[] selectionArgs = {"%" + newText + "%"};
+
+                        String orderBy = "CASE WHEN NAME LIKE '" + newText + "%' THEN 0 ELSE 1 END, " + // sort by first letter match
+                                "CASE WHEN NAME LIKE '%" + newText + "%' THEN 0 ELSE 1 END, " + // sort by containing newText
+                                "NAME ASC";
+
+                        cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, orderBy, "15");
+
+                        List<NHLItem> newItemList = new ArrayList<>();
+                        while (cursor.moveToNext()) {
+                            disableWhileAnimation(noToolsText);
+                            String toolCategory = cursor.getString(0);
+                            String toolName = cursor.getString(1);
+                            String toolDescription = cursor.getString(2);
+                            String toolCmd = cursor.getString(3);
+                            String toolIcon = cursor.getString(4);
+                            int toolUsage = cursor.getInt(5);
+
+                            Log.d("TESTER", cursor.getString(1));
+
+                            NHLItem item = new NHLItem(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
+
+                            // Add the item to the itemList
+                            newItemList.add(item);
+                        }
+
+                        cursor.close();
+                        return newItemList;
+                    });
+
+                    try {
+                        List<NHLItem> newItemList = future.get(); // This will block until the task is complete
+                        handler.post(() -> {
+                            if (newItemList.isEmpty()) {
+                                enableAfterAnimation(noToolsText);
+                                noToolsText.setText(getResources().getString(R.string.cant_found) + newText + "\n" + getResources().getString(R.string.check_your_query));
+                                disableWhileAnimation(recyclerView);
+                            } else {
+                                enableAfterAnimation(recyclerView);
+                                adapter.updateData(newItemList);
+
+                                // Prevent newlines from being entered
+                                if (newText.toString().contains("\n")) {
+                                    String filteredText = newText.toString().replace("\n", "");
+                                    searchEditText.setText(filteredText);
+                                    searchEditText.setSelection(filteredText.length());
+                                }
+                            }
+                        });
+
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
                     }
-                    List<NHLItem> newItemList = new ArrayList<>();
-                    while (cursor.moveToNext()) {
-                        noToolsText.setText(null);
-                        String toolCategory = cursor.getString(0);
-                        String toolName = cursor.getString(1);
-                        String toolDescription = cursor.getString(2);
-                        String toolCmd = cursor.getString(3);
-                        String toolIcon = cursor.getString(4);
-                        int toolUsage = cursor.getInt(5);
-
-                        Log.d("TESTER", cursor.getString(1));
-
-                        NHLItem item = new NHLItem(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
-
-                        // Add the item to the itemList
-                        newItemList.add(item);
-
-                    }
-                    adapter.updateData(newItemList);
-                    cursor.close();
-
-                    // Prevent newlines from being entered
-                    if (newText.toString().contains("\n")) {
-                        String filteredText = newText.toString().replace("\n", "");
-                        searchEditText.setText(filteredText);
-                        searchEditText.setSelection(filteredText.length());
-                    }
-
                 }
             }
+
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -500,7 +512,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Compare the current time with the target time
         if (formattedTime.equals(targetTime)) {
-            Handler handler = new Handler(Looper.getMainLooper());
             adapter.startPapysz();
             ToastUtils.showCustomToast(this, "21:37");
             handler.postDelayed(stopPapysz, 5000); // show papysz face for 5s
@@ -566,7 +577,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!disableMenu) {
                     dialogUtils.openNewToolDialog(buttonCategory);
                 } else {
-                    Toast.makeText(this, getResources().getString(R.string.get_out), Toast.LENGTH_SHORT).show();
+                    ToastUtils.showCustomToast(this, getResources().getString(R.string.get_out));
                 }
                 return true;
             }

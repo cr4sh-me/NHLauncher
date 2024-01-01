@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
 
@@ -23,6 +22,7 @@ import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.MainUtils;
+import com.cr4sh.nhlauncher.utils.ToastUtils;
 
 import java.util.Objects;
 
@@ -73,10 +73,10 @@ public class DeleteToolDialog extends AppCompatDialogFragment {
 
                 assert isSystem != null;
                 if (isSystem.equals("1")) {
-                    Toast.makeText(getActivity(), requireActivity().getResources().getString(R.string.cant_delete), Toast.LENGTH_SHORT).show();
+                    ToastUtils.showCustomToast(requireActivity(), requireActivity().getResources().getString(R.string.cant_delete));
                 } else {
                     DBHandler.deleteTool(db, name);
-                    Toast.makeText(getActivity(), requireActivity().getResources().getString(R.string.deleted), Toast.LENGTH_SHORT).show();
+                    ToastUtils.showCustomToast(requireActivity(), requireActivity().getResources().getString(R.string.deleted));
                     mainUtils.restartSpinner();
                 }
 
@@ -86,7 +86,7 @@ public class DeleteToolDialog extends AppCompatDialogFragment {
 
             } catch (SQLiteException e) {
                 // Display error
-                Toast.makeText(getActivity(), "E: " + e, Toast.LENGTH_SHORT).show();
+                ToastUtils.showCustomToast(requireActivity(), "E: " + e);
                 Log.d("SQLITE", e.toString());
             }
             Objects.requireNonNull(getDialog()).cancel();

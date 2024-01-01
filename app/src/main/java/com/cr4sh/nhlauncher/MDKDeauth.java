@@ -38,6 +38,7 @@ import androidx.core.widget.CompoundButtonCompat;
 
 import com.cr4sh.nhlauncher.bridge.Bridge;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
+import com.cr4sh.nhlauncher.utils.ToastUtils;
 
 import java.util.List;
 import java.util.Locale;
@@ -224,7 +225,7 @@ public class MDKDeauth extends AppCompatActivity {
         launchAttackButton.setOnClickListener(
                 v -> {
                     if (selectedButton == null) {
-                        Toast.makeText(MDKDeauth.this, "No target selected!", Toast.LENGTH_SHORT).show();
+                        ToastUtils.showCustomToast(MDKDeauth.this, "No target selected!");
                     } else {
                         wifiManager.disconnect(); // disconnect from active ap to prevent issues
                         String bssid = extractBSSID(selectedButton.getText().toString()); // Extract SSID from button text

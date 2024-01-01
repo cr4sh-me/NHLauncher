@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.NHLManager;
@@ -34,8 +33,6 @@ public class DBBackup {
 
     public void createBackup(Context context) {
 
-//        TODO Create themes backup
-
         try {
             // Create a new instance of your DBHandler class
             DBHandler dbHelper = new DBHandler(context);
@@ -55,7 +52,7 @@ public class DBBackup {
                 if (!backupDir.exists()) {
                     if (!backupDir.mkdirs()) {
                         // Show an error message if the directory couldn't be created
-                        ToastUtils.showCustomToast(context, context.getResources().getString(R.string.err_backup_dir));
+                        showToastOnMainThread(context.getResources().getString(R.string.err_backup_dir));
                         return;
                     }
                 }
@@ -85,18 +82,16 @@ public class DBBackup {
                 db.close();
 
                 // Show a message indicating the backup was successful
-                ToastUtils.showCustomToast(context, context.getResources().getString(R.string.saved_to) + backupDir.getAbsolutePath());
-
+                showToastOnMainThread(context.getResources().getString(R.string.saved_to) + backupDir.getAbsolutePath());
             } else {
                 // External storage not available, show an error message
-                ToastUtils.showCustomToast(context, context.getResources().getString(R.string.ex_storage));
-
+                showToastOnMainThread(context.getResources().getString(R.string.ex_storage));
             }
         } catch (FileNotFoundException e) {
-            ToastUtils.showCustomToast(context, context.getResources().getString(R.string.backup_failed));
+            showToastOnMainThread(context.getResources().getString(R.string.backup_failed));
             dialogUtils.openPermissionsDialog();
         } catch (Exception e) {
-            Toast.makeText(context, "E: " + e, Toast.LENGTH_LONG).show();
+            showToastOnMainThread("E: " + e);
         }
     }
 
@@ -107,7 +102,7 @@ public class DBBackup {
             @SuppressLint("SdCardPath") File file = new File("/sdcard/NHLauncher/backup.db");
 
             if (!file.exists()) {
-                ToastUtils.showCustomToast(context, context.getResources().getString(R.string.bf_not));
+                showToastOnMainThread(context.getResources().getString(R.string.bf_not));
                 return;
             }
 
@@ -162,17 +157,20 @@ public class DBBackup {
             backupCursor.close();
             backupDB.close();
             existingDB.close();
-            ToastUtils.showCustomToast(context, context.getResources().getString(R.string.bp_restored));
+            showToastOnMainThread(context.getResources().getString(R.string.bp_restored));
             mainActivity.runOnUiThread(mainUtils::restartSpinner);
 
         } catch (SQLiteCantOpenDatabaseException e) {
-            ToastUtils.showCustomToast(context, context.getResources().getString(R.string.restore_fail));
+            showToastOnMainThread(context.getResources().getString(R.string.restore_fail));
             dialogUtils.openPermissionsDialog();
         } catch (Exception e) {
-            Toast.makeText(context, "E: " + e, Toast.LENGTH_LONG).show();
+            showToastOnMainThread("E: " + e);
             Log.d("DBBACKUPERR", "E: " + e);
         }
 
-
+    }
+    private void showToastOnMainThread(String message) {
+        // Using the main thread's handler to post a runnable
+        mainActivity.runOnUiThread(() -> ToastUtils.showCustomToast(mainActivity, message));
     }
 }

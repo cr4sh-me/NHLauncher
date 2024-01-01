@@ -22,6 +22,7 @@ import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.MainUtils;
+import com.cr4sh.nhlauncher.utils.ToastUtils;
 
 import java.util.Objects;
 
@@ -66,17 +67,17 @@ public class EditableDialog extends AppCompatDialogFragment {
         saveButton.setOnClickListener(view12 -> {
             // Idiot protection...
             if (newCmd.getText().toString().isEmpty()) {
-                Toast.makeText(getActivity(), requireActivity().getResources().getString(R.string.empty_input), Toast.LENGTH_SHORT).show();
+                ToastUtils.showCustomToast(requireActivity(), requireActivity().getResources().getString(R.string.empty_input));
             } else {
                 try (SQLiteOpenHelper dbHandler = new DBHandler(getActivity());
                      SQLiteDatabase db = dbHandler.getReadableDatabase()) {
                     DBHandler.updateToolCmd(db, name, newCmd.getText().toString().trim());
                     mainUtils.restartSpinner();
-                    Toast.makeText(getActivity(), requireActivity().getResources().getString(R.string.command_updated), Toast.LENGTH_SHORT).show();
+                    ToastUtils.showCustomToast(requireActivity(), requireActivity().getResources().getString(R.string.command_updated));
                     Objects.requireNonNull(getDialog()).cancel();
                 } catch (SQLException e) {
                     // Handle the exception here, for example:
-                    Toast.makeText(getActivity(), "E: " + e, Toast.LENGTH_SHORT).show();
+                    ToastUtils.showCustomToast(requireActivity(), "E: " + e);
                 }
             }
 

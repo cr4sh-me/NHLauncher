@@ -6,17 +6,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
@@ -24,10 +23,13 @@ import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.StatsRecycler.StatsAdapter;
 import com.cr4sh.nhlauncher.StatsRecycler.StatsItem;
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
+import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class SettingsFragment3 extends Fragment {
     private MyPreferences myPreferences;
@@ -71,84 +73,79 @@ public class SettingsFragment3 extends Fragment {
 
         title.setTextColor(Color.parseColor(myPreferences.color80()));
 
-        powerSpinnerView.setOnSpinnerItemSelectedListener((OnSpinnerItemSelectedListener<String>) (oldIndex, oldItem, newIndex, newItem) -> {
-            spinnerChanger(newIndex);
-        });
+        powerSpinnerView.selectItemByIndex(0);
+        spinnerChanger(0); // Display all tools by default
+
+        powerSpinnerView.setOnSpinnerItemSelectedListener((OnSpinnerItemSelectedListener<String>) (oldIndex, oldItem, newIndex, newItem) -> spinnerChanger(newIndex));
 
         GradientDrawable gd = new GradientDrawable();
         gd.setStroke(8, Color.parseColor(myPreferences.color50())); // Stroke width and color
         gd.setCornerRadius(20);
         spinnerBg1.setBackground(gd);
 
-
-        myPreferences = new MyPreferences(requireActivity());
-
+        powerSpinnerView.setSpinnerOutsideTouchListener(new OnSpinnerOutsideTouchListener() {
+            @Override
+            public void onSpinnerOutsideTouch(@NonNull View view, @NonNull MotionEvent motionEvent) {
+                powerSpinnerView.selectItemByIndex(powerSpinnerView.getSelectedIndex());
+            }
+        });
 
         return view;
     }
 
     @SuppressLint({"SetTextI18n", "Recycle"})
     public void spinnerChanger(int category) {
+        Future<?> future = mainActivity.executor.submit(() -> {
+            Cursor cursor;
 
-        Cursor cursor;
+            String[] projection = {"CATEGORY", "FAVOURITE", "NAME", "ICON", "USAGE"};
+            String selection;
+            String[] selectionArgs;
 
-        String[] projection = {"CATEGORY", "FAVOURITE", "NAME", "ICON", "USAGE"};
-        String selection;
-        String[] selectionArgs;
-
-        if (category == 0) {
-            selection = "USAGE > ?";
-            selectionArgs = new String[]{"0"};
-        } else if (category == 1) {
-            selection = "FAVOURITE = ? AND USAGE > ?";
-            selectionArgs = new String[]{"1", "0"};
-         } else {
-            selection = "CATEGORY = ? AND USAGE > ?";
-            selectionArgs = new String[]{String.valueOf(category-1), "0"};
-        }
-
-        cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, myPreferences.sortingMode(), null);
-        if (cursor.getCount() == 0) {
-            requireActivity().runOnUiThread(() -> {
-                noToolsText.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
-            });
-        } else {
-            mainActivity.runOnUiThread(() -> {
-                noToolsText.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-            });
-
-            // Create a new itemList from the cursor data
-            List<StatsItem> newItemList = new ArrayList<>();
-            while (cursor.moveToNext()) {
-                String toolName = cursor.getString(2);
-                String toolIcon = cursor.getString(3);
-                int toolUsage = cursor.getInt(4);
-                String toolUsageString = String.valueOf(toolUsage);
-
-                StatsItem item = new StatsItem(toolName, toolIcon, toolUsageString);
-                newItemList.add(item);
-
+            if (category == 0) {
+                selection = "USAGE > ?";
+                selectionArgs = new String[]{"0"};
+            } else if (category == 1) {
+                selection = "FAVOURITE = ? AND USAGE > ?";
+                selectionArgs = new String[]{"1", "0"};
+            } else {
+                selection = "CATEGORY = ? AND USAGE > ?";
+                selectionArgs = new String[]{String.valueOf(category - 1), "0"};
             }
-            Log.d("recview", newItemList.toString());
-            mainActivity.runOnUiThread(() -> {
-                    adapter.updateData(newItemList);
-            });
+
+            cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, myPreferences.sortingMode(), null);
+            if (cursor.getCount() == 0) {
+                mainActivity.handler.post(() -> {
+                    noToolsText.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                });
+            } else {
+                mainActivity.handler.post(() -> {
+                    noToolsText.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                });
+
+                // Create a new itemList from the cursor data
+                List<StatsItem> newItemList = new ArrayList<>();
+                while (cursor.moveToNext()) {
+                    String toolName = cursor.getString(2);
+                    String toolIcon = cursor.getString(3);
+                    int toolUsage = cursor.getInt(4);
+                    String toolUsageString = String.valueOf(toolUsage);
+
+                    StatsItem item = new StatsItem(toolName, toolIcon, toolUsageString);
+                    newItemList.add(item);
+                }
+
+                mainActivity.handler.post(() -> adapter.updateData(newItemList));
+            }
+            cursor.close();
+        });
+
+        try {
+            future.get(); // This will wait for the background task to complete
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
         }
-        cursor.close();
-
-    }
-
-    private void setContainerBackground(LinearLayout container, String color) {
-        GradientDrawable drawable = new GradientDrawable();
-        drawable.setCornerRadius(60);
-        drawable.setStroke(8, Color.parseColor(color));
-        container.setBackground(drawable);
-    }
-
-    private void setButtonColors(Button button) {
-        button.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        button.setTextColor(Color.parseColor(myPreferences.color80()));
     }
 }

@@ -103,7 +103,9 @@
     <string name="usage">"Użycie: "</string>
     <string name="choose_theme">Wybierz motyw:</string>
     <string name="choose_font">Wybierz czcionkę</string>
-    <string name="sorting">Wybierz sortowanie:</string>
+    <string name="sorting">Sortowanie przycisków</string>
+    <string name="check_your_tools_usage_statistics">Sprawdź statystyki z użycia narzędzi!</string>
+    <string name="open_source_libraries_in_nhlauncher">Biblioteki open source w NHLauncher</string>
     <string name="choose_lanuage">Wybierz język:</string>
     <string name="apps_error">Aplikacja NetHunter lub NetHunter Terminal nie jest zainstalowana! Przeczytaj dokumentację NHLauncher i użyj mózgu…</string>
     <string name="default_sorting">Domyślne</string>
@@ -145,4 +147,17 @@
     <string name="update_button">Pobierz aktualizacje!</string>
     <string name="enable_vibrations">Włącz wibracje</string>
     <string name="addons">Dodatki</string>
+    <string name="bluetooth_toolkit">Narzędzia Bluetooth</string>
+    <string name="perform_various_bluetooth_attacks_using_simple_tools_gui_internal_bluetooth_requires_rfcomm_uart_h4_vhci_and_binder_ipc_enabled_in_kernel_or_bt_smd_driver_device">Wykonuj różne ataki Bluetooth za pomocą prostych narzędzi GUI. Wewnętrzny bluetooth wymaga RFCOMM, UART H4, VHCI i BINDER_IPC włączonych w jądrze lub bt_smd urządzeniu sterownika</string>
+    <string name="interfaces">Interfejsy</string>
+    <string name="services">Serwisy</string>
+    <string name="scan_time">Czas skanu</string>
+    <string name="scan">Skan</string>
+    <string name="scan_results">Wyniki skanu</string>
+    <string name="wifi_throttling_warning">Ostrzeżenie WiFi Throttling!</string>
+    <string name="it_looks_like_you_have_wi_fi_throttling_enabled_it_limit_scanning_to_4_times_per_2_minutes_you_can_disable_it_for_unlimited_scanning_here_developer_options_networking_wi_fi_scan_throttling">Wygląda na to, że masz włączone ograniczanie przepustowości Wi-Fi, ogranicza skanowanie do 4 razy na 2 minuty. Możesz go wyłączyć, aby uzyskać nieograniczone skanowanie tutaj: Opcje programisty > Ograniczanie sieci > skanowania Wi-Fi</string>
+    <string name="open_settings">Otwórz ustawienia</string>
+    <string name="use_new_buttons_style">Użyj nowego stylu przycisków</string>
+    <string name="you_can_customize_your_nhlauncher_feedback_here">"Możesz tu dostosować NHLauncher "</string>
+    <string name="choose_language">Język aplikacji</string>
 </resources>
