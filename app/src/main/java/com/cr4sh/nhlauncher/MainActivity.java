@@ -13,6 +13,8 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
@@ -37,19 +39,24 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cr4sh.nhlauncher.ButtonsRecycler.Item;
-import com.cr4sh.nhlauncher.ButtonsRecycler.MyAdapter;
+import com.cr4sh.nhlauncher.ButtonsRecycler.NHLItem;
+import com.cr4sh.nhlauncher.ButtonsRecycler.NHLAdapter;
 import com.cr4sh.nhlauncher.CategoriesRecycler.CategoriesAdapter;
 import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.SettingsPager.SettingsActivity;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.PermissionUtils;
+import com.cr4sh.nhlauncher.utils.ToastUtils;
 import com.cr4sh.nhlauncher.utils.VibrationUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -153,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
 
         // Set the adapter for RecyclerView
-        MyAdapter adapter = new MyAdapter();
+        NHLAdapter adapter = new NHLAdapter();
         recyclerView.setAdapter(adapter);
 
         // Get functions from this class
@@ -439,7 +446,7 @@ public class MainActivity extends AppCompatActivity {
                     if (cursor.getCount() == 0) {
                         runOnUiThread(() -> noToolsText.setText(getResources().getString(R.string.cant_found) + newText + "\n" + getResources().getString(R.string.check_your_query)));
                     }
-                    List<Item> newItemList = new ArrayList<>();
+                    List<NHLItem> newItemList = new ArrayList<>();
                     while (cursor.moveToNext()) {
                         noToolsText.setText(null);
                         String toolCategory = cursor.getString(0);
@@ -451,7 +458,7 @@ public class MainActivity extends AppCompatActivity {
 
                         Log.d("TESTER", cursor.getString(1));
 
-                        Item item = new Item(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
+                        NHLItem item = new NHLItem(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
 
                         // Add the item to the itemList
                         newItemList.add(item);
@@ -484,8 +491,31 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        // Start papysz easteregg
+        Calendar calendar = Calendar.getInstance();
+        Date currentTime = calendar.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        String formattedTime = sdf.format(currentTime);
+        String targetTime = "21:37";
+
+        // Compare the current time with the target time
+        if (formattedTime.equals(targetTime)) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            adapter.startPapysz();
+            ToastUtils.showCustomToast(this, "21:37");
+            handler.postDelayed(stopPapysz, 5000); // show papysz face for 5s
+        }
 
     }
+
+    // Stop papysz easteregg
+    private final Runnable stopPapysz = new Runnable() {
+        @Override
+        public void run() {
+            mainUtils.restartSpinner();
+        }
+    };
+
 
     private void disableWhileAnimation(View v) {
         v.setEnabled(false);

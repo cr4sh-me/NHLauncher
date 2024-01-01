@@ -14,7 +14,6 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -41,11 +40,9 @@ import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
 
 import java.util.List;
-import java.util.Locale;
 
 public class WPSAttack extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private static final int COUNTDOWN_DURATION = 120; // in seconds
     public String customPINCMD = "";
     public String delayCMD = "";
     TextView msg2;
@@ -60,7 +57,6 @@ public class WPSAttack extends AppCompatActivity {
     private LinearLayout buttonContainer; // Container for dynamic buttons
     private BroadcastReceiver wifiScanReceiver;
     private Button scanButton;
-    private Handler countdownHandler; // Add this line
 
     private static String extractBSSID(String buttonText) {
         String[] lines = buttonText.split("\n");
@@ -387,7 +383,8 @@ public class WPSAttack extends AppCompatActivity {
             try {
                 boolean success = wifiManager.startScan();
                 if (!success && isThrottleEnabled) {
-                    startCountdown();
+                    enableScanButton(true);
+                    setMessage("Scan limit reached, WAIT 2min!");
                 } else {
                     enableScanButton(false);
                     buttonContainer.removeAllViews();
@@ -401,33 +398,6 @@ public class WPSAttack extends AppCompatActivity {
             buttonContainer.removeAllViews();
             setMessage("Please enable location services first!");
         }
-    }
-
-    private void startCountdown() {
-        countdownHandler = new Handler();
-        final int countdownSeconds = COUNTDOWN_DURATION;
-
-        enableScanButton(false);
-
-        // Update countdown message every second
-        for (int i = 0; i <= COUNTDOWN_DURATION; i++) {
-            int minutes = (countdownSeconds - i) / 60;
-            int remainingSeconds = (countdownSeconds - i) % 60;
-            String countdownMessage = String.format(Locale.getDefault(), "%02d:%02d", minutes, remainingSeconds);
-
-            final int delay = i * 1000; // Delay increases every second
-
-            countdownHandler.postDelayed(() -> setMessage("Scan limit reached. Countdown: " + countdownMessage), delay);
-        }
-
-        // After the countdown completes, display the default message
-        countdownHandler.postDelayed(() -> {
-            // Countdown completed, reset scanCount and enable the scan button
-//            scanCount = 0;
-            enableScanButton(true);
-            // Show the default message after countdown completion
-            setMessage("Ready to scan");
-        }, (COUNTDOWN_DURATION + 1) * 1000); // Additional delay for the default message
     }
 
     private void enableScanButton(boolean enabled) {
@@ -480,8 +450,5 @@ public class WPSAttack extends AppCompatActivity {
         super.onDestroy();
         // Unregister the BroadcastReceiver to avoid memory leaks
         unregisterReceiver(wifiScanReceiver);
-        if (countdownHandler != null) {
-            countdownHandler.removeCallbacksAndMessages(null);
-        }
     }
 }

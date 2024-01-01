@@ -15,9 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cr4sh.nhlauncher.Database.DBHandler;
-import com.cr4sh.nhlauncher.ButtonsRecycler.Item;
+import com.cr4sh.nhlauncher.ButtonsRecycler.NHLItem;
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.ButtonsRecycler.MyAdapter;
+import com.cr4sh.nhlauncher.ButtonsRecycler.NHLAdapter;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.bridge.Bridge;
@@ -99,7 +99,7 @@ public class MainUtils extends AppCompatActivity {
             });
 
             // Create a new itemList from the cursor data
-            List<Item> newItemList = new ArrayList<>();
+            List<NHLItem> newItemList = new ArrayList<>();
             while (cursor.moveToNext()) {
                 String toolCategory = cursor.getString(0);
                 String toolName = cursor.getString(2);
@@ -108,14 +108,14 @@ public class MainUtils extends AppCompatActivity {
                 String toolIcon = cursor.getString(5);
                 int toolUsage = cursor.getInt(6);
 
-                Item item = new Item(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
+                NHLItem item = new NHLItem(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
                 newItemList.add(item);
 
             }
             mainActivity.runOnUiThread(() -> {
                 RecyclerView.Adapter adapter = layout.getAdapter();
-                if (adapter instanceof MyAdapter) {
-                    ((MyAdapter) adapter).updateData(newItemList);
+                if (adapter instanceof NHLAdapter) {
+                    ((NHLAdapter) adapter).updateData(newItemList);
                 }
             });
         }
