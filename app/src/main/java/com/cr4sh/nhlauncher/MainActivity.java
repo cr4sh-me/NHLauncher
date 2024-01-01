@@ -1,11 +1,9 @@
 package com.cr4sh.nhlauncher;
 
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -16,11 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
-import android.text.SpannableString;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.ContextMenu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
@@ -33,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -56,8 +51,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -73,21 +66,42 @@ public class MainActivity extends AppCompatActivity {
     public int buttonUsage;
     public SQLiteDatabase mDatabase;
     public ActivityResultLauncher<Intent> requestPermissionLauncher;
-    public RecyclerView listViewCategories;
+    private RecyclerView listViewCategories;
     public Button backButton;
-    public Button specialButton;
     public int currentCategoryNumber = 1;
-    public ImageView toolbar;
-    List<String> valuesList;
-    List<Integer> imageList;
-    TextView rollCategoriesText;
-    ImageView rollCategories;
-    private DialogUtils dialogUtils;
+    private ImageView toolbar;
+    public ExecutorService executor;
+    public RecyclerView recyclerView;
+    //    public Handler handler;
+    private List<String> valuesList;
+    private List<Integer> imageList;
+    private TextView rollCategoriesText;
+    private ImageView rollCategories;
     private MainUtils mainUtils;
     private MyPreferences myPreferences;
-    private RecyclerView recyclerView;
-    public ExecutorService executor;
-    public Handler handler;
+    // Stop papysz easteregg
+    private final Runnable stopPapysz = new Runnable() {
+        @Override
+        public void run() {
+            mainUtils.restartSpinner();
+        }
+    };
+    private EditText searchEditText;
+    private LinearLayout rollCategoriesLayout;
+    private RelativeLayout categoriesLayout;
+    private ImageView searchIcon;
+    private TextView noToolsText;
+    private Animation rollOut;
+    private Animation rollToolbar;
+    private Animation rollOutToolbar;
+    private GradientDrawable drawableSearchIcon;
+    //     Set up a callback for the back button press
+    OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            closeOpen();
+        }
+    };
 
     // TODO translation
     // TODO test app stability
@@ -97,35 +111,37 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         NHLManager.getInstance().setMainActivity(this);
-        dialogUtils = new DialogUtils(this.getSupportFragmentManager());
+        DialogUtils dialogUtils = new DialogUtils(this.getSupportFragmentManager());
         executor = Executors.newCachedThreadPool();
-        handler = new Handler(Looper.getMainLooper());
+//        handler = new Handler(Looper.getMainLooper());
 
-        // Check for nethunter and terminal apps
-        PackageManager pm = getPackageManager();
-
-        try {
-            // First, check if the com.offsec.nethunter and com.offsec.nhterm packages exist
-            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
-            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
-
-            // Then, check if the com.offsec.nhterm.ui.term.NeoTermRemoteInterface activity exists within com.offsec.nhterm
-            Intent intent = new Intent();
-            intent.setComponent(new ComponentName("com.offsec.nhterm", "com.offsec.nhterm.ui.term.NeoTermRemoteInterface"));
-            List<ResolveInfo> activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-
-            if (activities.isEmpty()) {
-                // The activity is missing
-                dialogUtils.openMissingActivityDialog();
-                return;
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            // One of the packages is missing
-            dialogUtils.openAppsDialog();
-            return;
-        }
+//        // Check for nethunter and terminal apps
+//        PackageManager pm = getPackageManager();
+//
+//        try {
+//            // First, check if the com.offsec.nethunter and com.offsec.nhterm packages exist
+//            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
+//            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
+//
+//            // Then, check if the com.offsec.nhterm.ui.term.NeoTermRemoteInterface activity exists within com.offsec.nhterm
+//            Intent intent = new Intent();
+//            intent.setComponent(new ComponentName("com.offsec.nhterm", "com.offsec.nhterm.ui.term.NeoTermRemoteInterface"));
+//            List<ResolveInfo> activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+//
+//            if (activities.isEmpty()) {
+//                // The activity is missing
+//                dialogUtils.openMissingActivityDialog();
+//                return;
+//            }
+//        } catch (PackageManager.NameNotFoundException e) {
+//            // One of the packages is missing
+//            dialogUtils.openAppsDialog();
+//            return;
+//        }
 
         myPreferences = new MyPreferences(this);
+
+        resetRecyclerHeight();
 
         setContentView(R.layout.activity_main);
 
@@ -216,7 +232,6 @@ public class MainActivity extends AppCompatActivity {
         // Initialise categories
 
 
-
 //        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 //        listViewCategories.setLayoutManager(layoutManager);
 
@@ -240,16 +255,16 @@ public class MainActivity extends AppCompatActivity {
         mainUtils.spinnerChanger(isFavourite == 0 ? 1 : 0);
         currentCategoryNumber = isFavourite == 0 ? 1 : 0;
 
-        ImageView searchIcon = findViewById(R.id.searchIcon);
-        EditText searchEditText = findViewById(R.id.search_edit_text);
+        searchIcon = findViewById(R.id.searchIcon);
+        searchEditText = findViewById(R.id.search_edit_text);
         toolbar = findViewById(R.id.toolBar);
-        LinearLayout rollCategoriesLayout = findViewById(R.id.showCategoriesLayout);
+        rollCategoriesLayout = findViewById(R.id.showCategoriesLayout);
 
-        RelativeLayout categoriesLayout = findViewById(R.id.categories_layout);
+        categoriesLayout = findViewById(R.id.categories_layout);
         TextView categoriesLayoutTitle = findViewById(R.id.dialog_title);
-        specialButton = findViewById(R.id.special_features_button);
+        Button specialButton = findViewById(R.id.special_features_button);
         backButton = findViewById(R.id.goBackButton);
-        TextView noToolsText = findViewById(R.id.messagebox);
+        noToolsText = findViewById(R.id.messagebox);
         noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
 
         categoriesLayoutTitle.setTextColor(Color.parseColor(myPreferences.color80()));
@@ -336,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
         drawableToolbar.setStroke(8, Color.parseColor(myPreferences.color50()));
         toolbar.setBackground(drawableToolbar);
 
-        GradientDrawable drawableSearchIcon = new GradientDrawable();
+        drawableSearchIcon = new GradientDrawable();
         drawableSearchIcon.setCornerRadius(100);
         drawableSearchIcon.setStroke(8, Color.parseColor(myPreferences.color50()));
         searchIcon.setBackground(drawableSearchIcon);
@@ -351,66 +366,63 @@ public class MainActivity extends AppCompatActivity {
         drawableSearchEditText.setColor(Color.parseColor(myPreferences.color50()));
         drawableSearchEditText.setStroke(8, Color.parseColor(myPreferences.color50()));
 
-
         // Setup animations
         Animation roll = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll);
-        Animation rollOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out);
-        Animation rollToolbar = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_toolbar);
-        Animation rollOutToolbar = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out_toolbar);
+        rollOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out);
+        rollToolbar = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_toolbar);
+        rollOutToolbar = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out_toolbar);
 
         searchIcon.setOnClickListener(v -> {
             VibrationUtil.vibrate(MainActivity.this, 10);
 
-            // Toggle visibility of the search EditText when the icon is clicked
             if (searchEditText.getVisibility() == View.VISIBLE) {
-
-                // Clear searchbar, every close
-                searchEditText.setText(null);
-
-                // Enable things
-                enableAfterAnimation(toolbar);
-                enableAfterAnimation(rollCategoriesLayout);
-                enableAfterAnimation(rollCategories);
-                enableAfterAnimation(searchEditText);
-
-                // Close the keyboard if it's open
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
-
-                // After animation
-                rollCategoriesLayout.startAnimation(rollOutToolbar);
-                toolbar.startAnimation(rollOutToolbar);
-                searchEditText.startAnimation(rollOut);
-
-                // Disable things
-                disableWhileAnimation(searchEditText);
-                drawableSearchIcon.setColor(Color.TRANSPARENT);
-
-                mainUtils.restartSpinner();
+                closeSearchBar();
             } else {
-
                 // Disable things
                 disableWhileAnimation(toolbar);
                 disableWhileAnimation(rollCategoriesLayout);
                 disableWhileAnimation(searchEditText);
                 disableWhileAnimation(rollCategories);
 
-                toolbar.startAnimation(rollToolbar);
-                rollCategoriesLayout.startAnimation(rollToolbar);
-                searchEditText.startAnimation(roll);
-
+                // Enable the searchEditText
                 enableAfterAnimation(searchEditText);
-                searchEditText.requestFocus(); // Set focus when EditText is made visible
+                searchEditText.setVisibility(View.VISIBLE);
+
+                // Set custom drawable as background
                 searchEditText.setBackground(drawableSearchEditText);
+
+                // Start animations simultaneously
+                searchEditText.startAnimation(roll);
+                rollCategoriesLayout.startAnimation(rollToolbar);
+                toolbar.startAnimation(rollToolbar);
+
+                roll.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        // Not needed for this case
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        searchEditText.requestFocus(); // Set focus when EditText is made visible
+                        searchEditText.setSelection(searchEditText.getText().length()); // Move cursor to the end
+
+                        // Show the keyboard explicitly
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(searchEditText, InputMethodManager.SHOW_IMPLICIT);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                        // Not needed for this case
+                    }
+                });
 
                 drawableSearchIcon.setSize(10, 10);
                 drawableSearchIcon.setColor(Color.parseColor(myPreferences.color50()));
-
-                // Show the keyboard explicitly
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(searchEditText, InputMethodManager.SHOW_IMPLICIT);
             }
         });
+
 
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -419,81 +431,91 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @SuppressLint("SetTextI18n")
+            @Override
             public void onTextChanged(CharSequence newText, int start, int before, int count) {
+
+//                Cursor cursor;
+
+                String[] projection = {"CATEGORY", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
+
+                // Add search filter to query
+                String selection = "NAME LIKE ?";
+
+                String[] selectionArgs = {"%" + newText + "%"};
+//
+                String orderBy = "CASE WHEN NAME LIKE '" + newText + "%' THEN 0 ELSE 1 END, " + // sort by first letter match
+                        "CASE WHEN NAME LIKE '%" + newText + "%' THEN 0 ELSE 1 END, " + // sort by containing newText
+                        "NAME ASC";
+
                 if (newText.length() > 0) {
-                    recyclerView.setVisibility(View.VISIBLE);
+//                    recyclerView.setVisibility(View.VISIBLE);
                     disableMenu = true;
 
-                    Future<List<NHLItem>> future = executor.submit(() -> {
-                        Cursor cursor;
-
-                        String[] projection = {"CATEGORY", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
-
-                        // Add search filter to query
-                        String selection = "NAME LIKE ?";
-
-                        String[] selectionArgs = {"%" + newText + "%"};
-
-                        String orderBy = "CASE WHEN NAME LIKE '" + newText + "%' THEN 0 ELSE 1 END, " + // sort by first letter match
-                                "CASE WHEN NAME LIKE '%" + newText + "%' THEN 0 ELSE 1 END, " + // sort by containing newText
-                                "NAME ASC";
-
-                        cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, orderBy, "15");
+                    Future<List<NHLItem>> queryTask = executor.submit(() -> {
+                        Cursor cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, orderBy, "15");
 
                         List<NHLItem> newItemList = new ArrayList<>();
-                        while (cursor.moveToNext()) {
-                            disableWhileAnimation(noToolsText);
-                            String toolCategory = cursor.getString(0);
-                            String toolName = cursor.getString(1);
-                            String toolDescription = cursor.getString(2);
-                            String toolCmd = cursor.getString(3);
-                            String toolIcon = cursor.getString(4);
-                            int toolUsage = cursor.getInt(5);
 
-                            Log.d("TESTER", cursor.getString(1));
+                        if (cursor.getCount() > 0) {
+                            // Create a new itemList from the cursor data
+                            while (cursor.moveToNext()) {
+                                String toolCategory = cursor.getString(0);
+                                String toolName = cursor.getString(1);
+                                String toolDescription = cursor.getString(2);
+                                String toolCmd = cursor.getString(3);
+                                String toolIcon = cursor.getString(4);
+                                int toolUsage = cursor.getInt(5);
 
-                            NHLItem item = new NHLItem(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
-
-                            // Add the item to the itemList
-                            newItemList.add(item);
+                                NHLItem item = new NHLItem(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
+                                newItemList.add(item);
+                            }
+                        } else {
+                            runOnUiThread(() -> {
+                                enableAfterAnimation(noToolsText);
+                                noToolsText.setText(getResources().getString(R.string.cant_found) + newText + "\n" + getResources().getString(R.string.check_your_query));
+                            });
                         }
-
                         cursor.close();
                         return newItemList;
                     });
 
-                    try {
-                        List<NHLItem> newItemList = future.get(); // This will block until the task is complete
-                        handler.post(() -> {
-                            if (newItemList.isEmpty()) {
+                    runOnUiThread(() -> {
+                        try {
+                            List<NHLItem> newItemList1 = queryTask.get(); // This blocks until the task is done
+                            if (newItemList1.isEmpty()) {
+                                adapter.updateData(new ArrayList<>()); // Empty list to clear existing data
+
                                 enableAfterAnimation(noToolsText);
-                                noToolsText.setText(getResources().getString(R.string.cant_found) + newText + "\n" + getResources().getString(R.string.check_your_query));
-                                disableWhileAnimation(recyclerView);
+                                noToolsText.setText(getResources().getString(R.string.db_error));
                             } else {
-                                enableAfterAnimation(recyclerView);
-                                adapter.updateData(newItemList);
+                                noToolsText.setText(null);
+                                disableWhileAnimation(noToolsText);
 
-                                // Prevent newlines from being entered
-                                if (newText.toString().contains("\n")) {
-                                    String filteredText = newText.toString().replace("\n", "");
-                                    searchEditText.setText(filteredText);
-                                    searchEditText.setSelection(filteredText.length());
-                                }
+                                adapter.updateData(newItemList1);
                             }
-                        });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
 
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
+                    // Prevent newlines from being entered
+                    if (newText.toString().contains("\n")) {
+                        String filteredText = newText.toString().replace("\n", "");
+                        searchEditText.setText(filteredText);
+                        searchEditText.setSelection(filteredText.length());
                     }
-                }
-            }
 
+                }
+
+
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
 
             }
         });
+
 
         toolbar.setOnClickListener(v -> {
 //            toolbar.setEnabled(false); // Prevent double open
@@ -512,31 +534,30 @@ public class MainActivity extends AppCompatActivity {
 
         // Compare the current time with the target time
         if (formattedTime.equals(targetTime)) {
+            Handler handler = new Handler(Looper.getMainLooper());
             adapter.startPapysz();
             ToastUtils.showCustomToast(this, "21:37");
             handler.postDelayed(stopPapysz, 5000); // show papysz face for 5s
         }
 
+        getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
+
     }
 
-    // Stop papysz easteregg
-    private final Runnable stopPapysz = new Runnable() {
-        @Override
-        public void run() {
-            mainUtils.restartSpinner();
-        }
-    };
-
-
-    private void disableWhileAnimation(View v) {
-        v.setEnabled(false);
-        v.setVisibility(View.GONE);
+    public void disableWhileAnimation(View v) {
+        runOnUiThread(() -> {
+            v.setEnabled(false);
+            v.setVisibility(View.GONE);
+        });
     }
 
-    private void enableAfterAnimation(View v) {
-        v.setEnabled(true);
-        v.setVisibility(View.VISIBLE);
+    public void enableAfterAnimation(View v) {
+        runOnUiThread(() -> {
+            v.setEnabled(true);
+            v.setVisibility(View.VISIBLE);
+        });
     }
+
 
     // Close database on app close
     protected void onDestroy() {
@@ -544,53 +565,46 @@ public class MainActivity extends AppCompatActivity {
         if (mDatabase != null) {
             mDatabase.close();
         }
-        if(!executor.isShutdown()){
+        if (!executor.isShutdown()) {
             executor.shutdown();
         }
     }
 
-
-
-    // Creates menu that is shown after longer button click
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        // Set the color of the menu title
-        SpannableString s = new SpannableString(getResources().getString(R.string.choose_option));
-        Objects.requireNonNull(menu.setHeaderTitle(s));
-        getMenuInflater().inflate(R.menu.options_menu, menu);
-    }
-
-    // Catches selections for menu above
-    @SuppressLint("NonConstantResourceId")
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.option_1 -> {
-                dialogUtils.openEditableDialog(buttonName, buttonCmd);
-                return true;
-            }
-            case R.id.option_2 -> {
-                mainUtils.addFavourite();
-                return true;
-            }
-            case R.id.option_3 -> {
-                if (!disableMenu) {
-                    dialogUtils.openNewToolDialog(buttonCategory);
-                } else {
-                    ToastUtils.showCustomToast(this, getResources().getString(R.string.get_out));
-                }
-                return true;
-            }
-            case R.id.option_4 -> {
-                dialogUtils.openDeleteToolDialog(buttonName);
-                return true;
-            }
-            default -> {
-                return super.onContextItemSelected(item);
-            }
+    // Close searchbar or categories if back button pressed
+    private void closeOpen() {
+        if (searchEditText.getVisibility() == View.VISIBLE) {
+            closeSearchBar();
+        }
+        if (categoriesLayout.getVisibility() == View.VISIBLE && searchEditText.getVisibility() == View.GONE) {
+            backButton.callOnClick();
         }
     }
 
+    private void closeSearchBar() {
+        // Clear searchbar, every close
+        searchEditText.setText(null);
+
+        // Enable things
+        enableAfterAnimation(toolbar);
+        enableAfterAnimation(rollCategoriesLayout);
+        enableAfterAnimation(rollCategories);
+        enableAfterAnimation(searchEditText);
+
+        // Close the keyboard if it's open
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+
+        // Disable things
+        disableWhileAnimation(searchEditText);
+        drawableSearchIcon.setColor(Color.TRANSPARENT);
+
+        // After animation
+        rollCategoriesLayout.startAnimation(rollOutToolbar);
+        toolbar.startAnimation(rollOutToolbar);
+        searchEditText.startAnimation(rollOut);
+
+        mainUtils.restartSpinner();
+    }
 
     public void changeCategoryPreview(int position) {
         String categoryTextView;
@@ -606,6 +620,13 @@ public class MainActivity extends AppCompatActivity {
         // Set text and text color
         rollCategoriesText.setText(categoryTextView);
         rollCategoriesText.setTextColor(Color.parseColor(myPreferences.color80()));
+    }
+
+    private void resetRecyclerHeight() {
+        SharedPreferences prefs = getSharedPreferences("nhlSettings", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("recyclerHeight", 0);
+        editor.apply();
     }
 }
 

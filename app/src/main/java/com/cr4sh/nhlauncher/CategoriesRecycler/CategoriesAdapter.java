@@ -55,7 +55,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<com.cr4sh.nhlauncher
         height = (originalHeight / 8) - margin; // Button height without margin
 
         drawable = new GradientDrawable();
-        if(myPreferences.isNewButtonStyleActive()){
+        if (myPreferences.isNewButtonStyleActive()) {
             drawable.setColor(Color.parseColor(myPreferences.color50()));
             drawable.setCornerRadius(60);
         } else {
@@ -66,7 +66,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<com.cr4sh.nhlauncher
 
         return new com.cr4sh.nhlauncher.CategoriesViewHolder(LayoutInflater.from(myActivity).inflate(R.layout.custom_category_item, parent, false));
     }
-
 
 
     // Used to create buttons, and set listeners for them
@@ -89,7 +88,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<com.cr4sh.nhlauncher
         holder.itemView.setBackground(drawable);
 
         RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-        params.setMargins(margin, (margin / 2), margin, (margin/2));
+        params.setMargins(margin, (margin / 2), margin, (margin / 2));
         holder.categoryLayout.setLayoutParams(params);
 
         Log.d("CategoriesAdapter", "Parent height: " + originalHeight);

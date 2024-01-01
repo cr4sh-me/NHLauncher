@@ -34,7 +34,7 @@ public class DialogUtils {
     }
 
     public void openEditableDialog(String name, String cmd) {
-        mainActivity.executor.execute(()->{
+        mainActivity.executor.execute(() -> {
             EditableDialog editableDialog = new EditableDialog();
             // Input as an argument.
             Bundle args = new Bundle();
@@ -48,7 +48,7 @@ public class DialogUtils {
 
 
     public void openNewToolDialog(String category) {
-        mainActivity.executor.execute(()->{
+        mainActivity.executor.execute(() -> {
             NewToolDialog ntDialog = new NewToolDialog();
             // ARGS!
             Bundle args = new Bundle();
@@ -60,7 +60,7 @@ public class DialogUtils {
     }
 
     public void openDeleteToolDialog(String name) {
-        mainActivity.executor.execute(()-> {
+        mainActivity.executor.execute(() -> {
             DeleteToolDialog dtDialog = new DeleteToolDialog();
             // ARGS!
             Bundle args = new Bundle();
@@ -72,7 +72,7 @@ public class DialogUtils {
     }
 
     public void openAppsDialog() {
-        mainActivity.executor.execute(()-> {
+        mainActivity.executor.execute(() -> {
             AppsDialog apDialog = new AppsDialog();
             // Display our dialog!
             apDialog.show(fragmentManager, "AppsDialog");
@@ -80,7 +80,7 @@ public class DialogUtils {
     }
 
     public void openFirstSetupDialog() {
-        mainActivity.executor.execute(()-> {
+        mainActivity.executor.execute(() -> {
             FirstSetupDialog fsDialog = new FirstSetupDialog();
             // Display our dialog!
             fsDialog.show(fragmentManager, "FirstSetupDialog");
@@ -88,9 +88,8 @@ public class DialogUtils {
     }
 
 
-
     public void openPermissionsDialog() {
-        mainActivity.executor.execute(()-> {
+        mainActivity.executor.execute(() -> {
             PermissionDialog pmDialog = new PermissionDialog();
             // Display our dialog!
             pmDialog.show(fragmentManager, "PermissionsDialog");
@@ -98,9 +97,8 @@ public class DialogUtils {
     }
 
 
-
     public void openMissingActivityDialog() {
-        mainActivity.executor.execute(()-> {
+        mainActivity.executor.execute(() -> {
             MissingActivityDialog maDialog = new MissingActivityDialog();
             // Display our dialog!
             maDialog.show(fragmentManager, "MissingActivityDialog");
@@ -108,7 +106,7 @@ public class DialogUtils {
     }
 
     public void openButtonMenuDialog(MainActivity myActivity) {
-        mainActivity.executor.execute(()-> {
+        mainActivity.executor.execute(() -> {
             ButtonMenuDialog bmDialog = new ButtonMenuDialog(myActivity);
             // ARGS!
 //            Bundle args = new Bundle();
@@ -121,7 +119,7 @@ public class DialogUtils {
 
 
     public void openNhlColorPickerDialog(Button button, ImageView alpha, String colorShade) {
-        mainActivity.executor.execute(()-> {
+        mainActivity.executor.execute(() -> {
             NhlColorPickerDialog nhlcpDialog = new NhlColorPickerDialog(button, alpha, colorShade);
             // Display our dialog!
             nhlcpDialog.show(fragmentManager, "NhlColorPickerDialog");
@@ -129,7 +127,7 @@ public class DialogUtils {
     }
 
     public void openThrottlingDialog() {
-        mainActivity.executor.execute(()-> {
+        mainActivity.executor.execute(() -> {
             ThrottlingDialog thDialog = new ThrottlingDialog();
             // Display our dialog!
             thDialog.show(fragmentManager, "PermissionsDialog");
@@ -137,7 +135,7 @@ public class DialogUtils {
     }
 
     public void openWpsCustomSetting(int number, WPSAttack activity) {
-        mainActivity.executor.execute(()-> {
+        mainActivity.executor.execute(() -> {
             WpsCustomPinDialog pinDialog = new WpsCustomPinDialog(activity);
             Bundle args = new Bundle();
             args.putInt("option", number);
@@ -148,7 +146,7 @@ public class DialogUtils {
     }
 
     public void openScanTimeDialog(int number, BluetoothFragment1 activity) {
-        mainActivity.executor.execute(()-> {
+        mainActivity.executor.execute(() -> {
             ScanTimeDialog pinDialog = new ScanTimeDialog(activity);
             Bundle args = new Bundle();
             args.putInt("option", number);

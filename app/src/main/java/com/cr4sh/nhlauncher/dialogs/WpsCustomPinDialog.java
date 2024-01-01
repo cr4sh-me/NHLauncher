@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
 
@@ -84,7 +83,7 @@ public class WpsCustomPinDialog extends AppCompatDialogFragment {
 
         setupButton.setOnClickListener(view12 -> {
             if (customPin.getText().toString().isEmpty()) {
-                ToastUtils.showCustomToast(requireActivity(),"Empty input!");
+                ToastUtils.showCustomToast(requireActivity(), "Empty input!");
             } else {
                 Objects.requireNonNull(getDialog()).cancel();
                 if (option == 1) {

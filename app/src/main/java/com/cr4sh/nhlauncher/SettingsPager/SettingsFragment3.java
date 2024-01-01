@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
@@ -32,12 +33,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class SettingsFragment3 extends Fragment {
-    private MyPreferences myPreferences;
-    private RecyclerView recyclerView;
     private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
-    private TextView noToolsText;
     SQLiteDatabase mDatabase;
     StatsAdapter adapter;
+    private MyPreferences myPreferences;
+    private RecyclerView recyclerView;
+    private TextView noToolsText;
 
     public SettingsFragment3() {
         // Required empty public constructor
@@ -115,12 +116,12 @@ public class SettingsFragment3 extends Fragment {
 
             cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, myPreferences.sortingMode(), null);
             if (cursor.getCount() == 0) {
-                mainActivity.handler.post(() -> {
+                mainActivity.runOnUiThread(() -> {
                     noToolsText.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.GONE);
                 });
             } else {
-                mainActivity.handler.post(() -> {
+                mainActivity.runOnUiThread(() -> {
                     noToolsText.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
                 });
@@ -137,7 +138,7 @@ public class SettingsFragment3 extends Fragment {
                     newItemList.add(item);
                 }
 
-                mainActivity.handler.post(() -> adapter.updateData(newItemList));
+                mainActivity.runOnUiThread(() -> adapter.updateData(newItemList));
             }
             cursor.close();
         });

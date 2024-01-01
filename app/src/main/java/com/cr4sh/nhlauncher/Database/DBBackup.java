@@ -169,6 +169,7 @@ public class DBBackup {
         }
 
     }
+
     private void showToastOnMainThread(String message) {
         // Using the main thread's handler to post a runnable
         mainActivity.runOnUiThread(() -> ToastUtils.showCustomToast(mainActivity, message));

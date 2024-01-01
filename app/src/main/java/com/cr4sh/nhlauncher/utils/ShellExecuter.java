@@ -56,7 +56,8 @@ public class ShellExecuter {
                 output.append(line).append('\n');
             }
             /* remove the last \n */
-            if (output.length() > 0) output = new StringBuilder(output.substring(0, output.length() - 1));
+            if (output.length() > 0)
+                output = new StringBuilder(output.substring(0, output.length() - 1));
             br.close();
             br = new BufferedReader(new InputStreamReader(stderr));
             while ((line = br.readLine()) != null) {

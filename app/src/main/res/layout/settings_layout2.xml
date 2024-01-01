@@ -6,11 +6,11 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:layout_margin="10dp"
         android:id="@+id/text_second"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_margin="10dp"
         android:gravity="center"
         android:text="@string/color_info"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,7 +26,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_second" />
-
 
 
     <!-- Inner Container (To be hidden) -->
@@ -116,10 +115,10 @@
         </LinearLayout>
 
         <com.cr4sh.nhlauncher.ColorPickerMod
-            android:nestedScrollingEnabled="true"
             android:id="@+id/colorPickerView"
             android:layout_width="270dp"
-            android:layout_height="270dp" />
+            android:layout_height="270dp"
+            android:nestedScrollingEnabled="true" />
 
         <RelativeLayout
             android:id="@+id/alphaLayout"
@@ -167,11 +166,11 @@
     </LinearLayout>
 
     <Button
-        android:layout_marginHorizontal="10dp"
-        android:text="@string/save"
         android:id="@+id/apply_custom_colors"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:text="@string/save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

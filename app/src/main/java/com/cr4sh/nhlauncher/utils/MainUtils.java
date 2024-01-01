@@ -6,18 +6,16 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
-import android.view.View;
+import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cr4sh.nhlauncher.Database.DBHandler;
-import com.cr4sh.nhlauncher.ButtonsRecycler.NHLItem;
-import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.ButtonsRecycler.NHLAdapter;
+import com.cr4sh.nhlauncher.ButtonsRecycler.NHLItem;
+import com.cr4sh.nhlauncher.Database.DBHandler;
+import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.bridge.Bridge;
@@ -25,7 +23,7 @@ import com.cr4sh.nhlauncher.bridge.Bridge;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class MainUtils extends AppCompatActivity {
@@ -58,11 +56,12 @@ public class MainUtils extends AppCompatActivity {
     // Queries db for buttons with given categories and display them!
     @SuppressLint({"SetTextI18n", "Recycle"})
     public void spinnerChanger(int category) {
+
         mainActivity.changeCategoryPreview(category); // Set category preview
 
         // Obtain references to app resources and button layout
         Resources resources = mainActivity.getResources();
-        RecyclerView layout = mainActivity.findViewById(R.id.recyclerView);
+        RecyclerView layout = mainActivity.recyclerView;
         TextView noToolsText = mainActivity.findViewById(R.id.messagebox);
         noToolsText.setText(null);
 
@@ -82,11 +81,18 @@ public class MainUtils extends AppCompatActivity {
             // Enable creating new buttons in normal categories
             MainActivity.disableMenu = false;
         }
-        Future<List<NHLItem>> future = mainActivity.executor.submit(() -> {
+
+        if (mainActivity.executor.isTerminated() || mainActivity.executor.isShutdown()) {
+            mainActivity.executor = Executors.newCachedThreadPool();
+        }
+
+        Future<List<NHLItem>> queryTask = mainActivity.executor.submit(() -> {
             Cursor cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, myPreferences.sortingMode(), null);
 
             List<NHLItem> newItemList = new ArrayList<>();
+
             if (cursor.getCount() > 0) {
+                // Create a new itemList from the cursor data
                 while (cursor.moveToNext()) {
                     String toolCategory = cursor.getString(0);
                     String toolName = cursor.getString(2);
@@ -94,6 +100,8 @@ public class MainUtils extends AppCompatActivity {
                     String toolCmd = cursor.getString(4);
                     String toolIcon = cursor.getString(5);
                     int toolUsage = cursor.getInt(6);
+
+//                    Log.d("MainUtilsLog", toolCategory + toolCategory + toolCmd);
 
                     NHLItem item = new NHLItem(toolCategory, toolName, toolDescription, toolCmd, toolIcon, toolUsage);
                     newItemList.add(item);
@@ -103,27 +111,31 @@ public class MainUtils extends AppCompatActivity {
             return newItemList;
         });
 
-        try {
-            List<NHLItem> newItemList = future.get();
-            mainActivity.runOnUiThread(() -> {
+        mainActivity.runOnUiThread(() -> {
+            try {
+                List<NHLItem> newItemList = queryTask.get(); // This blocks until the task is done
                 if (newItemList.isEmpty()) {
-                    noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
+                    RecyclerView.Adapter<?> adapter = layout.getAdapter();
+                    if (adapter instanceof NHLAdapter) {
+                        ((NHLAdapter) adapter).updateData(new ArrayList<>()); // Empty list to clear existing data
+                    }
+//                    mainActivity.disableWhileAnimation(layout);
+                    mainActivity.enableAfterAnimation(noToolsText);
                     noToolsText.setText(resources.getString(R.string.no_fav_tools));
-                    layout.setVisibility(View.GONE);
                 } else {
                     // layout.scrollToPosition(0); // Scroll to first tool
                     noToolsText.setText(null);
-                    layout.setVisibility(View.VISIBLE);
+                    mainActivity.disableWhileAnimation(noToolsText);
 
                     RecyclerView.Adapter<?> adapter = layout.getAdapter();
                     if (adapter instanceof NHLAdapter) {
                         ((NHLAdapter) adapter).updateData(newItemList);
                     }
                 }
-            });
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace(); // Handle exceptions appropriately
-        }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 

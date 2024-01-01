@@ -24,28 +24,28 @@
 
         <!-- TextView and PowerSpinnerView for Language -->
         <LinearLayout
-            android:layout_margin="5dp"
-            android:padding="5dp"
             android:id="@+id/languageLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_margin="5dp"
+            android:orientation="horizontal"
+            android:padding="5dp">
 
             <TextView
-                android:textStyle="bold"
-                android:gravity="center"
                 android:id="@+id/language_spinner_label"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/choose_language" />
+                android:gravity="center"
+                android:text="@string/choose_language"
+                android:textStyle="bold" />
 
             <LinearLayout
-                android:padding="15dp"
                 android:id="@+id/spinnerBg1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:padding="15dp">
 
                 <com.skydoves.powerspinner.PowerSpinnerView
                     android:id="@+id/language_spinner"
@@ -65,29 +65,29 @@
 
         <!-- TextView and PowerSpinnerView for Sorting -->
         <LinearLayout
-            android:layout_margin="5dp"
-            android:padding="5dp"
             android:id="@+id/sortingLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_margin="5dp"
+            android:orientation="horizontal"
+            android:padding="5dp">
 
             <TextView
-                android:gravity="center"
-                android:textStyle="bold"
-                android:layout_gravity="center"
                 android:id="@+id/sorting_spinner_label"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="@string/sorting" />
+                android:gravity="center"
+                android:text="@string/sorting"
+                android:textStyle="bold" />
 
             <LinearLayout
-                android:padding="15dp"
                 android:id="@+id/spinnerBg2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:padding="15dp">
 
                 <com.skydoves.powerspinner.PowerSpinnerView
                     android:id="@+id/sorting_spinner"
@@ -166,11 +166,11 @@
     </LinearLayout>
 
     <Button
-        android:layout_marginHorizontal="10dp"
-        android:text="@string/save"
         android:id="@+id/save_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:text="@string/save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

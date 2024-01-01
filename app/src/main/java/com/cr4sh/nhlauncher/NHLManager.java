@@ -16,11 +16,11 @@ public class NHLManager {
         return instance;
     }
 
-    public void setMainActivity(MainActivity activity) {
-        this.mainActivity = activity;
-    }
-
     public MainActivity getMainActivity() {
         return mainActivity;
+    }
+
+    public void setMainActivity(MainActivity activity) {
+        this.mainActivity = activity;
     }
 }

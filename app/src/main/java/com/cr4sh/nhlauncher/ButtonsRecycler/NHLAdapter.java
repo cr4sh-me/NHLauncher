@@ -1,6 +1,8 @@
 package com.cr4sh.nhlauncher.ButtonsRecycler;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
@@ -46,7 +48,7 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder> {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void startPapysz(){
+    public void startPapysz() {
         // Replace all item images with a single image
         for (NHLItem item : items) {
             item.setImage("papysz2"); // Replace with your single image name
@@ -56,18 +58,30 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder> {
         notifyDataSetChanged();
     }
 
+    private void saveRecyclerHeight(int active) {
+        SharedPreferences prefs = myActivity.getSharedPreferences("nhlSettings", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("recyclerHeight", active);
+        editor.apply();
+    }
 
     @NonNull
     @Override
     public NHLViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         myPreferences = new MyPreferences(myActivity);
 
-        originalHeight = parent.getMeasuredHeight();
+        if(myPreferences.getRecyclerMainHeight() == 0){
+            originalHeight = parent.getMeasuredHeight();
+            saveRecyclerHeight(originalHeight);
+        } else {
+            originalHeight = myPreferences.getRecyclerMainHeight();
+        }
+
         margin = 20;
         height = (originalHeight / 8) - margin; // Button height without margin
 
         drawable = new GradientDrawable();
-        if(myPreferences.isNewButtonStyleActive()){
+        if (myPreferences.isNewButtonStyleActive()) {
             drawable.setColor(Color.parseColor(myPreferences.color50()));
             drawable.setCornerRadius(60);
         } else {
@@ -105,7 +119,7 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder> {
         holder.itemView.setBackground(drawable);
 
         RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-        params.setMargins(margin, (margin / 2), margin, (margin/2));
+        params.setMargins(margin, (margin / 2), margin, (margin / 2));
         holder.buttonView.setLayoutParams(params);
 
         Log.d("MyAdapter", "Parent height: " + originalHeight);
@@ -114,7 +128,7 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder> {
         holder.itemView.setOnClickListener(v -> {
             myActivity.buttonUsage = item.getUsage();
             mainUtils.buttonUsageIncrease(item.getName());
-            myActivity.executor.execute(()-> mainUtils.run_cmd(item.getCmd()));
+            myActivity.executor.execute(() -> mainUtils.run_cmd(item.getCmd()));
         });
 
         holder.itemView.setOnLongClickListener(view -> {

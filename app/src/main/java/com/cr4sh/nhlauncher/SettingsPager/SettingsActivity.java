@@ -21,6 +21,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 public class SettingsActivity extends AppCompatActivity {
 
     public Button cancelButton;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

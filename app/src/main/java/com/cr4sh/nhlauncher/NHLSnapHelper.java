@@ -18,9 +18,9 @@ import java.util.concurrent.Executors;
 
 // modification of https://amitshekhar.me/blog/snaphelper
 public class NHLSnapHelper extends LinearSnapHelper {
-    private OrientationHelper mVerticalHelper;
     private static final float MILLISECONDS_PER_INCH = 10f;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private OrientationHelper mVerticalHelper;
 
     @Override
     public void attachToRecyclerView(@Nullable RecyclerView recyclerView)
@@ -36,7 +36,7 @@ public class NHLSnapHelper extends LinearSnapHelper {
 
             @Override
             public void onViewDetachedFromWindow(@NonNull View view) {
-                if(!executorService.isShutdown()){
+                if (!executorService.isShutdown()) {
                     executorService.shutdown();
                 }
             }

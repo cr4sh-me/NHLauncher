@@ -99,12 +99,17 @@ public class MyPreferences {
     public boolean isThrottlingMessageShown() {
         return !setupPrefs.getBoolean("isThrottlingMessageShown", false);
     }
+
     public boolean vibrationOn() {
         return nhlPrefs.getBoolean("vibrationsOn", false);
     }
 
     public boolean isNewButtonStyleActive() {
         return nhlPrefs.getBoolean("isNewButtonStyleActive", false);
+    }
+
+    public int getRecyclerMainHeight(){
+        return nhlPrefs.getInt("recyclerHeight", 0);
     }
 
 }

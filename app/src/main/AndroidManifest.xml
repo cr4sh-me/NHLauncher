@@ -44,21 +44,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SpecialFeaturesActivity"
-            android:exported="false">
-        </activity>
-        <activity android:name=".WPSAttack"
-            android:exported="false">
-        </activity>
-        <activity android:name=".MDKDeauth"
-            android:exported="false">
-        </activity>
-        <activity android:name=".BluetoothPager.BluetoothActivity"
-            android:exported="false">
-        </activity>
-        <activity android:name=".SettingsPager.SettingsActivity"
-            android:exported="false">
-        </activity>
+        <activity
+            android:name=".SpecialFeaturesActivity"
+            android:exported="false"></activity>
+        <activity
+            android:name=".WPSAttack"
+            android:exported="false"></activity>
+        <activity
+            android:name=".MDKDeauth"
+            android:exported="false"></activity>
+        <activity
+            android:name=".BluetoothPager.BluetoothActivity"
+            android:exported="false"></activity>
+        <activity
+            android:name=".SettingsPager.SettingsActivity"
+            android:exported="false"></activity>
     </application>
 
 </manifest>

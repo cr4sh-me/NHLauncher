@@ -91,12 +91,12 @@
             android:textStyle="bold" />
 
         <com.cr4sh.nhlauncher.FastScrollRecyclerView
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:id="@+id/recyclerViewCategories"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/btn_container"
-            android:layout_below="@id/dialog_title">
+            android:layout_below="@id/dialog_title"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
         </com.cr4sh.nhlauncher.FastScrollRecyclerView>
 
@@ -112,8 +112,8 @@
                 android:id="@+id/special_features_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
                 android:text="@string/addons"
                 tools:ignore="ButtonStyle" />
 
@@ -121,8 +121,8 @@
                 android:id="@+id/goBackButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
                 android:text="@string/close"
                 tools:ignore="ButtonStyle" />
 
@@ -144,7 +144,6 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
-        android:visibility="gone"
         android:id="@+id/messagebox"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -153,6 +152,7 @@
         android:paddingVertical="25dp"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

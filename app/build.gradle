@@ -39,9 +39,8 @@ android {
 }
 
 
-
-
 dependencies {
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
     implementation "com.github.skydoves:powerspinner:1.2.7"
     implementation 'com.github.skydoves:colorpickerview:2.3.0'

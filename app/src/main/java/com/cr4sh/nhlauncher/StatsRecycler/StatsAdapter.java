@@ -55,7 +55,7 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsHolder> {
         height = (originalHeight / 8) - margin; // Button height without margin
 
         drawable = new GradientDrawable();
-        if(myPreferences.isNewButtonStyleActive()){
+        if (myPreferences.isNewButtonStyleActive()) {
             drawable.setColor(Color.parseColor(myPreferences.color50()));
             drawable.setCornerRadius(60);
         } else {
@@ -93,7 +93,7 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsHolder> {
         holder.itemView.setBackground(drawable);
 
         RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-        params.setMargins(margin, (margin / 2), margin, (margin/2));
+        params.setMargins(margin, (margin / 2), margin, (margin / 2));
         holder.buttonView.setLayoutParams(params);
 
         Log.d("MyAdapter", "Parent height: " + originalHeight);

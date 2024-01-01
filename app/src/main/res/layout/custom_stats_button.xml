@@ -34,10 +34,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:paddingHorizontal="10dp"
             android:text="@string/loading"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:paddingHorizontal="10dp"
             tools:ignore="SmallSp" />
 
         <!-- TextView for tool usage count on the right -->
@@ -46,9 +46,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
+            android:paddingHorizontal="10dp"
             android:text="@string/loading"
             android:textSize="12sp"
-            android:paddingHorizontal="10dp"
             tools:ignore="SmallSp" />
     </LinearLayout>
 

@@ -39,12 +39,12 @@ public class NHLItem {
         return image;
     }
 
-    public int getUsage() {
-        return usage;
-    }
-
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public int getUsage() {
+        return usage;
     }
 
 

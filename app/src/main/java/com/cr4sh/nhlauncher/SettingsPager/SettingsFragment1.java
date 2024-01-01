@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.widget.CompoundButtonCompat;
@@ -36,6 +35,7 @@ import com.cr4sh.nhlauncher.utils.ToastUtils;
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
 import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
+
 public class SettingsFragment1 extends Fragment {
     MyPreferences myPreferences;
     MainUtils mainUtils;
@@ -71,7 +71,6 @@ public class SettingsFragment1 extends Fragment {
         Button saveButton = view.findViewById(R.id.save_button);
         updateButton = view.findViewById(R.id.update_button);
         TextView checkUpdate = view.findViewById(R.id.checkUpdate);
-
 
 
         TextView spinnerText1 = view.findViewById(R.id.language_spinner_label);
@@ -117,24 +116,24 @@ public class SettingsFragment1 extends Fragment {
         newButtonsStyle.setChecked(myPreferences.isNewButtonStyleActive());
 
         String languageLocale = myPreferences.languageLocale();
-        if(languageLocale.equals("pl")){
+        if (languageLocale.equals("pl")) {
             powerSpinnerView.selectItemByIndex(1);
         } else if (languageLocale.equals("en")) {
             powerSpinnerView.selectItemByIndex(0);
         }
 
         String sortingMode = myPreferences.sortingMode();
-        if(sortingMode == null){
+        if (sortingMode == null) {
             powerSpinnerView2.selectItemByIndex(0);
-        } else if(sortingMode.equals("USAGE DESC")){
+        } else if (sortingMode.equals("USAGE DESC")) {
             powerSpinnerView2.selectItemByIndex(1);
         } else if (sortingMode.equals("CASE WHEN NAME GLOB '[A-Za-z]*' THEN 0 ELSE 1 END, NAME ASC")) {
             powerSpinnerView2.selectItemByIndex(2);
-        } else if (sortingMode.equals("CASE WHEN NAME GLOB '[A-Za-z]*' THEN 0 ELSE 1 END, NAME DESC")){
+        } else if (sortingMode.equals("CASE WHEN NAME GLOB '[A-Za-z]*' THEN 0 ELSE 1 END, NAME DESC")) {
             powerSpinnerView2.selectItemByIndex(3);
-        } else if (sortingMode.equals("CASE WHEN NAME GLOB '[0-9]*' THEN 0 ELSE 1 END, NAME ASC")){
+        } else if (sortingMode.equals("CASE WHEN NAME GLOB '[0-9]*' THEN 0 ELSE 1 END, NAME ASC")) {
             powerSpinnerView2.selectItemByIndex(4);
-        } else if (sortingMode.equals("CASE WHEN NAME GLOB '[0-9]*' THEN 0 ELSE 1 END, NAME COLLATE NOCASE DESC")){
+        } else if (sortingMode.equals("CASE WHEN NAME GLOB '[0-9]*' THEN 0 ELSE 1 END, NAME COLLATE NOCASE DESC")) {
             powerSpinnerView2.selectItemByIndex(5);
         }
 
@@ -152,15 +151,15 @@ public class SettingsFragment1 extends Fragment {
 //        powerSpinnerView2.setPadding(0, 0, 0, 0);
 
         powerSpinnerView.setOnSpinnerItemSelectedListener((OnSpinnerItemSelectedListener<String>) (oldIndex, oldItem, newIndex, newItem) -> {
-          if(newIndex == 0){
-              saveNhlLanguageTemp("DESCRIPTION_EN", "en");
-          } else if (newIndex == 1) {
-              saveNhlLanguageTemp("DESCRIPTION_PL", "pl");
-          }
+            if (newIndex == 0) {
+                saveNhlLanguageTemp("DESCRIPTION_EN", "en");
+            } else if (newIndex == 1) {
+                saveNhlLanguageTemp("DESCRIPTION_PL", "pl");
+            }
         });
 
         powerSpinnerView2.setOnSpinnerItemSelectedListener((OnSpinnerItemSelectedListener<String>) (oldIndex, oldItem, newIndex, newItem) -> {
-            if(newIndex == 0){
+            if (newIndex == 0) {
                 saveNhlSettings(null);
             } else if (newIndex == 1) {
                 saveNhlSettingsTemp("USAGE DESC");
@@ -223,12 +222,12 @@ public class SettingsFragment1 extends Fragment {
 
         backupDb.setOnClickListener(v -> {
             DBBackup dbb = new DBBackup();
-            mainActivity.executor.execute(()-> dbb.createBackup(getContext()));
+            mainActivity.executor.execute(() -> dbb.createBackup(getContext()));
         });
 
         restoreDb.setOnClickListener(v -> {
             DBBackup dbb = new DBBackup();
-            mainActivity.executor.execute(()-> dbb.restoreBackup(getContext()));
+            mainActivity.executor.execute(() -> dbb.restoreBackup(getContext()));
         });
 
         saveButton.setOnClickListener(v -> applySettings());
@@ -277,7 +276,6 @@ public class SettingsFragment1 extends Fragment {
         button.setBackgroundColor(Color.parseColor(myPreferences.color50()));
         button.setTextColor(Color.parseColor(myPreferences.color80()));
     }
-
 
 
     private void saveNhlSettings(String sortingMode) {

@@ -18,10 +18,11 @@ import com.cr4sh.nhlauncher.R;
 public class ToastUtils {
 
     public static void showCustomToast(Context context, String message) {
-        ViewGroup root = new LinearLayout(context);
-        View layout = LayoutInflater.from(context).inflate(R.layout.nhl_custom_toast, root, false);
+        Context appContext = context.getApplicationContext();
+        ViewGroup root = new LinearLayout(appContext);
+        View layout = LayoutInflater.from(appContext).inflate(R.layout.nhl_custom_toast, root, false);
 
-        MyPreferences myPreferences = new MyPreferences(context);
+        MyPreferences myPreferences = new MyPreferences(appContext);
 
         FrameLayout background = layout.findViewById(R.id.customToastLayout);
 
@@ -39,7 +40,7 @@ public class ToastUtils {
         text.setText(message);
         text.setTextColor(Color.parseColor(myPreferences.color80()));
 
-        Toast toast = new Toast(context);
+        Toast toast = new Toast(appContext);
         toast.setGravity(Gravity.BOTTOM, 0, 150);
         // Create and show the toast
         toast.setDuration(Toast.LENGTH_SHORT);
