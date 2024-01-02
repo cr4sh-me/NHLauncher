@@ -34,11 +34,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:orientation="horizontal">
 
 
         <Button
+            android:layout_margin="5dp"
             android:id="@+id/cancel_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -47,6 +47,7 @@
             tools:ignore="ButtonStyle" />
 
         <Button
+            android:layout_margin="5dp"
             android:id="@+id/delete_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

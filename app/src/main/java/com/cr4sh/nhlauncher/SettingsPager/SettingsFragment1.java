@@ -11,7 +11,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
@@ -20,7 +19,6 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.core.widget.CompoundButtonCompat;
 import androidx.fragment.app.Fragment;
 
@@ -33,7 +31,6 @@ import com.cr4sh.nhlauncher.UpdateChecker;
 import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
-import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
 public class SettingsFragment1 extends Fragment {
@@ -146,10 +143,6 @@ public class SettingsFragment1 extends Fragment {
         spinnerBg1.setBackground(gd);
         spinnerBg2.setBackground(gd);
 
-        // Remove padding from PowerSpinnerViews
-//        powerSpinnerView.setPadding(0, 0, 0, 0);
-//        powerSpinnerView2.setPadding(0, 0, 0, 0);
-
         powerSpinnerView.setOnSpinnerItemSelectedListener((OnSpinnerItemSelectedListener<String>) (oldIndex, oldItem, newIndex, newItem) -> {
             if (newIndex == 0) {
                 saveNhlLanguageTemp("DESCRIPTION_EN", "en");
@@ -232,19 +225,9 @@ public class SettingsFragment1 extends Fragment {
 
         saveButton.setOnClickListener(v -> applySettings());
 
-        powerSpinnerView.setSpinnerOutsideTouchListener(new OnSpinnerOutsideTouchListener() {
-            @Override
-            public void onSpinnerOutsideTouch(@NonNull View view, @NonNull MotionEvent motionEvent) {
-                powerSpinnerView.selectItemByIndex(powerSpinnerView.getSelectedIndex());
-            }
-        });
+        powerSpinnerView.setSpinnerOutsideTouchListener((view1, motionEvent) -> powerSpinnerView.selectItemByIndex(powerSpinnerView.getSelectedIndex()));
 
-        powerSpinnerView2.setSpinnerOutsideTouchListener(new OnSpinnerOutsideTouchListener() {
-            @Override
-            public void onSpinnerOutsideTouch(@NonNull View view, @NonNull MotionEvent motionEvent) {
-                powerSpinnerView2.selectItemByIndex(powerSpinnerView2.getSelectedIndex());
-            }
-        });
+        powerSpinnerView2.setSpinnerOutsideTouchListener((view12, motionEvent) -> powerSpinnerView2.selectItemByIndex(powerSpinnerView2.getSelectedIndex()));
 
 
         return view;
@@ -334,11 +317,4 @@ public class SettingsFragment1 extends Fragment {
         isNewButtonStyleSetting = active;
     }
 
-    private boolean isTouchInsideView(MotionEvent event, View view) {
-        int[] location = new int[2];
-        view.getLocationOnScreen(location);
-        float x = event.getRawX();
-        float y = event.getRawY();
-        return x > location[0] && x < location[0] + view.getWidth() && y > location[1] && y < location[1] + view.getHeight();
-    }
 }

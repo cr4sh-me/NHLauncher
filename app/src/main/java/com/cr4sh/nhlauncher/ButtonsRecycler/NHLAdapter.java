@@ -49,12 +49,10 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder> {
 
     @SuppressLint("NotifyDataSetChanged")
     public void startPapysz() {
-        // Replace all item images with a single image
+        // Replace all item images with a papysz
         for (NHLItem item : items) {
-            item.setImage("papysz2"); // Replace with your single image name
+            item.setImage("papysz2");
         }
-
-        // Notify the adapter to update the views
         notifyDataSetChanged();
     }
 
