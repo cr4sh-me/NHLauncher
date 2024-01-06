@@ -196,7 +196,6 @@ public class MDKDeauth extends AppCompatActivity {
 //                performWifiScan();
 //                AccessPointManager accessPointManager = new AccessPointManager(MDKDeauth.this);
 //                accessPointManager.startAccessPoint();
-
             } else {
                 requestLocationPermission();
             }
@@ -247,7 +246,6 @@ public class MDKDeauth extends AppCompatActivity {
     private void handleScanResults() {
         // Retrieve the scan results
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Handle the case where location permission is not granted
             return;
         }
         List<ScanResult> results = wifiManager.getScanResults();

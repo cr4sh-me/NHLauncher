@@ -36,6 +36,16 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
         window.setStatusBarColor(Color.parseColor(myPreferences.color20()));
         window.setNavigationBarColor(Color.parseColor(myPreferences.color20()));
 
+        GradientDrawable drawable = new GradientDrawable();
+        if (myPreferences.isNewButtonStyleActive()) {
+            drawable.setColor(Color.parseColor(myPreferences.color50()));
+            drawable.setCornerRadius(60);
+        } else {
+            drawable.setCornerRadius(60);
+            drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
+        }
+//        drawable.setBounds(0, 0, 0, height); // Set bounds for the drawable
+
         CustomButton customButton1 = findViewById(R.id.button1);
         customButton1.setImageResource(R.drawable.kali_fern_wifi_cracker);
         customButton1.setName("WPS ATTACK");
@@ -58,9 +68,6 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
         customButton3.setDescriptionColor(Color.parseColor(myPreferences.color80()));
 
 
-        GradientDrawable drawable = new GradientDrawable();
-        drawable.setCornerRadius(60);
-        drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
         customButton1.setBackground(drawable);
 //        customButton2.setBackground(drawable);
         customButton3.setBackground(drawable);

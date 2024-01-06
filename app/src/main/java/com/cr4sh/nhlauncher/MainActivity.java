@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
     private ImageView toolbar;
     public ExecutorService executor;
     public RecyclerView recyclerView;
-    //    public Handler handler;
     private List<String> valuesList;
     private List<Integer> imageList;
     private TextView rollCategoriesText;
@@ -103,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    // TODO translation
     // TODO test app stability
     @SuppressLint({"Recycle", "ResourceType", "CutPasteId"})
     @Override

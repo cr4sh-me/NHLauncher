@@ -60,10 +60,10 @@ public class SettingsActivity extends AppCompatActivity {
         new TabLayoutMediator(tabs, viewPager2, (tab, position) -> {
             // Set tab titles based on position
             switch (position) {
-                case 0 -> tab.setText("General");
-                case 1 -> tab.setText("Theme");
-                case 2 -> tab.setText("Statistics");
-                case 3 -> tab.setText("About");
+                case 0 -> tab.setText(getResources().getString(R.string.general));
+                case 1 -> tab.setText(getResources().getString(R.string.themes_settings));
+                case 2 -> tab.setText(getResources().getString(R.string.statistics));
+                case 3 -> tab.setText(getResources().getString(R.string.about));
                 // Add more cases for additional tabs if needed
             }
         }).attach();

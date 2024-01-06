@@ -28,7 +28,7 @@ public class MyPreferences {
             // Convert the integer color to hexadecimal
             return String.format("#%06X", (0xFFFFFF & myColor));
         } else {
-            return customColorsPrefs.getString("color80", "#e60000");
+            return customColorsPrefs.getString("color80", "#ADBDCC");
         }
     }
 
@@ -38,7 +38,7 @@ public class MyPreferences {
             // Convert the integer color to hexadecimal
             return String.format("#%06X", (0xFFFFFF & myColor));
         } else {
-            return customColorsPrefs.getString("color50", "#660000");
+            return customColorsPrefs.getString("color50", "#6C7680");
         }
     }
 
@@ -49,7 +49,7 @@ public class MyPreferences {
             // Convert the integer color to hexadecimal
             return String.format("#%06X", (0xFFFFFF & myColor));
         } else {
-            return customColorsPrefs.getString("color20", "#4c0000");
+            return customColorsPrefs.getString("color20", "#2B2F33");
         }
     }
 
@@ -59,7 +59,7 @@ public class MyPreferences {
             // Convert the integer color to hexadecimal
             return String.format("#%06X", (0xFFFFFF & myColor));
         } else {
-            return customColorsPrefs.getString("color100", "#FF0000");
+            return customColorsPrefs.getString("color100", "#ADBDCC");
         }
     }
 

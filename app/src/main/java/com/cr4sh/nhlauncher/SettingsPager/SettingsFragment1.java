@@ -113,9 +113,9 @@ public class SettingsFragment1 extends Fragment {
         newButtonsStyle.setChecked(myPreferences.isNewButtonStyleActive());
 
         String languageLocale = myPreferences.languageLocale();
-        if (languageLocale.equals("pl")) {
+        if (languageLocale.equals("PL")) {
             powerSpinnerView.selectItemByIndex(1);
-        } else if (languageLocale.equals("en")) {
+        } else if (languageLocale.equals("EN")) {
             powerSpinnerView.selectItemByIndex(0);
         }
 

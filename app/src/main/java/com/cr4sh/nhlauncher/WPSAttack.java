@@ -78,7 +78,11 @@ public class WPSAttack extends AppCompatActivity {
 
         msg2.setTextColor(Color.parseColor(myPreferences.color80()));
 
-        checkThrottling();
+        try {
+            checkThrottling();
+        } catch (Settings.SettingNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
         if (myPreferences.isThrottlingMessageShown() & isThrottleEnabled) {
             dialogUtils.openThrottlingDialog();
@@ -178,7 +182,11 @@ public class WPSAttack extends AppCompatActivity {
         enableScanButton(true);
 
         scanButton.setOnClickListener(v -> {
-            checkThrottling();
+            try {
+                checkThrottling();
+            } catch (Settings.SettingNotFoundException e) {
+                throw new RuntimeException(e);
+            }
             // Check for location permission before initiating the scan
             if (checkLocationPermission()) {
 //                startWifiScan();
@@ -196,6 +204,11 @@ public class WPSAttack extends AppCompatActivity {
             finish();
         });
 
+        msg2.setOnClickListener(v -> {
+            if (isThrottleEnabled){
+                dialogUtils.openThrottlingDialog();
+            }
+        });
 
         // Register BroadcastReceiver
         wifiScanReceiver = new BroadcastReceiver() {
@@ -235,13 +248,6 @@ public class WPSAttack extends AppCompatActivity {
         // Retrieve the scan results
         try {
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return;
             }
             List<ScanResult> results = wifiManager.getScanResults();
@@ -374,28 +380,33 @@ public class WPSAttack extends AppCompatActivity {
     }
 
     private void performWifiScan() {
-//        scanCount++;
-        // Continue with the scan
-        if (isLocationEnabled()) {
-            // Start the Wi-Fi scan
-            try {
-                boolean success = wifiManager.startScan();
-                if (!success && isThrottleEnabled) {
-                    enableScanButton(true);
-                    setMessage("Scan limit reached, WAIT 2min!");
-                } else {
-                    enableScanButton(false);
+        if (wifiManager.isWifiEnabled()) {
+            if (isLocationEnabled()) {
+                // Start the Wi-Fi scan
+                try {
+                    boolean success = wifiManager.startScan();
+                    if (!success && isThrottleEnabled) {
+                        enableScanButton(true);
+                        setMessage("Scan limit reached, wait for 2min!");
+                    } else {
+                        enableScanButton(false);
+                        buttonContainer.removeAllViews();
+                        setMessage("Scanning...");
+                    }
+                } catch (Exception e) {
                     buttonContainer.removeAllViews();
-                    setMessage("Scanning...");
+                    ToastUtils.showCustomToast(this, "E: " + e.getMessage());
                 }
-            } catch (Exception e) {
+            } else {
                 buttonContainer.removeAllViews();
-                ToastUtils.showCustomToast(this, "E: " + e.getMessage());
+                setMessage("Please enable location services first!");
             }
         } else {
             buttonContainer.removeAllViews();
-            setMessage("Please enable location services first!");
+            setMessage("Please enable WiFI!");
         }
+
+
     }
 
     private void enableScanButton(boolean enabled) {
@@ -429,11 +440,13 @@ public class WPSAttack extends AppCompatActivity {
         msg2.setText(message);
     }
 
-    private void checkThrottling() {
+    private void checkThrottling() throws Settings.SettingNotFoundException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             isThrottleEnabled = wifiManager.isScanThrottleEnabled();
         } else {
-            isThrottleEnabled = true;
+            //based on https://stackoverflow.com/a/61147099 answer
+            int enabledInt = Settings.Global.getInt(this.getContentResolver(), "wifi_scan_throttle_enabled");
+            isThrottleEnabled = enabledInt != 1;
         }
     }
 
