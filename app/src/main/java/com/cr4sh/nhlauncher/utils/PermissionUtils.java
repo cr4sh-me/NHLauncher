@@ -20,6 +20,11 @@ public class PermissionUtils {
         myActivity = activity;
     }
 
+    public boolean isRoot() {
+        ShellExecuter exe = new ShellExecuter();
+        return !exe.Executer("su -c 'id'").isEmpty();
+    }
+
     // Check is permissions for files granted
     public boolean isPermissionsGranted() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

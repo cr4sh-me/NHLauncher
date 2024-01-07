@@ -137,6 +137,15 @@ public class MainActivity extends AppCompatActivity {
 //            return;
 //        }
 
+
+        PermissionUtils permissionUtils = new PermissionUtils(this);
+
+        // Check for root permissions
+        if(!permissionUtils.isRoot()){
+            dialogUtils.openRootDialog();
+            return;
+        }
+
         myPreferences = new MyPreferences(this);
 
         resetRecyclerHeight();
@@ -156,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
         // Get classes
         DBHandler mDbHandler = DBHandler.getInstance(this);
         mDatabase = mDbHandler.getDatabase();
-        PermissionUtils permissionUtils = new PermissionUtils(this);
 
         // Check if setup has been completed
         if (!myPreferences.isSetupCompleted()) {

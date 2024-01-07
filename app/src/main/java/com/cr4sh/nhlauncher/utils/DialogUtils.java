@@ -19,6 +19,7 @@ import com.cr4sh.nhlauncher.dialogs.MissingActivityDialog;
 import com.cr4sh.nhlauncher.dialogs.NewToolDialog;
 import com.cr4sh.nhlauncher.dialogs.NhlColorPickerDialog;
 import com.cr4sh.nhlauncher.dialogs.PermissionDialog;
+import com.cr4sh.nhlauncher.dialogs.RootDialog;
 import com.cr4sh.nhlauncher.dialogs.ScanTimeDialog;
 import com.cr4sh.nhlauncher.dialogs.ThrottlingDialog;
 import com.cr4sh.nhlauncher.dialogs.WpsCustomPinDialog;
@@ -76,6 +77,14 @@ public class DialogUtils {
             AppsDialog apDialog = new AppsDialog();
             // Display our dialog!
             apDialog.show(fragmentManager, "AppsDialog");
+        });
+    }
+
+    public void openRootDialog() {
+        mainActivity.executor.execute(() -> {
+            RootDialog rootDialog = new RootDialog();
+            // Display our dialog!
+            rootDialog.show(fragmentManager, "RootDialog");
         });
     }
 

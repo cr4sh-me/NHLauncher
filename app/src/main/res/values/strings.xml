@@ -152,7 +152,7 @@
     <string name="scan">Scan</string>
     <string name="scan_results">Scan results</string>
     <string name="wifi_throttling_warning">WiFi Throttling warning!</string>
-    <string name="it_looks_like_you_have_wi_fi_throttling_enabled_it_limit_scanning_to_4_times_per_2_minutes_you_can_disable_it_for_unlimited_scanning_here_developer_options_networking_wi_fi_scan_throttling">t looks like you have Wi-Fi throttling enabled, it limit scanning to 4 times per 2 minutes. You can disable it for unlimited scanning here: Developer Options > Networking > Wi-Fi scan throttling</string>
+    <string name="it_looks_like_you_have_wi_fi_throttling_enabled_it_limit_scanning_to_4_times_per_2_minutes_you_can_disable_it_for_unlimited_scanning_here_developer_options_networking_wi_fi_scan_throttling">It looks like you have Wi-Fi throttling enabled, it limit scanning to 4 times per 2 minutes. NHLauncher will attempt to restart wifi to avoid throttling. If scanning problems occurs, you can disable it for unlimited scanning here: Developer Options > Networking > Wi-Fi scan throttling</string>
     <string name="open_settings">Open settings</string>
     <string name="use_new_buttons_style">Use new buttons style</string>
     <string name="you_can_customize_your_nhlauncher_feedback_here">You can customize your NHLauncher feedback here</string>
@@ -163,5 +163,7 @@
     <string name="db_error">Database is empty!</string>
     <string name="themes_settings">Themes</string>
     <string name="general">General</string>
+    <string name="root_error">ROOT PERMISSION IS REQUIRED!!!</string>
+    <string name="yes">OK</string>
 
 </resources>

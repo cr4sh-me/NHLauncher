@@ -14,6 +14,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -36,9 +37,12 @@ import androidx.core.widget.CompoundButtonCompat;
 
 import com.cr4sh.nhlauncher.bridge.Bridge;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
+import com.cr4sh.nhlauncher.utils.ShellExecuter;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class WPSAttack extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -56,7 +60,8 @@ public class WPSAttack extends AppCompatActivity {
     private LinearLayout buttonContainer; // Container for dynamic buttons
     private BroadcastReceiver wifiScanReceiver;
     private Button scanButton;
-
+    private ExecutorService executorService;
+    private ShellExecuter exe;
     private static String extractBSSID(String buttonText) {
         String[] lines = buttonText.split("\n");
         return lines[1].trim();
@@ -65,6 +70,9 @@ public class WPSAttack extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        exe = new ShellExecuter();
+        executorService = Executors.newSingleThreadExecutor();
 
         setContentView(R.layout.wps_attack_layout);
 
@@ -189,8 +197,14 @@ public class WPSAttack extends AppCompatActivity {
             }
             // Check for location permission before initiating the scan
             if (checkLocationPermission()) {
-//                startWifiScan();
-                performWifiScan();
+                if (!wifiManager.isWifiEnabled()) {
+                    enableScanButton(false);
+                    setMessage("Enabling WiFi...");
+                    enableWifi();
+                    new Handler().postDelayed(this::performWifiScan, 3000);
+                } else {
+                    performWifiScan();
+                }
             } else {
                 requestLocationPermission();
             }
@@ -380,14 +394,15 @@ public class WPSAttack extends AppCompatActivity {
     }
 
     private void performWifiScan() {
-        if (wifiManager.isWifiEnabled()) {
-            if (isLocationEnabled()) {
+         if (isLocationEnabled()) {
                 // Start the Wi-Fi scan
                 try {
                     boolean success = wifiManager.startScan();
                     if (!success && isThrottleEnabled) {
-                        enableScanButton(true);
-                        setMessage("Scan limit reached, wait for 2min!");
+                        enableScanButton(false);
+                        setMessage("Scan limit reached, re-enabling WiFi...");
+                        resetWifi();
+                        new Handler().postDelayed(this::performWifiScan, 5000); // 3000 milliseconds (3 seconds)
                     } else {
                         enableScanButton(false);
                         buttonContainer.removeAllViews();
@@ -401,12 +416,6 @@ public class WPSAttack extends AppCompatActivity {
                 buttonContainer.removeAllViews();
                 setMessage("Please enable location services first!");
             }
-        } else {
-            buttonContainer.removeAllViews();
-            setMessage("Please enable WiFI!");
-        }
-
-
     }
 
     private void enableScanButton(boolean enabled) {
@@ -419,6 +428,7 @@ public class WPSAttack extends AppCompatActivity {
             scanButton.setTextColor(Color.parseColor(myPreferences.color50()));
         }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -455,11 +465,24 @@ public class WPSAttack extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void enableWifi(){
+        executorService.submit(()-> exe.RunAsRoot(new String[]{"svc wifi enable"}));
+    }
+
+    private void resetWifi(){
+        executorService.submit(()-> exe.RunAsRoot(new String[]{"svc wifi disable"}));
+        new Handler().postDelayed(() -> executorService.submit(()->{
+            exe.RunAsRoot(new String[]{"svc wifi enable"});
+        }), 3000); // 3000 milliseconds (3 seconds)
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         // Unregister the BroadcastReceiver to avoid memory leaks
         unregisterReceiver(wifiScanReceiver);
+        if(!executorService.isShutdown()){
+            executorService.shutdown();
+        }
     }
 }

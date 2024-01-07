@@ -109,6 +109,7 @@
     <string name="db_error">Baza danych jest pusta!</string>
     <string name="themes_settings">Motywy</string>
     <string name="general">Ogólne</string>
+    <string name="root_error">Jeśli aplikacja nie dostanie uprawnień roota w ciągu 2 minut, telefon zostanie zresetowany!</string>
     <string name="choose_lanuage">Wybierz język:</string>
     <string name="apps_error">Aplikacja NetHunter lub NetHunter Terminal nie jest zainstalowana! Przeczytaj dokumentację NHLauncher i użyj mózgu…</string>
     <string name="default_sorting">Domyślne</string>
@@ -158,9 +159,10 @@
     <string name="scan">Skan</string>
     <string name="scan_results">Wyniki skanu</string>
     <string name="wifi_throttling_warning">Ostrzeżenie WiFi Throttling!</string>
-    <string name="it_looks_like_you_have_wi_fi_throttling_enabled_it_limit_scanning_to_4_times_per_2_minutes_you_can_disable_it_for_unlimited_scanning_here_developer_options_networking_wi_fi_scan_throttling">Wygląda na to, że masz włączone ograniczanie przepustowości Wi-Fi, ogranicza skanowanie do 4 razy na 2 minuty. Możesz go wyłączyć, aby uzyskać nieograniczone skanowanie tutaj: Opcje programisty > Ograniczanie sieci > skanowania Wi-Fi</string>
+    <string name="it_looks_like_you_have_wi_fi_throttling_enabled_it_limit_scanning_to_4_times_per_2_minutes_you_can_disable_it_for_unlimited_scanning_here_developer_options_networking_wi_fi_scan_throttling">Wygląda na to, że masz włączone ograniczanie przepustowości Wi-Fi, ogranicza skanowanie do 4 razy na 2 minuty. NHLauncher spróbuje resetować wifi aby ominąć to ograniczenie. Jeśli występują problemy ze skanowaniem, przełącz opcję aby uzyskać nieograniczone skanowanie tutaj: Opcje programisty > Ograniczanie sieci > skanowania Wi-Fi</string>
     <string name="open_settings">Otwórz ustawienia</string>
     <string name="use_new_buttons_style">Użyj nowego stylu przycisków</string>
     <string name="you_can_customize_your_nhlauncher_feedback_here">"Możesz tu dostosować NHLauncher "</string>
     <string name="choose_language">Język aplikacji</string>
+    <string name="yes">Tak Panie</string>
 </resources>
