@@ -120,8 +120,8 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder> {
         params.setMargins(margin, (margin / 2), margin, (margin / 2));
         holder.buttonView.setLayoutParams(params);
 
-        Log.d("MyAdapter", "Parent height: " + originalHeight);
-        Log.d("MyAdapter", "Button height with margin: " + (height + margin));
+//        Log.d("MyAdapter", "Parent height: " + originalHeight);
+//        Log.d("MyAdapter", "Button height with margin: " + (height + margin));
 
         holder.itemView.setOnClickListener(v -> {
             myActivity.buttonUsage = item.getUsage();
@@ -155,4 +155,21 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder> {
         // Vibrate when a view is detached (button is disappearing from the screen)
         handler.postDelayed(() -> VibrationUtil.vibrate(myActivity, 10), 0);
     }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    // Last item is fully visible and RecyclerView is not scrolling
+                    VibrationUtil.vibrate(myActivity, 10);
+                }
+            }
+        });
+    }
+
 }

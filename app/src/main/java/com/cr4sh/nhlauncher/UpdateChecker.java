@@ -1,8 +1,6 @@
 package com.cr4sh.nhlauncher;
 
 import android.content.pm.PackageInfo;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -13,7 +11,6 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -31,7 +28,8 @@ public class UpdateChecker {
 
     public void checkUpdateAsync(UpdateCheckListener listener) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<?> future = executor.submit(() -> {
+
+        executor.submit(() -> {
             try {
                 String latestVersion = getLatestAppVersion();
                 UpdateCheckResult updateResult = compareVersions(latestVersion);
@@ -42,17 +40,9 @@ public class UpdateChecker {
             }
         });
 
-        executor.shutdown();
-
-        new Handler(Looper.getMainLooper()).post(() -> {
-            try {
-                future.get(); // Wait for the task to complete before calling onUpdateCheckCompleted
-            } catch (Exception e) {
-                Log.e(TAG, "Error getting update result", e);
-                listener.onUpdateCheckCompleted(new UpdateCheckResult(false, e.getMessage()));
-            }
-        });
+        executor.shutdown(); // Shutdown the executor when tasks are completed.
     }
+
 
 
     private String getLatestAppVersion() throws IOException, JSONException {

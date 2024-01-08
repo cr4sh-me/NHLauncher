@@ -33,16 +33,18 @@ import com.cr4sh.nhlauncher.utils.ToastUtils;
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
+import java.util.Locale;
+
 public class SettingsFragment1 extends Fragment {
     MyPreferences myPreferences;
     MainUtils mainUtils;
     MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
     private Button updateButton;
-    private boolean isNewVibrationsSetting;
-    private boolean isNewButtonStyleSetting;
     private String newSortingModeSetting;
     private String newLanguageNameSetting;
     private String newLanguageLocaleSetting;
+    private CheckBox vibrationsCheckbox;
+    private CheckBox newButtonsStyle;
 
     public SettingsFragment1() {
         // Required empty public constructor
@@ -58,8 +60,8 @@ public class SettingsFragment1 extends Fragment {
         myPreferences = new MyPreferences(requireActivity());
         mainUtils = new MainUtils(mainActivity);
 
-        CheckBox vibrationsCheckbox = view.findViewById(R.id.vibrations_checkbox);
-        CheckBox newButtonsStyle = view.findViewById(R.id.newbuttons_checkbox);
+        vibrationsCheckbox = view.findViewById(R.id.vibrations_checkbox);
+        newButtonsStyle = view.findViewById(R.id.newbuttons_checkbox);
         TextView title = view.findViewById(R.id.bt_info2);
         LinearLayout bkg = view.findViewById(R.id.custom_theme_dialog_background);
         Button runSetup = view.findViewById(R.id.run_setup);
@@ -112,10 +114,10 @@ public class SettingsFragment1 extends Fragment {
         vibrationsCheckbox.setChecked(myPreferences.vibrationOn());
         newButtonsStyle.setChecked(myPreferences.isNewButtonStyleActive());
 
-        String languageLocale = myPreferences.languageLocale();
-        if (languageLocale.equals("PL")) {
+        String languageLocale = Locale.getDefault().getLanguage();
+        if (languageLocale.equals("pl")) {
             powerSpinnerView.selectItemByIndex(1);
-        } else if (languageLocale.equals("EN")) {
+        } else if (languageLocale.equals("en")) {
             powerSpinnerView.selectItemByIndex(0);
         }
 
@@ -134,8 +136,8 @@ public class SettingsFragment1 extends Fragment {
             powerSpinnerView2.selectItemByIndex(5);
         }
 
-        newButtonsStyle.setOnCheckedChangeListener(((buttonView, isChecked) -> saveNewButtonPrefTemp(isChecked)));
-        vibrationsCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> saveVibrationsPrefTemp(isChecked));
+//        newButtonsStyle.setOnCheckedChangeListener(((buttonView, isChecked) -> sa(isChecked)));
+//        vibrationsCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> saveVibrationsPrefTemp(isChecked));
 
         GradientDrawable gd = new GradientDrawable();
         gd.setStroke(8, Color.parseColor(myPreferences.color50())); // Stroke width and color
@@ -167,42 +169,48 @@ public class SettingsFragment1 extends Fragment {
             }
         });
 
-        // Create an instance of UpdateChecker
         UpdateChecker updateChecker = new UpdateChecker(mainActivity);
 
-        updateChecker.checkUpdateAsync(updateResult -> {
-            // Run on the UI thread to update the UI components
-            requireActivity().runOnUiThread(() -> {
-                checkUpdate.setText(updateResult.message());
+        checkUpdate.setOnClickListener(v -> {
+            checkUpdate.setText(requireActivity().getResources().getString(R.string.update_wait));
+            // Create an instance of UpdateChecker
 
-                if (updateResult.isUpdateAvailable()) {
-                    ToastUtils.showCustomToast(requireActivity(), requireActivity().getResources().getString(R.string.update_avaiable));
-                    updateButton.setVisibility(View.VISIBLE);
+            updateChecker.checkUpdateAsync(updateResult -> {
+                // Run on the UI thread to update the UI components
+                requireActivity().runOnUiThread(() -> {
+                    checkUpdate.setText(updateResult.message());
 
-                    int[] rainbowColors = new int[100];
+                    if (updateResult.isUpdateAvailable()) {
+                        ToastUtils.showCustomToast(requireActivity(), requireActivity().getResources().getString(R.string.update_avaiable));
+                        updateButton.setVisibility(View.VISIBLE);
 
-                    for (int i = 0; i < 100; i++) {
-                        float hue = (float) i / 100 * 360; // Distribute hues evenly
-                        rainbowColors[i] = Color.HSVToColor(new float[]{hue, 1.0f, 1.0f});
+                        int[] rainbowColors = new int[100];
+
+                        for (int i = 0; i < 100; i++) {
+                            float hue = (float) i / 100 * 360; // Distribute hues evenly
+                            rainbowColors[i] = Color.HSVToColor(new float[]{hue, 1.0f, 1.0f});
+                        }
+
+                        ValueAnimator colorAnimator = ValueAnimator.ofArgb(rainbowColors);
+                        colorAnimator.setDuration(5000);
+                        colorAnimator.setInterpolator(new LinearInterpolator());
+                        colorAnimator.setRepeatCount(ValueAnimator.INFINITE);
+                        colorAnimator.setRepeatMode(ValueAnimator.RESTART);
+
+                        colorAnimator.addUpdateListener(animation -> {
+                            int animatedColor = (int) animation.getAnimatedValue();
+                            updateButton.setBackgroundColor(animatedColor);
+                        });
+
+                        colorAnimator.start();
+                    } else {
+                        updateButton.setVisibility(View.GONE);
                     }
-
-                    ValueAnimator colorAnimator = ValueAnimator.ofArgb(rainbowColors);
-                    colorAnimator.setDuration(5000);
-                    colorAnimator.setInterpolator(new LinearInterpolator());
-                    colorAnimator.setRepeatCount(ValueAnimator.INFINITE);
-                    colorAnimator.setRepeatMode(ValueAnimator.RESTART);
-
-                    colorAnimator.addUpdateListener(animation -> {
-                        int animatedColor = (int) animation.getAnimatedValue();
-                        updateButton.setBackgroundColor(animatedColor);
-                    });
-
-                    colorAnimator.start();
-                } else {
-                    updateButton.setVisibility(View.GONE);
-                }
+                });
             });
+
         });
+
 
 
         updateButton.setOnClickListener(v -> {
@@ -235,8 +243,8 @@ public class SettingsFragment1 extends Fragment {
 
     private void applySettings() {
         // Apply the settings to SharedPreferences
-        saveVibrationsPref(isNewVibrationsSetting);
-        saveNewButtonPref(isNewButtonStyleSetting);
+        saveVibrationsPref(vibrationsCheckbox.isChecked());
+        saveNewButtonPref(newButtonsStyle.isChecked());
 
 
         if (newSortingModeSetting != null) {
@@ -262,6 +270,7 @@ public class SettingsFragment1 extends Fragment {
 
 
     private void saveNhlSettings(String sortingMode) {
+
         // Save the color values and frame drawable to SharedPreferences
         SharedPreferences prefs = requireActivity().getSharedPreferences("nhlSettings", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -308,13 +317,4 @@ public class SettingsFragment1 extends Fragment {
         newLanguageNameSetting = languageName;
         newLanguageLocaleSetting = languageLocale;
     }
-
-    private void saveVibrationsPrefTemp(boolean vibrations) {
-        isNewVibrationsSetting = vibrations;
-    }
-
-    private void saveNewButtonPrefTemp(boolean active) {
-        isNewButtonStyleSetting = active;
-    }
-
 }

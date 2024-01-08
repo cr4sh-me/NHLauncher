@@ -56,8 +56,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class MainActivity extends AppCompatActivity {
-
-    //    public boolean isSpecialEnabled = false;
     public static boolean disableMenu = false;
     public String buttonCategory;
     public String buttonName;
@@ -111,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
         NHLManager.getInstance().setMainActivity(this);
         DialogUtils dialogUtils = new DialogUtils(this.getSupportFragmentManager());
         executor = Executors.newCachedThreadPool();
-//        handler = new Handler(Looper.getMainLooper());
 
 //        // Check for nethunter and terminal apps
 //        PackageManager pm = getPackageManager();

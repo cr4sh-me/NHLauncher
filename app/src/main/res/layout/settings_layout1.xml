@@ -43,7 +43,7 @@
             <LinearLayout
                 android:id="@+id/spinnerBg1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:padding="15dp">
 
@@ -85,7 +85,7 @@
             <LinearLayout
                 android:id="@+id/spinnerBg2"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:padding="15dp">
 
@@ -114,7 +114,7 @@
             android:gravity="center"
             android:maxLines="3"
             android:padding="5dp"
-            android:text="@string/update_wait" />
+            android:text="@string/click_to_check_for_updates" />
 
         <CheckBox
             android:id="@+id/vibrations_checkbox"

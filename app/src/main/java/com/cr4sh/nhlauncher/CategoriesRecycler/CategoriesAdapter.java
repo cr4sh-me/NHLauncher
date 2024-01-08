@@ -91,8 +91,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<com.cr4sh.nhlauncher
         params.setMargins(margin, (margin / 2), margin, (margin / 2));
         holder.categoryLayout.setLayoutParams(params);
 
-        Log.d("CategoriesAdapter", "Parent height: " + originalHeight);
-        Log.d("CategoriesAdapter", "Button height with margin: " + (height + margin));
+//        Log.d("CategoriesAdapter", "Parent height: " + originalHeight);
+//        Log.d("CategoriesAdapter", "Button height with margin: " + (height + margin));
 
 
         holder.itemView.setOnClickListener(v -> {
