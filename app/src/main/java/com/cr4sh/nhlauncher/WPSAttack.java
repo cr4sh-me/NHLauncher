@@ -42,7 +42,6 @@ import com.cr4sh.nhlauncher.utils.ToastUtils;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class WPSAttack extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -60,7 +59,7 @@ public class WPSAttack extends AppCompatActivity {
     private LinearLayout buttonContainer; // Container for dynamic buttons
     private BroadcastReceiver wifiScanReceiver;
     private Button scanButton;
-    private ExecutorService executorService;
+    private final ExecutorService executorService = NHLManager.getInstance().getExecutorService();
     private ShellExecuter exe;
     private static String extractBSSID(String buttonText) {
         String[] lines = buttonText.split("\n");
@@ -72,7 +71,6 @@ public class WPSAttack extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         exe = new ShellExecuter();
-        executorService = Executors.newSingleThreadExecutor();
 
         setContentView(R.layout.wps_attack_layout);
 
@@ -481,8 +479,6 @@ public class WPSAttack extends AppCompatActivity {
         super.onDestroy();
         // Unregister the BroadcastReceiver to avoid memory leaks
         unregisterReceiver(wifiScanReceiver);
-        if(!executorService.isShutdown()){
-            executorService.shutdown();
-        }
+//        NHLManager.getInstance().shutdownExecutorService();
     }
 }

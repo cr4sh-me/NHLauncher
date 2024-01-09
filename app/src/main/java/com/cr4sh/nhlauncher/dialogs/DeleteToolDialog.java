@@ -20,13 +20,17 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
+import com.cr4sh.nhlauncher.utils.VibrationUtil;
 
 import java.util.Objects;
 
 public class DeleteToolDialog extends AppCompatDialogFragment {
+
+    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
 
     @SuppressLint("SetTextI18n")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +65,7 @@ public class DeleteToolDialog extends AppCompatDialogFragment {
         text1.setText(requireActivity().getResources().getString(R.string.deleting) + name);
 
         deleteButton.setOnClickListener(view12 -> {
+            VibrationUtil.vibrate(mainActivity, 10);
             // Some idiot protection
             try {
                 SQLiteOpenHelper dbHandler = new DBHandler(getActivity());
@@ -92,7 +97,11 @@ public class DeleteToolDialog extends AppCompatDialogFragment {
             Objects.requireNonNull(getDialog()).cancel();
         });
 
-        cancelButton.setOnClickListener(view1 -> Objects.requireNonNull(getDialog()).cancel());
+        cancelButton.setOnClickListener(view1 -> {
+            VibrationUtil.vibrate(mainActivity, 10);
+            Objects.requireNonNull(getDialog()).cancel();
+
+        });
 
         return view;
 

@@ -19,13 +19,17 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
+import com.cr4sh.nhlauncher.utils.VibrationUtil;
 
 import java.util.Objects;
 
 public class EditableDialog extends AppCompatDialogFragment {
+
+    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
 
     @SuppressLint("SetTextI18n")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,6 +68,8 @@ public class EditableDialog extends AppCompatDialogFragment {
         currentCommand.setText(requireActivity().getResources().getString(R.string.current_cmd) + cmd);
 
         saveButton.setOnClickListener(view12 -> {
+            VibrationUtil.vibrate(mainActivity, 10);
+
             // Idiot protection...
             if (newCmd.getText().toString().isEmpty()) {
                 ToastUtils.showCustomToast(requireActivity(), requireActivity().getResources().getString(R.string.empty_input));
@@ -82,7 +88,10 @@ public class EditableDialog extends AppCompatDialogFragment {
 
         });
 
-        cancelButton.setOnClickListener(view1 -> Objects.requireNonNull(getDialog()).cancel());
+        cancelButton.setOnClickListener(view1 -> {
+            VibrationUtil.vibrate(mainActivity, 10);
+            Objects.requireNonNull(getDialog()).cancel();
+        });
 
         return view;
 

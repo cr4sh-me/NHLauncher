@@ -30,10 +30,12 @@ import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.UpdateChecker;
 import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
+import com.cr4sh.nhlauncher.utils.VibrationUtil;
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
 
 public class SettingsFragment1 extends Fragment {
     MyPreferences myPreferences;
@@ -45,6 +47,7 @@ public class SettingsFragment1 extends Fragment {
     private String newLanguageLocaleSetting;
     private CheckBox vibrationsCheckbox;
     private CheckBox newButtonsStyle;
+    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
 
     public SettingsFragment1() {
         // Required empty public constructor
@@ -169,9 +172,10 @@ public class SettingsFragment1 extends Fragment {
             }
         });
 
-        UpdateChecker updateChecker = new UpdateChecker(mainActivity);
+        UpdateChecker updateChecker = new UpdateChecker();
 
         checkUpdate.setOnClickListener(v -> {
+            VibrationUtil.vibrate(mainActivity, 10);
             checkUpdate.setText(requireActivity().getResources().getString(R.string.update_wait));
             // Create an instance of UpdateChecker
 
@@ -214,24 +218,33 @@ public class SettingsFragment1 extends Fragment {
 
 
         updateButton.setOnClickListener(v -> {
+            VibrationUtil.vibrate(mainActivity, 10);
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse("https://github.com/cr4sh-me/NHLauncher/releases/latest"));
             startActivity(intent);
         });
 
-        runSetup.setOnClickListener(v -> mainUtils.run_cmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit"));
+        runSetup.setOnClickListener(v -> {
+            VibrationUtil.vibrate(mainActivity, 10);
+            mainUtils.run_cmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit");
+        });
 
         backupDb.setOnClickListener(v -> {
+            VibrationUtil.vibrate(mainActivity, 10);
             DBBackup dbb = new DBBackup();
-            mainActivity.executor.execute(() -> dbb.createBackup(getContext()));
+            executor.execute(() -> dbb.createBackup(getContext()));
         });
 
         restoreDb.setOnClickListener(v -> {
+            VibrationUtil.vibrate(mainActivity, 10);
             DBBackup dbb = new DBBackup();
-            mainActivity.executor.execute(() -> dbb.restoreBackup(getContext()));
+            executor.execute(() -> dbb.restoreBackup(getContext()));
         });
 
-        saveButton.setOnClickListener(v -> applySettings());
+        saveButton.setOnClickListener(v -> {
+            VibrationUtil.vibrate(mainActivity, 10);
+            applySettings();
+        });
 
         powerSpinnerView.setSpinnerOutsideTouchListener((view1, motionEvent) -> powerSpinnerView.selectItemByIndex(powerSpinnerView.getSelectedIndex()));
 
@@ -242,6 +255,8 @@ public class SettingsFragment1 extends Fragment {
     }
 
     private void applySettings() {
+        VibrationUtil.vibrate(mainActivity, 10);
+
         // Apply the settings to SharedPreferences
         saveVibrationsPref(vibrationsCheckbox.isChecked());
         saveNewButtonPref(newButtonsStyle.isChecked());

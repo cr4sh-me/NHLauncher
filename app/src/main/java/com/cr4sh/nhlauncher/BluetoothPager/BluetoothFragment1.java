@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment;
 
 import com.cr4sh.nhlauncher.CustomSpinnerAdapter;
 import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.bridge.Bridge;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
@@ -61,7 +62,7 @@ public class BluetoothFragment1 extends Fragment {
     private File bt_smd;
     private File bluebinder;
     private LinearLayout buttonContainer;
-    private ExecutorService executor;
+    private ExecutorService executor = NHLManager.getInstance().getExecutorService();
     private Button selectedButton = null;
 
     public BluetoothFragment1() {
@@ -76,7 +77,6 @@ public class BluetoothFragment1 extends Fragment {
         View view = inflater.inflate(R.layout.bt_layout1, container, false);
 
         myPreferences = new MyPreferences(requireActivity());
-        executor = Executors.newCachedThreadPool();
         mainHandler = new Handler(Looper.getMainLooper());
         bt_smd = new File("/sys/module/hci_smd/parameters/hcismd_set");
         String CHROOT_PATH = "/data/local/nhsystem/kali-arm64";

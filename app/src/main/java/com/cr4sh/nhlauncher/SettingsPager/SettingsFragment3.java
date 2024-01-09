@@ -30,6 +30,7 @@ import com.skydoves.powerspinner.PowerSpinnerView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 public class SettingsFragment3 extends Fragment {
@@ -39,6 +40,7 @@ public class SettingsFragment3 extends Fragment {
     private MyPreferences myPreferences;
     private RecyclerView recyclerView;
     private TextView noToolsText;
+    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
 
     public SettingsFragment3() {
         // Required empty public constructor
@@ -96,7 +98,7 @@ public class SettingsFragment3 extends Fragment {
 
     @SuppressLint({"SetTextI18n", "Recycle"})
     public void spinnerChanger(int category) {
-        Future<?> future = mainActivity.executor.submit(() -> {
+        Future<?> future = executor.submit(() -> {
             Cursor cursor;
 
             String[] projection = {"CATEGORY", "FAVOURITE", "NAME", "ICON", "USAGE"};

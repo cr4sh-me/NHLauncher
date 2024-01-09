@@ -21,14 +21,10 @@ import com.cr4sh.nhlauncher.utils.ToastUtils;
 import java.util.Objects;
 
 public class WpsCustomPinDialog extends AppCompatDialogFragment {
-
-    WPSAttack wpsAttack;
-
+    private final WPSAttack wpsAttack;
     public WpsCustomPinDialog(WPSAttack activity) {
         this.wpsAttack = activity;
     }
-
-
     @SuppressLint("SetTextI18n")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

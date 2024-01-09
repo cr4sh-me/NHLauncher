@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -24,17 +22,16 @@ import com.cr4sh.nhlauncher.utils.VibrationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
-public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder> {
+public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
     private final MainActivity myActivity = NHLManager.getInstance().getMainActivity();
     private final List<NHLItem> items = new ArrayList<>();
-    private final Handler handler = new Handler();
-    private int originalHeight;
     private int height;
     private int margin;
     private GradientDrawable drawable;
     private MyPreferences myPreferences;
-
+    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
 
     public NHLAdapter() {
     }
@@ -68,6 +65,7 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder> {
     public NHLViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         myPreferences = new MyPreferences(myActivity);
 
+        int originalHeight;
         if(myPreferences.getRecyclerMainHeight() == 0){
             originalHeight = parent.getMeasuredHeight();
             saveRecyclerHeight(originalHeight);
@@ -126,7 +124,7 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder> {
         holder.itemView.setOnClickListener(v -> {
             myActivity.buttonUsage = item.getUsage();
             mainUtils.buttonUsageIncrease(item.getName());
-            myActivity.executor.execute(() -> mainUtils.run_cmd(item.getCmd()));
+            executor.execute(() -> mainUtils.run_cmd(item.getCmd()));
         });
 
         holder.itemView.setOnLongClickListener(view -> {
@@ -148,28 +146,4 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder> {
     private NHLItem getItem(int position) {
         return items.get(position);
     }
-
-    @Override
-    public void onViewDetachedFromWindow(@NonNull NHLViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        // Vibrate when a view is detached (button is disappearing from the screen)
-        handler.postDelayed(() -> VibrationUtil.vibrate(myActivity, 10), 0);
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    // Last item is fully visible and RecyclerView is not scrolling
-                    VibrationUtil.vibrate(myActivity, 10);
-                }
-            }
-        });
-    }
-
 }

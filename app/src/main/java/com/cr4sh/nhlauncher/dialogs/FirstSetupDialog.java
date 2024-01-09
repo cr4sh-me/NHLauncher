@@ -15,13 +15,16 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.MainUtils;
+import com.cr4sh.nhlauncher.utils.VibrationUtil;
 
 import java.util.Objects;
 
 public class FirstSetupDialog extends AppCompatDialogFragment {
 
+    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.first_setup_dialog, container, false);
@@ -50,12 +53,14 @@ public class FirstSetupDialog extends AppCompatDialogFragment {
 
 
         setupButton.setOnClickListener(view12 -> {
+            VibrationUtil.vibrate(mainActivity, 10);
             Objects.requireNonNull(getDialog()).cancel();
             mainUtils.run_cmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit");
             firstSetupCompleted();
         });
 
         cancelButton.setOnClickListener(view12 -> {
+            VibrationUtil.vibrate(mainActivity, 10);
             Objects.requireNonNull(getDialog()).cancel();
             firstSetupCompleted();
         });

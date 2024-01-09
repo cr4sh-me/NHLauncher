@@ -14,8 +14,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.R;
+import com.cr4sh.nhlauncher.utils.VibrationUtil;
 import com.skydoves.colorpickerview.ColorEnvelope;
 import com.skydoves.colorpickerview.ColorPickerView;
 import com.skydoves.colorpickerview.flag.BubbleFlag;
@@ -28,12 +31,11 @@ import java.util.Objects;
 
 public class NhlColorPickerDialog extends AppCompatDialogFragment {
 
-    Button button;
-    ImageView alpha;
-    String hexColorShade;
-    //    MainActivity myActivity;
-    String hexColorString;
-    MyPreferences myPreferences;
+    private final Button button;
+    private final ImageView alpha;
+    private final String hexColorShade;
+    private String hexColorString;
+    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
 
     public NhlColorPickerDialog(Button button, ImageView alpha, String hexColorShade) {
         this.button = button;
@@ -50,7 +52,7 @@ public class NhlColorPickerDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.color_picker_dialog, container, false);
 
 //        MainUtils mainUtils = new MainUtils(myActivity);
-        myPreferences = new MyPreferences(requireActivity());
+        MyPreferences myPreferences = new MyPreferences(requireActivity());
 
 //        LinearLayout manualBox = view.findViewById(R.id.hiddenLayout);
 //        LinearLayout advancedMode = view.findViewById(R.id.advancedLayout);
@@ -97,11 +99,16 @@ public class NhlColorPickerDialog extends AppCompatDialogFragment {
         });
 
         applyColors.setOnClickListener(v -> {
+            VibrationUtil.vibrate(mainActivity, 10);
+            // TODO fix this shit
             button.setText(hexColorString);
             Objects.requireNonNull(getDialog()).cancel();
         });
 
-        cancelButton.setOnClickListener(view1 -> Objects.requireNonNull(getDialog()).cancel());
+        cancelButton.setOnClickListener(view1 -> {
+            VibrationUtil.vibrate(mainActivity, 10);
+            Objects.requireNonNull(getDialog()).cancel();
+        });
 
         return view;
 

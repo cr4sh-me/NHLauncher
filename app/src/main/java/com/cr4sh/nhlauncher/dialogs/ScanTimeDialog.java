@@ -14,15 +14,20 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.BluetoothPager.BluetoothFragment1;
+import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
+import com.cr4sh.nhlauncher.utils.VibrationUtil;
 
 import java.util.Objects;
 
 public class ScanTimeDialog extends AppCompatDialogFragment {
 
-    BluetoothFragment1 wpsAttack;
+    private final BluetoothFragment1 wpsAttack;
+
+    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
 
     public ScanTimeDialog(BluetoothFragment1 activity) {
         this.wpsAttack = activity;
@@ -70,6 +75,7 @@ public class ScanTimeDialog extends AppCompatDialogFragment {
 
 
         setupButton.setOnClickListener(view12 -> {
+            VibrationUtil.vibrate(mainActivity, 10);
             if (customPin.getText().toString().isEmpty()) {
                 ToastUtils.showCustomToast(requireActivity(), "Empty input");
             } else {
@@ -86,6 +92,7 @@ public class ScanTimeDialog extends AppCompatDialogFragment {
         });
 
         cancelButton.setOnClickListener(view12 -> {
+            VibrationUtil.vibrate(mainActivity, 10);
             Objects.requireNonNull(getDialog()).cancel();
             if (option == 1) {
                 wpsAttack.scanTime = "15";

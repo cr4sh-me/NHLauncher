@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -17,6 +16,7 @@ import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.MainUtils;
+import com.cr4sh.nhlauncher.utils.VibrationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<com.cr4sh.nhlauncher
     private final MainActivity myActivity = NHLManager.getInstance().getMainActivity();
     private final List<String> item = new ArrayList<>();
     private final List<Integer> itemImg = new ArrayList<>();
-    private int originalHeight;
     private int height;
     private int margin;
     private GradientDrawable drawable;
@@ -50,7 +49,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<com.cr4sh.nhlauncher
     @Override
     public com.cr4sh.nhlauncher.CategoriesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         myPreferences = new MyPreferences(myActivity);
-        originalHeight = parent.getMeasuredHeight();
+        int originalHeight = parent.getMeasuredHeight();
         margin = 20;
         height = (originalHeight / 8) - margin; // Button height without margin
 
@@ -94,8 +93,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<com.cr4sh.nhlauncher
 //        Log.d("CategoriesAdapter", "Parent height: " + originalHeight);
 //        Log.d("CategoriesAdapter", "Button height with margin: " + (height + margin));
 
-
         holder.itemView.setOnClickListener(v -> {
+            VibrationUtil.vibrate(myActivity, 10);
             myActivity.backButton.callOnClick();
             mainUtils.spinnerChanger((position));
             myActivity.currentCategoryNumber = position;

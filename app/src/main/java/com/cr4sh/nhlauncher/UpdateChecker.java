@@ -20,14 +20,12 @@ public class UpdateChecker {
 
     private static final String TAG = "UpdateChecker";
     private static final String GITHUB_API_URL = "https://api.github.com/repos/cr4sh-me/NHLauncher/releases/latest";
-    MainActivity mainActivity;
+    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
+    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
 
-    public UpdateChecker(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
-    }
+    public UpdateChecker() {}
 
     public void checkUpdateAsync(UpdateCheckListener listener) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
 
         executor.submit(() -> {
             try {
@@ -40,7 +38,8 @@ public class UpdateChecker {
             }
         });
 
-        executor.shutdown(); // Shutdown the executor when tasks are completed.
+        // TODO shit
+//        executor.shutdown(); // Shutdown the executor when tasks are completed.
     }
 
 

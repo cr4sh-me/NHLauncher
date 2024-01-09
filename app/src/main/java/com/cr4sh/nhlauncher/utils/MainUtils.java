@@ -16,13 +16,14 @@ import com.cr4sh.nhlauncher.ButtonsRecycler.NHLItem;
 import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.bridge.Bridge;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 public class MainUtils extends AppCompatActivity {
@@ -30,6 +31,8 @@ public class MainUtils extends AppCompatActivity {
     private final SQLiteDatabase mDatabase;
     private final MainActivity mainActivity;
     private final MyPreferences myPreferences;
+
+    private final ExecutorService executorService = NHLManager.getInstance().getExecutorService();
 
     public MainUtils(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
@@ -81,11 +84,7 @@ public class MainUtils extends AppCompatActivity {
             MainActivity.disableMenu = false;
         }
 
-        if (mainActivity.executor.isTerminated() || mainActivity.executor.isShutdown()) {
-            mainActivity.executor = Executors.newCachedThreadPool();
-        }
-
-        Future<List<NHLItem>> queryTask = mainActivity.executor.submit(() -> {
+        Future<List<NHLItem>> queryTask = executorService.submit(() -> {
             Cursor cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, myPreferences.sortingMode(), null);
 
             List<NHLItem> newItemList = new ArrayList<>();

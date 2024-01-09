@@ -18,12 +18,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.R;
+import com.cr4sh.nhlauncher.utils.VibrationUtil;
 
 public class SettingsFragment4 extends Fragment {
-    MyPreferences myPreferences;
-
+    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
+    private MyPreferences myPreferences;
     public SettingsFragment4() {
         // Required empty public constructor
     }
@@ -62,6 +65,7 @@ public class SettingsFragment4 extends Fragment {
         textView3.setLinkTextColor(Color.parseColor(myPreferences.color80()));
 
         github.setOnClickListener(v -> {
+            VibrationUtil.vibrate(mainActivity, 10);
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/cr4sh-me/NHLauncher"));
             startActivity(intent);
         });
@@ -75,6 +79,7 @@ public class SettingsFragment4 extends Fragment {
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
+                VibrationUtil.vibrate(mainActivity, 10);
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
             }

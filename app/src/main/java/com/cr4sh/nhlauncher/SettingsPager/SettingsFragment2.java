@@ -27,6 +27,7 @@ import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
+import com.cr4sh.nhlauncher.utils.VibrationUtil;
 import com.skydoves.colorpickerview.ColorEnvelope;
 import com.skydoves.colorpickerview.ColorPickerView;
 import com.skydoves.colorpickerview.flag.BubbleFlag;
@@ -218,7 +219,7 @@ public class SettingsFragment2 extends Fragment {
         });
 
         applyColors.setOnClickListener(v -> {
-
+            VibrationUtil.vibrate(mainActivity, 10);
             if (hexColorValue1.getText().length() < 0 || hexColorValue1.getText().length() < 0 || hexColorValue1.getText().length() < 0) {
                 ToastUtils.showCustomToast(requireActivity(), "Empty color values! Use brain...");
             } else {
@@ -239,8 +240,6 @@ public class SettingsFragment2 extends Fragment {
                 requireActivity().recreate(); // recreate this activity AFTER to prevent closing db for stats
             }
         });
-
-//        cancelButton.setOnClickListener(view1 -> Objects.requireNonNull(getDialog()).cancel());
 
         return view;
     }

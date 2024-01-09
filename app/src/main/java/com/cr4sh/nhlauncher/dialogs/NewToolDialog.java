@@ -20,14 +20,17 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
+import com.cr4sh.nhlauncher.utils.VibrationUtil;
 
 import java.util.Objects;
 
 public class NewToolDialog extends AppCompatDialogFragment {
 
+    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
     @SuppressLint("Recycle")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -68,6 +71,7 @@ public class NewToolDialog extends AppCompatDialogFragment {
         saveButton.setTextColor(Color.parseColor(myPreferences.color80()));
 
         saveButton.setOnClickListener(view12 -> {
+            VibrationUtil.vibrate(mainActivity, 10);
             // Idiot protection...
             if (myName.getText().toString().isEmpty()) {
                 ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.name_empty));
@@ -101,7 +105,10 @@ public class NewToolDialog extends AppCompatDialogFragment {
 
         });
 
-        cancelButton.setOnClickListener(view1 -> Objects.requireNonNull(getDialog()).cancel());
+        cancelButton.setOnClickListener(view1 -> {
+            VibrationUtil.vibrate(mainActivity, 10);
+            Objects.requireNonNull(getDialog()).cancel();
+        });
 
         return view;
 

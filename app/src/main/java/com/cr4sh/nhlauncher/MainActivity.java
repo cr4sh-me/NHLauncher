@@ -52,7 +52,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class MainActivity extends AppCompatActivity {
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     public Button backButton;
     public int currentCategoryNumber = 1;
     private ImageView toolbar;
-    public ExecutorService executor;
+    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
     public RecyclerView recyclerView;
     private List<String> valuesList;
     private List<Integer> imageList;
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
         NHLManager.getInstance().setMainActivity(this);
         DialogUtils dialogUtils = new DialogUtils(this.getSupportFragmentManager());
-        executor = Executors.newCachedThreadPool();
+//        executor = Executors.newCachedThreadPool();
 
 //        // Check for nethunter and terminal apps
 //        PackageManager pm = getPackageManager();
@@ -568,9 +567,7 @@ public class MainActivity extends AppCompatActivity {
         if (mDatabase != null) {
             mDatabase.close();
         }
-        if (!executor.isShutdown()) {
-            executor.shutdown();
-        }
+        NHLManager.getInstance().shutdownExecutorService();
     }
 
     // Close searchbar or categories if back button pressed

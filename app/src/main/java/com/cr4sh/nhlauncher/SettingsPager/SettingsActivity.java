@@ -14,14 +14,15 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.R;
+import com.cr4sh.nhlauncher.utils.VibrationUtil;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    public Button cancelButton;
-
+    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +40,12 @@ public class SettingsActivity extends AppCompatActivity {
         TextView title = findViewById(R.id.title);
         title.setTextColor(Color.parseColor(myPreferences.color80()));
 
-        cancelButton = findViewById(R.id.cancel_button);
+        Button cancelButton = findViewById(R.id.cancel_button);
         cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
         cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
 
         cancelButton.setOnClickListener(v -> {
+            VibrationUtil.vibrate(mainActivity, 10);
             Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);

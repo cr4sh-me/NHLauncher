@@ -13,12 +13,16 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.PermissionUtils;
+import com.cr4sh.nhlauncher.utils.VibrationUtil;
 
 import java.util.Objects;
 
 public class PermissionDialog extends AppCompatDialogFragment {
+
+    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,6 +45,7 @@ public class PermissionDialog extends AppCompatDialogFragment {
         allowButton.setTextColor(Color.parseColor(myPreferences.color80()));
 
         allowButton.setOnClickListener(view12 -> {
+            VibrationUtil.vibrate(mainActivity, 10);
             Objects.requireNonNull(getDialog()).cancel();
             PermissionUtils permissionUtils = new PermissionUtils((MainActivity) requireActivity());
             permissionUtils.takePermissions();
