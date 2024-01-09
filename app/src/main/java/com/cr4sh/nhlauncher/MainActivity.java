@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
         Animation recUp = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_down);
 
         rollCategoriesLayout.setOnClickListener(view -> runOnUiThread(() -> {
-
+            VibrationUtil.vibrate(MainActivity.this, 10);
             // Check if searchView is not opened, prevent opening 2 things at the same time
             if (searchEditText.getVisibility() == View.GONE) {
 
@@ -295,8 +295,6 @@ public class MainActivity extends AppCompatActivity {
                 disableWhileAnimation(rollCategoriesLayout);
 
                 // Animation
-
-                VibrationUtil.vibrate(MainActivity.this, 10);
                 categoriesLayout.startAnimation(recUp);
 
                 // Enable things
@@ -311,7 +309,6 @@ public class MainActivity extends AppCompatActivity {
             enableAfterAnimation(rollCategoriesLayout);
             disableWhileAnimation(categoriesLayout);
 
-
             backButton.callOnClick();
 
             Intent intent = new Intent(this, SpecialFeaturesActivity.class);
@@ -319,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         backButton.setOnClickListener(view -> {
-
+            VibrationUtil.vibrate(MainActivity.this, 10);
             enableAfterAnimation(toolbar);
             enableAfterAnimation(rollCategoriesLayout);
             disableWhileAnimation(categoriesLayout);
@@ -506,10 +503,7 @@ public class MainActivity extends AppCompatActivity {
                         searchEditText.setText(filteredText);
                         searchEditText.setSelection(filteredText.length());
                     }
-
                 }
-
-
             }
 
             @Override

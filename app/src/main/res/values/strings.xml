@@ -166,5 +166,6 @@
     <string name="root_error">ROOT PERMISSION IS REQUIRED!!!</string>
     <string name="yes">OK</string>
     <string name="click_to_check_for_updates">Click to check for updates!</string>
+    <string name="nhlauncher_add_ons">NHLauncher Add-ons</string>
 
 </resources>

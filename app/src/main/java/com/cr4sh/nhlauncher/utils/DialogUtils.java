@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import com.cr4sh.nhlauncher.BluetoothPager.BluetoothFragment1;
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.NHLManager;
-import com.cr4sh.nhlauncher.WPSAttack;
+import com.cr4sh.nhlauncher.WpsAttacks.WPSAttack;
 import com.cr4sh.nhlauncher.dialogs.AppsDialog;
 import com.cr4sh.nhlauncher.dialogs.ButtonMenuDialog;
 import com.cr4sh.nhlauncher.dialogs.DeleteToolDialog;

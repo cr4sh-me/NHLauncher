@@ -15,8 +15,9 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.R;
-import com.cr4sh.nhlauncher.WPSAttack;
+import com.cr4sh.nhlauncher.WpsAttacks.WPSAttack;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
+import com.cr4sh.nhlauncher.utils.VibrationUtil;
 
 import java.util.Objects;
 
@@ -78,6 +79,7 @@ public class WpsCustomPinDialog extends AppCompatDialogFragment {
 
 
         setupButton.setOnClickListener(view12 -> {
+            VibrationUtil.vibrate(requireActivity(), 10);
             if (customPin.getText().toString().isEmpty()) {
                 ToastUtils.showCustomToast(requireActivity(), "Empty input!");
             } else {
@@ -91,6 +93,7 @@ public class WpsCustomPinDialog extends AppCompatDialogFragment {
         });
 
         cancelButton.setOnClickListener(view12 -> {
+            VibrationUtil.vibrate(requireActivity(), 10);
             Objects.requireNonNull(getDialog()).cancel();
             if (option == 1) {
                 wpsAttack.customPINCMD = "";

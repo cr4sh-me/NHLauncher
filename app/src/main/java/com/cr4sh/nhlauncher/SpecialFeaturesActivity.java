@@ -11,8 +11,14 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.cr4sh.nhlauncher.utils.ToastUtils;
+import com.cr4sh.nhlauncher.SpecialButtonsRecycler.NHLSpecialAdapter;
+import com.cr4sh.nhlauncher.SpecialButtonsRecycler.NHLSpecialItem;
+import com.cr4sh.nhlauncher.utils.VibrationUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SpecialFeaturesActivity extends AppCompatActivity {
 
@@ -22,6 +28,8 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
         setContentView(R.layout.special_fragment_layout);
 
         MyPreferences myPreferences = new MyPreferences(this);
+
+        RecyclerView specialRecyclerView = findViewById(R.id.special_recycler_view);
 
         TextView title = findViewById(R.id.textView);
         title.setTextColor(Color.parseColor(myPreferences.color80()));
@@ -44,52 +52,43 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
             drawable.setCornerRadius(60);
             drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
         }
-//        drawable.setBounds(0, 0, 0, height); // Set bounds for the drawable
 
-        CustomButton customButton1 = findViewById(R.id.button1);
-        customButton1.setImageResource(R.drawable.kali_fern_wifi_cracker);
-        customButton1.setName("WPS ATTACK");
-        customButton1.setNameColor(Color.parseColor(myPreferences.color80()));
-        customButton1.setDescription("USE ONESHOT SCRIPT TO PERFORM WPS ATTACKS");
-        customButton1.setDescriptionColor(Color.parseColor(myPreferences.color80()));
+        NHLSpecialAdapter nhlSpecialAdapter = new NHLSpecialAdapter();
+        NHLSpecialItem specialItem = new NHLSpecialItem("WPS ATTACK", "USE ONESHOT SCRIPT TO PERFORM WPS ATTACKS", "kali_fern_wifi_cracker");
+        NHLSpecialItem specialItem2 = new NHLSpecialItem("BLUETOOTH TOOLKIT", "PERFORM VARIOUS BLUETOOTH ATTACKS", "kali_spooftooph");
 
-//        CustomButton customButton2 = findViewById(R.id.button2);
-//        customButton2.setImageResource(R.drawable.kali_mdk3);
-//        customButton2.setName("WIFI DEAUTH");
-//        customButton2.setNameColor(Color.parseColor(myPreferences.color80()));
-//        customButton2.setDescription("USE MDK4 TO DISCONNECT CLIENTS FROM AP");
-//        customButton2.setDescriptionColor(Color.parseColor(myPreferences.color80()));
+        List<NHLSpecialItem> newItemList = new ArrayList<>();
+        newItemList.add(specialItem);
+        newItemList.add(specialItem2);
 
-        CustomButton customButton3 = findViewById(R.id.button3);
-        customButton3.setImageResource(R.drawable.kali_tools);
-        customButton3.setName("Bluetooth Toolkit");
-        customButton3.setNameColor(Color.parseColor(myPreferences.color80()));
-        customButton3.setDescription("PERFORM VARIOUS BLUETOOTH ATTACKS");
-        customButton3.setDescriptionColor(Color.parseColor(myPreferences.color80()));
+        nhlSpecialAdapter.updateData(newItemList);
+        specialRecyclerView.setAdapter(nhlSpecialAdapter);
 
-
-        customButton1.setBackground(drawable);
-//        customButton2.setBackground(drawable);
-        customButton3.setBackground(drawable);
-
-
-        customButton1.setOnClickListener(v -> {
-            Intent intent = new Intent(this, WPSAttack.class);
-            startActivity(intent);
-        });
+//        customButton1.setBackground(drawable);
+////        customButton2.setBackground(drawable);
+//        customButton3.setBackground(drawable);
+//
+//
+//        customButton1.setOnClickListener(v -> {
+//            VibrationUtil.vibrate(this, 10);
+//            Intent intent = new Intent(this, WPSAttack.class);
+//            startActivity(intent);
+//        });
 
 //        customButton2.setOnClickListener(v -> {
 //            Intent intent = new Intent(this, MDKDeauth.class);
 //            startActivity(intent);
 //        });
 
-        customButton3.setOnClickListener(v -> {
-            ToastUtils.showCustomToast(this, "Coming soon...");
-//            Intent intent = new Intent(this, BluetoothAttacks.class);
-//            startActivity(intent);
-        });
+//        customButton3.setOnClickListener(v -> {
+//            VibrationUtil.vibrate(this, 10);
+//            ToastUtils.showCustomToast(this, "Coming soon...");
+////            Intent intent = new Intent(this, BluetoothAttacks.class);
+////            startActivity(intent);
+//        });
 
         cancelButton.setOnClickListener(v -> {
+            VibrationUtil.vibrate(this, 10);
             Intent intent = new Intent(SpecialFeaturesActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);

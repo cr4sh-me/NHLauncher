@@ -139,8 +139,8 @@ public class SettingsFragment1 extends Fragment {
             powerSpinnerView2.selectItemByIndex(5);
         }
 
-//        newButtonsStyle.setOnCheckedChangeListener(((buttonView, isChecked) -> sa(isChecked)));
-//        vibrationsCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> saveVibrationsPrefTemp(isChecked));
+        newButtonsStyle.setOnCheckedChangeListener((buttonView, isChecked) -> VibrationUtil.vibrate(requireActivity(), 10));
+        vibrationsCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> VibrationUtil.vibrate(requireActivity(), 10));
 
         GradientDrawable gd = new GradientDrawable();
         gd.setStroke(8, Color.parseColor(myPreferences.color50())); // Stroke width and color

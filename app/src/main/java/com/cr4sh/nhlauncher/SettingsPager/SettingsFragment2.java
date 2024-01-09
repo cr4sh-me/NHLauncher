@@ -195,9 +195,18 @@ public class SettingsFragment2 extends Fragment {
             }
         });
 
-        hexColorValue1.setOnClickListener(v -> openPickerDialog(hexColorValue1, alphaTileViewAdv1, myPreferences.color80()));
-        hexColorValue2.setOnClickListener(v -> openPickerDialog(hexColorValue2, alphaTileViewAdv2, myPreferences.color50()));
-        hexColorValue3.setOnClickListener(v -> openPickerDialog(hexColorValue3, alphaTileViewAdv3, myPreferences.color20()));
+        hexColorValue1.setOnClickListener(v -> {
+            VibrationUtil.vibrate(mainActivity, 10);
+            openPickerDialog(hexColorValue1, alphaTileViewAdv1, myPreferences.color80());
+        });
+        hexColorValue2.setOnClickListener(v -> {
+            VibrationUtil.vibrate(mainActivity, 10);
+            openPickerDialog(hexColorValue2, alphaTileViewAdv2, myPreferences.color50());
+        });
+        hexColorValue3.setOnClickListener(v -> {
+            VibrationUtil.vibrate(mainActivity, 10);
+            openPickerDialog(hexColorValue3, alphaTileViewAdv3, myPreferences.color20());
+        });
 
 
         colorPickerView.setColorListener((ColorListener) (color, fromUser) -> {

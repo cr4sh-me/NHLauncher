@@ -48,7 +48,7 @@
             android:name=".SpecialFeaturesActivity"
             android:exported="false"></activity>
         <activity
-            android:name=".WPSAttack"
+            android:name=".WpsAttacks.WPSAttack"
             android:exported="false"></activity>
         <activity
             android:name=".MDKDeauth"

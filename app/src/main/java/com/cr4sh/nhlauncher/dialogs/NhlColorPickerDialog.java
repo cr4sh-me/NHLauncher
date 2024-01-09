@@ -43,22 +43,14 @@ public class NhlColorPickerDialog extends AppCompatDialogFragment {
         this.hexColorShade = hexColorShade;
     }
 
-    //    public CustomThemeDialog(MainActivity activity) {
-//        this.myActivity = activity;
-//    }
     @SuppressLint("SetTextI18n")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.color_picker_dialog, container, false);
 
-//        MainUtils mainUtils = new MainUtils(myActivity);
         MyPreferences myPreferences = new MyPreferences(requireActivity());
 
-//        LinearLayout manualBox = view.findViewById(R.id.hiddenLayout);
-//        LinearLayout advancedMode = view.findViewById(R.id.advancedLayout);
-//        RelativeLayout alphaLayout = view.findViewById(R.id.alphaLayout);
         TextView title = view.findViewById(R.id.dialog_title);
-//        TextView text2  = view.findViewById(R.id.text_second);
         LinearLayout bkg = view.findViewById(R.id.custom_theme_dialog_background);
         ColorPickerView colorPickerView = view.findViewById(R.id.colorPickerView);
         BrightnessSlideBar brightnessSlideBar = view.findViewById(R.id.brightnessBar);
@@ -93,14 +85,11 @@ public class NhlColorPickerDialog extends AppCompatDialogFragment {
         colorPickerView.setColorListener((ColorListener) (color, fromUser) -> {
             ColorEnvelope colorEnvelope = new ColorEnvelope(color);
             hexColorString = "#" + colorEnvelope.getHexCode();
-            hexColorValue.setText(hexColorString);
-            alpha.setBackgroundColor(Color.parseColor(hexColorString));
-
         });
 
         applyColors.setOnClickListener(v -> {
             VibrationUtil.vibrate(mainActivity, 10);
-            // TODO fix this shit
+            alpha.setBackgroundColor(Color.parseColor(hexColorString));
             button.setText(hexColorString);
             Objects.requireNonNull(getDialog()).cancel();
         });
