@@ -130,6 +130,13 @@
             android:gravity="center"
             android:text="@string/use_new_buttons_style" />
 
+        <CheckBox
+            android:id="@+id/overlay_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/use_themed_icons_overlay" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

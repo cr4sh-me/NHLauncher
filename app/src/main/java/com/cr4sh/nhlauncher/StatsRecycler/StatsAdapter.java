@@ -13,11 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
-import com.cr4sh.nhlauncher.utils.DialogUtils;
-import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.VibrationUtil;
 
 import java.util.ArrayList;
@@ -31,7 +29,7 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsHolder> {
     private int height;
     private int margin;
     private GradientDrawable drawable;
-    private MyPreferences myPreferences;
+    private NHLPreferences NHLPreferences;
 
 
     public StatsAdapter() {
@@ -48,19 +46,19 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsHolder> {
     @NonNull
     @Override
     public StatsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        myPreferences = new MyPreferences(myActivity);
+        NHLPreferences = new NHLPreferences(myActivity);
 
         originalHeight = parent.getMeasuredHeight();
         margin = 20;
         height = (originalHeight / 8) - margin; // Button height without margin
 
         drawable = new GradientDrawable();
-        if (myPreferences.isNewButtonStyleActive()) {
-            drawable.setColor(Color.parseColor(myPreferences.color50()));
+        if (NHLPreferences.isNewButtonStyleActive()) {
+            drawable.setColor(Color.parseColor(NHLPreferences.color50()));
             drawable.setCornerRadius(60);
         } else {
             drawable.setCornerRadius(60);
-            drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
+            drawable.setStroke(8, Color.parseColor(NHLPreferences.color80()));
         }
         drawable.setBounds(0, 0, 0, height); // Set bounds for the drawable
 
@@ -71,9 +69,6 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsHolder> {
     // Used to create buttons, and set listeners for them
     @Override
     public void onBindViewHolder(@NonNull StatsHolder holder, @SuppressLint("RecyclerView") int position) {
-
-        MainUtils mainUtils = new MainUtils(myActivity);
-        DialogUtils dialogUtils = new DialogUtils(myActivity.getSupportFragmentManager());
 
         StatsItem item = getItem(position);
 
@@ -87,8 +82,8 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsHolder> {
 
         holder.imageView.setImageResource(imageResourceId);
 
-        holder.nameView.setTextColor(Color.parseColor(myPreferences.color80()));
-        holder.usageText.setTextColor(Color.parseColor(myPreferences.color80()));
+        holder.nameView.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        holder.usageText.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         holder.itemView.setBackground(drawable);
 

@@ -15,8 +15,8 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.BluetoothPager.BluetoothFragment1;
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
 import com.cr4sh.nhlauncher.utils.VibrationUtil;
@@ -40,7 +40,7 @@ public class ScanTimeDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.wps_custom_pin_dialog, container, false);
 
 //        MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
-        MyPreferences myPreferences = new MyPreferences(requireActivity());
+        NHLPreferences NHLPreferences = new NHLPreferences(requireActivity());
 
         assert getArguments() != null;
         int option = getArguments().getInt("option");
@@ -60,18 +60,18 @@ public class ScanTimeDialog extends AppCompatDialogFragment {
         }
 
         // Apply custom themes
-        bkg.setBackgroundColor(Color.parseColor(myPreferences.color20()));
-        title.setTextColor(Color.parseColor(myPreferences.color80()));
+        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
+        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        customPin.setTextColor(Color.parseColor(myPreferences.color80()));
-        customPin.getBackground().mutate().setTint(Color.parseColor(myPreferences.color50()));
-        customPin.setHintTextColor(Color.parseColor(myPreferences.color50()));
+        customPin.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        customPin.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
+        customPin.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
 
-        setupButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        setupButton.setTextColor(Color.parseColor(myPreferences.color80()));
+        setupButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        setupButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-        cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
+        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
 
 
         setupButton.setOnClickListener(view12 -> {

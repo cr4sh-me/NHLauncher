@@ -14,18 +14,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.WpsAttacks.WPSAttack;
-import com.cr4sh.nhlauncher.utils.DialogUtils;
-import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
 import com.cr4sh.nhlauncher.utils.VibrationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 public class NHLSpecialAdapter extends RecyclerView.Adapter<NHLSpecialViewHolder>{
     private final MainActivity myActivity = NHLManager.getInstance().getMainActivity();
@@ -33,9 +30,7 @@ public class NHLSpecialAdapter extends RecyclerView.Adapter<NHLSpecialViewHolder
     private int height;
     private int margin;
     private GradientDrawable drawable;
-    private MyPreferences myPreferences;
-    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
-
+    private NHLPreferences NHLPreferences;
     public NHLSpecialAdapter() {
     }
 
@@ -57,26 +52,26 @@ public class NHLSpecialAdapter extends RecyclerView.Adapter<NHLSpecialViewHolder
     @NonNull
     @Override
     public NHLSpecialViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        myPreferences = new MyPreferences(myActivity);
+        NHLPreferences = new NHLPreferences(myActivity);
 
         int originalHeight;
-        if(myPreferences.getRecyclerMainHeight() == 0){
+        if(NHLPreferences.getRecyclerMainHeight() == 0){
             originalHeight = parent.getMeasuredHeight();
             saveRecyclerHeight(originalHeight);
         } else {
-            originalHeight = myPreferences.getRecyclerMainHeight();
+            originalHeight = NHLPreferences.getRecyclerMainHeight();
         }
 
         margin = 20;
         height = (originalHeight / 8) - margin; // Button height without margin
 
         drawable = new GradientDrawable();
-        if (myPreferences.isNewButtonStyleActive()) {
-            drawable.setColor(Color.parseColor(myPreferences.color50()));
+        if (NHLPreferences.isNewButtonStyleActive()) {
+            drawable.setColor(Color.parseColor(NHLPreferences.color50()));
             drawable.setCornerRadius(60);
         } else {
             drawable.setCornerRadius(60);
-            drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
+            drawable.setStroke(8, Color.parseColor(NHLPreferences.color80()));
         }
         drawable.setBounds(0, 0, 0, height); // Set bounds for the drawable
 
@@ -88,9 +83,6 @@ public class NHLSpecialAdapter extends RecyclerView.Adapter<NHLSpecialViewHolder
     @Override
     public void onBindViewHolder(@NonNull NHLSpecialViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
-        MainUtils mainUtils = new MainUtils(myActivity);
-        DialogUtils dialogUtils = new DialogUtils(myActivity.getSupportFragmentManager());
-
         NHLSpecialItem item = getItem(position);
 
         holder.nameView.setText(item.getName().toUpperCase());
@@ -98,13 +90,10 @@ public class NHLSpecialAdapter extends RecyclerView.Adapter<NHLSpecialViewHolder
 
         @SuppressLint("DiscouragedApi") int imageResourceId = myActivity.getResources().getIdentifier(item.getImage(), "drawable", myActivity.getPackageName());
 
-//        holder.imageView.setColorFilter(Color.parseColor(myPreferences.color80()), PorterDuff.Mode.MULTIPLY);
-//        holder.imageView.setColorFilter(Color.parseColor(myPreferences.color80()), PorterDuff.Mode.);
-
         holder.imageView.setImageResource(imageResourceId);
 
-        holder.nameView.setTextColor(Color.parseColor(myPreferences.color80()));
-        holder.descriptionView.setTextColor(Color.parseColor(myPreferences.color80()));
+        holder.nameView.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        holder.descriptionView.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         holder.itemView.setBackground(drawable);
 
@@ -112,12 +101,8 @@ public class NHLSpecialAdapter extends RecyclerView.Adapter<NHLSpecialViewHolder
         params.setMargins(margin, (margin / 2), margin, (margin / 2));
         holder.buttonView.setLayoutParams(params);
 
-//        Log.d("MyAdapter", "Parent height: " + originalHeight);
-//        Log.d("MyAdapter", "Button height with margin: " + (height + margin));
-
         holder.itemView.setOnClickListener(v -> {
             VibrationUtil.vibrate(myActivity, 10);
-
             if (position == 0) {
                 Intent intent = new Intent(myActivity, WPSAttack.class);
                 myActivity.startActivity(intent);

@@ -138,7 +138,7 @@
     <string name="current_app_version">"Current version: "</string>
     <string name="new_app_version">"New version: "</string>
     <string name="update_avaiable">Update available!</string>
-    <string name="giga_chad">Welcome to beta version!</string>
+    <string name="giga_chad">Welcome to test version!</string>
     <string name="already_updated">Already updated!</string>
     <string name="something_fucked_up">Something went wrong!</string>
     <string name="update_button">Download update!</string>
@@ -167,5 +167,19 @@
     <string name="yes">OK</string>
     <string name="click_to_check_for_updates">Click to check for updates!</string>
     <string name="nhlauncher_add_ons">NHLauncher Add-ons</string>
+    <string name="use_themed_icons_overlay">Use themed icons overlay</string>
+    <string name="location_denied">Location permission denied!</string>
+    <string name="custom_pin">Custom pin</string>
+    <string name="wps_attack">WPS Attack</string>
+    <string name="oneshot_performs_wps_pin_and_pixie_dust_attack_without_having_to_switch_to_monitor_mode">OneShot performs WPS PIN and Pixie Dust attack without having to switch to monitor mode</string>
+    <string name="pixie_dust">Pixie Dust</string>
+    <string name="online_bruteforce">Online Bruteforce</string>
+    <string name="pixie_force">Pixie Force</string>
+    <string name="wps_button">WPS Button</string>
+    <string name="delay">Delay</string>
+    <string name="launch_attack">Launch attack</string>
+    <string name="wps_desc_short">USE ONESHOT SCRIPT TO PERFORM WPS ATTACKS</string>
+    <string name="bt_short">PERFORM VARIOUS BLUETOOTH ATTACKS</string>
+    <string name="bt_toolkit">BLUETOOTH TOOLKIT</string>
 
 </resources>

@@ -5,8 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,20 +23,16 @@ import androidx.core.widget.CompoundButtonCompat;
 import androidx.fragment.app.Fragment;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
 import com.cr4sh.nhlauncher.utils.VibrationUtil;
-import com.skydoves.colorpickerview.ColorEnvelope;
-import com.skydoves.colorpickerview.ColorPickerView;
-import com.skydoves.colorpickerview.flag.BubbleFlag;
-import com.skydoves.colorpickerview.flag.FlagMode;
-import com.skydoves.colorpickerview.listeners.ColorListener;
+import com.flask.colorpicker.ColorPickerView;
 
 public class SettingsFragment2 extends Fragment {
-    MyPreferences myPreferences;
+    NHLPreferences NHLPreferences;
     String hexColorString;
     MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
 
@@ -51,7 +48,7 @@ public class SettingsFragment2 extends Fragment {
 
         View view = inflater.inflate(R.layout.settings_layout2, container, false);
 
-        myPreferences = new MyPreferences(requireActivity());
+        NHLPreferences = new NHLPreferences(requireActivity());
 
         LinearLayout manualBox = view.findViewById(R.id.hiddenLayout);
         LinearLayout advancedMode = view.findViewById(R.id.advancedLayout);
@@ -80,13 +77,14 @@ public class SettingsFragment2 extends Fragment {
         Button applyColors = view.findViewById(R.id.apply_custom_colors);
 //        Button cancelButton = view.findViewById(R.id.cancel_button);
 
-        hexColorString = myPreferences.color100();
+        hexColorString = NHLPreferences.color100();
+        hexColorValue.setText(hexColorString);
 
 
         // Checkbox set
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            dynamicThemes.setChecked(myPreferences.dynamicThemeBool());
+            dynamicThemes.setChecked(NHLPreferences.dynamicThemeBool());
         } else {
             dynamicThemes.setEnabled(false);
         }
@@ -95,23 +93,23 @@ public class SettingsFragment2 extends Fragment {
             manualBox.setVisibility(View.GONE);
         } else {
             manualBox.setVisibility(View.VISIBLE);
-            colorPickerView.setInitialColor(Color.parseColor(myPreferences.color100()));
+            colorPickerView.setInitialColor(Color.parseColor(NHLPreferences.color100()), true);
         }
 
-        if (myPreferences.advancedThemeBool()) {
+        if (NHLPreferences.advancedThemeBool()) {
             advancedThemes.setChecked(true);
             advancedMode.setVisibility(View.VISIBLE);
             alphaLayout.setVisibility(View.GONE);
             hexColorValue.setVisibility(View.GONE);
             colorPickerView.setVisibility(View.GONE);
-            hexColorValue1.setText(myPreferences.color80());
-            hexColorValue2.setText(myPreferences.color50());
-            hexColorValue3.setText(myPreferences.color20());
+            hexColorValue1.setText(NHLPreferences.color80());
+            hexColorValue2.setText(NHLPreferences.color50());
+            hexColorValue3.setText(NHLPreferences.color20());
 
             alphaLayoutAdv.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorValue3.getText().toString(), 0.5f)));
-            alphaTileViewAdv1.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-            alphaTileViewAdv2.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-            alphaTileViewAdv3.setBackgroundColor(Color.parseColor(myPreferences.color20()));
+            alphaTileViewAdv1.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+            alphaTileViewAdv2.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+            alphaTileViewAdv3.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
 
 
         } else {
@@ -120,54 +118,47 @@ public class SettingsFragment2 extends Fragment {
             alphaLayout.setVisibility(View.VISIBLE);
             hexColorValue.setVisibility(View.VISIBLE);
             colorPickerView.setVisibility(View.VISIBLE);
-            colorPickerView.setInitialColor(Color.parseColor(myPreferences.color100()));
+            colorPickerView.setInitialColor(Color.parseColor(NHLPreferences.color100()), true);
+
+            alphaLayout.setBackgroundColor(Color.parseColor(adjustColorBrightness(NHLPreferences.color20(), 0.5f)));
+            alphaTileView1.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+            alphaTileView2.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+            alphaTileView3.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
         }
 
         // Apply custom themes
-//        bkg.setBackgroundColor(Color.parseColor(myPreferences.color20()));
-//        title.setTextColor(Color.parseColor(myPreferences.color80()));
-        text2.setTextColor(Color.parseColor(myPreferences.color80()));
-        dynamicThemes.setTextColor(Color.parseColor(myPreferences.color80()));
-        advancedThemes.setTextColor(Color.parseColor(myPreferences.color80()));
+        text2.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        dynamicThemes.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        advancedThemes.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         int[][] states = {{android.R.attr.state_checked}, {}};
-        int[] colors = {Color.parseColor(myPreferences.color80()), Color.parseColor(myPreferences.color80())};
+        int[] colors = {Color.parseColor(NHLPreferences.color80()), Color.parseColor(NHLPreferences.color80())};
         CompoundButtonCompat.setButtonTintList(dynamicThemes, new ColorStateList(states, colors));
         CompoundButtonCompat.setButtonTintList(advancedThemes, new ColorStateList(states, colors));
 
-        hexColorValue.setTextColor(Color.parseColor(myPreferences.color80()));
-        hexColorValue.getBackground().mutate().setTint(Color.parseColor(myPreferences.color50()));
-        hexColorValue1.setTextColor(Color.parseColor(myPreferences.color80()));
-        hexColorValue1.setHintTextColor(Color.parseColor(myPreferences.color80()));
-        hexColorValue1.getBackground().mutate().setTint(Color.parseColor(myPreferences.color50()));
-        hexColorValue2.setTextColor(Color.parseColor(myPreferences.color80()));
-        hexColorValue2.setHintTextColor(Color.parseColor(myPreferences.color80()));
-        hexColorValue2.getBackground().mutate().setTint(Color.parseColor(myPreferences.color50()));
-        hexColorValue3.setTextColor(Color.parseColor(myPreferences.color80()));
-        hexColorValue3.setHintTextColor(Color.parseColor(myPreferences.color80()));
-        hexColorValue3.getBackground().mutate().setTint(Color.parseColor(myPreferences.color50()));
+        hexColorValue.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        hexColorValue.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
+        hexColorValue1.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        hexColorValue1.setHintTextColor(Color.parseColor(NHLPreferences.color80()));
+        hexColorValue1.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
+        hexColorValue2.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        hexColorValue2.setHintTextColor(Color.parseColor(NHLPreferences.color80()));
+        hexColorValue2.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
+        hexColorValue3.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        hexColorValue3.setHintTextColor(Color.parseColor(NHLPreferences.color80()));
+        hexColorValue3.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
 
-        applyColors.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        applyColors.setTextColor(Color.parseColor(myPreferences.color80()));
-
-//        cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-//        cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
+        applyColors.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        applyColors.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         hexColorValue.setEnabled(false);
-
-        BubbleFlag at = new BubbleFlag(requireActivity());
-        at.setFlagMode(FlagMode.ALWAYS);
-        colorPickerView.setFlagView(at);
-
-
-//        colorPickerView.setPaletteDrawable(ContextCompat.getDrawable(requireActivity(), R.drawable.kali_hashid))
 
         dynamicThemes.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 manualBox.setVisibility(View.GONE);
             } else {
                 manualBox.setVisibility(View.VISIBLE);
-                colorPickerView.setInitialColor(Color.parseColor(myPreferences.color100()));
+//                colorPickerView.setInitialColor(Color.parseColor(myPreferences.color100()));
             }
         });
 
@@ -177,54 +168,50 @@ public class SettingsFragment2 extends Fragment {
                 alphaLayout.setVisibility(View.GONE);
                 hexColorValue.setVisibility(View.GONE);
                 colorPickerView.setVisibility(View.GONE);
-                hexColorValue1.setText(myPreferences.color80());
-                hexColorValue2.setText(myPreferences.color50());
-                hexColorValue3.setText(myPreferences.color20());
+                hexColorValue1.setText(NHLPreferences.color80());
+                hexColorValue2.setText(NHLPreferences.color50());
+                hexColorValue3.setText(NHLPreferences.color20());
 
                 alphaLayoutAdv.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorValue3.getText().toString(), 0.5f)));
-                alphaTileViewAdv1.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-                alphaTileViewAdv2.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-                alphaTileViewAdv3.setBackgroundColor(Color.parseColor(myPreferences.color20()));
+                alphaTileViewAdv1.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+                alphaTileViewAdv2.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+                alphaTileViewAdv3.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
 
             } else {
                 advancedMode.setVisibility(View.GONE);
                 alphaLayout.setVisibility(View.VISIBLE);
                 hexColorValue.setVisibility(View.VISIBLE);
                 colorPickerView.setVisibility(View.VISIBLE);
-                colorPickerView.setInitialColor(Color.parseColor(myPreferences.color100()));
+                colorPickerView.setInitialColor(Color.parseColor(NHLPreferences.color100()), true);
+
+                alphaLayout.setBackgroundColor(Color.parseColor(adjustColorBrightness(NHLPreferences.color20(), 0.5f)));
+                alphaTileView1.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+                alphaTileView2.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+                alphaTileView3.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
             }
         });
 
         hexColorValue1.setOnClickListener(v -> {
             VibrationUtil.vibrate(mainActivity, 10);
-            openPickerDialog(hexColorValue1, alphaTileViewAdv1, myPreferences.color80());
+            openPickerDialog(hexColorValue1, alphaTileViewAdv1, NHLPreferences.color80());
         });
         hexColorValue2.setOnClickListener(v -> {
             VibrationUtil.vibrate(mainActivity, 10);
-            openPickerDialog(hexColorValue2, alphaTileViewAdv2, myPreferences.color50());
+            openPickerDialog(hexColorValue2, alphaTileViewAdv2, NHLPreferences.color50());
         });
         hexColorValue3.setOnClickListener(v -> {
             VibrationUtil.vibrate(mainActivity, 10);
-            openPickerDialog(hexColorValue3, alphaTileViewAdv3, myPreferences.color20());
+            openPickerDialog(hexColorValue3, alphaTileViewAdv3, NHLPreferences.color20());
         });
 
+        colorPickerView.addOnColorChangedListener(selectedColor -> {
+            hexColorValue.setText(("#" + Integer.toHexString(selectedColor)).toUpperCase());
+            hexColorString = ("#" + Integer.toHexString(selectedColor)).toUpperCase();
 
-        colorPickerView.setColorListener((ColorListener) (color, fromUser) -> {
-//            bkg.requestDisallowInterceptTouchEvent(true);
-            ColorEnvelope colorEnvelope = new ColorEnvelope(color);
-            hexColorValue.setText("#" + colorEnvelope.getHexCode());
-            hexColorString = "#" + colorEnvelope.getHexCode();
-
-            alphaLayout.setBackgroundColor(color);
-
+//            alphaLayout.setBackgroundColor(Color.parseColor(adjustColorBrightness(NHLPreferences.color20(), 0.5f)));
             alphaTileView1.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.8f)));
             alphaTileView2.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.5f)));
             alphaTileView3.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.2f)));
-
-//            alphaTileView1.setBackgroundColor(color);
-//            alphaTileView2.setColorFilter(Color.parseColor(adjustColorBrightness(hexColorString, 0.8f)));
-//            alphaTileView3.setColorFilter(Color.parseColor(adjustColorBrightness(hexColorString, 0.6f)));
-//            alphaTileView4.setColorFilter(Color.parseColor(adjustColorBrightness(hexColorString, 0.2f)));
         });
 
         applyColors.setOnClickListener(v -> {
@@ -233,16 +220,21 @@ public class SettingsFragment2 extends Fragment {
                 ToastUtils.showCustomToast(requireActivity(), "Empty color values! Use brain...");
             } else {
                 if (advancedThemes.isChecked()) {
-                    String color100 = myPreferences.color100();
+                    String color100 = NHLPreferences.color100();
                     String color80 = hexColorValue1.getText().toString();
                     String color50 = hexColorValue2.getText().toString();
                     String color20 = hexColorValue3.getText().toString();
                     saveColor80(color100, color80, color50, color20, dynamicThemes.isChecked(), advancedThemes.isChecked());
                 } else {
                     String color100 = hexColorString;
-                    String color80 = adjustColorBrightness(hexColorString, 0.8f);
-                    String color50 = adjustColorBrightness(hexColorString, 0.5f);
-                    String color20 = adjustColorBrightness(hexColorString, 0.2f);
+                    int color80Int = ((ColorDrawable) alphaTileView1.getBackground()).getColor();
+                    int color50Int = ((ColorDrawable) alphaTileView2.getBackground()).getColor();
+                    int color20Int = ((ColorDrawable) alphaTileView3.getBackground()).getColor();
+
+                    String color80 = String.format("#%06X", (0xFFFFFF & color80Int));
+                    String color50 = String.format("#%06X", (0xFFFFFF & color50Int));
+                    String color20 = String.format("#%06X", (0xFFFFFF & color20Int));
+
                     saveColor80(color100, color80, color50, color20, dynamicThemes.isChecked(), advancedThemes.isChecked());
                 }
                 mainActivity.recreate(); // recreate MainActivity below
@@ -251,18 +243,6 @@ public class SettingsFragment2 extends Fragment {
         });
 
         return view;
-    }
-
-    private void setContainerBackground(LinearLayout container, String color) {
-        GradientDrawable drawable = new GradientDrawable();
-        drawable.setCornerRadius(60);
-        drawable.setStroke(8, Color.parseColor(color));
-        container.setBackground(drawable);
-    }
-
-    private void setButtonColors(Button button) {
-        button.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        button.setTextColor(Color.parseColor(myPreferences.color80()));
     }
 
     public String adjustColorBrightness(String hexColor, float factor) {
@@ -281,12 +261,12 @@ public class SettingsFragment2 extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void openPickerDialog(Button button, ImageView alpha, String colorShade) {
-
         DialogUtils dialogUtils = new DialogUtils(requireActivity().getSupportFragmentManager());
         dialogUtils.openNhlColorPickerDialog(button, alpha, colorShade);
     }
 
     private void saveColor80(String color100, String color80, String color50, String color20, boolean dynamicThemeBool, boolean advThemeBool) {
+        Log.d("SavedColors", "100: " + color100 + " 80: " + color80 + " 50: " + color50 + " 20: " + color20);
         // Save the color values and frame drawable to SharedPreferences
         SharedPreferences prefs = requireActivity().getSharedPreferences("customColors", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();

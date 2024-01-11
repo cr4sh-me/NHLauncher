@@ -14,8 +14,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.VibrationUtil;
@@ -30,7 +30,7 @@ public class FirstSetupDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.first_setup_dialog, container, false);
 
         MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
-        MyPreferences myPreferences = new MyPreferences(requireActivity());
+        NHLPreferences NHLPreferences = new NHLPreferences(requireActivity());
 
         setCancelable(false);
 
@@ -41,15 +41,15 @@ public class FirstSetupDialog extends AppCompatDialogFragment {
         Button cancelButton = view.findViewById(R.id.cancel_button);
 
         // Apply custom themes
-        bkg.setBackgroundColor(Color.parseColor(myPreferences.color20()));
-        title.setTextColor(Color.parseColor(myPreferences.color80()));
-        text.setTextColor(Color.parseColor(myPreferences.color80()));
+        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
+        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        text.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        setupButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        setupButton.setTextColor(Color.parseColor(myPreferences.color80()));
+        setupButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        setupButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-        cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
+        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
 
 
         setupButton.setOnClickListener(view12 -> {

@@ -110,7 +110,6 @@
     <string name="themes_settings">Motywy</string>
     <string name="general">Ogólne</string>
     <string name="root_error">Jeśli aplikacja nie dostanie uprawnień roota w ciągu 2 minut, telefon zostanie zresetowany!</string>
-    <string name="choose_lanuage">Wybierz język:</string>
     <string name="apps_error">Aplikacja NetHunter lub NetHunter Terminal nie jest zainstalowana! Przeczytaj dokumentację NHLauncher i użyj mózgu…</string>
     <string name="default_sorting">Domyślne</string>
     <string name="by_usage">Po użyciu</string>
@@ -145,7 +144,7 @@
     <string name="current_app_version">"Obecna wersja: "</string>
     <string name="new_app_version">"Nowa wersja: "</string>
     <string name="update_avaiable">Aktualizacja dostępna!</string>
-    <string name="giga_chad">Witaj w wersji beta!</string>
+    <string name="giga_chad">Witaj w wersji testowej!</string>
     <string name="already_updated">Wersja aktualna!</string>
     <string name="something_fucked_up">Coś poszło nie tak!</string>
     <string name="update_button">Pobierz aktualizacje!</string>
@@ -165,4 +164,20 @@
     <string name="you_can_customize_your_nhlauncher_feedback_here">"Możesz tu dostosować NHLauncher "</string>
     <string name="choose_language">Język aplikacji</string>
     <string name="yes">Tak Panie</string>
+    <string name="click_to_check_for_updates">Kliknij aby sprawdzić aktualizacje</string>
+    <string name="nhlauncher_add_ons">Dodatki NHLauncher</string>
+    <string name="use_themed_icons_overlay">Użyj pokrycia z motywem na ikonach</string>
+    <string name="location_denied">Odmówiono uprawnień do lokalizacji!</string>
+    <string name="pixie_dust">Pixie Dust</string>
+    <string name="pixie_force">Pixie Force</string>
+    <string name="custom_pin">Własny pin</string>
+    <string name="wps_attack">Atak WPS</string>
+    <string name="oneshot_performs_wps_pin_and_pixie_dust_attack_without_having_to_switch_to_monitor_mode">OneShot wykonuje atak WPS PIN i Pixie Dust bez konieczności przełączania się w tryb monitora</string>
+    <string name="online_bruteforce">Online Bruteforce</string>
+    <string name="wps_button">Przycisk WPS</string>
+    <string name="delay">Opóźnienie</string>
+    <string name="launch_attack">Uruchom atak</string>
+    <string name="wps_desc_short">UŻYJ SKRYPTU ONESHOT ABY WYKONAĆ ATAKI WPS</string>
+    <string name="bt_short">WYKONUJ RÓŹNE ATAKI BLUETOOTH</string>
+    <string name="bt_toolkit">NARZĘDZIA BLUETOOTH</string>
 </resources>

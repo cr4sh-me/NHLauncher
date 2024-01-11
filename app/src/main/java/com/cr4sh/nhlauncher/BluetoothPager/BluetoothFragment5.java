@@ -15,14 +15,14 @@ import android.widget.TextView;
 import androidx.core.widget.CompoundButtonCompat;
 import androidx.fragment.app.Fragment;
 
-import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 
 import java.util.List;
 
 public class BluetoothFragment5 extends Fragment {
 
-    MyPreferences myPreferences;
+    NHLPreferences NHLPreferences;
 
     public BluetoothFragment5() {
         // Required empty public constructor
@@ -34,7 +34,7 @@ public class BluetoothFragment5 extends Fragment {
 
         View view = inflater.inflate(R.layout.bt_layout5, container, false);
 
-        myPreferences = new MyPreferences(requireActivity());
+        NHLPreferences = new NHLPreferences(requireActivity());
 
         TextView juiceInfo = view.findViewById(R.id.juiceInfo);
 //        Spinner customAdvertise = view.findViewById(R.id.advertise);
@@ -44,18 +44,18 @@ public class BluetoothFragment5 extends Fragment {
         Button intervalButton = view.findViewById(R.id.interval);
 
 
-        startButton.setTextColor(Color.parseColor(myPreferences.color80()));
-        startButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+        startButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        startButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
 
-        customAdvertise.setTextColor(Color.parseColor(myPreferences.color80()));
-        customAdvertise.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+        customAdvertise.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        customAdvertise.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
 
-        intervalButton.setTextColor(Color.parseColor(myPreferences.color80()));
-        intervalButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+        intervalButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        intervalButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
 
-        juiceInfo.setTextColor(Color.parseColor(myPreferences.color80()));
+        juiceInfo.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        randomCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
+        randomCheckbox.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         List<Integer> imageList = List.of();
 
@@ -92,7 +92,7 @@ public class BluetoothFragment5 extends Fragment {
         );
 
         int[][] states = {{android.R.attr.state_checked}, {}};
-        int[] colors = {Color.parseColor(myPreferences.color80()), Color.parseColor(myPreferences.color80())};
+        int[] colors = {Color.parseColor(NHLPreferences.color80()), Color.parseColor(NHLPreferences.color80())};
         CompoundButtonCompat.setButtonTintList(randomCheckbox, new ColorStateList(states, colors));
 
         return view;
@@ -101,13 +101,13 @@ public class BluetoothFragment5 extends Fragment {
     private void setContainerBackground(LinearLayout container) {
         GradientDrawable drawable = new GradientDrawable();
         drawable.setCornerRadius(60);
-        drawable.setStroke(8, Color.parseColor(myPreferences.color50()));
+        drawable.setStroke(8, Color.parseColor(NHLPreferences.color50()));
         container.setBackground(drawable);
     }
 
     private void setButtonColors(Button button) {
-        button.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        button.setTextColor(Color.parseColor(myPreferences.color80()));
+        button.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        button.setTextColor(Color.parseColor(NHLPreferences.color80()));
     }
 
 }

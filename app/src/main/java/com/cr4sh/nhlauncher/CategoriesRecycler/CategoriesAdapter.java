@@ -12,8 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.VibrationUtil;
@@ -21,7 +21,7 @@ import com.cr4sh.nhlauncher.utils.VibrationUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoriesAdapter extends RecyclerView.Adapter<com.cr4sh.nhlauncher.CategoriesViewHolder> {
+public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesViewHolder> {
 
     private final MainActivity myActivity = NHLManager.getInstance().getMainActivity();
     private final List<String> item = new ArrayList<>();
@@ -29,7 +29,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<com.cr4sh.nhlauncher
     private int height;
     private int margin;
     private GradientDrawable drawable;
-    private MyPreferences myPreferences;
+    private NHLPreferences NHLPreferences;
 
     public CategoriesAdapter() {
 
@@ -47,29 +47,29 @@ public class CategoriesAdapter extends RecyclerView.Adapter<com.cr4sh.nhlauncher
 
     @NonNull
     @Override
-    public com.cr4sh.nhlauncher.CategoriesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        myPreferences = new MyPreferences(myActivity);
+    public CategoriesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        NHLPreferences = new NHLPreferences(myActivity);
         int originalHeight = parent.getMeasuredHeight();
         margin = 20;
         height = (originalHeight / 8) - margin; // Button height without margin
 
         drawable = new GradientDrawable();
-        if (myPreferences.isNewButtonStyleActive()) {
-            drawable.setColor(Color.parseColor(myPreferences.color50()));
+        if (NHLPreferences.isNewButtonStyleActive()) {
+            drawable.setColor(Color.parseColor(NHLPreferences.color50()));
             drawable.setCornerRadius(60);
         } else {
             drawable.setCornerRadius(60);
-            drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
+            drawable.setStroke(8, Color.parseColor(NHLPreferences.color80()));
         }
         drawable.setBounds(0, 0, 0, height); // Set bounds for the drawable
 
-        return new com.cr4sh.nhlauncher.CategoriesViewHolder(LayoutInflater.from(myActivity).inflate(R.layout.custom_category_item, parent, false));
+        return new CategoriesViewHolder(LayoutInflater.from(myActivity).inflate(R.layout.custom_category_item, parent, false));
     }
 
 
     // Used to create buttons, and set listeners for them
     @Override
-    public void onBindViewHolder(@NonNull com.cr4sh.nhlauncher.CategoriesViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull CategoriesViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         MainUtils mainUtils = new MainUtils(myActivity);
         String categoryName = item.get(position);
@@ -80,9 +80,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<com.cr4sh.nhlauncher
         @SuppressLint("DiscouragedApi") int imageResourceId = myActivity.getResources().getIdentifier(categoryImage, "drawable", myActivity.getPackageName());
         holder.imageView.setImageResource(imageResourceId);
 
-        holder.imageView.setColorFilter(Color.parseColor(myPreferences.color80()), PorterDuff.Mode.MULTIPLY);
+        holder.imageView.setColorFilter(Color.parseColor(NHLPreferences.color80()), PorterDuff.Mode.MULTIPLY);
 
-        holder.nameView.setTextColor(Color.parseColor(myPreferences.color80()));
+        holder.nameView.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         holder.itemView.setBackground(drawable);
 

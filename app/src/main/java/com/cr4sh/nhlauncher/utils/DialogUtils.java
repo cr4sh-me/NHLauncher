@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.cr4sh.nhlauncher.BluetoothPager.BluetoothFragment1;
@@ -101,6 +102,17 @@ public class DialogUtils {
 
 
     public void openPermissionsDialog() {
+        // Assuming "fragmentManager" is the support fragment manager from an Activity or Fragment
+        fragmentManager.executePendingTransactions();
+
+        if (fragmentManager.isStateSaved()) {
+            // Handle the case where state is already saved.
+            return;
+        }
+
+        fragmentManager.beginTransaction().add(new Fragment(), "TempFragment").commitNow();
+        fragmentManager.executePendingTransactions();
+
         executor.execute(() -> {
             PermissionDialog pmDialog = new PermissionDialog();
             // Display our dialog!

@@ -18,8 +18,8 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
@@ -37,7 +37,7 @@ public class EditableDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.editable_dialog, container, false);
 
         MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
-        MyPreferences myPreferences = new MyPreferences(requireActivity());
+        NHLPreferences NHLPreferences = new NHLPreferences(requireActivity());
 
         // Get arguments
         assert getArguments() != null;
@@ -51,19 +51,19 @@ public class EditableDialog extends AppCompatDialogFragment {
         Button cancelButton = view.findViewById(R.id.cancel_button);
         Button saveButton = view.findViewById(R.id.save_button);
 
-        bkg.setBackgroundColor(Color.parseColor(myPreferences.color20()));
-        title.setTextColor(Color.parseColor(myPreferences.color80()));
-        currentCommand.setTextColor(Color.parseColor(myPreferences.color50()));
+        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
+        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        currentCommand.setTextColor(Color.parseColor(NHLPreferences.color50()));
 
-        newCmd.getBackground().mutate().setTint(Color.parseColor(myPreferences.color50()));
-        newCmd.setHintTextColor(Color.parseColor(myPreferences.color50()));
-        newCmd.setTextColor(Color.parseColor(myPreferences.color80()));
+        newCmd.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
+        newCmd.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
+        newCmd.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        saveButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        saveButton.setTextColor(Color.parseColor(myPreferences.color80()));
+        saveButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        saveButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-        cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
+        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
 
         currentCommand.setText(requireActivity().getResources().getString(R.string.current_cmd) + cmd);
 

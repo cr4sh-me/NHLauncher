@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -13,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.MainUtils;
@@ -30,7 +31,8 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
     private int height;
     private int margin;
     private GradientDrawable drawable;
-    private MyPreferences myPreferences;
+    private NHLPreferences NHLPreferences;
+    private boolean overlay;
     private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
 
     public NHLAdapter() {
@@ -63,26 +65,28 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
     @NonNull
     @Override
     public NHLViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        myPreferences = new MyPreferences(myActivity);
+        NHLPreferences = new NHLPreferences(myActivity);
 
         int originalHeight;
-        if(myPreferences.getRecyclerMainHeight() == 0){
+        if(NHLPreferences.getRecyclerMainHeight() == 0){
             originalHeight = parent.getMeasuredHeight();
             saveRecyclerHeight(originalHeight);
         } else {
-            originalHeight = myPreferences.getRecyclerMainHeight();
+            originalHeight = NHLPreferences.getRecyclerMainHeight();
         }
+
+        overlay = NHLPreferences.isButtonOverlayActive();
 
         margin = 20;
         height = (originalHeight / 8) - margin; // Button height without margin
 
         drawable = new GradientDrawable();
-        if (myPreferences.isNewButtonStyleActive()) {
-            drawable.setColor(Color.parseColor(myPreferences.color50()));
+        if (NHLPreferences.isNewButtonStyleActive()) {
+            drawable.setColor(Color.parseColor(NHLPreferences.color50()));
             drawable.setCornerRadius(60);
         } else {
             drawable.setCornerRadius(60);
-            drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
+            drawable.setStroke(8, Color.parseColor(NHLPreferences.color80()));
         }
         drawable.setBounds(0, 0, 0, height); // Set bounds for the drawable
 
@@ -104,13 +108,14 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
 
         @SuppressLint("DiscouragedApi") int imageResourceId = myActivity.getResources().getIdentifier(item.getImage(), "drawable", myActivity.getPackageName());
 
-//        holder.imageView.setColorFilter(Color.parseColor(myPreferences.color80()), PorterDuff.Mode.MULTIPLY);
-//        holder.imageView.setColorFilter(Color.parseColor(myPreferences.color80()), PorterDuff.Mode.);
-
         holder.imageView.setImageResource(imageResourceId);
 
-        holder.nameView.setTextColor(Color.parseColor(myPreferences.color80()));
-        holder.descriptionView.setTextColor(Color.parseColor(myPreferences.color80()));
+        if(overlay){
+            holder.imageView.setColorFilter(Color.parseColor(NHLPreferences.color80()), PorterDuff.Mode.MULTIPLY);
+        }
+
+        holder.nameView.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        holder.descriptionView.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         holder.itemView.setBackground(drawable);
 

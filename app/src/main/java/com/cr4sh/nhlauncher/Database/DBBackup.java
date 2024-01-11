@@ -89,7 +89,7 @@ public class DBBackup {
             }
         } catch (FileNotFoundException e) {
             showToastOnMainThread(context.getResources().getString(R.string.backup_failed));
-            dialogUtils.openPermissionsDialog();
+            mainActivity.runOnUiThread(dialogUtils::openPermissionsDialog);
         } catch (Exception e) {
             showToastOnMainThread("E: " + e);
         }
@@ -162,7 +162,7 @@ public class DBBackup {
 
         } catch (SQLiteCantOpenDatabaseException e) {
             showToastOnMainThread(context.getResources().getString(R.string.restore_fail));
-            dialogUtils.openPermissionsDialog();
+            mainActivity.runOnUiThread(dialogUtils::openPermissionsDialog);
         } catch (Exception e) {
             showToastOnMainThread("E: " + e);
             Log.d("DBBACKUPERR", "E: " + e);

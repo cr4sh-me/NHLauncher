@@ -1,4 +1,4 @@
-package com.cr4sh.nhlauncher;
+package com.cr4sh.nhlauncher.CategoriesRecycler;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -7,6 +7,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.cr4sh.nhlauncher.R;
 
 public class CategoriesViewHolder extends RecyclerView.ViewHolder {
 

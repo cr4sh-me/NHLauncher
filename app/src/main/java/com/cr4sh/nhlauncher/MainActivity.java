@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
     public int buttonUsage;
     public SQLiteDatabase mDatabase;
     public ActivityResultLauncher<Intent> requestPermissionLauncher;
-    private RecyclerView listViewCategories;
     public Button backButton;
     public int currentCategoryNumber = 1;
     private ImageView toolbar;
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView rollCategoriesText;
     private ImageView rollCategories;
     private MainUtils mainUtils;
-    private MyPreferences myPreferences;
+    private NHLPreferences NHLPreferences;
     // Stop papysz easteregg
     private final Runnable stopPapysz = new Runnable() {
         @Override
@@ -99,15 +98,17 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    // TODO test app stability
+    private boolean permissionDialogShown = false;
+    private boolean firstSetupDialogShown = false;
+
     @SuppressLint({"Recycle", "ResourceType", "CutPasteId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
 
         NHLManager.getInstance().setMainActivity(this);
         DialogUtils dialogUtils = new DialogUtils(this.getSupportFragmentManager());
-//        executor = Executors.newCachedThreadPool();
 
 //        // Check for nethunter and terminal apps
 //        PackageManager pm = getPackageManager();
@@ -137,12 +138,12 @@ public class MainActivity extends AppCompatActivity {
         PermissionUtils permissionUtils = new PermissionUtils(this);
 
         // Check for root permissions
-        if(!permissionUtils.isRoot()){
-            dialogUtils.openRootDialog();
-            return;
-        }
+//        if(!permissionUtils.isRoot()){
+//            dialogUtils.openRootDialog();
+//            return;
+//        }
 
-        myPreferences = new MyPreferences(this);
+        NHLPreferences = new NHLPreferences(this);
 
         resetRecyclerHeight();
 
@@ -151,10 +152,10 @@ public class MainActivity extends AppCompatActivity {
         View rootView = findViewById(android.R.id.content);
 
         // Apply custom colors
-        rootView.setBackgroundColor(Color.parseColor(myPreferences.color20()));
+        rootView.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
         Window window = this.getWindow();
-        window.setStatusBarColor(Color.parseColor(myPreferences.color20()));
-        window.setNavigationBarColor(Color.parseColor(myPreferences.color20()));
+        window.setStatusBarColor(Color.parseColor(NHLPreferences.color20()));
+        window.setNavigationBarColor(Color.parseColor(NHLPreferences.color20()));
 //         Get the dialog and set it to not be cancelable
         setFinishOnTouchOutside(false);
 
@@ -163,8 +164,9 @@ public class MainActivity extends AppCompatActivity {
         mDatabase = mDbHandler.getDatabase();
 
         // Check if setup has been completed
-        if (!myPreferences.isSetupCompleted()) {
+        if (!NHLPreferences.isSetupCompleted() && !firstSetupDialogShown) {
             dialogUtils.openFirstSetupDialog();
+            firstSetupDialogShown = true;
         }
 
         requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -172,8 +174,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Check for permissions
-        if (!permissionUtils.isPermissionsGranted()) {
+        if (!permissionUtils.isPermissionsGranted() && !permissionDialogShown) {
             dialogUtils.openPermissionsDialog();
+            permissionDialogShown = true;
         }
 
         recyclerView = findViewById(R.id.recyclerView);
@@ -186,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
         mainUtils = new MainUtils(this);
 
         // Setup colors and settings
-        mainUtils.changeLanguage(myPreferences.languageLocale());
+        mainUtils.changeLanguage(NHLPreferences.languageLocale());
 
         // Setting up new spinner
 
@@ -224,13 +227,12 @@ public class MainActivity extends AppCompatActivity {
         );
 
 //        adapter2 = new CustomSpinnerAdapter(this, valuesList, imageList, myPreferences.color20(), myPreferences.color80());
-        listViewCategories = findViewById(R.id.recyclerViewCategories);
+        RecyclerView listViewCategories = findViewById(R.id.recyclerViewCategories);
         CategoriesAdapter adapter2 = new CategoriesAdapter();
 
         // Fill categories recycler
         adapter2.updateData(valuesList, imageList);
         listViewCategories.setAdapter(adapter2);
-
         // Initialise categories
 
 
@@ -267,20 +269,22 @@ public class MainActivity extends AppCompatActivity {
         Button specialButton = findViewById(R.id.special_features_button);
         backButton = findViewById(R.id.goBackButton);
         noToolsText = findViewById(R.id.messagebox);
-        noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
+        noToolsText.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        categoriesLayoutTitle.setTextColor(Color.parseColor(myPreferences.color80()));
-        backButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-        backButton.setTextColor(Color.parseColor(myPreferences.color50()));
+        categoriesLayoutTitle.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        backButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+        backButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
 
-        specialButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        specialButton.setTextColor(Color.parseColor(myPreferences.color80()));
+        specialButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        specialButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
+        Animation categoriesAppear = AnimationUtils.loadAnimation(MainActivity.this, R.anim.cat_appear);
+        Animation categoriesDisappear = AnimationUtils.loadAnimation(MainActivity.this, R.anim.cat_disappear);
 
-        Animation recUp = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rec_down);
 
         rollCategoriesLayout.setOnClickListener(view -> runOnUiThread(() -> {
             VibrationUtil.vibrate(MainActivity.this, 10);
+
             // Check if searchView is not opened, prevent opening 2 things at the same time
             if (searchEditText.getVisibility() == View.GONE) {
 
@@ -295,24 +299,21 @@ public class MainActivity extends AppCompatActivity {
                 disableWhileAnimation(rollCategoriesLayout);
 
                 // Animation
-                categoriesLayout.startAnimation(recUp);
-
-                // Enable things
+                categoriesLayout.startAnimation(categoriesAppear);
 
                 enableAfterAnimation(categoriesLayout);
-                enableAfterAnimation(listViewCategories);
             }
         }));
+
 
         specialButton.setOnClickListener(v -> {
             enableAfterAnimation(toolbar);
             enableAfterAnimation(rollCategoriesLayout);
             disableWhileAnimation(categoriesLayout);
 
-            backButton.callOnClick();
-
             Intent intent = new Intent(this, SpecialFeaturesActivity.class);
             startActivity(intent);
+            backButton.callOnClick();
         });
 
         backButton.setOnClickListener(view -> {
@@ -322,7 +323,6 @@ public class MainActivity extends AppCompatActivity {
             disableWhileAnimation(categoriesLayout);
             enableAfterAnimation(rollCategories);
 
-
             enableAfterAnimation(searchIcon);
             enableAfterAnimation(recyclerView);
             enableAfterAnimation(noToolsText);
@@ -330,40 +330,40 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        searchIcon.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        searchEditText.setHintTextColor(Color.parseColor(myPreferences.color80()));
-        searchEditText.setTextColor(Color.parseColor(myPreferences.color80()));
-        toolbar.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+        searchIcon.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        searchEditText.setHintTextColor(Color.parseColor(NHLPreferences.color80()));
+        searchEditText.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        toolbar.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
 
         @SuppressLint("UseCompatLoadingForDrawables") Drawable searchViewIcon = getDrawable(R.drawable.nhl_searchview);
         assert searchViewIcon != null;
-        searchViewIcon.setTint(Color.parseColor(myPreferences.color80()));
+        searchViewIcon.setTint(Color.parseColor(NHLPreferences.color80()));
         searchIcon.setImageDrawable(searchViewIcon);
 
         @SuppressLint("UseCompatLoadingForDrawables") Drawable settingsIcon = getDrawable(R.drawable.nhl_settings);
         assert settingsIcon != null;
-        settingsIcon.setTint(Color.parseColor(myPreferences.color80()));
+        settingsIcon.setTint(Color.parseColor(NHLPreferences.color80()));
         toolbar.setImageDrawable(settingsIcon);
 
         GradientDrawable drawableToolbar = new GradientDrawable();
         drawableToolbar.setCornerRadius(100);
-        drawableToolbar.setStroke(8, Color.parseColor(myPreferences.color50()));
+        drawableToolbar.setStroke(8, Color.parseColor(NHLPreferences.color50()));
         toolbar.setBackground(drawableToolbar);
 
         drawableSearchIcon = new GradientDrawable();
         drawableSearchIcon.setCornerRadius(100);
-        drawableSearchIcon.setStroke(8, Color.parseColor(myPreferences.color50()));
+        drawableSearchIcon.setStroke(8, Color.parseColor(NHLPreferences.color50()));
         searchIcon.setBackground(drawableSearchIcon);
 
         GradientDrawable drawableRollCategories = new GradientDrawable();
         drawableRollCategories.setCornerRadius(100);
-        drawableRollCategories.setStroke(8, Color.parseColor(myPreferences.color50()));
+        drawableRollCategories.setStroke(8, Color.parseColor(NHLPreferences.color50()));
         rollCategoriesLayout.setBackground(drawableRollCategories);
 
         GradientDrawable drawableSearchEditText = new GradientDrawable();
         drawableSearchEditText.setCornerRadius(100);
-        drawableSearchEditText.setColor(Color.parseColor(myPreferences.color50()));
-        drawableSearchEditText.setStroke(8, Color.parseColor(myPreferences.color50()));
+        drawableSearchEditText.setColor(Color.parseColor(NHLPreferences.color50()));
+        drawableSearchEditText.setStroke(8, Color.parseColor(NHLPreferences.color50()));
 
         // Setup animations
         Animation roll = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll);
@@ -418,7 +418,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 drawableSearchIcon.setSize(10, 10);
-                drawableSearchIcon.setColor(Color.parseColor(myPreferences.color50()));
+                drawableSearchIcon.setColor(Color.parseColor(NHLPreferences.color50()));
             }
         });
 
@@ -435,7 +435,7 @@ public class MainActivity extends AppCompatActivity {
 
 //                Cursor cursor;
 
-                String[] projection = {"CATEGORY", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
+                String[] projection = {"CATEGORY", "NAME", NHLPreferences.language(), "CMD", "ICON", "USAGE"};
 
                 // Add search filter to query
                 String selection = "NAME LIKE ?";
@@ -513,13 +513,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        toolbar.setOnClickListener(v -> {
-//            toolbar.setEnabled(false); // Prevent double open
+        toolbar.setOnClickListener(v -> executor.submit(()->{
             VibrationUtil.vibrate(MainActivity.this, 10);
-//            dialogUtils.openToolbarDialog(MainActivity.this);
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
-        });
+            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+        }));
 
         // Start papysz easteregg
         Calendar calendar = Calendar.getInstance();
@@ -562,6 +561,13 @@ public class MainActivity extends AppCompatActivity {
             mDatabase.close();
         }
         NHLManager.getInstance().shutdownExecutorService();
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (isFinishing()) {
+            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+        }
     }
 
     // Close searchbar or categories if back button pressed
@@ -609,11 +615,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Set image resource and color filter
         rollCategories.setImageResource(imageResourceId);
-        rollCategories.setColorFilter(Color.parseColor(myPreferences.color80()), PorterDuff.Mode.MULTIPLY);
+        rollCategories.setColorFilter(Color.parseColor(NHLPreferences.color80()), PorterDuff.Mode.MULTIPLY);
 
         // Set text and text color
         rollCategoriesText.setText(categoryTextView);
-        rollCategoriesText.setTextColor(Color.parseColor(myPreferences.color80()));
+        rollCategoriesText.setTextColor(Color.parseColor(NHLPreferences.color80()));
     }
 
     private void resetRecyclerHeight() {

@@ -33,10 +33,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.widget.CompoundButtonCompat;
 
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.SpecialFeaturesActivity;
 import com.cr4sh.nhlauncher.bridge.Bridge;
@@ -53,7 +52,7 @@ public class WPSAttack extends AppCompatActivity {
     public String customPINCMD = "";
     public String delayCMD = "";
     TextView msg2;
-    MyPreferences myPreferences;
+    NHLPreferences NHLPreferences;
     boolean isThrottleEnabled;
     private String pixieCMD = "";
     private String pixieforceCMD = "";
@@ -72,8 +71,17 @@ public class WPSAttack extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (isFinishing()) {
+            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+        }
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
 
         exe = new ShellExecuter();
 
@@ -84,10 +92,10 @@ public class WPSAttack extends AppCompatActivity {
         wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         buttonContainer = findViewById(R.id.buttonContainer);
 
-        myPreferences = new MyPreferences(this);
+        NHLPreferences = new NHLPreferences(this);
         DialogUtils dialogUtils = new DialogUtils(getSupportFragmentManager());
 
-        msg2.setTextColor(Color.parseColor(myPreferences.color80()));
+        msg2.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         try {
             checkThrottling();
@@ -95,7 +103,7 @@ public class WPSAttack extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
-        if (myPreferences.isThrottlingMessageShown() & isThrottleEnabled) {
+        if (NHLPreferences.isThrottlingMessageShown() & isThrottleEnabled) {
             dialogUtils.openThrottlingDialog();
         }
 
@@ -106,34 +114,34 @@ public class WPSAttack extends AppCompatActivity {
         }
 
         View rootView = findViewById(android.R.id.content);
-        rootView.setBackgroundColor(Color.parseColor(myPreferences.color20()));
+        rootView.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
         Window window = this.getWindow();
-        window.setStatusBarColor(Color.parseColor(myPreferences.color20()));
-        window.setNavigationBarColor(Color.parseColor(myPreferences.color20()));
+        window.setStatusBarColor(Color.parseColor(NHLPreferences.color20()));
+        window.setNavigationBarColor(Color.parseColor(NHLPreferences.color20()));
 
         setFinishOnTouchOutside(false);
 
         LinearLayout choiceContainer = findViewById(R.id.choiceContainer);
         GradientDrawable selectedDrawable = new GradientDrawable();
         selectedDrawable.setCornerRadius(60);
-        selectedDrawable.setStroke(8, Color.parseColor(myPreferences.color50()));
+        selectedDrawable.setStroke(8, Color.parseColor(NHLPreferences.color50()));
         choiceContainer.setBackground(selectedDrawable);
 
         TextView title = findViewById(R.id.wps_info);
         TextView description = findViewById(R.id.wps_info2);
 
-        title.setTextColor(Color.parseColor(myPreferences.color80()));
-        description.setTextColor(Color.parseColor(myPreferences.color80()));
+        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        description.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         scanButton = findViewById(R.id.scanButton);
         Button cancelButton = findViewById(R.id.cancel_button);
         Button launchAttackButton = findViewById(R.id.launchAttack);
 
-        cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-        cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
+        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
 
-        launchAttackButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        launchAttackButton.setTextColor(Color.parseColor(myPreferences.color80()));
+        launchAttackButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        launchAttackButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         CheckBox pixieDustCheckbox = findViewById(R.id.pixie);
         CheckBox pixieForceCheckbox = findViewById(R.id.pixieforce);
@@ -142,25 +150,22 @@ public class WPSAttack extends AppCompatActivity {
         Button delayCheckbox = findViewById(R.id.delay);
         CheckBox wpsButtonCheckbox = findViewById(R.id.pbc);
 
-        customPinCheckbox.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        customPinCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
+        customPinCheckbox.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        customPinCheckbox.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        delayCheckbox.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        delayCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
-
-
-        pixieDustCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
-        pixieForceCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
-        bruteCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
-        wpsButtonCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
+        delayCheckbox.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        delayCheckbox.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
 
-        int[][] states = {{android.R.attr.state_checked}, {}};
-        int[] colors = {Color.parseColor(myPreferences.color80()), Color.parseColor(myPreferences.color80())};
-        CompoundButtonCompat.setButtonTintList(pixieDustCheckbox, new ColorStateList(states, colors));
-        CompoundButtonCompat.setButtonTintList(pixieForceCheckbox, new ColorStateList(states, colors));
-        CompoundButtonCompat.setButtonTintList(bruteCheckbox, new ColorStateList(states, colors));
-        CompoundButtonCompat.setButtonTintList(wpsButtonCheckbox, new ColorStateList(states, colors));
+        pixieDustCheckbox.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        pixieForceCheckbox.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        bruteCheckbox.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        wpsButtonCheckbox.setTextColor(Color.parseColor(NHLPreferences.color80()));
+
+        pixieDustCheckbox.setButtonTintList(ColorStateList.valueOf(Color.parseColor(NHLPreferences.color80())));
+        pixieForceCheckbox.setButtonTintList(ColorStateList.valueOf(Color.parseColor(NHLPreferences.color80())));
+        bruteCheckbox.setButtonTintList(ColorStateList.valueOf(Color.parseColor(NHLPreferences.color80())));
+        wpsButtonCheckbox.setButtonTintList(ColorStateList.valueOf(Color.parseColor(NHLPreferences.color80())));
 
         pixieDustCheckbox.setOnClickListener(v -> {
             VibrationUtil.vibrate(this, 10);
@@ -343,12 +348,12 @@ public class WPSAttack extends AppCompatActivity {
                 ssb.append(String.valueOf(result.level)).append(" dBm");
 
                 wifiButton.setText(ssb);
-                wifiButton.setTextColor(Color.parseColor(myPreferences.color80()));
+                wifiButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
                 // Set the background drawable for each button
                 GradientDrawable drawable = new GradientDrawable();
                 drawable.setCornerRadius(60);
-                drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
+                drawable.setStroke(8, Color.parseColor(NHLPreferences.color80()));
                 wifiButton.setBackground(drawable);
 
                 // Calculate button height dynamically
@@ -374,11 +379,11 @@ public class WPSAttack extends AppCompatActivity {
     private void handleButtonClick(Button clickedButton) {
         VibrationUtil.vibrate(this, 10);
         if (selectedButton != null) {
-            selectedButton.setTextColor(Color.parseColor(myPreferences.color80()));
+            selectedButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
             // Change the background drawable for the previously selected button
             GradientDrawable drawable = new GradientDrawable();
             drawable.setCornerRadius(60);
-            drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
+            drawable.setStroke(8, Color.parseColor(NHLPreferences.color80()));
             selectedButton.setBackground(drawable);
         }
 
@@ -387,10 +392,10 @@ public class WPSAttack extends AppCompatActivity {
             selectedButton = null;
         } else {
             // Set the text and background color for the clicked button to indicate selection
-            clickedButton.setTextColor(Color.parseColor(myPreferences.color50()));
+            clickedButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
             GradientDrawable selectedDrawable = new GradientDrawable();
             selectedDrawable.setCornerRadius(60);
-            selectedDrawable.setStroke(8, Color.parseColor(myPreferences.color50()));
+            selectedDrawable.setStroke(8, Color.parseColor(NHLPreferences.color50()));
             clickedButton.setBackground(selectedDrawable);
             selectedButton = clickedButton;
         }
@@ -439,11 +444,11 @@ public class WPSAttack extends AppCompatActivity {
     private void enableScanButton(boolean enabled) {
         scanButton.setEnabled(enabled);
         if (enabled) {
-            scanButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-            scanButton.setTextColor(Color.parseColor(myPreferences.color80()));
+            scanButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+            scanButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
         } else {
-            scanButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-            scanButton.setTextColor(Color.parseColor(myPreferences.color50()));
+            scanButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+            scanButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
         }
     }
 

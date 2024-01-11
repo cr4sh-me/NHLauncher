@@ -15,16 +15,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.VibrationUtil;
-import com.skydoves.colorpickerview.ColorEnvelope;
-import com.skydoves.colorpickerview.ColorPickerView;
-import com.skydoves.colorpickerview.flag.BubbleFlag;
-import com.skydoves.colorpickerview.flag.FlagMode;
-import com.skydoves.colorpickerview.listeners.ColorListener;
-import com.skydoves.colorpickerview.sliders.BrightnessSlideBar;
+import com.flask.colorpicker.ColorPickerView;
 
 import java.util.Objects;
 
@@ -48,43 +43,36 @@ public class NhlColorPickerDialog extends AppCompatDialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.color_picker_dialog, container, false);
 
-        MyPreferences myPreferences = new MyPreferences(requireActivity());
+        NHLPreferences NHLPreferences = new NHLPreferences(requireActivity());
 
         TextView title = view.findViewById(R.id.dialog_title);
         LinearLayout bkg = view.findViewById(R.id.custom_theme_dialog_background);
-        ColorPickerView colorPickerView = view.findViewById(R.id.colorPickerView);
-        BrightnessSlideBar brightnessSlideBar = view.findViewById(R.id.brightnessBar);
+        ColorPickerView colorPickerView = view.findViewById(R.id.color_picker_view);
 
         EditText hexColorValue = view.findViewById(R.id.customHexColor);
 
         Button applyColors = view.findViewById(R.id.apply_custom_colors);
         Button cancelButton = view.findViewById(R.id.cancel_button);
 
-        // Checkbox set
-
         // Apply custom themes
-        bkg.setBackgroundColor(Color.parseColor(myPreferences.color20()));
-        title.setTextColor(Color.parseColor(myPreferences.color80()));
+        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
+        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        hexColorValue.setTextColor(Color.parseColor(myPreferences.color80()));
-        hexColorValue.getBackground().mutate().setTint(Color.parseColor(myPreferences.color50()));
+        hexColorValue.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        hexColorValue.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
 
-        applyColors.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        applyColors.setTextColor(Color.parseColor(myPreferences.color80()));
+        applyColors.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        applyColors.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-        cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
+        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
 
-        colorPickerView.setInitialColor(Color.parseColor(hexColorShade));
-        colorPickerView.attachBrightnessSlider(brightnessSlideBar);
+        colorPickerView.setInitialColor(Color.parseColor(hexColorShade), true);
 
-        BubbleFlag at = new BubbleFlag(requireActivity());
-        at.setFlagMode(FlagMode.ALWAYS);
-        colorPickerView.setFlagView(at);
-
-        colorPickerView.setColorListener((ColorListener) (color, fromUser) -> {
-            ColorEnvelope colorEnvelope = new ColorEnvelope(color);
-            hexColorString = "#" + colorEnvelope.getHexCode();
+        hexColorValue.setText(button.getText());
+        colorPickerView.addOnColorChangedListener(selectedColor -> {
+            hexColorString = (("#" + Integer.toHexString(selectedColor)).toUpperCase());
+            hexColorValue.setText(hexColorString);
         });
 
         applyColors.setOnClickListener(v -> {

@@ -25,37 +25,39 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+
         setContentView(R.layout.special_fragment_layout);
 
-        MyPreferences myPreferences = new MyPreferences(this);
+        NHLPreferences NHLPreferences = new NHLPreferences(this);
 
         RecyclerView specialRecyclerView = findViewById(R.id.special_recycler_view);
 
         TextView title = findViewById(R.id.textView);
-        title.setTextColor(Color.parseColor(myPreferences.color80()));
+        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         Button cancelButton = findViewById(R.id.cancel_button);
-        cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-        cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
+        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
 
         View rootView = findViewById(android.R.id.content);
-        rootView.setBackgroundColor(Color.parseColor(myPreferences.color20()));
+        rootView.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
         Window window = this.getWindow();
-        window.setStatusBarColor(Color.parseColor(myPreferences.color20()));
-        window.setNavigationBarColor(Color.parseColor(myPreferences.color20()));
+        window.setStatusBarColor(Color.parseColor(NHLPreferences.color20()));
+        window.setNavigationBarColor(Color.parseColor(NHLPreferences.color20()));
 
         GradientDrawable drawable = new GradientDrawable();
-        if (myPreferences.isNewButtonStyleActive()) {
-            drawable.setColor(Color.parseColor(myPreferences.color50()));
+        if (NHLPreferences.isNewButtonStyleActive()) {
+            drawable.setColor(Color.parseColor(NHLPreferences.color50()));
             drawable.setCornerRadius(60);
         } else {
             drawable.setCornerRadius(60);
-            drawable.setStroke(8, Color.parseColor(myPreferences.color80()));
+            drawable.setStroke(8, Color.parseColor(NHLPreferences.color80()));
         }
 
         NHLSpecialAdapter nhlSpecialAdapter = new NHLSpecialAdapter();
-        NHLSpecialItem specialItem = new NHLSpecialItem("WPS ATTACK", "USE ONESHOT SCRIPT TO PERFORM WPS ATTACKS", "kali_fern_wifi_cracker");
-        NHLSpecialItem specialItem2 = new NHLSpecialItem("BLUETOOTH TOOLKIT", "PERFORM VARIOUS BLUETOOTH ATTACKS", "kali_spooftooph");
+        NHLSpecialItem specialItem = new NHLSpecialItem(getResources().getString(R.string.wps_attack), getResources().getString(R.string.wps_desc_short), "kali_fern_wifi_cracker");
+        NHLSpecialItem specialItem2 = new NHLSpecialItem(getResources().getString(R.string.bt_toolkit), getResources().getString(R.string.bt_short), "kali_spooftooph");
 
         List<NHLSpecialItem> newItemList = new ArrayList<>();
         newItemList.add(specialItem);
@@ -92,8 +94,17 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
             Intent intent = new Intent(SpecialFeaturesActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
+            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
             finish();
         });
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (isFinishing()) {
+            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+        }
     }
 }

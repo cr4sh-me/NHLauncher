@@ -19,8 +19,8 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
@@ -38,7 +38,7 @@ public class DeleteToolDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.delete_tool_dialog, container, false);
 
         MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
-        MyPreferences myPreferences = new MyPreferences(requireActivity());
+        NHLPreferences NHLPreferences = new NHLPreferences(requireActivity());
 
         // Get arguments
         assert getArguments() != null;
@@ -51,16 +51,16 @@ public class DeleteToolDialog extends AppCompatDialogFragment {
         Button cancelButton = view.findViewById(R.id.cancel_button);
         Button deleteButton = view.findViewById(R.id.delete_button);
 
-        bkg.setBackgroundColor(Color.parseColor(myPreferences.color20()));
-        title.setTextColor(Color.parseColor(myPreferences.color80()));
-        text1.setTextColor(Color.parseColor(myPreferences.color80()));
-        text2.setTextColor(Color.parseColor(myPreferences.color80()));
+        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
+        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        text1.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        text2.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-        cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
+        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
 
-        deleteButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        deleteButton.setTextColor(Color.parseColor(myPreferences.color80()));
+        deleteButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        deleteButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         text1.setText(requireActivity().getResources().getString(R.string.deleting) + name);
 

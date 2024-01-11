@@ -5,19 +5,17 @@ import android.content.SharedPreferences;
 
 import androidx.core.content.ContextCompat;
 
-import com.cr4sh.nhlauncher.ButtonsRecycler.NHLAdapter;
-
 import java.util.Locale;
 
 // This class read, store and return SharedPreferences
-public class MyPreferences {
+public class NHLPreferences {
     private final SharedPreferences nhlPrefs;
     private final SharedPreferences setupPrefs;
     private final SharedPreferences customColorsPrefs;
 //    private final Context context;
     private final MainActivity context = NHLManager.getInstance().getMainActivity();
 
-    public MyPreferences(Context context) {
+    public NHLPreferences(Context context) {
 //        this.context = mainActivity;
         customColorsPrefs = context.getSharedPreferences("customColors", Context.MODE_PRIVATE);
         nhlPrefs = context.getSharedPreferences("nhlSettings", Context.MODE_PRIVATE);
@@ -113,6 +111,10 @@ public class MyPreferences {
 
     public int getRecyclerMainHeight(){
         return nhlPrefs.getInt("recyclerHeight", 0);
+    }
+
+    public boolean isButtonOverlayActive() {
+        return nhlPrefs.getBoolean("isButtonOverlayActive", false);
     }
 
 }

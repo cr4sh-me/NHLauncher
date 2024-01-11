@@ -13,7 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.MainUtils;
@@ -37,7 +37,7 @@ public class ButtonMenuDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.button_menu_dialog, container, false);
 
         MainUtils mainUtils = new MainUtils(myActivity);
-        MyPreferences myPreferences = new MyPreferences(myActivity);
+        NHLPreferences NHLPreferences = new NHLPreferences(myActivity);
 
         LinearLayout bkg = view.findViewById(R.id.custom_theme_dialog_background);
         TextView title = view.findViewById(R.id.dialog_title);
@@ -49,21 +49,21 @@ public class ButtonMenuDialog extends AppCompatDialogFragment {
         DialogUtils dialogUtils = new DialogUtils(requireActivity().getSupportFragmentManager());
 
         // Apply custom themes
-        bkg.setBackgroundColor(Color.parseColor(myPreferences.color20()));
-        title.setTextColor(Color.parseColor(myPreferences.color80()));
+        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
+        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        option1.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        option1.setTextColor(Color.parseColor(myPreferences.color80()));
-        option1.setTextColor(Color.parseColor(myPreferences.color80()));
-        option2.setTextColor(Color.parseColor(myPreferences.color80()));
-        option2.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        option3.setTextColor(Color.parseColor(myPreferences.color80()));
-        option3.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        option4.setTextColor(Color.parseColor(myPreferences.color80()));
-        option4.setBackgroundColor(Color.parseColor(myPreferences.color50()));
+        option1.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        option1.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        option1.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        option2.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        option2.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        option3.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        option3.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        option4.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        option4.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
 
-        cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-        cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
+        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
 
 
         title.setText(myActivity.buttonName.toUpperCase() + " " + requireActivity().getResources().getString(R.string.options).toUpperCase());

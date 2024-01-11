@@ -12,8 +12,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.PermissionUtils;
 import com.cr4sh.nhlauncher.utils.VibrationUtil;
@@ -30,19 +30,19 @@ public class PermissionDialog extends AppCompatDialogFragment {
 
         setCancelable(false);
 
-        MyPreferences myPreferences = new MyPreferences(requireActivity());
+        NHLPreferences NHLPreferences = new NHLPreferences(requireActivity());
 
         LinearLayout bkg = view.findViewById(R.id.custom_theme_dialog_background);
         TextView title = view.findViewById(R.id.dialog_title);
         TextView text = view.findViewById(R.id.text_view1);
         Button allowButton = view.findViewById(R.id.allow_button);
 
-        bkg.setBackgroundColor(Color.parseColor(myPreferences.color20()));
-        title.setTextColor(Color.parseColor(myPreferences.color80()));
-        text.setTextColor(Color.parseColor(myPreferences.color80()));
+        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
+        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        text.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        allowButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        allowButton.setTextColor(Color.parseColor(myPreferences.color80()));
+        allowButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        allowButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         allowButton.setOnClickListener(view12 -> {
             VibrationUtil.vibrate(mainActivity, 10);

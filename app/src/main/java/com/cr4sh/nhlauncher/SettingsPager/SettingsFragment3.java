@@ -7,24 +7,21 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.StatsRecycler.StatsAdapter;
 import com.cr4sh.nhlauncher.StatsRecycler.StatsItem;
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
-import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
 import java.util.ArrayList;
@@ -37,7 +34,7 @@ public class SettingsFragment3 extends Fragment {
     private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
     SQLiteDatabase mDatabase;
     StatsAdapter adapter;
-    private MyPreferences myPreferences;
+    private NHLPreferences NHLPreferences;
     private RecyclerView recyclerView;
     private TextView noToolsText;
     private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
@@ -52,7 +49,7 @@ public class SettingsFragment3 extends Fragment {
 
         View view = inflater.inflate(R.layout.settings_layout3, container, false);
 
-        myPreferences = new MyPreferences(requireActivity());
+        NHLPreferences = new NHLPreferences(requireActivity());
 
         mDatabase = mainActivity.mDatabase;
 
@@ -66,15 +63,15 @@ public class SettingsFragment3 extends Fragment {
         adapter = new StatsAdapter();
         recyclerView.setAdapter(adapter);
 
-        noToolsText.setTextColor(Color.parseColor(myPreferences.color80()));
+        noToolsText.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
 
-        powerSpinnerView.setBackgroundColor(Color.parseColor(myPreferences.color20()));
-        powerSpinnerView.setTextColor(Color.parseColor(myPreferences.color80()));
-        powerSpinnerView.setHintTextColor(Color.parseColor(myPreferences.color50()));
-        powerSpinnerView.setDividerColor(Color.parseColor(myPreferences.color80()));
+        powerSpinnerView.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
+        powerSpinnerView.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        powerSpinnerView.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
+        powerSpinnerView.setDividerColor(Color.parseColor(NHLPreferences.color80()));
 
-        title.setTextColor(Color.parseColor(myPreferences.color80()));
+        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         powerSpinnerView.selectItemByIndex(0);
         spinnerChanger(0); // Display all tools by default
@@ -82,16 +79,11 @@ public class SettingsFragment3 extends Fragment {
         powerSpinnerView.setOnSpinnerItemSelectedListener((OnSpinnerItemSelectedListener<String>) (oldIndex, oldItem, newIndex, newItem) -> spinnerChanger(newIndex));
 
         GradientDrawable gd = new GradientDrawable();
-        gd.setStroke(8, Color.parseColor(myPreferences.color50())); // Stroke width and color
+        gd.setStroke(8, Color.parseColor(NHLPreferences.color50())); // Stroke width and color
         gd.setCornerRadius(20);
         spinnerBg1.setBackground(gd);
 
-        powerSpinnerView.setSpinnerOutsideTouchListener(new OnSpinnerOutsideTouchListener() {
-            @Override
-            public void onSpinnerOutsideTouch(@NonNull View view, @NonNull MotionEvent motionEvent) {
-                powerSpinnerView.selectItemByIndex(powerSpinnerView.getSelectedIndex());
-            }
-        });
+        powerSpinnerView.setSpinnerOutsideTouchListener((view1, motionEvent) -> powerSpinnerView.selectItemByIndex(powerSpinnerView.getSelectedIndex()));
 
         return view;
     }
@@ -116,7 +108,7 @@ public class SettingsFragment3 extends Fragment {
                 selectionArgs = new String[]{String.valueOf(category - 1), "0"};
             }
 
-            cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, myPreferences.sortingMode(), null);
+            cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, NHLPreferences.sortingMode(), null);
             if (cursor.getCount() == 0) {
                 mainActivity.runOnUiThread(() -> {
                     noToolsText.setVisibility(View.VISIBLE);

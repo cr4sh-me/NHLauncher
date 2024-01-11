@@ -1,15 +1,9 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:interpolator="@android:anim/accelerate_decelerate_interpolator">
 
-    <!-- Translate (Slide) animation -->
-    <!--    <translate-->
-    <!--        android:duration="200"-->
-    <!--        android:fromXDelta="0%"-->
-    <!--        android:toXDelta="-60dp" />-->
-
-    <!-- Alpha (Fade) animation -->
     <alpha
         android:duration="200"
         android:fromAlpha="1.0"
         android:toAlpha="0.0" />
+
 </set>

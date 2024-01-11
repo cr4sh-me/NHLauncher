@@ -19,8 +19,8 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
@@ -37,7 +37,7 @@ public class NewToolDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.new_tool_dialog, container, false);
 
         MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
-        MyPreferences myPreferences = new MyPreferences(requireActivity());
+        NHLPreferences NHLPreferences = new NHLPreferences(requireActivity());
 
         assert getArguments() != null;
         String category = getArguments().getString("category");
@@ -50,25 +50,25 @@ public class NewToolDialog extends AppCompatDialogFragment {
         Button cancelButton = view.findViewById(R.id.cancel_button);
         Button saveButton = view.findViewById(R.id.save_button);
 
-        bkg.setBackgroundColor(Color.parseColor(myPreferences.color20()));
-        title.setTextColor(Color.parseColor(myPreferences.color80()));
-        myName.setTextColor(Color.parseColor(myPreferences.color80()));
-        myDescription.setTextColor(Color.parseColor(myPreferences.color80()));
-        myCmd.setTextColor(Color.parseColor(myPreferences.color80()));
+        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
+        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        myName.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        myDescription.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        myCmd.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        myName.getBackground().mutate().setTint(Color.parseColor(myPreferences.color50()));
-        myName.setHintTextColor(Color.parseColor(myPreferences.color50()));
-        myCmd.getBackground().mutate().setTint(Color.parseColor(myPreferences.color50()));
-        myCmd.setHintTextColor(Color.parseColor(myPreferences.color50()));
-        myDescription.getBackground().mutate().setTint(Color.parseColor(myPreferences.color50()));
-        myDescription.setHintTextColor(Color.parseColor(myPreferences.color50()));
+        myName.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
+        myName.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
+        myCmd.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
+        myCmd.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
+        myDescription.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
+        myDescription.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
 
 
-        cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-        cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
+        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
 
-        saveButton.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        saveButton.setTextColor(Color.parseColor(myPreferences.color80()));
+        saveButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        saveButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         saveButton.setOnClickListener(view12 -> {
             VibrationUtil.vibrate(mainActivity, 10);

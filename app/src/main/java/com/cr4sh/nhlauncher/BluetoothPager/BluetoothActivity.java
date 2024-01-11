@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.SpecialFeaturesActivity;
 import com.google.android.material.tabs.TabLayout;
@@ -26,25 +26,26 @@ public class BluetoothActivity extends AppCompatActivity {
 
         setContentView(R.layout.bt_layout);
 
-        MyPreferences myPreferences = new MyPreferences(this);
+        NHLPreferences NHLPreferences = new NHLPreferences(this);
 
         View rootView = findViewById(android.R.id.content);
-        rootView.setBackgroundColor(Color.parseColor(myPreferences.color20()));
+        rootView.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
         Window window = this.getWindow();
-        window.setStatusBarColor(Color.parseColor(myPreferences.color20()));
-        window.setNavigationBarColor(Color.parseColor(myPreferences.color20()));
+        window.setStatusBarColor(Color.parseColor(NHLPreferences.color20()));
+        window.setNavigationBarColor(Color.parseColor(NHLPreferences.color20()));
 
         TextView title = findViewById(R.id.title);
-        title.setTextColor(Color.parseColor(myPreferences.color80()));
+        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         Button cancelButton = findViewById(R.id.cancel_button);
-        cancelButton.setBackgroundColor(Color.parseColor(myPreferences.color80()));
-        cancelButton.setTextColor(Color.parseColor(myPreferences.color50()));
+        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
 
         cancelButton.setOnClickListener(v -> {
             Intent intent = new Intent(BluetoothActivity.this, SpecialFeaturesActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
+            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
             finish();
         });
 
@@ -69,15 +70,15 @@ public class BluetoothActivity extends AppCompatActivity {
         }).attach();
 
         // Set tab background color
-        tabs.setBackgroundColor(Color.parseColor(myPreferences.color20()));
+        tabs.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
 
         // Set tab text color (unselected and selected)
         tabs.setTabTextColors(
-                Color.parseColor(myPreferences.color80()),
-                Color.parseColor(myPreferences.color80())
+                Color.parseColor(NHLPreferences.color80()),
+                Color.parseColor(NHLPreferences.color80())
         );
 
-        tabs.setSelectedTabIndicatorColor(Color.parseColor(myPreferences.color80()));
+        tabs.setSelectedTabIndicatorColor(Color.parseColor(NHLPreferences.color80()));
 
 
     }

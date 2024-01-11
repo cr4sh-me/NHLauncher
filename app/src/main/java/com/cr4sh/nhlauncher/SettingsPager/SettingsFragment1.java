@@ -6,10 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.LocaleList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +22,12 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.core.widget.CompoundButtonCompat;
 import androidx.fragment.app.Fragment;
 
 import com.cr4sh.nhlauncher.Database.DBBackup;
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.UpdateChecker;
 import com.cr4sh.nhlauncher.utils.MainUtils;
@@ -38,7 +40,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 
 public class SettingsFragment1 extends Fragment {
-    MyPreferences myPreferences;
+    NHLPreferences NHLPreferences;
     MainUtils mainUtils;
     MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
     private Button updateButton;
@@ -47,6 +49,7 @@ public class SettingsFragment1 extends Fragment {
     private String newLanguageLocaleSetting;
     private CheckBox vibrationsCheckbox;
     private CheckBox newButtonsStyle;
+    private CheckBox overlayCheckbox;
     private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
 
     public SettingsFragment1() {
@@ -60,11 +63,12 @@ public class SettingsFragment1 extends Fragment {
 
         View view = inflater.inflate(R.layout.settings_layout1, container, false);
 
-        myPreferences = new MyPreferences(requireActivity());
+        NHLPreferences = new NHLPreferences(requireActivity());
         mainUtils = new MainUtils(mainActivity);
 
         vibrationsCheckbox = view.findViewById(R.id.vibrations_checkbox);
         newButtonsStyle = view.findViewById(R.id.newbuttons_checkbox);
+        overlayCheckbox = view.findViewById(R.id.overlay_checkbox);
         TextView title = view.findViewById(R.id.bt_info2);
         LinearLayout bkg = view.findViewById(R.id.custom_theme_dialog_background);
         Button runSetup = view.findViewById(R.id.run_setup);
@@ -78,8 +82,8 @@ public class SettingsFragment1 extends Fragment {
         TextView spinnerText1 = view.findViewById(R.id.language_spinner_label);
         TextView spinnerText2 = view.findViewById(R.id.sorting_spinner_label);
 
-        spinnerText1.setTextColor(Color.parseColor(myPreferences.color80()));
-        spinnerText2.setTextColor(Color.parseColor(myPreferences.color80()));
+        spinnerText1.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        spinnerText2.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         PowerSpinnerView powerSpinnerView = view.findViewById(R.id.language_spinner);
         PowerSpinnerView powerSpinnerView2 = view.findViewById(R.id.sorting_spinner);
@@ -87,44 +91,54 @@ public class SettingsFragment1 extends Fragment {
         LinearLayout spinnerBg1 = view.findViewById(R.id.spinnerBg1);
         LinearLayout spinnerBg2 = view.findViewById(R.id.spinnerBg2);
 
-        checkUpdate.setTextColor(Color.parseColor(myPreferences.color80()));
+        checkUpdate.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        powerSpinnerView.setBackgroundColor(Color.parseColor(myPreferences.color20()));
-        powerSpinnerView.setTextColor(Color.parseColor(myPreferences.color80()));
-        powerSpinnerView.setHintTextColor(Color.parseColor(myPreferences.color50()));
-        powerSpinnerView.setDividerColor(Color.parseColor(myPreferences.color80()));
+        powerSpinnerView.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
+        powerSpinnerView.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        powerSpinnerView.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
+        powerSpinnerView.setDividerColor(Color.parseColor(NHLPreferences.color80()));
 
-        powerSpinnerView2.setBackgroundColor(Color.parseColor(myPreferences.color20()));
-        powerSpinnerView2.setTextColor(Color.parseColor(myPreferences.color80()));
-        powerSpinnerView2.setHintTextColor(Color.parseColor(myPreferences.color50()));
-        powerSpinnerView2.setDividerColor(Color.parseColor(myPreferences.color80()));
+        powerSpinnerView2.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
+        powerSpinnerView2.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        powerSpinnerView2.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
+        powerSpinnerView2.setDividerColor(Color.parseColor(NHLPreferences.color80()));
 
-        vibrationsCheckbox.setTextColor(Color.parseColor(myPreferences.color80()));
-        newButtonsStyle.setTextColor(Color.parseColor(myPreferences.color80()));
-        int[][] states = {{android.R.attr.state_checked}, {}};
-        int[] colors = {Color.parseColor(myPreferences.color80()), Color.parseColor(myPreferences.color80())};
-        CompoundButtonCompat.setButtonTintList(vibrationsCheckbox, new ColorStateList(states, colors));
-        CompoundButtonCompat.setButtonTintList(newButtonsStyle, new ColorStateList(states, colors));
+        vibrationsCheckbox.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        newButtonsStyle.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        overlayCheckbox.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        bkg.setBackgroundColor(Color.parseColor(myPreferences.color20()));
-        title.setTextColor(Color.parseColor(myPreferences.color80()));
+        vibrationsCheckbox.setButtonTintList(ColorStateList.valueOf(Color.parseColor(NHLPreferences.color80())));
+        newButtonsStyle.setButtonTintList(ColorStateList.valueOf(Color.parseColor(NHLPreferences.color80())));
+        overlayCheckbox.setButtonTintList(ColorStateList.valueOf(Color.parseColor(NHLPreferences.color80())));
+
+
+        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
+        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         setButtonColors(runSetup);
         setButtonColors(backupDb);
         setButtonColors(restoreDb);
         setButtonColors(saveButton);
 
-        vibrationsCheckbox.setChecked(myPreferences.vibrationOn());
-        newButtonsStyle.setChecked(myPreferences.isNewButtonStyleActive());
+        vibrationsCheckbox.setChecked(NHLPreferences.vibrationOn());
+        newButtonsStyle.setChecked(NHLPreferences.isNewButtonStyleActive());
+        overlayCheckbox.setChecked(NHLPreferences.isButtonOverlayActive());
 
-        String languageLocale = Locale.getDefault().getLanguage();
-        if (languageLocale.equals("pl")) {
+
+        Resources resources = mainActivity.getResources();
+        Configuration configuration = resources.getConfiguration();
+
+        LocaleList localeList = configuration.getLocales();
+        Locale currentLocale = localeList.get(0);
+        String currentLanguageCode = currentLocale.getLanguage();
+
+        if (currentLanguageCode.equals("pl")) {
             powerSpinnerView.selectItemByIndex(1);
-        } else if (languageLocale.equals("en")) {
+        } else if (currentLanguageCode.equals("en")) {
             powerSpinnerView.selectItemByIndex(0);
         }
 
-        String sortingMode = myPreferences.sortingMode();
+        String sortingMode = NHLPreferences.sortingMode();
         if (sortingMode == null) {
             powerSpinnerView2.selectItemByIndex(0);
         } else if (sortingMode.equals("USAGE DESC")) {
@@ -141,9 +155,11 @@ public class SettingsFragment1 extends Fragment {
 
         newButtonsStyle.setOnCheckedChangeListener((buttonView, isChecked) -> VibrationUtil.vibrate(requireActivity(), 10));
         vibrationsCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> VibrationUtil.vibrate(requireActivity(), 10));
+        overlayCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> VibrationUtil.vibrate(requireActivity(), 10));
+
 
         GradientDrawable gd = new GradientDrawable();
-        gd.setStroke(8, Color.parseColor(myPreferences.color50())); // Stroke width and color
+        gd.setStroke(8, Color.parseColor(NHLPreferences.color50())); // Stroke width and color
         gd.setCornerRadius(20);
         spinnerBg1.setBackground(gd);
         spinnerBg2.setBackground(gd);
@@ -247,9 +263,7 @@ public class SettingsFragment1 extends Fragment {
         });
 
         powerSpinnerView.setSpinnerOutsideTouchListener((view1, motionEvent) -> powerSpinnerView.selectItemByIndex(powerSpinnerView.getSelectedIndex()));
-
         powerSpinnerView2.setSpinnerOutsideTouchListener((view12, motionEvent) -> powerSpinnerView2.selectItemByIndex(powerSpinnerView2.getSelectedIndex()));
-
 
         return view;
     }
@@ -260,6 +274,8 @@ public class SettingsFragment1 extends Fragment {
         // Apply the settings to SharedPreferences
         saveVibrationsPref(vibrationsCheckbox.isChecked());
         saveNewButtonPref(newButtonsStyle.isChecked());
+        saveOverlayPref(overlayCheckbox.isChecked());
+
 
 
         if (newSortingModeSetting != null) {
@@ -279,8 +295,8 @@ public class SettingsFragment1 extends Fragment {
 
 
     private void setButtonColors(Button button) {
-        button.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        button.setTextColor(Color.parseColor(myPreferences.color80()));
+        button.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        button.setTextColor(Color.parseColor(NHLPreferences.color80()));
     }
 
 
@@ -320,6 +336,15 @@ public class SettingsFragment1 extends Fragment {
         SharedPreferences prefs = requireActivity().getSharedPreferences("nhlSettings", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("isNewButtonStyleActive", active);
+        editor.apply();
+//        mainActivity.recreate();
+    }
+
+    private void saveOverlayPref(boolean active) {
+        // Save the color values and frame drawable to SharedPreferences
+        SharedPreferences prefs = requireActivity().getSharedPreferences("nhlSettings", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("isButtonOverlayActive", active);
         editor.apply();
 //        mainActivity.recreate();
     }

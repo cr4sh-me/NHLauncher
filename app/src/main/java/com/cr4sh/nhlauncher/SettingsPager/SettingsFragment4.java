@@ -19,14 +19,14 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.VibrationUtil;
 
 public class SettingsFragment4 extends Fragment {
     private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
-    private MyPreferences myPreferences;
+    private NHLPreferences NHLPreferences;
     public SettingsFragment4() {
         // Required empty public constructor
     }
@@ -38,7 +38,7 @@ public class SettingsFragment4 extends Fragment {
 
         View view = inflater.inflate(R.layout.settings_layout4, container, false);
 
-        myPreferences = new MyPreferences(requireActivity());
+        NHLPreferences = new NHLPreferences(requireActivity());
 
         // Get the TextViews from the layout
         TextView title = view.findViewById(R.id.bt_info2);
@@ -52,17 +52,17 @@ public class SettingsFragment4 extends Fragment {
         // Set the text for each TextView
         textView1.setText("'OkHttp' library licensed under Apache 2.0");
         textView2.setText("'PowerSpinner' library licensed under Apache 2.0");
-        textView3.setText("'ColorPicker' library licensed under Apache 2.0");
+        textView3.setText("'colorpicker' library licensed under Apache 2.0");
 
         // Create ClickableSpan for each TextView
         setClickableSpan(textView1, "https://github.com/square/okhttp");
         setClickableSpan(textView2, "https://github.com/skydoves/PowerSpinner");
-        setClickableSpan(textView3, "https://github.com/skydoves/ColorPickerView");
+        setClickableSpan(textView3, "https://github.com/QuadFlask/colorpicker");
 
-        title.setTextColor(Color.parseColor(myPreferences.color80()));
-        textView1.setLinkTextColor(Color.parseColor(myPreferences.color80()));
-        textView2.setLinkTextColor(Color.parseColor(myPreferences.color80()));
-        textView3.setLinkTextColor(Color.parseColor(myPreferences.color80()));
+        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        textView1.setLinkTextColor(Color.parseColor(NHLPreferences.color80()));
+        textView2.setLinkTextColor(Color.parseColor(NHLPreferences.color80()));
+        textView3.setLinkTextColor(Color.parseColor(NHLPreferences.color80()));
 
         github.setOnClickListener(v -> {
             VibrationUtil.vibrate(mainActivity, 10);
@@ -92,7 +92,7 @@ public class SettingsFragment4 extends Fragment {
     }
 
     private void setButtonColors(Button button) {
-        button.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        button.setTextColor(Color.parseColor(myPreferences.color80()));
+        button.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        button.setTextColor(Color.parseColor(NHLPreferences.color80()));
     }
 }

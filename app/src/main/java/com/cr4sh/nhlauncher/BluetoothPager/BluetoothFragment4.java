@@ -11,12 +11,12 @@ import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
 
-import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 
 public class BluetoothFragment4 extends Fragment {
 
-    MyPreferences myPreferences;
+    NHLPreferences NHLPreferences;
 
     public BluetoothFragment4() {
         // Required empty public constructor
@@ -28,7 +28,7 @@ public class BluetoothFragment4 extends Fragment {
 
         View view = inflater.inflate(R.layout.bt_layout4, container, false);
 
-        myPreferences = new MyPreferences(requireActivity());
+        NHLPreferences = new NHLPreferences(requireActivity());
 
 
         return view;
@@ -42,8 +42,8 @@ public class BluetoothFragment4 extends Fragment {
     }
 
     private void setButtonColors(Button button) {
-        button.setBackgroundColor(Color.parseColor(myPreferences.color50()));
-        button.setTextColor(Color.parseColor(myPreferences.color80()));
+        button.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        button.setTextColor(Color.parseColor(NHLPreferences.color80()));
     }
 
 }

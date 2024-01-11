@@ -15,8 +15,8 @@ import com.cr4sh.nhlauncher.ButtonsRecycler.NHLAdapter;
 import com.cr4sh.nhlauncher.ButtonsRecycler.NHLItem;
 import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MyPreferences;
 import com.cr4sh.nhlauncher.NHLManager;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.bridge.Bridge;
 
@@ -30,14 +30,14 @@ public class MainUtils extends AppCompatActivity {
 
     private final SQLiteDatabase mDatabase;
     private final MainActivity mainActivity;
-    private final MyPreferences myPreferences;
+    private final NHLPreferences NHLPreferences;
 
     private final ExecutorService executorService = NHLManager.getInstance().getExecutorService();
 
     public MainUtils(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         mDatabase = mainActivity.mDatabase;
-        myPreferences = new MyPreferences(mainActivity);
+        NHLPreferences = new NHLPreferences(mainActivity);
     }
 
     // MainUtils functions!!!
@@ -67,7 +67,7 @@ public class MainUtils extends AppCompatActivity {
         TextView noToolsText = mainActivity.findViewById(R.id.messagebox);
         noToolsText.setText(null);
 
-        String[] projection = {"CATEGORY", "FAVOURITE", "NAME", myPreferences.language(), "CMD", "ICON", "USAGE"};
+        String[] projection = {"CATEGORY", "FAVOURITE", "NAME", NHLPreferences.language(), "CMD", "ICON", "USAGE"};
         String selection;
         String[] selectionArgs;
 
@@ -85,7 +85,7 @@ public class MainUtils extends AppCompatActivity {
         }
 
         Future<List<NHLItem>> queryTask = executorService.submit(() -> {
-            Cursor cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, myPreferences.sortingMode(), null);
+            Cursor cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, NHLPreferences.sortingMode(), null);
 
             List<NHLItem> newItemList = new ArrayList<>();
 

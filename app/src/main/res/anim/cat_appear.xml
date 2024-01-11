@@ -1,11 +1,9 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:interpolator="@android:anim/accelerate_decelerate_interpolator">
 
-    <!-- Translate (Slide) animation -->
-
     <alpha
-        android:duration="2000"
-        android:fromAlpha="1.0"
-        android:toAlpha="0.0" />
+        android:duration="200"
+        android:fromAlpha="0.0"
+        android:toAlpha="1.0" />
 
 </set>

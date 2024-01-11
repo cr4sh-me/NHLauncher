@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/custom_theme_dialog_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,7 +11,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Custom pin"
+        android:text="@string/custom_pin"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -20,8 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:hint="Custom PIN"
-        android:inputType="number" />
+        android:hint="@string/custom_pin"
+        android:inputType="number"
+        tools:ignore="TextFields" />
 
 
     <LinearLayout

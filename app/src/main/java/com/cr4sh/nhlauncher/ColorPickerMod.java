@@ -5,7 +5,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.skydoves.colorpickerview.ColorPickerView;
+import com.flask.colorpicker.ColorPickerView;
 
 public class ColorPickerMod extends ColorPickerView {
     public ColorPickerMod(Context context) {

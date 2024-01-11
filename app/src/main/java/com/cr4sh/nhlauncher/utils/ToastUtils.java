@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cr4sh.nhlauncher.MyPreferences;
+import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 
 public class ToastUtils {
@@ -22,7 +22,7 @@ public class ToastUtils {
         ViewGroup root = new LinearLayout(appContext);
         View layout = LayoutInflater.from(appContext).inflate(R.layout.nhl_custom_toast, root, false);
 
-        MyPreferences myPreferences = new MyPreferences(appContext);
+        NHLPreferences NHLPreferences = new NHLPreferences(appContext);
 
         FrameLayout background = layout.findViewById(R.id.customToastLayout);
 
@@ -30,15 +30,15 @@ public class ToastUtils {
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
         shape.setCornerRadius(60); // Adjust the corner radius as needed
-        shape.setStroke(8, Color.parseColor(myPreferences.color80()));
-        shape.setColor(Color.parseColor(myPreferences.color20())); // Set your background color
+        shape.setStroke(8, Color.parseColor(NHLPreferences.color80()));
+        shape.setColor(Color.parseColor(NHLPreferences.color20())); // Set your background color
 
         // Set the background drawable for the FrameLayout
         background.setBackground(shape);
 
         TextView text = layout.findViewById(R.id.customToastText);
         text.setText(message);
-        text.setTextColor(Color.parseColor(myPreferences.color80()));
+        text.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         Toast toast = new Toast(appContext);
         toast.setGravity(Gravity.BOTTOM, 0, 150);
