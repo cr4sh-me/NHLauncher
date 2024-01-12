@@ -1,4 +1,4 @@
-package com.cr4sh.nhlauncher;
+package com.cr4sh.nhlauncher.Overrides;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

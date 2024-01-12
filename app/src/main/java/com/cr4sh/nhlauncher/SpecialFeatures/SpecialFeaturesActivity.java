@@ -1,8 +1,10 @@
-package com.cr4sh.nhlauncher;
+package com.cr4sh.nhlauncher.SpecialFeatures;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -13,9 +15,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cr4sh.nhlauncher.MainActivity;
+import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.SpecialButtonsRecycler.NHLSpecialAdapter;
 import com.cr4sh.nhlauncher.SpecialButtonsRecycler.NHLSpecialItem;
-import com.cr4sh.nhlauncher.utils.VibrationUtil;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +30,12 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+//        overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, R.anim.cat_appear, R.anim.cat_appear);
+        } else {
+            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+        }
 
         setContentView(R.layout.special_fragment_layout);
 
@@ -72,7 +82,7 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
 //
 //
 //        customButton1.setOnClickListener(v -> {
-//            VibrationUtil.vibrate(this, 10);
+//            VibrationUtils.vibrate(this, 10);
 //            Intent intent = new Intent(this, WPSAttack.class);
 //            startActivity(intent);
 //        });
@@ -83,18 +93,23 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
 //        });
 
 //        customButton3.setOnClickListener(v -> {
-//            VibrationUtil.vibrate(this, 10);
+//            VibrationUtils.vibrate(this, 10);
 //            ToastUtils.showCustomToast(this, "Coming soon...");
 ////            Intent intent = new Intent(this, BluetoothAttacks.class);
 ////            startActivity(intent);
 //        });
 
         cancelButton.setOnClickListener(v -> {
-            VibrationUtil.vibrate(this, 10);
+            VibrationUtils.vibrate(this, 10);
+
             Intent intent = new Intent(SpecialFeaturesActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+            Bundle animationBundle = ActivityOptions.makeCustomAnimation(
+                    this,
+                    R.anim.cat_appear,  // Enter animation
+                    R.anim.cat_disappear  // Exit animation
+            ).toBundle();
+            startActivity(intent, animationBundle);
             finish();
         });
 
@@ -104,7 +119,11 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         if (isFinishing()) {
-            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, R.anim.cat_appear, R.anim.cat_appear);
+            } else {
+                overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+            }
         }
     }
 }

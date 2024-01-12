@@ -19,12 +19,12 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.NHLManager;
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.MainUtils;
+import com.cr4sh.nhlauncher.utils.NHLManager;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
-import com.cr4sh.nhlauncher.utils.VibrationUtil;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 import java.util.Objects;
 
@@ -71,7 +71,7 @@ public class NewToolDialog extends AppCompatDialogFragment {
         saveButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         saveButton.setOnClickListener(view12 -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             // Idiot protection...
             if (myName.getText().toString().isEmpty()) {
                 ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.name_empty));
@@ -106,7 +106,7 @@ public class NewToolDialog extends AppCompatDialogFragment {
         });
 
         cancelButton.setOnClickListener(view1 -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             Objects.requireNonNull(getDialog()).cancel();
         });
 

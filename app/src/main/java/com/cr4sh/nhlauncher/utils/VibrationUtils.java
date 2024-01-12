@@ -5,9 +5,7 @@ import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 
-import com.cr4sh.nhlauncher.NHLPreferences;
-
-public class VibrationUtil {
+public class VibrationUtils {
     // Vibrations method
     public static void vibrate(Context context, long milliseconds) {
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);

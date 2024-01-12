@@ -1,4 +1,4 @@
-package com.cr4sh.nhlauncher;
+package com.cr4sh.nhlauncher.Overrides;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+
+import com.cr4sh.nhlauncher.R;
 
 import java.util.List;
 

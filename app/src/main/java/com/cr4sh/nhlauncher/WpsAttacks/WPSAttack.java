@@ -1,6 +1,7 @@
 package com.cr4sh.nhlauncher.WpsAttacks;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -34,15 +35,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.cr4sh.nhlauncher.NHLManager;
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
-import com.cr4sh.nhlauncher.SpecialFeaturesActivity;
+import com.cr4sh.nhlauncher.SpecialFeatures.SpecialFeaturesActivity;
 import com.cr4sh.nhlauncher.bridge.Bridge;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
+import com.cr4sh.nhlauncher.utils.NHLManager;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
 import com.cr4sh.nhlauncher.utils.ShellExecuter;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
-import com.cr4sh.nhlauncher.utils.VibrationUtil;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -64,6 +65,7 @@ public class WPSAttack extends AppCompatActivity {
     private BroadcastReceiver wifiScanReceiver;
     private Button scanButton;
     private final ExecutorService executorService = NHLManager.getInstance().getExecutorService();
+
     private ShellExecuter exe;
     private static String extractBSSID(String buttonText) {
         String[] lines = buttonText.split("\n");
@@ -74,15 +76,22 @@ public class WPSAttack extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         if (isFinishing()) {
-            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, R.anim.cat_appear, R.anim.cat_appear);
+            } else {
+                overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+            }
         }
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, R.anim.cat_appear, R.anim.cat_appear);
+        } else {
+            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+        }
         exe = new ShellExecuter();
 
         setContentView(R.layout.wps_attack_layout);
@@ -168,37 +177,37 @@ public class WPSAttack extends AppCompatActivity {
         wpsButtonCheckbox.setButtonTintList(ColorStateList.valueOf(Color.parseColor(NHLPreferences.color80())));
 
         pixieDustCheckbox.setOnClickListener(v -> {
-            VibrationUtil.vibrate(this, 10);
+            VibrationUtils.vibrate(this, 10);
             if (pixieDustCheckbox.isChecked())
                 pixieCMD = " -K";
             else
                 pixieCMD = "";
         });
         pixieForceCheckbox.setOnClickListener(v -> {
-            VibrationUtil.vibrate(this, 10);
+            VibrationUtils.vibrate(this, 10);
             if (pixieForceCheckbox.isChecked())
                 pixieforceCMD = " -F";
             else
                 pixieforceCMD = "";
         });
         bruteCheckbox.setOnClickListener(v -> {
-            VibrationUtil.vibrate(this, 10);
+            VibrationUtils.vibrate(this, 10);
             if (bruteCheckbox.isChecked())
                 bruteCMD = " -B";
             else
                 bruteCMD = "";
         });
         customPinCheckbox.setOnClickListener(v -> {
-            VibrationUtil.vibrate(this, 10);
+            VibrationUtils.vibrate(this, 10);
             dialogUtils.openWpsCustomSetting(1, WPSAttack.this);
         });
         delayCheckbox.setOnClickListener(v -> {
-            VibrationUtil.vibrate(this, 10);
+            VibrationUtils.vibrate(this, 10);
             dialogUtils.openWpsCustomSetting(2, WPSAttack.this);
         });
 
         wpsButtonCheckbox.setOnClickListener(v -> {
-            VibrationUtil.vibrate(this, 10);
+            VibrationUtils.vibrate(this, 10);
             if (wpsButtonCheckbox.isChecked()) {
                 pbcCMD = " --pbc";
             } else
@@ -208,7 +217,7 @@ public class WPSAttack extends AppCompatActivity {
         enableScanButton(true);
 
         scanButton.setOnClickListener(v -> {
-            VibrationUtil.vibrate(this, 10);
+            VibrationUtils.vibrate(this, 10);
             try {
                 checkThrottling();
             } catch (Settings.SettingNotFoundException e) {
@@ -231,15 +240,20 @@ public class WPSAttack extends AppCompatActivity {
 
         // Initialize cancel button
         cancelButton.setOnClickListener(v -> {
-            VibrationUtil.vibrate(this, 10);
+            VibrationUtils.vibrate(this, 10);
             Intent intent = new Intent(WPSAttack.this, SpecialFeaturesActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
+            Bundle animationBundle = ActivityOptions.makeCustomAnimation(
+                    this,
+                    R.anim.cat_appear,  // Enter animation
+                    R.anim.cat_disappear  // Exit animation
+            ).toBundle();
+            startActivity(intent, animationBundle);
             finish();
         });
 
         msg2.setOnClickListener(v -> {
-            VibrationUtil.vibrate(this, 10);
+            VibrationUtils.vibrate(this, 10);
             if (isThrottleEnabled){
                 dialogUtils.openThrottlingDialog();
             }
@@ -258,7 +272,7 @@ public class WPSAttack extends AppCompatActivity {
 
         launchAttackButton.setOnClickListener(
                 v -> {
-                    VibrationUtil.vibrate(this, 10);
+                    VibrationUtils.vibrate(this, 10);
                     if (selectedButton == null) {
                         ToastUtils.showCustomToast(this, "No target selected!");
                     } else {
@@ -377,7 +391,7 @@ public class WPSAttack extends AppCompatActivity {
     }
 
     private void handleButtonClick(Button clickedButton) {
-        VibrationUtil.vibrate(this, 10);
+        VibrationUtils.vibrate(this, 10);
         if (selectedButton != null) {
             selectedButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
             // Change the background drawable for the previously selected button
@@ -425,7 +439,7 @@ public class WPSAttack extends AppCompatActivity {
                     enableScanButton(false);
                     setMessage("Scan limit reached, re-enabling WiFi...");
                     resetWifi();
-                    new Handler().postDelayed(this::performWifiScan, 5000); // 3000 milliseconds (3 seconds)
+                    new Handler().postDelayed(this::performWifiScan, 5000);
                 } else {
                     enableScanButton(false);
                     buttonContainer.removeAllViews();
@@ -492,9 +506,9 @@ public class WPSAttack extends AppCompatActivity {
         executorService.submit(()-> exe.RunAsRoot(new String[]{"svc wifi enable"}));
     }
 
-    private void resetWifi(){
-        executorService.submit(()-> exe.RunAsRoot(new String[]{"svc wifi disable"}));
-        new Handler().postDelayed(() -> executorService.submit(()-> exe.RunAsRoot(new String[]{"svc wifi enable"})), 3000); // 3000 milliseconds (3 seconds)
+    private void resetWifi() {
+        executorService.submit(() -> exe.RunAsRoot(new String[]{"svc wifi disable"}));
+        new Handler().postDelayed(() -> executorService.submit(() -> exe.RunAsRoot(new String[]{"svc wifi enable"})), 3000);
     }
 
     @Override

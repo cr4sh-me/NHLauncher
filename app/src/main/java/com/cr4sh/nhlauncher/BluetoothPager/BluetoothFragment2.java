@@ -16,8 +16,8 @@ import android.widget.TextView;
 import androidx.core.widget.CompoundButtonCompat;
 import androidx.fragment.app.Fragment;
 
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
 
 public class BluetoothFragment2 extends Fragment {
 

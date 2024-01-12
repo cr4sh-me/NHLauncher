@@ -1,5 +1,6 @@
 package com.cr4sh.nhlauncher.BluetoothPager;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,9 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
-import com.cr4sh.nhlauncher.SpecialFeaturesActivity;
+import com.cr4sh.nhlauncher.SpecialFeatures.SpecialFeaturesActivity;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -45,7 +46,12 @@ public class BluetoothActivity extends AppCompatActivity {
             Intent intent = new Intent(BluetoothActivity.this, SpecialFeaturesActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
-            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+            Bundle animationBundle = ActivityOptions.makeCustomAnimation(
+                    this,
+                    R.anim.cat_appear,  // Enter animation
+                    R.anim.cat_disappear  // Exit animation
+            ).toBundle();
+            startActivity(intent, animationBundle);
             finish();
         });
 

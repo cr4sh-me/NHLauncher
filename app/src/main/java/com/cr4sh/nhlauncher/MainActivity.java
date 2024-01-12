@@ -1,15 +1,20 @@
 package com.cr4sh.nhlauncher;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -38,11 +43,14 @@ import com.cr4sh.nhlauncher.ButtonsRecycler.NHLItem;
 import com.cr4sh.nhlauncher.CategoriesRecycler.CategoriesAdapter;
 import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.SettingsPager.SettingsActivity;
+import com.cr4sh.nhlauncher.SpecialFeatures.SpecialFeaturesActivity;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.MainUtils;
+import com.cr4sh.nhlauncher.utils.NHLManager;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
 import com.cr4sh.nhlauncher.utils.PermissionUtils;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
-import com.cr4sh.nhlauncher.utils.VibrationUtil;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -73,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView rollCategoriesText;
     private ImageView rollCategories;
     private MainUtils mainUtils;
-    private NHLPreferences NHLPreferences;
+    private com.cr4sh.nhlauncher.utils.NHLPreferences NHLPreferences;
     // Stop papysz easteregg
     private final Runnable stopPapysz = new Runnable() {
         @Override
@@ -105,43 +113,45 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, R.anim.cat_appear, R.anim.cat_appear);
+        } else {
+            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+        }
         NHLManager.getInstance().setMainActivity(this);
         DialogUtils dialogUtils = new DialogUtils(this.getSupportFragmentManager());
 
-//        // Check for nethunter and terminal apps
-//        PackageManager pm = getPackageManager();
-//
-//        try {
-//            // First, check if the com.offsec.nethunter and com.offsec.nhterm packages exist
-//            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
-//            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
-//
-//            // Then, check if the com.offsec.nhterm.ui.term.NeoTermRemoteInterface activity exists within com.offsec.nhterm
-//            Intent intent = new Intent();
-//            intent.setComponent(new ComponentName("com.offsec.nhterm", "com.offsec.nhterm.ui.term.NeoTermRemoteInterface"));
-//            List<ResolveInfo> activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-//
-//            if (activities.isEmpty()) {
-//                // The activity is missing
-//                dialogUtils.openMissingActivityDialog();
-//                return;
-//            }
-//        } catch (PackageManager.NameNotFoundException e) {
-//            // One of the packages is missing
-//            dialogUtils.openAppsDialog();
-//            return;
-//        }
+        // Check for nethunter and terminal apps
+        PackageManager pm = getPackageManager();
 
+        try {
+            // First, check if the com.offsec.nethunter and com.offsec.nhterm packages exist
+            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES);
+            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES);
+
+            // Then, check if the com.offsec.nhterm.ui.term.NeoTermRemoteInterface activity exists within com.offsec.nhterm
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName("com.offsec.nhterm", "com.offsec.nhterm.ui.term.NeoTermRemoteInterface"));
+            List<ResolveInfo> activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+            if (activities.isEmpty()) {
+                // The activity is missing
+                dialogUtils.openMissingActivityDialog();
+                return;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            // One of the packages is missing
+            dialogUtils.openAppsDialog();
+            return;
+        }
 
         PermissionUtils permissionUtils = new PermissionUtils(this);
 
         // Check for root permissions
-//        if(!permissionUtils.isRoot()){
-//            dialogUtils.openRootDialog();
-//            return;
-//        }
+        if (!permissionUtils.isRoot()) {
+            dialogUtils.openRootDialog();
+            return;
+        }
 
         NHLPreferences = new NHLPreferences(this);
 
@@ -279,11 +289,9 @@ public class MainActivity extends AppCompatActivity {
         specialButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         Animation categoriesAppear = AnimationUtils.loadAnimation(MainActivity.this, R.anim.cat_appear);
-        Animation categoriesDisappear = AnimationUtils.loadAnimation(MainActivity.this, R.anim.cat_disappear);
-
 
         rollCategoriesLayout.setOnClickListener(view -> runOnUiThread(() -> {
-            VibrationUtil.vibrate(MainActivity.this, 10);
+            VibrationUtils.vibrate(MainActivity.this, 10);
 
             // Check if searchView is not opened, prevent opening 2 things at the same time
             if (searchEditText.getVisibility() == View.GONE) {
@@ -312,12 +320,17 @@ public class MainActivity extends AppCompatActivity {
             disableWhileAnimation(categoriesLayout);
 
             Intent intent = new Intent(this, SpecialFeaturesActivity.class);
-            startActivity(intent);
+            Bundle animationBundle = ActivityOptions.makeCustomAnimation(
+                    this,
+                    R.anim.cat_appear,  // Enter animation
+                    R.anim.cat_disappear  // Exit animation
+            ).toBundle();
+            startActivity(intent, animationBundle);
             backButton.callOnClick();
         });
 
         backButton.setOnClickListener(view -> {
-            VibrationUtil.vibrate(MainActivity.this, 10);
+            VibrationUtils.vibrate(MainActivity.this, 10);
             enableAfterAnimation(toolbar);
             enableAfterAnimation(rollCategoriesLayout);
             disableWhileAnimation(categoriesLayout);
@@ -372,7 +385,7 @@ public class MainActivity extends AppCompatActivity {
         rollOutToolbar = AnimationUtils.loadAnimation(MainActivity.this, R.anim.roll_out_toolbar);
 
         searchIcon.setOnClickListener(v -> {
-            VibrationUtil.vibrate(MainActivity.this, 10);
+            VibrationUtils.vibrate(MainActivity.this, 10);
 
             if (searchEditText.getVisibility() == View.VISIBLE) {
                 closeSearchBar();
@@ -513,11 +526,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        toolbar.setOnClickListener(v -> executor.submit(()->{
-            VibrationUtil.vibrate(MainActivity.this, 10);
+        toolbar.setOnClickListener(v -> executor.submit(()-> {
+            VibrationUtils.vibrate(MainActivity.this, 10);
             Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+            Bundle animationBundle = ActivityOptions.makeCustomAnimation(
+                    this,
+                    R.anim.cat_appear,  // Enter animation
+                    R.anim.cat_disappear  // Exit animation
+            ).toBundle();
+            startActivity(intent, animationBundle);
         }));
 
         // Start papysz easteregg
@@ -566,7 +583,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         if (isFinishing()) {
-            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, R.anim.cat_appear, R.anim.cat_appear);
+            } else {
+                overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+            }
         }
     }
 

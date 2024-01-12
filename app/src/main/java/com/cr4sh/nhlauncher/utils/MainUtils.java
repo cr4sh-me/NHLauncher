@@ -15,8 +15,6 @@ import com.cr4sh.nhlauncher.ButtonsRecycler.NHLAdapter;
 import com.cr4sh.nhlauncher.ButtonsRecycler.NHLItem;
 import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.NHLManager;
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.bridge.Bridge;
 

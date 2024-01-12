@@ -114,7 +114,7 @@
 
         </LinearLayout>
 
-        <com.cr4sh.nhlauncher.ColorPickerMod
+        <com.cr4sh.nhlauncher.Overrides.ColorPickerMod
             android:id="@+id/colorPickerView"
             android:layout_width="270dp"
             android:layout_height="270dp"

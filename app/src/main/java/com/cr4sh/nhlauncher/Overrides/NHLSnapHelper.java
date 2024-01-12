@@ -1,4 +1,4 @@
-package com.cr4sh.nhlauncher;
+package com.cr4sh.nhlauncher.Overrides;
 
 import android.view.View;
 
@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cr4sh.nhlauncher.utils.VibrationUtil;
+import com.cr4sh.nhlauncher.MainActivity;
+import com.cr4sh.nhlauncher.utils.NHLManager;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 public class NHLSnapHelper extends LinearSnapHelper {
     private OrientationHelper mVerticalHelper;
@@ -57,7 +59,7 @@ public class NHLSnapHelper extends LinearSnapHelper {
     }
 
     private int distanceToStart(View targetView, OrientationHelper helper) {
-        VibrationUtil.vibrate(mainActivity, 10);
+        VibrationUtils.vibrate(mainActivity, 10);
 
         return helper.getDecoratedStart(targetView) - helper.getStartAfterPadding();
     }
@@ -99,7 +101,7 @@ public class NHLSnapHelper extends LinearSnapHelper {
 
     @Override
     public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
-        VibrationUtil.vibrate(mainActivity, 10);
+        VibrationUtils.vibrate(mainActivity, 10);
         return RecyclerView.NO_POSITION;
     }
 }

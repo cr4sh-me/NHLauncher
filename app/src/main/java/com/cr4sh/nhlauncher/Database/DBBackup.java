@@ -9,10 +9,10 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.NHLManager;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.MainUtils;
+import com.cr4sh.nhlauncher.utils.NHLManager;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
 
 import java.io.File;

@@ -19,12 +19,12 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.NHLManager;
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.MainUtils;
+import com.cr4sh.nhlauncher.utils.NHLManager;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
-import com.cr4sh.nhlauncher.utils.VibrationUtil;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 import java.util.Objects;
 
@@ -65,7 +65,7 @@ public class DeleteToolDialog extends AppCompatDialogFragment {
         text1.setText(requireActivity().getResources().getString(R.string.deleting) + name);
 
         deleteButton.setOnClickListener(view12 -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             // Some idiot protection
             try {
                 SQLiteOpenHelper dbHandler = new DBHandler(getActivity());
@@ -98,7 +98,7 @@ public class DeleteToolDialog extends AppCompatDialogFragment {
         });
 
         cancelButton.setOnClickListener(view1 -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             Objects.requireNonNull(getDialog()).cancel();
 
         });

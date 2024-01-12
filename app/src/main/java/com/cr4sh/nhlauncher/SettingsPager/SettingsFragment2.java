@@ -23,12 +23,12 @@ import androidx.core.widget.CompoundButtonCompat;
 import androidx.fragment.app.Fragment;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.NHLManager;
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
+import com.cr4sh.nhlauncher.utils.NHLManager;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
-import com.cr4sh.nhlauncher.utils.VibrationUtil;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 import com.flask.colorpicker.ColorPickerView;
 
 public class SettingsFragment2 extends Fragment {
@@ -192,15 +192,15 @@ public class SettingsFragment2 extends Fragment {
         });
 
         hexColorValue1.setOnClickListener(v -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             openPickerDialog(hexColorValue1, alphaTileViewAdv1, NHLPreferences.color80());
         });
         hexColorValue2.setOnClickListener(v -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             openPickerDialog(hexColorValue2, alphaTileViewAdv2, NHLPreferences.color50());
         });
         hexColorValue3.setOnClickListener(v -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             openPickerDialog(hexColorValue3, alphaTileViewAdv3, NHLPreferences.color20());
         });
 
@@ -215,7 +215,7 @@ public class SettingsFragment2 extends Fragment {
         });
 
         applyColors.setOnClickListener(v -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             if (hexColorValue1.getText().length() < 0 || hexColorValue1.getText().length() < 0 || hexColorValue1.getText().length() < 0) {
                 ToastUtils.showCustomToast(requireActivity(), "Empty color values! Use brain...");
             } else {

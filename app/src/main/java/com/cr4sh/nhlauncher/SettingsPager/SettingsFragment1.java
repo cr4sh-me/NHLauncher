@@ -26,13 +26,13 @@ import androidx.fragment.app.Fragment;
 
 import com.cr4sh.nhlauncher.Database.DBBackup;
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.NHLManager;
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
-import com.cr4sh.nhlauncher.UpdateChecker;
 import com.cr4sh.nhlauncher.utils.MainUtils;
+import com.cr4sh.nhlauncher.utils.NHLManager;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
-import com.cr4sh.nhlauncher.utils.VibrationUtil;
+import com.cr4sh.nhlauncher.utils.UpdateCheckerUtils;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
@@ -153,9 +153,9 @@ public class SettingsFragment1 extends Fragment {
             powerSpinnerView2.selectItemByIndex(5);
         }
 
-        newButtonsStyle.setOnCheckedChangeListener((buttonView, isChecked) -> VibrationUtil.vibrate(requireActivity(), 10));
-        vibrationsCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> VibrationUtil.vibrate(requireActivity(), 10));
-        overlayCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> VibrationUtil.vibrate(requireActivity(), 10));
+        newButtonsStyle.setOnCheckedChangeListener((buttonView, isChecked) -> VibrationUtils.vibrate(requireActivity(), 10));
+        vibrationsCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> VibrationUtils.vibrate(requireActivity(), 10));
+        overlayCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> VibrationUtils.vibrate(requireActivity(), 10));
 
 
         GradientDrawable gd = new GradientDrawable();
@@ -188,14 +188,14 @@ public class SettingsFragment1 extends Fragment {
             }
         });
 
-        UpdateChecker updateChecker = new UpdateChecker();
+        UpdateCheckerUtils updateCheckerUtils = new UpdateCheckerUtils();
 
         checkUpdate.setOnClickListener(v -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             checkUpdate.setText(requireActivity().getResources().getString(R.string.update_wait));
-            // Create an instance of UpdateChecker
+            // Create an instance of UpdateCheckerUtils
 
-            updateChecker.checkUpdateAsync(updateResult -> {
+            updateCheckerUtils.checkUpdateAsync(updateResult -> {
                 // Run on the UI thread to update the UI components
                 requireActivity().runOnUiThread(() -> {
                     checkUpdate.setText(updateResult.message());
@@ -234,31 +234,31 @@ public class SettingsFragment1 extends Fragment {
 
 
         updateButton.setOnClickListener(v -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse("https://github.com/cr4sh-me/NHLauncher/releases/latest"));
             startActivity(intent);
         });
 
         runSetup.setOnClickListener(v -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             mainUtils.run_cmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit");
         });
 
         backupDb.setOnClickListener(v -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             DBBackup dbb = new DBBackup();
             executor.execute(() -> dbb.createBackup(getContext()));
         });
 
         restoreDb.setOnClickListener(v -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             DBBackup dbb = new DBBackup();
             executor.execute(() -> dbb.restoreBackup(getContext()));
         });
 
         saveButton.setOnClickListener(v -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             applySettings();
         });
 
@@ -269,7 +269,7 @@ public class SettingsFragment1 extends Fragment {
     }
 
     private void applySettings() {
-        VibrationUtil.vibrate(mainActivity, 10);
+        VibrationUtils.vibrate(mainActivity, 10);
 
         // Apply the settings to SharedPreferences
         saveVibrationsPref(vibrationsCheckbox.isChecked());

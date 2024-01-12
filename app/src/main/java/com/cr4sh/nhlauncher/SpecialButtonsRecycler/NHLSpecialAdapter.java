@@ -14,12 +14,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.NHLManager;
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.WpsAttacks.WPSAttack;
+import com.cr4sh.nhlauncher.utils.NHLManager;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
-import com.cr4sh.nhlauncher.utils.VibrationUtil;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +102,7 @@ public class NHLSpecialAdapter extends RecyclerView.Adapter<NHLSpecialViewHolder
         holder.buttonView.setLayoutParams(params);
 
         holder.itemView.setOnClickListener(v -> {
-            VibrationUtil.vibrate(myActivity, 10);
+            VibrationUtils.vibrate(myActivity, 10);
             if (position == 0) {
                 Intent intent = new Intent(myActivity, WPSAttack.class);
                 myActivity.startActivity(intent);

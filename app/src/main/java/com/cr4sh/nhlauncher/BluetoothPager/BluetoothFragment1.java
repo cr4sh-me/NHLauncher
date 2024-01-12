@@ -24,12 +24,12 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import com.cr4sh.nhlauncher.CustomSpinnerAdapter;
-import com.cr4sh.nhlauncher.NHLManager;
-import com.cr4sh.nhlauncher.NHLPreferences;
+import com.cr4sh.nhlauncher.Overrides.CustomSpinnerAdapter;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.bridge.Bridge;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
+import com.cr4sh.nhlauncher.utils.NHLManager;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
 import com.cr4sh.nhlauncher.utils.ShellExecuter;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
 

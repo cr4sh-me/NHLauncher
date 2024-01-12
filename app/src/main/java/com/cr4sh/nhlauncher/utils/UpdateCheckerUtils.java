@@ -1,7 +1,10 @@
-package com.cr4sh.nhlauncher;
+package com.cr4sh.nhlauncher.utils;
 
 import android.content.pm.PackageInfo;
 import android.util.Log;
+
+import com.cr4sh.nhlauncher.MainActivity;
+import com.cr4sh.nhlauncher.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,14 +18,15 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class UpdateChecker {
+public class UpdateCheckerUtils {
 
-    private static final String TAG = "UpdateChecker";
+    private static final String TAG = "UpdateCheckerUtils";
     private static final String GITHUB_API_URL = "https://api.github.com/repos/cr4sh-me/NHLauncher/releases/latest";
     private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
     private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
 
-    public UpdateChecker() {}
+    public UpdateCheckerUtils() {
+    }
 
     public void checkUpdateAsync(UpdateCheckListener listener) {
 
@@ -37,8 +41,6 @@ public class UpdateChecker {
             }
         });
 
-        // TODO shit
-//        executor.shutdown(); // Shutdown the executor when tasks are completed.
     }
 
 

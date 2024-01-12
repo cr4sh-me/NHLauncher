@@ -13,12 +13,12 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.MainUtils;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
-import com.cr4sh.nhlauncher.utils.VibrationUtil;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 import java.util.Objects;
 
@@ -69,19 +69,19 @@ public class ButtonMenuDialog extends AppCompatDialogFragment {
         title.setText(myActivity.buttonName.toUpperCase() + " " + requireActivity().getResources().getString(R.string.options).toUpperCase());
 
         option1.setOnClickListener(view1 -> {
-            VibrationUtil.vibrate(myActivity, 10);
+            VibrationUtils.vibrate(myActivity, 10);
             dialogUtils.openEditableDialog(myActivity.buttonName, myActivity.buttonCmd);
             Objects.requireNonNull(getDialog()).cancel();
         });
 
         option2.setOnClickListener(view12 -> {
-            VibrationUtil.vibrate(myActivity, 10);
+            VibrationUtils.vibrate(myActivity, 10);
             mainUtils.addFavourite();
             Objects.requireNonNull(getDialog()).cancel();
         });
 
         option3.setOnClickListener(view1 -> {
-            VibrationUtil.vibrate(myActivity, 10);
+            VibrationUtils.vibrate(myActivity, 10);
             if (!MainActivity.disableMenu) {
                 dialogUtils.openNewToolDialog(myActivity.buttonCategory);
             } else {
@@ -91,13 +91,13 @@ public class ButtonMenuDialog extends AppCompatDialogFragment {
         });
 
         option4.setOnClickListener(view1 -> {
-            VibrationUtil.vibrate(myActivity, 10);
+            VibrationUtils.vibrate(myActivity, 10);
             dialogUtils.openDeleteToolDialog(myActivity.buttonName);
             Objects.requireNonNull(getDialog()).cancel();
         });
 
         cancelButton.setOnClickListener(view1 -> {
-            VibrationUtil.vibrate(myActivity, 10);
+            VibrationUtils.vibrate(myActivity, 10);
             Objects.requireNonNull(getDialog()).cancel();
         });
 

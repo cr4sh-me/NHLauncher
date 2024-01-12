@@ -15,10 +15,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.NHLManager;
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
-import com.cr4sh.nhlauncher.utils.VibrationUtil;
+import com.cr4sh.nhlauncher.utils.NHLManager;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 import com.flask.colorpicker.ColorPickerView;
 
 import java.util.Objects;
@@ -76,14 +76,14 @@ public class NhlColorPickerDialog extends AppCompatDialogFragment {
         });
 
         applyColors.setOnClickListener(v -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             alpha.setBackgroundColor(Color.parseColor(hexColorString));
             button.setText(hexColorString);
             Objects.requireNonNull(getDialog()).cancel();
         });
 
         cancelButton.setOnClickListener(view1 -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             Objects.requireNonNull(getDialog()).cancel();
         });
 

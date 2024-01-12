@@ -1,9 +1,11 @@
-package com.cr4sh.nhlauncher;
+package com.cr4sh.nhlauncher.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.core.content.ContextCompat;
+
+import com.cr4sh.nhlauncher.MainActivity;
 
 import java.util.Locale;
 

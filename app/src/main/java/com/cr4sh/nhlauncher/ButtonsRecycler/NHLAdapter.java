@@ -14,12 +14,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.NHLManager;
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.MainUtils;
-import com.cr4sh.nhlauncher.utils.VibrationUtil;
+import com.cr4sh.nhlauncher.utils.NHLManager;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,7 +133,7 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
         });
 
         holder.itemView.setOnLongClickListener(view -> {
-            VibrationUtil.vibrate(myActivity, 10);
+            VibrationUtils.vibrate(myActivity, 10);
             myActivity.buttonCategory = item.getCategory();
             myActivity.buttonName = item.getName();
             myActivity.buttonDescription = item.getDescription();

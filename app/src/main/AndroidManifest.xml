@@ -43,13 +43,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SpecialFeaturesActivity"
+            android:name=".SpecialFeatures.SpecialFeaturesActivity"
             android:exported="false" />
         <activity
             android:name=".WpsAttacks.WPSAttack"
             android:exported="false" />
         <activity
-            android:name=".MDKDeauth"
+            android:name=".MDKDeauth.MDKDeauth"
             android:exported="false" />
         <activity
             android:name=".BluetoothPager.BluetoothActivity"

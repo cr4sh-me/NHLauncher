@@ -1,4 +1,4 @@
-package com.cr4sh.nhlauncher;
+package com.cr4sh.nhlauncher.MDKDeauth;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -34,8 +34,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.cr4sh.nhlauncher.R;
+import com.cr4sh.nhlauncher.SpecialFeatures.SpecialFeaturesActivity;
 import com.cr4sh.nhlauncher.bridge.Bridge;
 import com.cr4sh.nhlauncher.utils.DialogUtils;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
 
 import java.util.List;
@@ -47,7 +50,7 @@ public class MDKDeauth extends AppCompatActivity {
     public String customPINCMD = "";
     public String delayCMD = "";
     TextView msg2;
-    NHLPreferences NHLPreferences;
+    com.cr4sh.nhlauncher.utils.NHLPreferences NHLPreferences;
     boolean isThrottleEnabled;
     private String pixieCMD = "";
     private String pixieforceCMD = "";

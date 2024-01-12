@@ -12,11 +12,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.NHLManager;
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
+import com.cr4sh.nhlauncher.utils.NHLManager;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
 import com.cr4sh.nhlauncher.utils.PermissionUtils;
-import com.cr4sh.nhlauncher.utils.VibrationUtil;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 import java.util.Objects;
 
@@ -45,7 +45,7 @@ public class PermissionDialog extends AppCompatDialogFragment {
         allowButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         allowButton.setOnClickListener(view12 -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             Objects.requireNonNull(getDialog()).cancel();
             PermissionUtils permissionUtils = new PermissionUtils((MainActivity) requireActivity());
             permissionUtils.takePermissions();

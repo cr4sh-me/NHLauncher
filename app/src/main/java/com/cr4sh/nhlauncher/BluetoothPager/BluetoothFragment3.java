@@ -11,8 +11,8 @@ import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
 
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
 
 public class BluetoothFragment3 extends Fragment {
 

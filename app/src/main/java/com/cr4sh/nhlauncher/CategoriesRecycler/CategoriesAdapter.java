@@ -12,11 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.NHLManager;
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.utils.MainUtils;
-import com.cr4sh.nhlauncher.utils.VibrationUtil;
+import com.cr4sh.nhlauncher.utils.NHLManager;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +94,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesViewHolder
 //        Log.d("CategoriesAdapter", "Button height with margin: " + (height + margin));
 
         holder.itemView.setOnClickListener(v -> {
-            VibrationUtil.vibrate(myActivity, 10);
+            VibrationUtils.vibrate(myActivity, 10);
             myActivity.backButton.callOnClick();
             mainUtils.spinnerChanger((position));
             myActivity.currentCategoryNumber = position;

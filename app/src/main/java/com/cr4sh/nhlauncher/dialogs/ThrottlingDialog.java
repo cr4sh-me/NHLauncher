@@ -16,11 +16,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.NHLManager;
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
+import com.cr4sh.nhlauncher.utils.NHLManager;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
 import com.cr4sh.nhlauncher.utils.ToastUtils;
-import com.cr4sh.nhlauncher.utils.VibrationUtil;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 import java.util.Objects;
 
@@ -55,7 +55,7 @@ public class ThrottlingDialog extends AppCompatDialogFragment {
 
 
         setupButton.setOnClickListener(view12 -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             Objects.requireNonNull(getDialog()).cancel();
             Intent intent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS);
             startActivity(intent);
@@ -64,7 +64,7 @@ public class ThrottlingDialog extends AppCompatDialogFragment {
         });
 
         cancelButton.setOnClickListener(view12 -> {
-            VibrationUtil.vibrate(mainActivity, 10);
+            VibrationUtils.vibrate(mainActivity, 10);
             Objects.requireNonNull(getDialog()).cancel();
             firstSetupCompleted();
         });

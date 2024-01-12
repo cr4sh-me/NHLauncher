@@ -13,10 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.NHLManager;
-import com.cr4sh.nhlauncher.NHLPreferences;
 import com.cr4sh.nhlauncher.R;
-import com.cr4sh.nhlauncher.utils.VibrationUtil;
+import com.cr4sh.nhlauncher.utils.NHLManager;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,6 +109,6 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsHolder> {
     public void onViewDetachedFromWindow(@NonNull StatsHolder holder) {
         super.onViewDetachedFromWindow(holder);
         // Vibrate when a view is detached (button is disappearing from the screen)
-        handler.postDelayed(() -> VibrationUtil.vibrate(myActivity, 10), 0);
+        handler.postDelayed(() -> VibrationUtils.vibrate(myActivity, 10), 0);
     }
 }
