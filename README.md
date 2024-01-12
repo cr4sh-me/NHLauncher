@@ -9,7 +9,8 @@ It uses NetHunter bridge for launching tools in nh terminal!
 - Android 7.0+
 - Rooted android device (Its required for NetHunter installation)  
 - Full NetHunter installation  
-- New nethunter terminal and app (2023.1+), you can download them from NetHunter store:
+- New nethunter terminal and app (2023.1+), you can download them from NetHunter store: [link](https://store.nethunter.com/)
+
 - Brain (working one)
 
 ## Main NHLauncher features
