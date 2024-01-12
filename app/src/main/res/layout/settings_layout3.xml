@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="15dp">
+
+    <TextView
+        android:id="@+id/bt_info2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:paddingBottom="15dp"
+        android:text="@string/check_your_tools_usage_statistics"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/spinnerBg1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:padding="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_info2">
+
+        <com.skydoves.powerspinner.PowerSpinnerView
+            android:id="@+id/categories_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:hint="@string/categories"
+            android:padding="10dp"
+            android:textSize="15sp"
+            app:spinner_arrow_show="false"
+            app:spinner_divider_show="true"
+            app:spinner_divider_size="0.1dp"
+            app:spinner_item_array="@array/categories"
+            app:spinner_item_height="50dp"
+            app:spinner_popup_animation="dropdown"
+            app:spinner_popup_elevation="10dp" />
+    </LinearLayout>
+
+    <com.cr4sh.nhlauncher.Overrides.FastScrollRecyclerView
+        android:id="@+id/stats_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerBg1">
+
+    </com.cr4sh.nhlauncher.Overrides.FastScrollRecyclerView>
+
+    <TextView
+        android:id="@+id/no_tools_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_tools_stat"
+        android:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

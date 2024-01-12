@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/text_second"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="@string/color_info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/dynamic_themes_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="50dp"
+        android:text="@string/enable_dynamic_themes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_second" />
+
+
+    <!-- Inner Container (To be hidden) -->
+    <LinearLayout
+        android:id="@+id/hiddenLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/dynamic_themes_checkbox"
+        tools:layout_editor_absoluteX="10dp">
+
+        <CheckBox
+            android:id="@+id/advanced_themes_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="@string/advanced_themes"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dynamic_themes_checkbox" />
+
+        <LinearLayout
+            android:id="@+id/advancedLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <!-- EditText for hex color value 1 -->
+
+            <Button
+                android:id="@+id/customHexColor1"
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:hint="@string/hex_color1"
+                android:maxLength="25" />
+
+            <!-- EditText for hex color value 1 -->
+            <Button
+                android:id="@+id/customHexColor2"
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:hint="@string/hex_color2"
+                android:maxLength="25" />
+
+            <Button
+                android:id="@+id/customHexColor3"
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:hint="@string/hex_color3"
+                android:maxLength="25" />
+
+
+            <RelativeLayout
+                android:id="@+id/alphaLayoutAdv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal">
+
+                <ImageView
+                    android:id="@+id/alphaTileViewAdv1"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp" />
+
+                <ImageView
+                    android:id="@+id/alphaTileViewAdv2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@id/alphaTileViewAdv1" />
+
+                <ImageView
+                    android:id="@+id/alphaTileViewAdv3"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@id/alphaTileViewAdv2" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <com.cr4sh.nhlauncher.Overrides.ColorPickerMod
+            android:id="@+id/colorPickerView"
+            android:layout_width="270dp"
+            android:layout_height="270dp"
+            android:nestedScrollingEnabled="true" />
+
+        <RelativeLayout
+            android:id="@+id/alphaLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:id="@+id/alphaTileView1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp" />
+
+            <ImageView
+                android:id="@+id/alphaTileView2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_toEndOf="@id/alphaTileView1" />
+
+            <ImageView
+                android:id="@+id/alphaTileView3"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:layout_toEndOf="@id/alphaTileView2" />
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/customHexColor"
+            android:layout_width="280dp"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:hint="@string/hex_color"
+            android:maxLength="25" />
+
+        <!-- Add more items as needed -->
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/apply_custom_colors"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:text="@string/save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

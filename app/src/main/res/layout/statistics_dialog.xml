@@ -1,7 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/custom_theme_dialog_background"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -17,9 +18,11 @@
 
     <Spinner
         android:id="@+id/stats_spinner"
-        android:layout_width="280dp"
+        android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:background="@color/transparent"
         android:gravity="center"
         android:maxLength="25"
         tools:ignore="SpeakableTextPresentCheck" />
@@ -27,9 +30,8 @@
     <ScrollView
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="wrap_content"
         tools:ignore="SpeakableTextPresentCheck">
-
 
         <LinearLayout
             android:id="@+id/stats_layout"
@@ -44,7 +46,6 @@
         android:layout_marginTop="16dp"
         android:orientation="horizontal">
 
-
         <Button
             android:id="@+id/cancel_button"
             android:layout_width="0dp"
@@ -53,5 +54,6 @@
             android:text="@string/close" />
 
     </LinearLayout>
+
 
 </LinearLayout>

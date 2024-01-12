@@ -1,0 +1,83 @@
+package com.cr4sh.nhlauncher.Overrides;
+
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+
+import com.cr4sh.nhlauncher.R;
+
+import java.util.List;
+
+// This class creates our spinner with custom themes and styles
+public class CustomSpinnerAdapter extends ArrayAdapter<String> {
+
+    private final List<Integer> imageList;
+    private final String backgroundColor;
+    private final String textColor;
+
+    public CustomSpinnerAdapter(Context context, List<String> values, List<Integer> imageList, String backgroundColor, String textColor) {
+        super(context, R.layout.dropdown_items, values);
+        this.imageList = imageList;
+        this.backgroundColor = backgroundColor;
+        this.textColor = textColor;
+    }
+
+    @Override
+    public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.dropdown_items, parent, false);
+        }
+
+        ImageView imageView = convertView.findViewById(R.id.image_view);
+        TextView textView = convertView.findViewById(R.id.text_view);
+
+
+        imageView.setColorFilter(Color.parseColor(textColor), PorterDuff.Mode.MULTIPLY);
+        if (!imageList.isEmpty()) {
+            imageView.setImageResource(imageList.get(position));
+        }
+        textView.setText(getItem(position));
+
+        // set background color and text color for dropdown items and selected item in spinner
+        convertView.setBackgroundColor(Color.parseColor(backgroundColor));
+        textView.setTextColor(Color.parseColor(textColor));
+
+        return convertView;
+    }
+
+    @NonNull
+    @Override
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+        return getCustomView(position, parent);
+    }
+
+    private View getCustomView(int position, ViewGroup parent) {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View view = inflater.inflate(R.layout.spinner_layout, parent, false);
+
+        ImageView imageView = view.findViewById(R.id.image_view);
+        TextView textView = view.findViewById(R.id.text_view);
+
+        imageView.setColorFilter(Color.parseColor(textColor), PorterDuff.Mode.MULTIPLY);
+
+        if (!imageList.isEmpty()) {
+            imageView.setImageResource(imageList.get(position));
+        }
+
+        textView.setText(getItem(position));
+
+        // Set text color of spinner
+        textView.setTextColor(Color.parseColor(textColor));
+
+        return view;
+    }
+
+}

@@ -1,0 +1,91 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/custom_theme_dialog_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <!-- Outer Container -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/choose_color"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+<!--        <com.skydoves.colorpickerview.ColorPickerView-->
+<!--            android:id="@+id/colorPickerView"-->
+<!--            android:layout_width="300dp"-->
+<!--            android:layout_height="300dp" />-->
+
+<!--        <com.skydoves.colorpickerview.sliders.BrightnessSlideBar-->
+<!--            android:id="@+id/brightnessBar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_margin="10dp"-->
+<!--            app:selector_BrightnessSlider="@drawable/colorpickerview_wheel" />-->
+
+        <com.flask.colorpicker.ColorPickerView
+            android:id="@+id/color_picker_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:alphaSlider="false"
+            app:density="12"
+            app:lightnessSlider="true"
+            app:wheelType="FLOWER"
+            app:lightnessSliderView="@+id/v_lightness_slider"
+            />
+
+        <com.flask.colorpicker.slider.LightnessSlider
+            android:id="@+id/v_lightness_slider"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            />
+
+        <EditText
+            android:id="@+id/customHexColor"
+            android:layout_width="280dp"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:enabled="false"
+            android:gravity="center"
+            android:hint="@string/hex_color"
+            android:maxLength="25" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/apply_custom_colors"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/material_dynamic_secondary30"
+                android:text="@string/apply_colors"
+                android:textColor="@color/material_dynamic_secondary80" />
+
+            <Button
+                android:id="@+id/cancel_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/material_dynamic_secondary30"
+                android:text="@string/close"
+                android:textColor="@color/material_dynamic_secondary80" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

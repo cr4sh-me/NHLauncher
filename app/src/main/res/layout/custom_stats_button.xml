@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/button_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <!-- ImageView for the tool icon on the left -->
+    <ImageView
+        android:id="@+id/button_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="5dp"
+        android:contentDescription="@string/loading"
+        android:src="@drawable/kali_menu"
+        tools:ignore="RtlSymmetry" />
+
+    <!-- LinearLayout to hold TextViews for tool name and usage count -->
+    <LinearLayout
+        android:id="@+id/btn_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <!-- TextView for tool name in the center -->
+        <TextView
+            android:id="@+id/button_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingHorizontal="10dp"
+            android:text="@string/loading"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:ignore="SmallSp" />
+
+        <!-- TextView for tool usage count on the right -->
+        <TextView
+            android:id="@+id/button_usage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:paddingHorizontal="10dp"
+            android:text="@string/loading"
+            android:textSize="12sp"
+            tools:ignore="SmallSp" />
+    </LinearLayout>
+
+</LinearLayout>

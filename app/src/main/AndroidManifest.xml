@@ -2,8 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
@@ -13,35 +22,41 @@
         <package android:name="com.offsec.nethunter" />
     </queries>
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
-        android:fullBackupContent="@xml/backup_rules"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
-        android:theme="@style/DialogActivityTheme"
+        android:theme="@style/Base.NHL"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".SplashScreenActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/DialogActivityTheme"
-            tools:ignore="LockedOrientationActivity">
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- Main activity -->
         <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-
+            android:name=".SpecialFeatures.SpecialFeaturesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WpsAttacks.WPSAttack"
+            android:exported="false" />
+        <activity
+            android:name=".MDKDeauth.MDKDeauth"
+            android:exported="false" />
+        <activity
+            android:name=".BluetoothPager.BluetoothActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SettingsPager.SettingsActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/custom_theme_dialog_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -47,22 +48,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/cancel_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/close" />
+            android:backgroundTint="@color/material_dynamic_secondary30"
+            android:text="@string/close"
+            android:textColor="@color/material_dynamic_secondary80" />
 
         <Button
             android:id="@+id/save_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/add" />
+            android:backgroundTint="@color/material_dynamic_secondary30"
+            android:text="@string/add"
+            android:textColor="@color/material_dynamic_secondary80" />
 
     </LinearLayout>
 

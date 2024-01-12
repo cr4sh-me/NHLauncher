@@ -20,6 +20,20 @@
         <item>13 - Inżynieria Społeczna</item>
     </string-array>
 
+    <string-array name="languages">
+        <item>Angielski</item>
+        <item>Polski</item>
+    </string-array>
+
+    <string-array name="sorting">
+        <item>Domyślne</item>
+        <item>Po użyciu</item>
+        <item>A-Z</item>
+        <item>Z-A</item>
+        <item>0–9 A-Z</item>
+        <item>9–0 Z-A</item>
+    </string-array>
+
     <string name="category_ft">FT - Ulubione narzędzia</string>
     <string name="category_01">01 - Zbieranie Informacji</string>
     <string name="category_02">02 - Analiza Podatności</string>
@@ -50,7 +64,7 @@
     <string name="close">Zamknij</string>
     <string name="delete">Usuń</string>
     <string name="edit_command">Edytuj komendę</string>
-    <string name="new_cmd">Nowa koemenda</string>
+    <string name="new_cmd">Nowa komenda</string>
     <string name="save">Zapisz</string>
     <string name="new_button">Nowy przycisk</string>
     <string name="button_name">Nazwa przycisku</string>
@@ -89,8 +103,13 @@
     <string name="usage">"Użycie: "</string>
     <string name="choose_theme">Wybierz motyw:</string>
     <string name="choose_font">Wybierz czcionkę</string>
-    <string name="sorting">Wybierz sortowanie:</string>
-    <string name="choose_lanuage">Wybierz język:</string>
+    <string name="sorting">Sortowanie przycisków</string>
+    <string name="check_your_tools_usage_statistics">Sprawdź statystyki z użycia narzędzi!</string>
+    <string name="open_source_libraries_in_nhlauncher">Biblioteki open source w NHLauncher</string>
+    <string name="db_error">Baza danych jest pusta!</string>
+    <string name="themes_settings">Motywy</string>
+    <string name="general">Ogólne</string>
+    <string name="root_error">Jeśli aplikacja nie dostanie uprawnień roota w ciągu 2 minut, telefon zostanie zresetowany!</string>
     <string name="apps_error">Aplikacja NetHunter lub NetHunter Terminal nie jest zainstalowana! Przeczytaj dokumentację NHLauncher i użyj mózgu…</string>
     <string name="default_sorting">Domyślne</string>
     <string name="by_usage">Po użyciu</string>
@@ -104,4 +123,61 @@
     <string name="animate_buttons">Animacje przycisków</string>
     <string name="enable_splash_screen">Włącz splash screen</string>
     <string name="missing_activity_error">Zła wersja NetHunter terminal jest zainstalowana! Przeczytaj dokumentację na githubie…</string>
+    <string name="button_menu">Wybierz opcję</string>
+    <string name="options">opcje</string>
+    <string name="enable_dynamic_themes">Włącz dynamiczne kolory (Android 12+)</string>
+    <string name="hex_color">Wartość koloru hex</string>
+    <string name="color_info">Możesz tu wyłączyć kolory dynamiczne (A12+), i używać własnych kolorów material!</string>
+    <string name="apply_colors">Zapisz ustawienia</string>
+    <string name="search_tool_name">Wyszukaj nazwę narzędzia</string>
+    <string name="tools">Menu narzędzi</string>
+    <string name="search_hint">Wyszukaj narzędzia</string>
+    <string name="advanced_themes">Tryb zaawansowany</string>
+    <string name="hex_color1">Wartość hex kolor1</string>
+    <string name="hex_color2">Wartość hex kolor2</string>
+    <string name="hex_color3">Wartość hex kolor3</string>
+    <string name="choose_color">Wybierz kolor</string>
+    <string name="categories">Kategorie</string>
+    <string name="all_categories">AC - Wszystkie Kategorie</string>
+    <string name="update_wait">Sprawdzam uaktualnienia…</string>
+    <string name="check_internet_connection">Sprawdź połączenie z internetem!</string>
+    <string name="current_app_version">"Obecna wersja: "</string>
+    <string name="new_app_version">"Nowa wersja: "</string>
+    <string name="update_avaiable">Aktualizacja dostępna!</string>
+    <string name="giga_chad">Witaj w wersji testowej!</string>
+    <string name="already_updated">Wersja aktualna!</string>
+    <string name="something_fucked_up">Coś poszło nie tak!</string>
+    <string name="update_button">Pobierz aktualizacje!</string>
+    <string name="enable_vibrations">Włącz wibracje</string>
+    <string name="addons">Dodatki</string>
+    <string name="bluetooth_toolkit">Narzędzia Bluetooth</string>
+    <string name="perform_various_bluetooth_attacks_using_simple_tools_gui_internal_bluetooth_requires_rfcomm_uart_h4_vhci_and_binder_ipc_enabled_in_kernel_or_bt_smd_driver_device">Wykonuj różne ataki Bluetooth za pomocą prostych narzędzi GUI. Wewnętrzny bluetooth wymaga RFCOMM, UART H4, VHCI i BINDER_IPC włączonych w jądrze lub bt_smd urządzeniu sterownika</string>
+    <string name="interfaces">Interfejsy</string>
+    <string name="services">Serwisy</string>
+    <string name="scan_time">Czas skanu</string>
+    <string name="scan">Skan</string>
+    <string name="scan_results">Wyniki skanu</string>
+    <string name="wifi_throttling_warning">Ostrzeżenie WiFi Throttling!</string>
+    <string name="it_looks_like_you_have_wi_fi_throttling_enabled_it_limit_scanning_to_4_times_per_2_minutes_you_can_disable_it_for_unlimited_scanning_here_developer_options_networking_wi_fi_scan_throttling">Wygląda na to, że masz włączone ograniczanie przepustowości Wi-Fi, ogranicza skanowanie do 4 razy na 2 minuty. NHLauncher spróbuje resetować wifi aby ominąć to ograniczenie. Jeśli występują problemy ze skanowaniem, przełącz opcję aby uzyskać nieograniczone skanowanie tutaj: Opcje programisty > Ograniczanie sieci > skanowania Wi-Fi</string>
+    <string name="open_settings">Otwórz ustawienia</string>
+    <string name="use_new_buttons_style">Użyj nowego stylu przycisków</string>
+    <string name="you_can_customize_your_nhlauncher_feedback_here">"Możesz tu dostosować NHLauncher "</string>
+    <string name="choose_language">Język aplikacji</string>
+    <string name="yes">Tak Panie</string>
+    <string name="click_to_check_for_updates">Kliknij aby sprawdzić aktualizacje</string>
+    <string name="nhlauncher_add_ons">Dodatki NHLauncher</string>
+    <string name="use_themed_icons_overlay">Użyj pokrycia z motywem na ikonach</string>
+    <string name="location_denied">Odmówiono uprawnień do lokalizacji!</string>
+    <string name="pixie_dust">Pixie Dust</string>
+    <string name="pixie_force">Pixie Force</string>
+    <string name="custom_pin">Własny pin</string>
+    <string name="wps_attack">Atak WPS</string>
+    <string name="oneshot_performs_wps_pin_and_pixie_dust_attack_without_having_to_switch_to_monitor_mode">OneShot wykonuje atak WPS PIN i Pixie Dust bez konieczności przełączania się w tryb monitora</string>
+    <string name="online_bruteforce">Online Bruteforce</string>
+    <string name="wps_button">Przycisk WPS</string>
+    <string name="delay">Opóźnienie</string>
+    <string name="launch_attack">Uruchom atak</string>
+    <string name="wps_desc_short">UŻYJ SKRYPTU ONESHOT ABY WYKONAĆ ATAKI WPS</string>
+    <string name="bt_short">WYKONUJ RÓŹNE ATAKI BLUETOOTH</string>
+    <string name="bt_toolkit">NARZĘDZIA BLUETOOTH</string>
 </resources>

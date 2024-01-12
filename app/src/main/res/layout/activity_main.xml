@@ -1,92 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/changeableTextView"
+    <LinearLayout
+        android:id="@+id/topBarContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:ignore="VisualLintOverlap" />
-
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="10dp"
-        android:layout_marginStart="43dp"
-        android:layout_marginTop="241dp"
-        android:layout_marginEnd="-13dp"
-        android:layout_marginBottom="10dp"
-        android:layout_toStartOf="@id/toolBar"
-        android:inputType="textNoSuggestions" />
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolBar"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="10dp"
-        app:menu="@menu/main_menu" />
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/searchIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp" />
+
+        <EditText
+            android:id="@+id/search_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:layout_toEndOf="@id/searchIcon"
+            android:hint="@string/search_hint"
+            android:maxLength="20"
+            android:paddingStart="16dp"
+            android:visibility="gone"
+            tools:ignore="RtlSymmetry" />
+
+        <LinearLayout
+            android:id="@+id/showCategoriesLayout"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/showCategoriesImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:contentDescription="@string/loading"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/showCategoriesText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/toolBar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp" />
+    </LinearLayout>
+
 
     <RelativeLayout
-        android:id="@+id/imageViewHeader"
+        android:clickable="false"
+        android:id="@+id/categories_layout"
         android:layout_width="match_parent"
-        android:layout_height="230dp">
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:visibility="gone">
 
-        <ImageView
-            android:id="@+id/nhlauncher_logo"
-            android:layout_width="250dp"
-            android:layout_height="100dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="imageview"
-            android:src="@drawable/nhlauncher"
-            tools:ignore="HardcodedText" />
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/categories"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-        <Spinner
-            android:id="@+id/categoriesSpinner"
+        <com.cr4sh.nhlauncher.Overrides.FastScrollRecyclerView
+            android:id="@+id/recyclerViewCategories"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/nhlauncher_logo"
-            android:background="@drawable/spinner_bg"
-            tools:ignore="DuplicateSpeakableTextCheck" />
+            android:layout_above="@id/btn_container"
+            android:layout_below="@id/dialog_title"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+        </com.cr4sh.nhlauncher.Overrides.FastScrollRecyclerView>
+
+        <LinearLayout
+            android:id="@+id/btn_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/special_features_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                android:text="@string/addons"
+                tools:ignore="ButtonStyle" />
+
+            <Button
+                android:id="@+id/goBackButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                android:text="@string/close"
+                tools:ignore="ButtonStyle" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
-
-    <LinearLayout
-        android:id="@+id/imageViewFooter"
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal" />
-
-    <androidx.recyclerview.widget.RecyclerView
+    <com.cr4sh.nhlauncher.Overrides.FastScrollRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/imageViewFooter"
-        android:layout_below="@+id/imageViewHeader"
-        android:nestedScrollingEnabled="true"
+        android:layout_height="0dp"
+        android:layout_below="@+id/topBarContainer"
         android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBarContainer"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/messagebox"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/imageViewFooter"
-        android:layout_below="@+id/imageViewHeader"
-        android:gravity="top|center_horizontal"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:paddingHorizontal="25dp"
         android:paddingVertical="25dp"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

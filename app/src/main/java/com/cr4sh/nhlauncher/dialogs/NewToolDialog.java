@@ -1,7 +1,5 @@
 package com.cr4sh.nhlauncher.dialogs;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -14,54 +12,73 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-import com.cr4sh.nhlauncher.DBHandler;
+import com.cr4sh.nhlauncher.Database.DBHandler;
 import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.MainUtils;
 import com.cr4sh.nhlauncher.R;
+import com.cr4sh.nhlauncher.utils.MainUtils;
+import com.cr4sh.nhlauncher.utils.NHLManager;
+import com.cr4sh.nhlauncher.utils.NHLPreferences;
+import com.cr4sh.nhlauncher.utils.ToastUtils;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 import java.util.Objects;
 
 public class NewToolDialog extends AppCompatDialogFragment {
 
+    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
     @SuppressLint("Recycle")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.new_tool_dialog, container, false);
 
         MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
+        NHLPreferences NHLPreferences = new NHLPreferences(requireActivity());
 
         assert getArguments() != null;
         String category = getArguments().getString("category");
 
+        LinearLayout bkg = view.findViewById(R.id.custom_theme_dialog_background);
+        TextView title = view.findViewById(R.id.dialog_title);
         EditText myName = view.findViewById(R.id.textview1);
         EditText myDescription = view.findViewById(R.id.textview2);
         EditText myCmd = view.findViewById(R.id.textview3);
         Button cancelButton = view.findViewById(R.id.cancel_button);
         Button saveButton = view.findViewById(R.id.save_button);
 
-        String frameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("frameColor", "frame6");
-        String nameColor = requireActivity().getSharedPreferences("customColors", MODE_PRIVATE).getString("nameColor", "#FFFFFF");
-        @SuppressLint("DiscouragedApi") int frame = requireActivity().getResources().getIdentifier(frameColor, "drawable", requireActivity().getPackageName());
+        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
+        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        myName.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        myDescription.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        myCmd.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        view.setBackgroundResource(frame);
-        myName.setTextColor(Color.parseColor(nameColor));
-        myDescription.setTextColor(Color.parseColor(nameColor));
-        myCmd.setTextColor(Color.parseColor(nameColor));
-        cancelButton.setTextColor(Color.parseColor(nameColor));
-        saveButton.setTextColor(Color.parseColor(nameColor));
+        myName.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
+        myName.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
+        myCmd.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
+        myCmd.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
+        myDescription.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
+        myDescription.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
+
+
+        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
+        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
+
+        saveButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
+        saveButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
         saveButton.setOnClickListener(view12 -> {
+            VibrationUtils.vibrate(mainActivity, 10);
             // Idiot protection...
             if (myName.getText().toString().isEmpty()) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.name_empty), Toast.LENGTH_SHORT).show();
+                ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.name_empty));
             } else if (myDescription.getText().toString().isEmpty()) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.desc_empty), Toast.LENGTH_SHORT).show();
+                ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.desc_empty));
             } else if (myCmd.getText().toString().isEmpty()) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.cmd_empty), Toast.LENGTH_SHORT).show();
+                ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.cmd_empty));
             } else {
                 try (SQLiteOpenHelper dbHandler = new DBHandler(requireActivity());
                      SQLiteDatabase db = dbHandler.getReadableDatabase()) {
@@ -75,20 +92,23 @@ public class NewToolDialog extends AppCompatDialogFragment {
                         DBHandler.insertTool(db, 0, category, 0, myName.getText().toString().trim(), myDescription.getText().toString().trim(), myDescription.getText().toString().trim(), myCmd.getText().toString().trim(), "kali_menu", 0);
                         mainUtils.restartSpinner();
                         Objects.requireNonNull(getDialog()).cancel();
-                        Toast.makeText(requireActivity(), getResources().getString(R.string.added), Toast.LENGTH_SHORT).show();
+                        ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.added));
                     } else {
-                        Toast.makeText(requireActivity(), getResources().getString(R.string.name_exist), Toast.LENGTH_SHORT).show();
+                        ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.name_exist));
                     }
 
                 } catch (SQLException e) {
                     // Handle the exception here, for example:
-                    Toast.makeText(getActivity(), "E: " + e, Toast.LENGTH_SHORT).show();
+                    ToastUtils.showCustomToast(requireActivity(), "E: " + e);
                 }
             }
 
         });
 
-        cancelButton.setOnClickListener(view1 -> Objects.requireNonNull(getDialog()).cancel());
+        cancelButton.setOnClickListener(view1 -> {
+            VibrationUtils.vibrate(mainActivity, 10);
+            Objects.requireNonNull(getDialog()).cancel();
+        });
 
         return view;
 

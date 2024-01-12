@@ -1,20 +1,15 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:interpolator="@android:anim/accelerate_decelerate_interpolator">
 
-    <!-- Scale animation -->
-    <scale
-        android:duration="300"
-        android:fromXScale="1.0"
-        android:fromYScale="0.0"
-        android:pivotX="50%"
-        android:pivotY="50%"
-        android:toXScale="1.0"
-        android:toYScale="1.0" />
+    <!-- Translate (Slide) animation -->
+    <translate
+        android:duration="200"
+        android:fromXDelta="-50dp"
+        android:toXDelta="0%" />
 
     <!-- Alpha animation -->
     <alpha
-        android:duration="300"
-        android:fillAfter="true"
+        android:duration="200"
         android:fromAlpha="0.0"
         android:toAlpha="1.0" />
 
