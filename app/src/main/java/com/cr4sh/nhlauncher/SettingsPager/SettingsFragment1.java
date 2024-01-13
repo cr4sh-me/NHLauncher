@@ -13,6 +13,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.LocaleList;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -198,6 +199,7 @@ public class SettingsFragment1 extends Fragment {
             updateCheckerUtils.checkUpdateAsync(updateResult -> {
                 // Run on the UI thread to update the UI components
                 requireActivity().runOnUiThread(() -> {
+                    Log.d("testmessageout", "msg: " + updateResult.message());
                     checkUpdate.setText(updateResult.message());
 
                     if (updateResult.isUpdateAvailable()) {
