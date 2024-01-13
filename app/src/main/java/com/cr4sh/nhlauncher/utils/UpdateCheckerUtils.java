@@ -1,6 +1,8 @@
 package com.cr4sh.nhlauncher.utils;
 
 import android.content.pm.PackageInfo;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.cr4sh.nhlauncher.MainActivity;
@@ -24,26 +26,38 @@ public class UpdateCheckerUtils {
     private static final String GITHUB_API_URL = "https://api.github.com/repos/cr4sh-me/NHLauncher/releases/latest";
     private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
     private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
+    private final Handler uiHandler = new Handler(Looper.getMainLooper());
 
     public UpdateCheckerUtils() {
     }
 
-    public void checkUpdateAsync(UpdateCheckListener listener) {
-
-        executor.submit(() -> {
-            try {
-                String latestVersion = getLatestAppVersion();
-                UpdateCheckResult updateResult = compareVersions(latestVersion);
-                listener.onUpdateCheckCompleted(updateResult);
-            } catch (IOException | JSONException e) {
-                Log.e(TAG, "Error checking for updates", e);
-                listener.onUpdateCheckCompleted(new UpdateCheckResult(false, e.getMessage()));
-            }
-        });
-
+    public interface UpdateCheckListener {
+        void onUpdateCheckCompleted(UpdateCheckResult updateResult);
     }
 
+    public void checkUpdateAsync(UpdateCheckListener listener) {
+        executor.submit(() -> {
+            try {
+                Log.d(TAG, "Checking for updates asynchronously...");
+                String latestVersion = getLatestAppVersion();
+                Log.d(TAG, "Checking for updates asynchronously2...");
+                UpdateCheckResult updateResult = compareVersions(latestVersion);
+                Log.d(TAG, "Update check result: " + updateResult);
+                postUpdateCheckResult(listener, updateResult);
+            } catch (IOException | JSONException e) {
+                Log.e(TAG, "Error checking for updates", e);
+                Log.d(TAG, "Update check failed: " + e.getMessage());
+                postUpdateCheckResult(listener, new UpdateCheckResult(false, e.getMessage()));
+            }
+        });
+    }
 
+    private void postUpdateCheckResult(UpdateCheckListener listener, UpdateCheckResult updateResult) {
+        uiHandler.post(() -> {
+            Log.d(TAG, "Posting update check result to the UI thread");
+            listener.onUpdateCheckCompleted(updateResult);
+        });
+    }
 
     private String getLatestAppVersion() throws IOException, JSONException {
         OkHttpClient client = new OkHttpClient();
@@ -54,23 +68,26 @@ public class UpdateCheckerUtils {
                 assert response.body() != null;
                 String responseBody = response.body().string();
                 JSONObject json = new JSONObject(responseBody);
-                return json.getString("tag_name");
+                String latestVersion = json.getString("tag_name");
+                Log.v(TAG, "Latest version: " + latestVersion);
+                return latestVersion;
             } else {
-
-                int responseCode = response.code();
-                if (responseCode == 403) {
-                    // Handle 403 error (Forbidden)
-                    Log.e(TAG, "Too many requests! Error 403");
-                    throw new IOException("API limit exceed. Try again later!");
-                } else {
-                    // Handle other HTTP errors
-                    Log.e(TAG, "Failed to retrieve app version. HTTP Code: " + responseCode);
-                    throw new IOException("Failed to retrieve app version. HTTP Code: " + responseCode);
-                }
+                handleHttpErrors(response.code());
+                return null;
             }
         } catch (UnknownHostException | SocketTimeoutException e) {
             Log.e(TAG, "Error checking for updates", e);
             throw new IOException(mainActivity.getResources().getString(R.string.check_internet_connection));
+        }
+    }
+
+    private void handleHttpErrors(int responseCode) throws IOException {
+        if (responseCode == 403) {
+            Log.e(TAG, "Too many requests! Error 403");
+            throw new IOException("API limit exceeded. Try again later!");
+        } else {
+            Log.e(TAG, "Failed to retrieve app version. HTTP Code: " + responseCode);
+            throw new IOException("Failed to retrieve app version. HTTP Code: " + responseCode);
         }
     }
 
@@ -81,31 +98,36 @@ public class UpdateCheckerUtils {
             return new UpdateCheckResult(false, mainActivity.getResources().getString(R.string.something_fucked_up));
         }
 
-        Log.d(TAG, "cURRENT: " + installedVersion);
+        Log.d(TAG, "Current version: " + installedVersion);
 
         String[] installedParts = installedVersion.split("\\.");
         String[] latestParts = latestVersion.split("\\.");
 
-        for (int i = 0; i < installedParts.length && i < latestParts.length; i++) {
-            int installedNumber = Integer.parseInt(installedParts[i]);
-            int latestNumber = Integer.parseInt(latestParts[i]);
+        for (int i = 0; i < installedParts.length || i < latestParts.length; i++) {
+            String installedComponent = (i < installedParts.length) ? installedParts[i] : "0";
+            String latestComponent = (i < latestParts.length) ? latestParts[i] : "0";
 
-            Log.d(TAG, "after: " + installedVersion);
+            Log.d(TAG, "Checking version component: " + installedComponent + " vs " + latestComponent);
 
-            if (installedNumber < latestNumber) {
-                Log.d(TAG, latestVersion + " < " + installedVersion);
+            int comparisonResult = installedComponent.compareTo(latestComponent);
+
+            if (comparisonResult < 0) {
+                Log.d(TAG, "Update available: " + latestVersion + " > " + installedVersion);
                 return new UpdateCheckResult(true, mainActivity.getResources().getString(R.string.update_avaiable) +
                         "\n" + mainActivity.getResources().getString(R.string.current_app_version) + installedVersion +
                         "\n" + mainActivity.getResources().getString(R.string.new_app_version) + latestVersion);
-            } else if (installedNumber > latestNumber) {
-                Log.d(TAG, latestVersion + " > " + installedVersion);
+            } else if (comparisonResult > 0) {
+                Log.d(TAG, "giga chad: " + latestVersion + " <= " + installedVersion);
                 return new UpdateCheckResult(false, mainActivity.getResources().getString(R.string.giga_chad));
             }
         }
 
-        Log.d(TAG, latestVersion + " == " + installedVersion);
+        // If loop completes, versions are equal
+        Log.d(TAG, "No update needed: " + latestVersion + " == " + installedVersion);
         return new UpdateCheckResult(false, mainActivity.getResources().getString(R.string.already_updated));
     }
+
+
 
     private String getInstalledVersion() {
         try {
@@ -115,10 +137,6 @@ public class UpdateCheckerUtils {
             Log.e(TAG, "Error getting installed version", e);
             return null;
         }
-    }
-
-    public interface UpdateCheckListener {
-        void onUpdateCheckCompleted(UpdateCheckResult updateResult);
     }
 
     public record UpdateCheckResult(boolean isUpdateAvailable, String message) {
