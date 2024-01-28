@@ -9,14 +9,12 @@ import android.graphics.drawable.GradientDrawable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.BackgroundColorSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cr4sh.nhlauncher.MainActivity;
@@ -25,18 +23,15 @@ import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.NHLManager;
 import com.cr4sh.nhlauncher.utils.NHLPreferences;
-import com.cr4sh.nhlauncher.utils.ToastUtils;
 import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
 
-    private EditText editText;
+    private final EditText editText;
     private final MainActivity myActivity = NHLManager.getInstance().getMainActivity();
     private final List<NHLItem> items = new ArrayList<>();
     private int height;
@@ -115,41 +110,44 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
 
         NHLItem item = getItem(position);
 
-        // Highlight the search query in the button text
-        if (!editText.getText().toString().isEmpty()) {
-            String buttonText = item.getName().toUpperCase();
-            SpannableStringBuilder builder = new SpannableStringBuilder(buttonText);
-            String searchQuery = editText.getText().toString().toUpperCase();
-            int startIndex = buttonText.indexOf(searchQuery);
+        String searchQuery = editText.getText().toString().toUpperCase();
 
-            if (startIndex != -1) {
-                // Apply a background color to the search query in the button text
-                builder.setSpan(new BackgroundColorSpan(Color.parseColor(NHLPreferences.color20())), startIndex, startIndex + searchQuery.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (!searchQuery.isEmpty()) {
+            // Highlight the search query in the button text for 'nameView'
+            String buttonTextName = item.getName().toUpperCase();
+            SpannableStringBuilder builderName = new SpannableStringBuilder(buttonTextName);
+            int startIndexName = buttonTextName.indexOf(searchQuery);
+
+            if (startIndexName != -1) {
+                if (NHLPreferences.isNewButtonStyleActive()) {
+                    builderName.setSpan(new BackgroundColorSpan(Color.parseColor(NHLPreferences.color20())), startIndexName, startIndexName + searchQuery.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else {
+                    builderName.setSpan(new BackgroundColorSpan(Color.parseColor(NHLPreferences.color50())), startIndexName, startIndexName + searchQuery.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
             }
 
-            holder.nameView.setText(builder);
+            holder.nameView.setText(builderName);
 
+            // Highlight the search query in the button text for 'descriptionView'
+            String buttonTextDescription = item.getDescription().toUpperCase();
+            SpannableStringBuilder builderDescription = new SpannableStringBuilder(buttonTextDescription);
+            int startIndexDescription = buttonTextDescription.indexOf(searchQuery);
+
+            if (startIndexDescription != -1) {
+                if (NHLPreferences.isNewButtonStyleActive()) {
+                    builderDescription.setSpan(new BackgroundColorSpan(Color.parseColor(NHLPreferences.color20())), startIndexDescription, startIndexDescription + searchQuery.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else {
+                    builderDescription.setSpan(new BackgroundColorSpan(Color.parseColor(NHLPreferences.color50())), startIndexDescription, startIndexDescription + searchQuery.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+
+            holder.descriptionView.setText(builderDescription);
 
         } else {
-            // If there is no search query, set the button text without highlighting
+            // If there is no search query, set the button text without highlighting for 'nameView'
             holder.nameView.setText(item.getName().toUpperCase());
-        }
-        if (!editText.getText().toString().isEmpty()) {
-            String buttonText = item.getDescription().toUpperCase();
-            SpannableStringBuilder builder = new SpannableStringBuilder(buttonText);
-            String searchQuery = editText.getText().toString().toUpperCase();
-            int startIndex = buttonText.indexOf(searchQuery);
 
-            if (startIndex != -1) {
-                // Apply a background color to the search query in the button text
-                builder.setSpan(new BackgroundColorSpan(Color.parseColor(NHLPreferences.color20())), startIndex, startIndex + searchQuery.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-
-            holder.descriptionView.setText(builder);
-
-
-        } else {
-            // If there is no search query, set the button text without highlighting
+            // If there is no search query, set the button text without highlighting for 'descriptionView'
             holder.descriptionView.setText(item.getDescription().toUpperCase());
         }
 

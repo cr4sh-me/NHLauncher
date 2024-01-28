@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:orientation="horizontal"
-        android:paddingHorizontal="10dp"
+        android:paddingHorizontal="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -30,7 +30,6 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:layout_toEndOf="@id/searchIcon"
             android:hint="@string/search_hint"
             android:maxLength="20"
             android:paddingStart="16dp"

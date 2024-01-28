@@ -35,6 +35,7 @@
         android:theme="@style/Base.NHL"
         tools:targetApi="tiramisu">
         <activity
+            android:screenOrientation="portrait"
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -43,18 +44,23 @@
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".SpecialFeatures.SpecialFeaturesActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".WpsAttacks.WPSAttack"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".MDKDeauth.MDKDeauth"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".BluetoothPager.BluetoothActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".SettingsPager.SettingsActivity"
             android:exported="false" />
     </application>
