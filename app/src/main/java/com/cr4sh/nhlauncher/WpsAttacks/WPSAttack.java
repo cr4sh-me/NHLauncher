@@ -278,7 +278,7 @@ public class WPSAttack extends AppCompatActivity {
                     } else {
                         wifiManager.disconnect(); // disconnect from active ap to prevent issues
                         String bssid = extractBSSID(selectedButton.getText().toString()); // Extract SSID from button text
-                        run_cmd("python3 /sdcard/nh_files/modules/oneshot.py -b " + bssid +
+                        run_cmd("cd /root/OneShot && python3 oneshot.py -b " + bssid +
                                 " -i " + "wlan0" + pixieCMD + pixieforceCMD + bruteCMD + customPINCMD + delayCMD + pbcCMD);
                     }
                 }

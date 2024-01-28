@@ -98,7 +98,7 @@ You can also attach tool image as svg, so i can scale it and put to tools databa
 If you cant or don't want to add image, put `kali_menu` here
 
 **How to send request?**  
-Open new issue with [TOOL REQUEST] tag in name, and ill check it...
+Open new issue with [TOOL REQUEST](https://github.com/cr4sh-me/NHLauncher/labels) tag in name, and ill check it...
 
 ## Features request
 You can also send features request with [FEATURE REQUEST](https://github.com/cr4sh-me/NHLauncher/labels) label

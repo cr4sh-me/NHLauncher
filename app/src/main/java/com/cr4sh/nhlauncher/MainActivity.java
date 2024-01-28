@@ -190,9 +190,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         recyclerView = findViewById(R.id.recyclerView);
+        searchEditText = findViewById(R.id.search_edit_text);
 
         // Set the adapter for RecyclerView
-        NHLAdapter adapter = new NHLAdapter();
+        NHLAdapter adapter = new NHLAdapter(searchEditText);
         recyclerView.setAdapter(adapter);
 
         // Get functions from this class
@@ -270,7 +271,6 @@ public class MainActivity extends AppCompatActivity {
         currentCategoryNumber = isFavourite == 0 ? 1 : 0;
 
         searchIcon = findViewById(R.id.searchIcon);
-        searchEditText = findViewById(R.id.search_edit_text);
         toolbar = findViewById(R.id.toolBar);
         rollCategoriesLayout = findViewById(R.id.showCategoriesLayout);
 
@@ -446,25 +446,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence newText, int start, int before, int count) {
 
-//                Cursor cursor;
-
                 String[] projection = {"CATEGORY", "NAME", NHLPreferences.language(), "CMD", "ICON", "USAGE"};
 
                 // Add search filter to query
-                String selection = "NAME LIKE ?";
+                String selection = "NAME LIKE ? OR " + NHLPreferences.language() + " LIKE ?";
 
-                String[] selectionArgs = {"%" + newText + "%"};
-//
+                String[] selectionArgs = {"%" + newText + "%", "%" + newText + "%"};
                 String orderBy = "CASE WHEN NAME LIKE '" + newText + "%' THEN 0 ELSE 1 END, " + // sort by first letter match
                         "CASE WHEN NAME LIKE '%" + newText + "%' THEN 0 ELSE 1 END, " + // sort by containing newText
-                        "NAME ASC";
+                        "CASE WHEN " + NHLPreferences.language() + " LIKE '" + newText + "%' THEN 0 ELSE 1 END, " + // sort by first letter match
+                        "CASE WHEN " + NHLPreferences.language() + " LIKE '%" + newText + "%' THEN 0 ELSE 1 END, " + // sort by containing newText
+                        "NAME OR " + NHLPreferences.language() + " ASC";
 
                 if (newText.length() > 0) {
-//                    recyclerView.setVisibility(View.VISIBLE);
                     disableMenu = true;
 
                     Future<List<NHLItem>> queryTask = executor.submit(() -> {
-                        Cursor cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, orderBy, "15");
+                        Cursor cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, orderBy, "50");
 
                         List<NHLItem> newItemList = new ArrayList<>();
 

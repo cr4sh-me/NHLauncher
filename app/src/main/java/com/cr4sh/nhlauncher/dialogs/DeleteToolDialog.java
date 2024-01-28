@@ -46,15 +46,13 @@ public class DeleteToolDialog extends AppCompatDialogFragment {
 
         LinearLayout bkg = view.findViewById(R.id.custom_theme_dialog_background);
         TextView title = view.findViewById(R.id.dialog_title);
-        TextView text1 = view.findViewById(R.id.text_view1);
         TextView text2 = view.findViewById(R.id.text_view2);
         Button cancelButton = view.findViewById(R.id.cancel_button);
         Button deleteButton = view.findViewById(R.id.delete_button);
 
         bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
         title.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        text1.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        text2.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        text2.setTextColor(Color.parseColor(NHLPreferences.color50()));
 
         cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
         cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
@@ -62,7 +60,8 @@ public class DeleteToolDialog extends AppCompatDialogFragment {
         deleteButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
         deleteButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
 
-        text1.setText(requireActivity().getResources().getString(R.string.deleting) + name);
+        assert name != null;
+        title.setText(name.toUpperCase());
 
         deleteButton.setOnClickListener(view12 -> {
             VibrationUtils.vibrate(mainActivity, 10);

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="15dp">
 
     <TextView
         android:id="@+id/dialog_title"
@@ -17,8 +17,8 @@
 
     <EditText
         android:id="@+id/textview1"
-        android:layout_width="280dp"
-        android:layout_height="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
         android:hint="@string/button_name"
@@ -27,8 +27,8 @@
 
     <EditText
         android:id="@+id/textview2"
-        android:layout_width="280dp"
-        android:layout_height="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
         android:hint="@string/button_description"
@@ -37,8 +37,8 @@
 
     <EditText
         android:id="@+id/textview3"
-        android:layout_width="280dp"
-        android:layout_height="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
         android:hint="@string/button_cmd"
@@ -46,29 +46,22 @@
         android:maxLength="1000" />
 
     <LinearLayout
+        android:paddingTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/cancel_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/material_dynamic_secondary30"
-            android:text="@string/close"
-            android:textColor="@color/material_dynamic_secondary80" />
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/save_button"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/material_dynamic_secondary30"
-            android:text="@string/add"
-            android:textColor="@color/material_dynamic_secondary80" />
+            android:text="@string/add" />
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/close"/>
 
     </LinearLayout>
 

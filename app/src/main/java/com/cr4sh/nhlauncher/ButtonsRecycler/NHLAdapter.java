@@ -6,11 +6,17 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cr4sh.nhlauncher.MainActivity;
@@ -19,13 +25,18 @@ import com.cr4sh.nhlauncher.utils.DialogUtils;
 import com.cr4sh.nhlauncher.utils.MainUtils;
 import com.cr4sh.nhlauncher.utils.NHLManager;
 import com.cr4sh.nhlauncher.utils.NHLPreferences;
+import com.cr4sh.nhlauncher.utils.ToastUtils;
 import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
+
+    private EditText editText;
     private final MainActivity myActivity = NHLManager.getInstance().getMainActivity();
     private final List<NHLItem> items = new ArrayList<>();
     private int height;
@@ -35,7 +46,8 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
     private boolean overlay;
     private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
 
-    public NHLAdapter() {
+    public NHLAdapter(EditText editText) {
+        this.editText = editText;
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -103,8 +115,43 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
 
         NHLItem item = getItem(position);
 
-        holder.nameView.setText(item.getName().toUpperCase());
-        holder.descriptionView.setText(item.getDescription().toUpperCase());
+        // Highlight the search query in the button text
+        if (!editText.getText().toString().isEmpty()) {
+            String buttonText = item.getName().toUpperCase();
+            SpannableStringBuilder builder = new SpannableStringBuilder(buttonText);
+            String searchQuery = editText.getText().toString().toUpperCase();
+            int startIndex = buttonText.indexOf(searchQuery);
+
+            if (startIndex != -1) {
+                // Apply a background color to the search query in the button text
+                builder.setSpan(new BackgroundColorSpan(Color.parseColor(NHLPreferences.color20())), startIndex, startIndex + searchQuery.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
+            holder.nameView.setText(builder);
+
+
+        } else {
+            // If there is no search query, set the button text without highlighting
+            holder.nameView.setText(item.getName().toUpperCase());
+        }
+        if (!editText.getText().toString().isEmpty()) {
+            String buttonText = item.getDescription().toUpperCase();
+            SpannableStringBuilder builder = new SpannableStringBuilder(buttonText);
+            String searchQuery = editText.getText().toString().toUpperCase();
+            int startIndex = buttonText.indexOf(searchQuery);
+
+            if (startIndex != -1) {
+                // Apply a background color to the search query in the button text
+                builder.setSpan(new BackgroundColorSpan(Color.parseColor(NHLPreferences.color20())), startIndex, startIndex + searchQuery.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
+            holder.descriptionView.setText(builder);
+
+
+        } else {
+            // If there is no search query, set the button text without highlighting
+            holder.descriptionView.setText(item.getDescription().toUpperCase());
+        }
 
         @SuppressLint("DiscouragedApi") int imageResourceId = myActivity.getResources().getIdentifier(item.getImage(), "drawable", myActivity.getPackageName());
 
@@ -127,6 +174,9 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
 //        Log.d("MyAdapter", "Button height with margin: " + (height + margin));
 
         holder.itemView.setOnClickListener(v -> {
+            if(!editText.getText().toString().isEmpty()){
+                myActivity.getOnBackPressedDispatcher().onBackPressed(); // close searchbar
+            }
             myActivity.buttonUsage = item.getUsage();
             mainUtils.buttonUsageIncrease(item.getName());
             executor.execute(() -> mainUtils.run_cmd(item.getCmd()));
