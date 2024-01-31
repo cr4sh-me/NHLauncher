@@ -13,12 +13,8 @@ public class NHLManager {
 
     private NHLManager() {
         // Private constructor to prevent instantiation
-        executorService = Executors.newSingleThreadExecutor();
+        executorService = Executors.newCachedThreadPool();
         scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-    }
-
-    private static class Holder {
-        private static final NHLManager INSTANCE = new NHLManager();
     }
 
     public static NHLManager getInstance() {
@@ -35,7 +31,7 @@ public class NHLManager {
 
     public ExecutorService getExecutorService() {
         if (executorService.isShutdown()) {
-            executorService = Executors.newSingleThreadExecutor();
+            executorService = Executors.newCachedThreadPool();
         }
         return executorService;
     }
@@ -47,7 +43,6 @@ public class NHLManager {
         return scheduledExecutorService;
     }
 
-
     public void shutdownExecutorService() {
         if (executorService != null && !executorService.isShutdown()) {
             executorService.shutdown();
@@ -55,5 +50,9 @@ public class NHLManager {
         if (scheduledExecutorService != null && !scheduledExecutorService.isShutdown()) {
             scheduledExecutorService.shutdown();
         }
+    }
+
+    private static class Holder {
+        private static final NHLManager INSTANCE = new NHLManager();
     }
 }

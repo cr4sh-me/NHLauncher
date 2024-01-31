@@ -25,6 +25,7 @@ import java.util.Objects;
 public class FirstSetupDialog extends AppCompatDialogFragment {
 
     private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.first_setup_dialog, container, false);

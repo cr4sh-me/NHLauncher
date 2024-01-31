@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutorService;
 public class DialogUtils {
 
     private final FragmentManager fragmentManager;
-//    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
+    //    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
     private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
 
     public DialogUtils(FragmentManager fragmentManager) {

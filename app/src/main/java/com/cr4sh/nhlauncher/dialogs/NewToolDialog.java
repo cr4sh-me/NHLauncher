@@ -31,6 +31,7 @@ import java.util.Objects;
 public class NewToolDialog extends AppCompatDialogFragment {
 
     private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
+
     @SuppressLint("Recycle")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

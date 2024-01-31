@@ -29,8 +29,8 @@ public class NhlColorPickerDialog extends AppCompatDialogFragment {
     private final Button button;
     private final ImageView alpha;
     private final String hexColorShade;
-    private String hexColorString;
     private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
+    private String hexColorString;
 
     public NhlColorPickerDialog(Button button, ImageView alpha, String hexColorShade) {
         this.button = button;

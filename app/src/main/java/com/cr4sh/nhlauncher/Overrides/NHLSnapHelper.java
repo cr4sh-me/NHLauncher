@@ -14,8 +14,8 @@ import com.cr4sh.nhlauncher.utils.NHLManager;
 import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 public class NHLSnapHelper extends LinearSnapHelper {
-    private OrientationHelper mVerticalHelper;
     private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
+    private OrientationHelper mVerticalHelper;
 
     @Override
     public void attachToRecyclerView(@Nullable RecyclerView recyclerView)

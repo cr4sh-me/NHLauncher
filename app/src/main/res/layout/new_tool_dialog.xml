@@ -46,10 +46,10 @@
         android:maxLength="1000" />
 
     <LinearLayout
-        android:paddingTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="5dp">
 
         <Button
             android:id="@+id/save_button"
@@ -61,7 +61,7 @@
             android:id="@+id/cancel_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/close"/>
+            android:text="@string/close" />
 
     </LinearLayout>
 

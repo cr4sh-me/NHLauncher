@@ -27,6 +27,7 @@ import com.cr4sh.nhlauncher.utils.VibrationUtils;
 public class SettingsFragment4 extends Fragment {
     private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
     private NHLPreferences NHLPreferences;
+
     public SettingsFragment4() {
         // Required empty public constructor
     }

@@ -6,21 +6,21 @@
     android:padding="20dp">
 
     <TextView
-        android:textSize="18sp"
         android:id="@+id/dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/loading"
         android:textAlignment="center"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
-        android:textSize="14sp"
         android:id="@+id/dialog_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/loading"
         android:textAlignment="center"
+        android:textSize="14sp"
         android:textStyle="normal" />
 
     <LinearLayout

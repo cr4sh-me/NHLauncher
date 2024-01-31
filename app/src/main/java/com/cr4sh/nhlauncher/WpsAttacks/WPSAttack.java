@@ -50,6 +50,7 @@ import java.util.concurrent.ExecutorService;
 
 public class WPSAttack extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private final ExecutorService executorService = NHLManager.getInstance().getExecutorService();
     public String customPINCMD = "";
     public String delayCMD = "";
     TextView msg2;
@@ -64,9 +65,8 @@ public class WPSAttack extends AppCompatActivity {
     private LinearLayout buttonContainer; // Container for dynamic buttons
     private BroadcastReceiver wifiScanReceiver;
     private Button scanButton;
-    private final ExecutorService executorService = NHLManager.getInstance().getExecutorService();
-
     private ShellExecuter exe;
+
     private static String extractBSSID(String buttonText) {
         String[] lines = buttonText.split("\n");
         return lines[1].trim();
@@ -254,7 +254,7 @@ public class WPSAttack extends AppCompatActivity {
 
         msg2.setOnClickListener(v -> {
             VibrationUtils.vibrate(this, 10);
-            if (isThrottleEnabled){
+            if (isThrottleEnabled) {
                 dialogUtils.openThrottlingDialog();
             }
         });
@@ -502,8 +502,8 @@ public class WPSAttack extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void enableWifi(){
-        executorService.submit(()-> exe.RunAsRoot(new String[]{"svc wifi enable"}));
+    private void enableWifi() {
+        executorService.submit(() -> exe.RunAsRoot(new String[]{"svc wifi enable"}));
     }
 
     private void resetWifi() {

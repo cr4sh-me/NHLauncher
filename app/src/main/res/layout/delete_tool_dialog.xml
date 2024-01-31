@@ -7,28 +7,28 @@
     android:padding="15dp">
 
     <TextView
-        android:textSize="18sp"
         android:id="@+id/dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/loading"
         android:textAlignment="center"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
-        android:textSize="14sp"
         android:id="@+id/text_view2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="@string/this_will_delete_yout_button_from_all_categories_are_you_sure" />
+        android:text="@string/this_will_delete_yout_button_from_all_categories_are_you_sure"
+        android:textSize="14sp" />
 
     <LinearLayout
-        android:paddingTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="5dp">
 
         <Button
             android:id="@+id/delete_button"

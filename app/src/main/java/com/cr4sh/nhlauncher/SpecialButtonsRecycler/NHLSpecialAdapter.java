@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cr4sh.nhlauncher.BluetoothPager.BluetoothActivity;
 import com.cr4sh.nhlauncher.MainActivity;
 import com.cr4sh.nhlauncher.R;
 import com.cr4sh.nhlauncher.WpsAttacks.WPSAttack;
@@ -24,13 +25,14 @@ import com.cr4sh.nhlauncher.utils.VibrationUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NHLSpecialAdapter extends RecyclerView.Adapter<NHLSpecialViewHolder>{
+public class NHLSpecialAdapter extends RecyclerView.Adapter<NHLSpecialViewHolder> {
     private final MainActivity myActivity = NHLManager.getInstance().getMainActivity();
     private final List<NHLSpecialItem> items = new ArrayList<>();
     private int height;
     private int margin;
     private GradientDrawable drawable;
     private NHLPreferences NHLPreferences;
+
     public NHLSpecialAdapter() {
     }
 
@@ -55,7 +57,7 @@ public class NHLSpecialAdapter extends RecyclerView.Adapter<NHLSpecialViewHolder
         NHLPreferences = new NHLPreferences(myActivity);
 
         int originalHeight;
-        if(NHLPreferences.getRecyclerMainHeight() == 0){
+        if (NHLPreferences.getRecyclerMainHeight() == 0) {
             originalHeight = parent.getMeasuredHeight();
             saveRecyclerHeight(originalHeight);
         } else {
@@ -107,9 +109,9 @@ public class NHLSpecialAdapter extends RecyclerView.Adapter<NHLSpecialViewHolder
                 Intent intent = new Intent(myActivity, WPSAttack.class);
                 myActivity.startActivity(intent);
             } else if (position == 1) {
-                ToastUtils.showCustomToast(myActivity, "Coming soon...");
-//                Intent intent = new Intent(myActivity, BluetoothActivity.class);
-//                myActivity.startActivity(intent);
+//                ToastUtils.showCustomToast(myActivity, "Coming soon...");
+                Intent intent = new Intent(myActivity, BluetoothActivity.class);
+                myActivity.startActivity(intent);
             }
         });
 

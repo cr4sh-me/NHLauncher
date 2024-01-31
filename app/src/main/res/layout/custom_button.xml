@@ -31,21 +31,21 @@
             android:id="@+id/button_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="start"
-            android:text="@string/loading"
-            android:maxLines="1"
             android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="1"
+            android:text="@string/loading"
             android:textSize="14sp"
             android:textStyle="bold"
             tools:ignore="SmallSp" />
 
         <TextView
-            android:ellipsize="end"
-            android:maxLines="3"
             android:id="@+id/button_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:gravity="start"
+            android:maxLines="3"
             android:text="@string/loading"
             android:textSize="12sp"
             tools:ignore="SmallSp" />

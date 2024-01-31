@@ -23,17 +23,17 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-<!--        <com.skydoves.colorpickerview.ColorPickerView-->
-<!--            android:id="@+id/colorPickerView"-->
-<!--            android:layout_width="300dp"-->
-<!--            android:layout_height="300dp" />-->
+        <!--        <com.skydoves.colorpickerview.ColorPickerView-->
+        <!--            android:id="@+id/colorPickerView"-->
+        <!--            android:layout_width="300dp"-->
+        <!--            android:layout_height="300dp" />-->
 
-<!--        <com.skydoves.colorpickerview.sliders.BrightnessSlideBar-->
-<!--            android:id="@+id/brightnessBar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="30dp"-->
-<!--            android:layout_margin="10dp"-->
-<!--            app:selector_BrightnessSlider="@drawable/colorpickerview_wheel" />-->
+        <!--        <com.skydoves.colorpickerview.sliders.BrightnessSlideBar-->
+        <!--            android:id="@+id/brightnessBar"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="30dp"-->
+        <!--            android:layout_margin="10dp"-->
+        <!--            app:selector_BrightnessSlider="@drawable/colorpickerview_wheel" />-->
 
         <com.flask.colorpicker.ColorPickerView
             android:id="@+id/color_picker_view"
@@ -42,15 +42,13 @@
             app:alphaSlider="false"
             app:density="12"
             app:lightnessSlider="true"
-            app:wheelType="FLOWER"
             app:lightnessSliderView="@+id/v_lightness_slider"
-            />
+            app:wheelType="FLOWER" />
 
         <com.flask.colorpicker.slider.LightnessSlider
             android:id="@+id/v_lightness_slider"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            />
+            android:layout_height="48dp" />
 
         <EditText
             android:id="@+id/customHexColor"

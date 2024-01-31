@@ -14,7 +14,7 @@ public class NHLPreferences {
     private final SharedPreferences nhlPrefs;
     private final SharedPreferences setupPrefs;
     private final SharedPreferences customColorsPrefs;
-//    private final Context context;
+    //    private final Context context;
     private final MainActivity context = NHLManager.getInstance().getMainActivity();
 
     public NHLPreferences(Context context) {
@@ -111,7 +111,7 @@ public class NHLPreferences {
         return nhlPrefs.getBoolean("isNewButtonStyleActive", false);
     }
 
-    public int getRecyclerMainHeight(){
+    public int getRecyclerMainHeight() {
         return nhlPrefs.getInt("recyclerHeight", 0);
     }
 

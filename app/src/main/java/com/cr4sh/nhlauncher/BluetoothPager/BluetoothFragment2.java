@@ -1,5 +1,7 @@
 package com.cr4sh.nhlauncher.BluetoothPager;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -17,11 +19,17 @@ import androidx.core.widget.CompoundButtonCompat;
 import androidx.fragment.app.Fragment;
 
 import com.cr4sh.nhlauncher.R;
+import com.cr4sh.nhlauncher.bridge.Bridge;
 import com.cr4sh.nhlauncher.utils.NHLPreferences;
+import com.cr4sh.nhlauncher.utils.ToastUtils;
+import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 public class BluetoothFragment2 extends Fragment {
 
     NHLPreferences NHLPreferences;
+
+    private String flood = null;
+    private String reverse = null;
 
     public BluetoothFragment2() {
         // Required empty public constructor
@@ -121,8 +129,43 @@ public class BluetoothFragment2 extends Fragment {
         rangeEdit.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
         rangeEdit.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
 
+        floodPingCheckbox.setOnClickListener( v -> {
+            if (floodPingCheckbox.isChecked())
+//                flood = " -f ";
+                flood = "n";
+            else
+                flood = "";
+        });
+        reversePingCheckBox.setOnClickListener( v -> {
+            if (reversePingCheckBox.isChecked())
+                reverse = " -r ";
+            else
+                reverse = "";
+        });
+
+
+        l2pingButton.setOnClickListener(v -> {
+            VibrationUtils.vibrate(requireActivity(), 10);
+
+            String l2ping_target = BluetoothFragment1.getSelectedTarget();
+            if (!l2ping_target.equals("")) {
+                String l2ping_size = sizeEdit.getText().toString();
+                String l2ping_count = countEdit.getText().toString();
+                String l2ping_interface = BluetoothFragment1.getSelectedIface(); // TODO do this
+                run_cmd("echo -ne \"\\033]0;Pinging BT device\\007\" && clear;l2ping -i " + l2ping_interface + " -s " + l2ping_size + " -c " + l2ping_count + flood + reverse + " " + l2ping_target + " && echo \"\nPinging done, closing in 3 secs..\";sleep 3 && exit");
+            } else {
+                ToastUtils.showCustomToast(requireActivity(), "No target address!");
+            }
+
+
+        });
 
         return view;
+    }
+
+    public void run_cmd(String cmd) {
+        @SuppressLint("SdCardPath") Intent intent = Bridge.createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd, true);
+        requireActivity().startActivity(intent);
     }
 
     private void setContainerBackground(LinearLayout container, String color) {

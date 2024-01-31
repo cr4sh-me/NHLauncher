@@ -47,13 +47,13 @@
             android:padding="5dp">
 
             <ImageView
-                android:paddingRight="5dp"
                 android:id="@+id/showCategoriesImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:contentDescription="@string/loading"
-                android:gravity="center" />
+                android:gravity="center"
+                android:paddingRight="5dp" />
 
             <TextView
                 android:id="@+id/showCategoriesText"
@@ -62,8 +62,8 @@
                 android:layout_gravity="center"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:textStyle="bold"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -76,10 +76,10 @@
 
 
     <RelativeLayout
-        android:clickable="false"
         android:id="@+id/categories_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="false"
         android:padding="10dp"
         android:visibility="gone">
 

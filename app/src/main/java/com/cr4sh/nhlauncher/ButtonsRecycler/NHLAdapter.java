@@ -29,17 +29,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
+public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder> {
 
     private final EditText editText;
     private final MainActivity myActivity = NHLManager.getInstance().getMainActivity();
     private final List<NHLItem> items = new ArrayList<>();
+    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
     private int height;
     private int margin;
     private GradientDrawable drawable;
     private NHLPreferences NHLPreferences;
     private boolean overlay;
-    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
 
     public NHLAdapter(EditText editText) {
         this.editText = editText;
@@ -75,7 +75,7 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
         NHLPreferences = new NHLPreferences(myActivity);
 
         int originalHeight;
-        if(NHLPreferences.getRecyclerMainHeight() == 0){
+        if (NHLPreferences.getRecyclerMainHeight() == 0) {
             originalHeight = parent.getMeasuredHeight();
             saveRecyclerHeight(originalHeight);
         } else {
@@ -118,7 +118,7 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
             SpannableStringBuilder builderName = new SpannableStringBuilder(buttonTextName);
             int startIndexName = buttonTextName.indexOf(searchQuery);
 
-            if (startIndexName != -1) {
+            if (startIndexName != -1 && (startIndexName + searchQuery.length() <= buttonTextName.length())) {
                 if (NHLPreferences.isNewButtonStyleActive()) {
                     builderName.setSpan(new BackgroundColorSpan(Color.parseColor(NHLPreferences.color20())), startIndexName, startIndexName + searchQuery.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 } else {
@@ -133,7 +133,7 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
             SpannableStringBuilder builderDescription = new SpannableStringBuilder(buttonTextDescription);
             int startIndexDescription = buttonTextDescription.indexOf(searchQuery);
 
-            if (startIndexDescription != -1) {
+            if (startIndexDescription != -1 && (startIndexName + searchQuery.length() <= buttonTextDescription.length())) {
                 if (NHLPreferences.isNewButtonStyleActive()) {
                     builderDescription.setSpan(new BackgroundColorSpan(Color.parseColor(NHLPreferences.color20())), startIndexDescription, startIndexDescription + searchQuery.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 } else {
@@ -155,7 +155,7 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
 
         holder.imageView.setImageResource(imageResourceId);
 
-        if(overlay){
+        if (overlay) {
             holder.imageView.setColorFilter(Color.parseColor(NHLPreferences.color80()), PorterDuff.Mode.MULTIPLY);
         }
 
@@ -172,7 +172,7 @@ public class NHLAdapter extends RecyclerView.Adapter<NHLViewHolder>{
 //        Log.d("MyAdapter", "Button height with margin: " + (height + margin));
 
         holder.itemView.setOnClickListener(v -> {
-            if(!editText.getText().toString().isEmpty()){
+            if (!editText.getText().toString().isEmpty()) {
                 myActivity.getOnBackPressedDispatcher().onBackPressed(); // close searchbar
             }
             myActivity.buttonUsage = item.getUsage();

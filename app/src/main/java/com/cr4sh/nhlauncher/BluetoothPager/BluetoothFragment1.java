@@ -49,6 +49,7 @@ public class BluetoothFragment1 extends Fragment {
     final ShellExecuter exe = new ShellExecuter();
     @SuppressLint("SdCardPath")
     private final String APP_SCRIPTS_PATH = "/data/data/com.offsec.nethunter/scripts";
+    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
     public String scanTime = "10";
     NHLPreferences NHLPreferences;
     ScrollView scrollView;
@@ -58,12 +59,11 @@ public class BluetoothFragment1 extends Fragment {
     private Button servicesButton;
     private Button scanButton;
     private Spinner ifaces;
-    private String selected_iface;
+    private static String selected_iface;
     private File bt_smd;
     private File bluebinder;
     private LinearLayout buttonContainer;
-    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
-    private Button selectedButton = null;
+    private static Button selectedButton = null;
 
     public BluetoothFragment1() {
         // Required empty public constructor
@@ -186,7 +186,6 @@ public class BluetoothFragment1 extends Fragment {
             String bluetooth_address = (cleanText.substring(0, 18)).strip();
 
             Log.d("HDH", bluetooth_name + " - " + bluetooth_address);
-
 
             SpannableStringBuilder ssb = new SpannableStringBuilder();
             // Set bold style for BT address
@@ -349,9 +348,10 @@ public class BluetoothFragment1 extends Fragment {
         Future<String> future1 = executor.submit(() -> exe.RunAsRootOutput(APP_SCRIPTS_PATH + "/bootkali custom_cmd service dbus status | grep dbus"));
         Future<String> future2 = executor.submit(() -> exe.RunAsRootOutput(APP_SCRIPTS_PATH + "/bootkali custom_cmd service bluetooth status | grep bluetooth"));
 
-
         String dbus_statusCMD = future1.get();
         String bt_statusCMD = future2.get();
+
+        Log.d("DEBSHIT", dbus_statusCMD + " " + bt_statusCMD);
 
         return dbus_statusCMD.equals("dbus is running.") && bt_statusCMD.equals("bluetooth is running.");
     }
@@ -528,4 +528,13 @@ public class BluetoothFragment1 extends Fragment {
         drawable.setStroke(8, Color.parseColor(NHLPreferences.color50()));
         container.setBackground(drawable);
     }
+
+    public static String getSelectedTarget(){
+        return selectedButton.getText().toString();
+    }
+
+    public static String getSelectedIface(){
+        return selected_iface;
+    }
+
 }

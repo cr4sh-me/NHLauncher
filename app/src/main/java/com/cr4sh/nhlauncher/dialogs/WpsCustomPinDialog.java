@@ -23,9 +23,11 @@ import java.util.Objects;
 
 public class WpsCustomPinDialog extends AppCompatDialogFragment {
     private final WPSAttack wpsAttack;
+
     public WpsCustomPinDialog(WPSAttack activity) {
         this.wpsAttack = activity;
     }
+
     @SuppressLint("SetTextI18n")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

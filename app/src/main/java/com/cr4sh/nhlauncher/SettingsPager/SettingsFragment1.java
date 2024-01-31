@@ -41,6 +41,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 
 public class SettingsFragment1 extends Fragment {
+    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
     NHLPreferences NHLPreferences;
     MainUtils mainUtils;
     MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
@@ -51,7 +52,6 @@ public class SettingsFragment1 extends Fragment {
     private CheckBox vibrationsCheckbox;
     private CheckBox newButtonsStyle;
     private CheckBox overlayCheckbox;
-    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
 
     public SettingsFragment1() {
         // Required empty public constructor
@@ -234,7 +234,6 @@ public class SettingsFragment1 extends Fragment {
         });
 
 
-
         updateButton.setOnClickListener(v -> {
             VibrationUtils.vibrate(mainActivity, 10);
             Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -277,7 +276,6 @@ public class SettingsFragment1 extends Fragment {
         saveVibrationsPref(vibrationsCheckbox.isChecked());
         saveNewButtonPref(newButtonsStyle.isChecked());
         saveOverlayPref(overlayCheckbox.isChecked());
-
 
 
         if (newSortingModeSetting != null) {

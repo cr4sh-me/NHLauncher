@@ -3,6 +3,7 @@ package com.cr4sh.nhlauncher.BluetoothPager;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -24,6 +25,11 @@ public class BluetoothActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, R.anim.cat_appear, R.anim.cat_appear);
+        } else {
+            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+        }
 
         setContentView(R.layout.bt_layout);
 
@@ -67,9 +73,9 @@ public class BluetoothActivity extends AppCompatActivity {
             switch (position) {
                 case 0 -> tab.setText("Home");
                 case 1 -> tab.setText("Tools");
-                case 2 -> tab.setText("Spoof");
-                case 3 -> tab.setText("Bad Bluetooth");
-                case 4 -> tab.setText("Apple Juice");
+//                case 2 -> tab.setText("Spoof");
+//                case 3 -> tab.setText("Bad Bluetooth");
+                case 2 -> tab.setText("Apple Juice");
 
                 // Add more cases for additional tabs if needed
             }
@@ -89,6 +95,17 @@ public class BluetoothActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (isFinishing()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, R.anim.cat_appear, R.anim.cat_appear);
+            } else {
+                overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+            }
+        }
+    }
 
     @Override
     protected void onDestroy() {

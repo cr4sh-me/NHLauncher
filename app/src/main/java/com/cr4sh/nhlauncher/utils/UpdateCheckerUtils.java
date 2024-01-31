@@ -31,10 +31,6 @@ public class UpdateCheckerUtils {
     public UpdateCheckerUtils() {
     }
 
-    public interface UpdateCheckListener {
-        void onUpdateCheckCompleted(UpdateCheckResult updateResult);
-    }
-
     public void checkUpdateAsync(UpdateCheckListener listener) {
         executor.submit(() -> {
             try {
@@ -127,8 +123,6 @@ public class UpdateCheckerUtils {
         return new UpdateCheckResult(false, mainActivity.getResources().getString(R.string.already_updated));
     }
 
-
-
     private String getInstalledVersion() {
         try {
             PackageInfo packageInfo = mainActivity.getPackageManager().getPackageInfo(mainActivity.getPackageName(), 0);
@@ -137,6 +131,11 @@ public class UpdateCheckerUtils {
             Log.e(TAG, "Error getting installed version", e);
             return null;
         }
+    }
+
+
+    public interface UpdateCheckListener {
+        void onUpdateCheckCompleted(UpdateCheckResult updateResult);
     }
 
     public record UpdateCheckResult(boolean isUpdateAvailable, String message) {

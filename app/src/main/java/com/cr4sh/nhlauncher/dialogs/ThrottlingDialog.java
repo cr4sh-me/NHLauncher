@@ -27,6 +27,7 @@ import java.util.Objects;
 public class ThrottlingDialog extends AppCompatDialogFragment {
 
     private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.throttling_dialog, container, false);

@@ -32,12 +32,12 @@ import java.util.concurrent.Future;
 
 public class SettingsFragment3 extends Fragment {
     private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
+    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
     SQLiteDatabase mDatabase;
     StatsAdapter adapter;
     private NHLPreferences NHLPreferences;
     private RecyclerView recyclerView;
     private TextView noToolsText;
-    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
 
     public SettingsFragment3() {
         // Required empty public constructor

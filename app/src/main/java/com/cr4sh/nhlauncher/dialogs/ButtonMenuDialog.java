@@ -41,7 +41,7 @@ public class ButtonMenuDialog extends AppCompatDialogFragment {
 
         LinearLayout bkg = view.findViewById(R.id.custom_theme_dialog_background);
         TextView title = view.findViewById(R.id.dialog_title);
-        TextView description  = view.findViewById(R.id.dialog_description);
+        TextView description = view.findViewById(R.id.dialog_description);
         Button option1 = view.findViewById(R.id.option1);
         Button option2 = view.findViewById(R.id.option2);
         Button option3 = view.findViewById(R.id.option3);

@@ -21,10 +21,10 @@
 
     <com.cr4sh.nhlauncher.Overrides.FastScrollRecyclerView
         android:id="@+id/special_recycler_view"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/cancel_button"
         app:layout_constraintTop_toBottomOf="@+id/textView">
 

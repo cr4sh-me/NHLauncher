@@ -64,6 +64,7 @@ import java.util.concurrent.Future;
 
 public class MainActivity extends AppCompatActivity {
     public static boolean disableMenu = false;
+    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
     public String buttonCategory;
     public String buttonName;
     public String buttonDescription;
@@ -73,9 +74,8 @@ public class MainActivity extends AppCompatActivity {
     public ActivityResultLauncher<Intent> requestPermissionLauncher;
     public Button backButton;
     public int currentCategoryNumber = 1;
-    private ImageView toolbar;
-    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
     public RecyclerView recyclerView;
+    private ImageView toolbar;
     private List<String> valuesList;
     private List<Integer> imageList;
     private TextView rollCategoriesText;
@@ -524,7 +524,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        toolbar.setOnClickListener(v -> executor.submit(()-> {
+        toolbar.setOnClickListener(v -> executor.submit(() -> {
             VibrationUtils.vibrate(MainActivity.this, 10);
             Intent intent = new Intent(this, SettingsActivity.class);
             Bundle animationBundle = ActivityOptions.makeCustomAnimation(
@@ -577,6 +577,7 @@ public class MainActivity extends AppCompatActivity {
         }
         NHLManager.getInstance().shutdownExecutorService();
     }
+
     @Override
     protected void onPause() {
         super.onPause();
