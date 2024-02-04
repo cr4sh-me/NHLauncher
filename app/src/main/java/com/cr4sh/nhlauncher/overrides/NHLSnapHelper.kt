@@ -1,107 +1,91 @@
-package com.cr4sh.nhlauncher.overrides;
+package com.cr4sh.nhlauncher.overrides
 
-import android.view.View;
+import android.view.View
+import android.view.View.OnAttachStateChangeListener
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.OrientationHelper
+import androidx.recyclerview.widget.RecyclerView
+import com.cr4sh.nhlauncher.utils.NHLManager
+import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.OrientationHelper;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.utils.NHLManager;
-import com.cr4sh.nhlauncher.utils.VibrationUtils;
-
-public class NHLSnapHelper extends LinearSnapHelper {
-    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
-    private OrientationHelper mVerticalHelper;
-
-    @Override
-    public void attachToRecyclerView(@Nullable RecyclerView recyclerView)
-            throws IllegalStateException {
-        super.attachToRecyclerView(recyclerView);
-
-        assert recyclerView != null;
-        recyclerView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-            @Override
-            public void onViewAttachedToWindow(@NonNull View view) {
-            }
-
-            @Override
-            public void onViewDetachedFromWindow(@NonNull View view) {
-            }
-        });
+class NHLSnapHelper : LinearSnapHelper() {
+    private val mainActivity = NHLManager.getInstance().mainActivity
+    private var mVerticalHelper: OrientationHelper? = null
+    @Throws(IllegalStateException::class)
+    override fun attachToRecyclerView(recyclerView: RecyclerView?) {
+        super.attachToRecyclerView(recyclerView)
+        assert(recyclerView != null)
+        recyclerView!!.addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(view: View) {}
+            override fun onViewDetachedFromWindow(view: View) {}
+        })
     }
 
-    @Override
-    public int[] calculateScrollDistance(int velocityX, int velocityY) {
-        return super.calculateScrollDistance(velocityX, velocityY);
-    }
-
-    @Override
-    public int[] calculateDistanceToFinalSnap(@NonNull RecyclerView.LayoutManager layoutManager,
-                                              @NonNull View targetView) {
-        int[] out = new int[2];
-
+    override fun calculateDistanceToFinalSnap(
+        layoutManager: RecyclerView.LayoutManager,
+        targetView: View
+    ): IntArray {
+        val out = IntArray(2)
         if (layoutManager.canScrollVertically()) {
-            out[1] = distanceToStart(targetView, getVerticalHelper(layoutManager));
+            out[1] = distanceToStart(targetView, getVerticalHelper(layoutManager))
         }
-        return out;
+        return out
     }
 
-    @Override
-    public View findSnapView(RecyclerView.LayoutManager layoutManager) {
-        if (layoutManager instanceof LinearLayoutManager) {
-            return getStartView(layoutManager, getVerticalHelper(layoutManager));
-        }
-        return super.findSnapView(layoutManager);
+    override fun findSnapView(layoutManager: RecyclerView.LayoutManager): View? {
+        return if (layoutManager is LinearLayoutManager) {
+            getStartView(layoutManager, getVerticalHelper(layoutManager))
+        } else super.findSnapView(layoutManager)
     }
 
-    private int distanceToStart(View targetView, OrientationHelper helper) {
-        VibrationUtils.vibrate(mainActivity, 10);
-
-        return helper.getDecoratedStart(targetView) - helper.getStartAfterPadding();
+    private fun distanceToStart(targetView: View, helper: OrientationHelper?): Int {
+        vibrate(mainActivity, 10)
+        return helper!!.getDecoratedStart(targetView) - helper.startAfterPadding
     }
 
-    private View getStartView(RecyclerView.LayoutManager layoutManager, OrientationHelper helper) {
-        if (layoutManager instanceof LinearLayoutManager) {
-            int firstChild = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
-
-            boolean isLastItem = ((LinearLayoutManager) layoutManager)
-                    .findLastCompletelyVisibleItemPosition() == layoutManager.getItemCount() - 1;
-
+    private fun getStartView(
+        layoutManager: RecyclerView.LayoutManager,
+        helper: OrientationHelper?
+    ): View? {
+        if (layoutManager is LinearLayoutManager) {
+            val firstChild = layoutManager.findFirstVisibleItemPosition()
+            val isLastItem = layoutManager
+                .findLastCompletelyVisibleItemPosition() == layoutManager.getItemCount() - 1
             if (firstChild == RecyclerView.NO_POSITION || isLastItem) {
-                return null;
+                return null
             }
-
-            View child = layoutManager.findViewByPosition(firstChild);
-
-            if (helper.getDecoratedEnd(child) >= helper.getDecoratedMeasurement(child) / 2
-                    && helper.getDecoratedEnd(child) > 0) {
-                return child;
+            val child = layoutManager.findViewByPosition(firstChild)
+            return if (helper!!.getDecoratedEnd(child) >= helper.getDecoratedMeasurement(child) / 2
+                && helper.getDecoratedEnd(child) > 0
+            ) {
+                child
             } else {
-                if (((LinearLayoutManager) layoutManager).findLastCompletelyVisibleItemPosition()
-                        == layoutManager.getItemCount() - 1) {
-                    return null;
+                if (layoutManager.findLastCompletelyVisibleItemPosition()
+                    == layoutManager.getItemCount() - 1
+                ) {
+                    null
                 } else {
-                    return layoutManager.findViewByPosition(firstChild + 1);
+                    layoutManager.findViewByPosition(firstChild + 1)
                 }
             }
         }
-        return super.findSnapView(layoutManager);
+        return super.findSnapView(layoutManager)
     }
 
-    private OrientationHelper getVerticalHelper(RecyclerView.LayoutManager layoutManager) {
+    private fun getVerticalHelper(layoutManager: RecyclerView.LayoutManager): OrientationHelper? {
         if (mVerticalHelper == null) {
-            mVerticalHelper = OrientationHelper.createVerticalHelper(layoutManager);
+            mVerticalHelper = OrientationHelper.createVerticalHelper(layoutManager)
         }
-        return mVerticalHelper;
+        return mVerticalHelper
     }
 
-    @Override
-    public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
-        VibrationUtils.vibrate(mainActivity, 10);
-        return RecyclerView.NO_POSITION;
+    override fun findTargetSnapPosition(
+        layoutManager: RecyclerView.LayoutManager,
+        velocityX: Int,
+        velocityY: Int
+    ): Int {
+        vibrate(mainActivity, 10)
+        return RecyclerView.NO_POSITION
     }
 }

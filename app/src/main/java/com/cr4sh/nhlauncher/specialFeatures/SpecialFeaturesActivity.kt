@@ -1,80 +1,73 @@
-package com.cr4sh.nhlauncher.specialFeatures;
+package com.cr4sh.nhlauncher.specialFeatures
 
-import android.app.ActivityOptions;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
+import android.app.ActivityOptions
+import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import android.os.Build
+import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
+import com.cr4sh.nhlauncher.MainActivity
+import com.cr4sh.nhlauncher.R
+import com.cr4sh.nhlauncher.specialButtonsRecycler.NHLSpecialAdapter
+import com.cr4sh.nhlauncher.specialButtonsRecycler.NHLSpecialItem
+import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.R;
-import com.cr4sh.nhlauncher.specialButtonsRecycler.NHLSpecialAdapter;
-import com.cr4sh.nhlauncher.specialButtonsRecycler.NHLSpecialItem;
-import com.cr4sh.nhlauncher.utils.NHLPreferences;
-import com.cr4sh.nhlauncher.utils.VibrationUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class SpecialFeaturesActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+class SpecialFeaturesActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        //        overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, R.anim.cat_appear, R.anim.cat_appear);
+            overrideActivityTransition(
+                OVERRIDE_TRANSITION_OPEN,
+                R.anim.cat_appear,
+                R.anim.cat_appear
+            )
         } else {
-            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear)
         }
-
-        setContentView(R.layout.special_fragment_layout);
-
-        NHLPreferences NHLPreferences = new NHLPreferences(this);
-
-        RecyclerView specialRecyclerView = findViewById(R.id.special_recycler_view);
-
-        TextView title = findViewById(R.id.textView);
-        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
-
-        Button cancelButton = findViewById(R.id.cancel_button);
-        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
-        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
-
-        View rootView = findViewById(android.R.id.content);
-        rootView.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
-        Window window = this.getWindow();
-        window.setStatusBarColor(Color.parseColor(NHLPreferences.color20()));
-        window.setNavigationBarColor(Color.parseColor(NHLPreferences.color20()));
-
-        GradientDrawable drawable = new GradientDrawable();
-        if (NHLPreferences.isNewButtonStyleActive()) {
-            drawable.setColor(Color.parseColor(NHLPreferences.color50()));
-            drawable.setCornerRadius(60);
+        setContentView(R.layout.special_fragment_layout)
+        val nhlPreferences = NHLPreferences(this)
+        val specialRecyclerView = findViewById<RecyclerView>(R.id.special_recycler_view)
+        val title = findViewById<TextView>(R.id.textView)
+        title.setTextColor(Color.parseColor(nhlPreferences.color80()))
+        val cancelButton = findViewById<Button>(R.id.cancel_button)
+        cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
+        cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
+        val rootView = findViewById<View>(android.R.id.content)
+        rootView.setBackgroundColor(Color.parseColor(nhlPreferences.color20()))
+        val window = this.window
+        window.statusBarColor = Color.parseColor(nhlPreferences.color20())
+        window.navigationBarColor = Color.parseColor(nhlPreferences.color20())
+        val drawable = GradientDrawable()
+        if (nhlPreferences.isNewButtonStyleActive) {
+            drawable.setColor(Color.parseColor(nhlPreferences.color50()))
+            drawable.cornerRadius = 60f
         } else {
-            drawable.setCornerRadius(60);
-            drawable.setStroke(8, Color.parseColor(NHLPreferences.color80()));
+            drawable.cornerRadius = 60f
+            drawable.setStroke(8, Color.parseColor(nhlPreferences.color80()))
         }
-
-        NHLSpecialAdapter nhlSpecialAdapter = new NHLSpecialAdapter();
-        NHLSpecialItem specialItem = new NHLSpecialItem(getResources().getString(R.string.wps_attack), getResources().getString(R.string.wps_desc_short), "kali_fern_wifi_cracker");
-        NHLSpecialItem specialItem2 = new NHLSpecialItem(getResources().getString(R.string.bt_toolkit), getResources().getString(R.string.bt_short), "kali_spooftooph");
-
-        List<NHLSpecialItem> newItemList = new ArrayList<>();
-        newItemList.add(specialItem);
-        newItemList.add(specialItem2);
-
-        nhlSpecialAdapter.updateData(newItemList);
-        specialRecyclerView.setAdapter(nhlSpecialAdapter);
+        val nhlSpecialAdapter = NHLSpecialAdapter()
+        val specialItem = NHLSpecialItem(
+            resources.getString(R.string.wps_attack),
+            resources.getString(R.string.wps_desc_short),
+            "kali_fern_wifi_cracker"
+        )
+        val specialItem2 = NHLSpecialItem(
+            resources.getString(R.string.bt_toolkit),
+            resources.getString(R.string.bt_short),
+            "kali_spooftooph"
+        )
+        val newItemList: MutableList<NHLSpecialItem> = ArrayList()
+        newItemList.add(specialItem)
+        newItemList.add(specialItem2)
+        nhlSpecialAdapter.updateData(newItemList)
+        specialRecyclerView.adapter = nhlSpecialAdapter
 
 //        customButton1.setBackground(drawable);
 ////        customButton2.setBackground(drawable);
@@ -98,31 +91,31 @@ public class SpecialFeaturesActivity extends AppCompatActivity {
 ////            Intent intent = new Intent(this, BluetoothAttacks.class);
 ////            startActivity(intent);
 //        });
-
-        cancelButton.setOnClickListener(v -> {
-            VibrationUtils.vibrate(this, 10);
-
-            Intent intent = new Intent(SpecialFeaturesActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            Bundle animationBundle = ActivityOptions.makeCustomAnimation(
-                    this,
-                    R.anim.cat_appear,  // Enter animation
-                    R.anim.cat_disappear  // Exit animation
-            ).toBundle();
-            startActivity(intent, animationBundle);
-            finish();
-        });
-
+        cancelButton.setOnClickListener {
+            vibrate(this, 10)
+            val intent = Intent(this@SpecialFeaturesActivity, MainActivity::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            val animationBundle = ActivityOptions.makeCustomAnimation(
+                this,
+                R.anim.cat_appear,  // Enter animation
+                R.anim.cat_disappear // Exit animation
+            ).toBundle()
+            startActivity(intent, animationBundle)
+            finish()
+        }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (isFinishing()) {
+    override fun onPause() {
+        super.onPause()
+        if (isFinishing) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, R.anim.cat_appear, R.anim.cat_appear);
+                overrideActivityTransition(
+                    OVERRIDE_TRANSITION_CLOSE,
+                    R.anim.cat_appear,
+                    R.anim.cat_appear
+                )
             } else {
-                overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
+                overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear)
             }
         }
     }

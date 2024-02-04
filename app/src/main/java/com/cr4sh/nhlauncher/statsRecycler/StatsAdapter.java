@@ -28,7 +28,7 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsHolder> {
     private int height;
     private int margin;
     private GradientDrawable drawable;
-    private NHLPreferences NHLPreferences;
+    private NHLPreferences nhlPreferences;
 
 
     public StatsAdapter() {
@@ -45,19 +45,19 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsHolder> {
     @NonNull
     @Override
     public StatsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        NHLPreferences = new NHLPreferences(myActivity);
+        nhlPreferences = new NHLPreferences(myActivity);
 
         originalHeight = parent.getMeasuredHeight();
         margin = 20;
         height = (originalHeight / 8) - margin; // Button height without margin
 
         drawable = new GradientDrawable();
-        if (NHLPreferences.isNewButtonStyleActive()) {
-            drawable.setColor(Color.parseColor(NHLPreferences.color50()));
+        if (nhlPreferences.isNewButtonStyleActive()) {
+            drawable.setColor(Color.parseColor(nhlPreferences.color50()));
             drawable.setCornerRadius(60);
         } else {
             drawable.setCornerRadius(60);
-            drawable.setStroke(8, Color.parseColor(NHLPreferences.color80()));
+            drawable.setStroke(8, Color.parseColor(nhlPreferences.color80()));
         }
         drawable.setBounds(0, 0, 0, height); // Set bounds for the drawable
 
@@ -81,8 +81,8 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsHolder> {
 
         holder.imageView.setImageResource(imageResourceId);
 
-        holder.nameView.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        holder.usageText.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        holder.nameView.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        holder.usageText.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
         holder.itemView.setBackground(drawable);
 

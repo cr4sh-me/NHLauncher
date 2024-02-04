@@ -35,7 +35,7 @@ public class SettingsFragment3 extends Fragment {
     private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
     SQLiteDatabase mDatabase;
     StatsAdapter adapter;
-    private NHLPreferences NHLPreferences;
+    private NHLPreferences nhlPreferences;
     private RecyclerView recyclerView;
     private TextView noToolsText;
 
@@ -49,7 +49,7 @@ public class SettingsFragment3 extends Fragment {
 
         View view = inflater.inflate(R.layout.settings_layout3, container, false);
 
-        NHLPreferences = new NHLPreferences(requireActivity());
+        nhlPreferences = new NHLPreferences(requireActivity());
 
         mDatabase = mainActivity.mDatabase;
 
@@ -63,15 +63,15 @@ public class SettingsFragment3 extends Fragment {
         adapter = new StatsAdapter();
         recyclerView.setAdapter(adapter);
 
-        noToolsText.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        noToolsText.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
 
-        powerSpinnerView.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
-        powerSpinnerView.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        powerSpinnerView.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
-        powerSpinnerView.setDividerColor(Color.parseColor(NHLPreferences.color80()));
+        powerSpinnerView.setBackgroundColor(Color.parseColor(nhlPreferences.color20()));
+        powerSpinnerView.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        powerSpinnerView.setHintTextColor(Color.parseColor(nhlPreferences.color50()));
+        powerSpinnerView.setDividerColor(Color.parseColor(nhlPreferences.color80()));
 
-        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        title.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
         powerSpinnerView.selectItemByIndex(0);
         spinnerChanger(0); // Display all tools by default
@@ -79,7 +79,7 @@ public class SettingsFragment3 extends Fragment {
         powerSpinnerView.setOnSpinnerItemSelectedListener((OnSpinnerItemSelectedListener<String>) (oldIndex, oldItem, newIndex, newItem) -> spinnerChanger(newIndex));
 
         GradientDrawable gd = new GradientDrawable();
-        gd.setStroke(8, Color.parseColor(NHLPreferences.color50())); // Stroke width and color
+        gd.setStroke(8, Color.parseColor(nhlPreferences.color50())); // Stroke width and color
         gd.setCornerRadius(20);
         spinnerBg1.setBackground(gd);
 
@@ -108,7 +108,7 @@ public class SettingsFragment3 extends Fragment {
                 selectionArgs = new String[]{String.valueOf(category - 1), "0"};
             }
 
-            cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, NHLPreferences.sortingMode(), null);
+            cursor = mDatabase.query("TOOLS", projection, selection, selectionArgs, null, null, nhlPreferences.sortingMode(), null);
             if (cursor.getCount() == 0) {
                 mainActivity.runOnUiThread(() -> {
                     noToolsText.setVisibility(View.VISIBLE);

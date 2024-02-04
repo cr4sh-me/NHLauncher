@@ -30,7 +30,7 @@ class ScanTimeDialog(private val wpsAttack: BluetoothFragment1) : AppCompatDialo
         val view = inflater.inflate(R.layout.wps_custom_pin_dialog, container, false)
 
 //        MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
-        val NHLPreferences = NHLPreferences(requireActivity())
+        val nhlPreferences = NHLPreferences(requireActivity())
         assert(arguments != null)
         val option = requireArguments().getInt("option")
         isCancelable = false
@@ -46,15 +46,15 @@ class ScanTimeDialog(private val wpsAttack: BluetoothFragment1) : AppCompatDialo
         }
 
         // Apply custom themes
-        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()))
-        title.setTextColor(Color.parseColor(NHLPreferences.color80()))
-        customPin.setTextColor(Color.parseColor(NHLPreferences.color80()))
-        customPin.background.mutate().setTint(Color.parseColor(NHLPreferences.color50()))
-        customPin.setHintTextColor(Color.parseColor(NHLPreferences.color50()))
-        setupButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()))
-        setupButton.setTextColor(Color.parseColor(NHLPreferences.color80()))
-        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()))
-        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()))
+        bkg.setBackgroundColor(Color.parseColor(nhlPreferences.color20()))
+        title.setTextColor(Color.parseColor(nhlPreferences.color80()))
+        customPin.setTextColor(Color.parseColor(nhlPreferences.color80()))
+        customPin.background.mutate().setTint(Color.parseColor(nhlPreferences.color50()))
+        customPin.setHintTextColor(Color.parseColor(nhlPreferences.color50()))
+        setupButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
+        setupButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
+        cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
+        cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
         setupButton.setOnClickListener {
             vibrate(mainActivity, 10)
             if (customPin.text.toString().isEmpty()) {

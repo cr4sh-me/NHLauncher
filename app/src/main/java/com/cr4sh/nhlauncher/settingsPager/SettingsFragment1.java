@@ -42,7 +42,7 @@ import java.util.concurrent.ExecutorService;
 
 public class SettingsFragment1 extends Fragment {
     private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
-    NHLPreferences NHLPreferences;
+    NHLPreferences nhlPreferences;
     MainUtils mainUtils;
     MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
     private Button updateButton;
@@ -64,7 +64,7 @@ public class SettingsFragment1 extends Fragment {
 
         View view = inflater.inflate(R.layout.settings_layout1, container, false);
 
-        NHLPreferences = new NHLPreferences(requireActivity());
+        nhlPreferences = new NHLPreferences(requireActivity());
         mainUtils = new MainUtils(mainActivity);
 
         vibrationsCheckbox = view.findViewById(R.id.vibrations_checkbox);
@@ -83,8 +83,8 @@ public class SettingsFragment1 extends Fragment {
         TextView spinnerText1 = view.findViewById(R.id.language_spinner_label);
         TextView spinnerText2 = view.findViewById(R.id.sorting_spinner_label);
 
-        spinnerText1.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        spinnerText2.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        spinnerText1.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        spinnerText2.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
         PowerSpinnerView powerSpinnerView = view.findViewById(R.id.language_spinner);
         PowerSpinnerView powerSpinnerView2 = view.findViewById(R.id.sorting_spinner);
@@ -92,38 +92,38 @@ public class SettingsFragment1 extends Fragment {
         LinearLayout spinnerBg1 = view.findViewById(R.id.spinnerBg1);
         LinearLayout spinnerBg2 = view.findViewById(R.id.spinnerBg2);
 
-        checkUpdate.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        checkUpdate.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
-        powerSpinnerView.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
-        powerSpinnerView.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        powerSpinnerView.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
-        powerSpinnerView.setDividerColor(Color.parseColor(NHLPreferences.color80()));
+        powerSpinnerView.setBackgroundColor(Color.parseColor(nhlPreferences.color20()));
+        powerSpinnerView.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        powerSpinnerView.setHintTextColor(Color.parseColor(nhlPreferences.color50()));
+        powerSpinnerView.setDividerColor(Color.parseColor(nhlPreferences.color80()));
 
-        powerSpinnerView2.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
-        powerSpinnerView2.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        powerSpinnerView2.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
-        powerSpinnerView2.setDividerColor(Color.parseColor(NHLPreferences.color80()));
+        powerSpinnerView2.setBackgroundColor(Color.parseColor(nhlPreferences.color20()));
+        powerSpinnerView2.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        powerSpinnerView2.setHintTextColor(Color.parseColor(nhlPreferences.color50()));
+        powerSpinnerView2.setDividerColor(Color.parseColor(nhlPreferences.color80()));
 
-        vibrationsCheckbox.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        newButtonsStyle.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        overlayCheckbox.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        vibrationsCheckbox.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        newButtonsStyle.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        overlayCheckbox.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
-        vibrationsCheckbox.setButtonTintList(ColorStateList.valueOf(Color.parseColor(NHLPreferences.color80())));
-        newButtonsStyle.setButtonTintList(ColorStateList.valueOf(Color.parseColor(NHLPreferences.color80())));
-        overlayCheckbox.setButtonTintList(ColorStateList.valueOf(Color.parseColor(NHLPreferences.color80())));
+        vibrationsCheckbox.setButtonTintList(ColorStateList.valueOf(Color.parseColor(nhlPreferences.color80())));
+        newButtonsStyle.setButtonTintList(ColorStateList.valueOf(Color.parseColor(nhlPreferences.color80())));
+        overlayCheckbox.setButtonTintList(ColorStateList.valueOf(Color.parseColor(nhlPreferences.color80())));
 
 
-        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
-        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        bkg.setBackgroundColor(Color.parseColor(nhlPreferences.color20()));
+        title.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
         setButtonColors(runSetup);
         setButtonColors(backupDb);
         setButtonColors(restoreDb);
         setButtonColors(saveButton);
 
-        vibrationsCheckbox.setChecked(NHLPreferences.vibrationOn());
-        newButtonsStyle.setChecked(NHLPreferences.isNewButtonStyleActive());
-        overlayCheckbox.setChecked(NHLPreferences.isButtonOverlayActive());
+        vibrationsCheckbox.setChecked(nhlPreferences.vibrationOn());
+        newButtonsStyle.setChecked(nhlPreferences.isNewButtonStyleActive());
+        overlayCheckbox.setChecked(nhlPreferences.isButtonOverlayActive());
 
 
         Resources resources = mainActivity.getResources();
@@ -139,7 +139,7 @@ public class SettingsFragment1 extends Fragment {
             powerSpinnerView.selectItemByIndex(0);
         }
 
-        String sortingMode = NHLPreferences.sortingMode();
+        String sortingMode = nhlPreferences.sortingMode();
         if (sortingMode == null) {
             powerSpinnerView2.selectItemByIndex(0);
         } else if (sortingMode.equals("USAGE DESC")) {
@@ -160,7 +160,7 @@ public class SettingsFragment1 extends Fragment {
 
 
         GradientDrawable gd = new GradientDrawable();
-        gd.setStroke(8, Color.parseColor(NHLPreferences.color50())); // Stroke width and color
+        gd.setStroke(8, Color.parseColor(nhlPreferences.color50())); // Stroke width and color
         gd.setCornerRadius(20);
         spinnerBg1.setBackground(gd);
         spinnerBg2.setBackground(gd);
@@ -295,8 +295,8 @@ public class SettingsFragment1 extends Fragment {
 
 
     private void setButtonColors(Button button) {
-        button.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
-        button.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        button.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
+        button.setTextColor(Color.parseColor(nhlPreferences.color80()));
     }
 
 

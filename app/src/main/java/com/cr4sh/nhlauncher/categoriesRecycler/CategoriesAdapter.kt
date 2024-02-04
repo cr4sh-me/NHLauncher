@@ -1,109 +1,92 @@
-package com.cr4sh.nhlauncher.categoriesRecycler;
+package com.cr4sh.nhlauncher.categoriesRecycler
 
-import android.annotation.SuppressLint;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.GradientDrawable;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.drawable.GradientDrawable
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.RelativeLayout
+import androidx.recyclerview.widget.RecyclerView
+import com.cr4sh.nhlauncher.R
+import com.cr4sh.nhlauncher.utils.MainUtils
+import com.cr4sh.nhlauncher.utils.NHLManager
+import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+class CategoriesAdapter : RecyclerView.Adapter<CategoriesViewHolder>() {
+    private val myActivity = NHLManager.getInstance().mainActivity
+    private val item: MutableList<String> = ArrayList()
+    private val itemImg: MutableList<Int> = ArrayList()
+    private var height = 0
+    private var margin = 0
+    private var drawable: GradientDrawable? = null
+    private var nhlPreferences: NHLPreferences? = null
 
-import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.R;
-import com.cr4sh.nhlauncher.utils.MainUtils;
-import com.cr4sh.nhlauncher.utils.NHLManager;
-import com.cr4sh.nhlauncher.utils.NHLPreferences;
-import com.cr4sh.nhlauncher.utils.VibrationUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesViewHolder> {
-
-    private final MainActivity myActivity = NHLManager.getInstance().getMainActivity();
-    private final List<String> item = new ArrayList<>();
-    private final List<Integer> itemImg = new ArrayList<>();
-    private int height;
-    private int margin;
-    private GradientDrawable drawable;
-    private NHLPreferences NHLPreferences;
-
-    public CategoriesAdapter() {
-
+    @SuppressLint("NotifyDataSetChanged") // Clear old data and display new!
+    fun updateData(newData: List<String>?, newData2: List<Int>?) {
+        item.clear()
+        itemImg.clear()
+        item.addAll(newData!!)
+        itemImg.addAll(newData2!!)
+        notifyDataSetChanged()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    // Clear old data and display new!
-    public void updateData(List<String> newData, List<Integer> newData2) {
-        item.clear();
-        itemImg.clear();
-        item.addAll(newData);
-        itemImg.addAll(newData2);
-        notifyDataSetChanged();
-    }
-
-    @NonNull
-    @Override
-    public CategoriesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        NHLPreferences = new NHLPreferences(myActivity);
-        int originalHeight = parent.getMeasuredHeight();
-        margin = 20;
-        height = (originalHeight / 8) - margin; // Button height without margin
-
-        drawable = new GradientDrawable();
-        if (NHLPreferences.isNewButtonStyleActive()) {
-            drawable.setColor(Color.parseColor(NHLPreferences.color50()));
-            drawable.setCornerRadius(60);
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesViewHolder {
+        nhlPreferences = NHLPreferences(myActivity)
+        val originalHeight = parent.measuredHeight
+        margin = 20
+        height = originalHeight / 8 - margin // Button height without margin
+        drawable = GradientDrawable()
+        if (nhlPreferences!!.isNewButtonStyleActive) {
+            drawable!!.setColor(Color.parseColor(nhlPreferences!!.color50()))
+            drawable!!.cornerRadius = 60f
         } else {
-            drawable.setCornerRadius(60);
-            drawable.setStroke(8, Color.parseColor(NHLPreferences.color80()));
+            drawable!!.cornerRadius = 60f
+            drawable!!.setStroke(8, Color.parseColor(nhlPreferences!!.color80()))
         }
-        drawable.setBounds(0, 0, 0, height); // Set bounds for the drawable
-
-        return new CategoriesViewHolder(LayoutInflater.from(myActivity).inflate(R.layout.custom_category_item, parent, false));
+        drawable!!.setBounds(0, 0, 0, height) // Set bounds for the drawable
+        return CategoriesViewHolder(
+            LayoutInflater.from(myActivity).inflate(R.layout.custom_category_item, parent, false)
+        )
     }
-
 
     // Used to create buttons, and set listeners for them
-    @Override
-    public void onBindViewHolder(@NonNull CategoriesViewHolder holder, @SuppressLint("RecyclerView") int position) {
-
-        MainUtils mainUtils = new MainUtils(myActivity);
-        String categoryName = item.get(position);
-        String categoryImage = String.valueOf(itemImg.get(position));
-        holder.nameView.setText(categoryName);
+    override fun onBindViewHolder(
+        holder: CategoriesViewHolder,
+        @SuppressLint("RecyclerView") position: Int
+    ) {
+        val mainUtils = MainUtils(myActivity)
+        val categoryName = item[position]
+        val categoryImage = itemImg[position].toString()
+        holder.nameView.text = categoryName
 
         // Load image dynamically based on categoryImage
-        @SuppressLint("DiscouragedApi") int imageResourceId = myActivity.getResources().getIdentifier(categoryImage, "drawable", myActivity.getPackageName());
-        holder.imageView.setImageResource(imageResourceId);
-
-        holder.imageView.setColorFilter(Color.parseColor(NHLPreferences.color80()), PorterDuff.Mode.MULTIPLY);
-
-        holder.nameView.setTextColor(Color.parseColor(NHLPreferences.color80()));
-
-        holder.itemView.setBackground(drawable);
-
-        RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-        params.setMargins(margin, (margin / 2), margin, (margin / 2));
-        holder.categoryLayout.setLayoutParams(params);
+        @SuppressLint("DiscouragedApi") val imageResourceId =
+            myActivity.resources.getIdentifier(categoryImage, "drawable", myActivity.packageName)
+        holder.imageView.setImageResource(imageResourceId)
+        holder.imageView.setColorFilter(
+            Color.parseColor(nhlPreferences!!.color80()),
+            PorterDuff.Mode.MULTIPLY
+        )
+        holder.nameView.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        holder.itemView.background = drawable
+        val params = RecyclerView.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height)
+        params.setMargins(margin, margin / 2, margin, margin / 2)
+        holder.categoryLayout.layoutParams = params
 
 //        Log.d("CategoriesAdapter", "Parent height: " + originalHeight);
 //        Log.d("CategoriesAdapter", "Button height with margin: " + (height + margin));
-
-        holder.itemView.setOnClickListener(v -> {
-            VibrationUtils.vibrate(myActivity, 10);
-            myActivity.backButton.callOnClick();
-            mainUtils.spinnerChanger((position));
-            myActivity.setCurrentCategoryNumber(position);
-        });
-
+        holder.itemView.setOnClickListener {
+            vibrate(myActivity, 10)
+            myActivity.backButton.callOnClick()
+            mainUtils.spinnerChanger(position)
+            myActivity.currentCategoryNumber = position
+        }
     }
 
-    @Override
-    public int getItemCount() {
-        return item.size();
+    override fun getItemCount(): Int {
+        return item.size
     }
 }

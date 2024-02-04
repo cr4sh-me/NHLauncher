@@ -25,16 +25,16 @@ class PermissionDialog : AppCompatDialogFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.permissions_dialog, container, false)
         isCancelable = false
-        val NHLPreferences = NHLPreferences(requireActivity())
+        val nhlPreferences = NHLPreferences(requireActivity())
         val bkg = view.findViewById<LinearLayout>(R.id.custom_theme_dialog_background)
         val title = view.findViewById<TextView>(R.id.dialog_title)
         val text = view.findViewById<TextView>(R.id.text_view1)
         val allowButton = view.findViewById<Button>(R.id.allow_button)
-        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()))
-        title.setTextColor(Color.parseColor(NHLPreferences.color80()))
-        text.setTextColor(Color.parseColor(NHLPreferences.color80()))
-        allowButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()))
-        allowButton.setTextColor(Color.parseColor(NHLPreferences.color80()))
+        bkg.setBackgroundColor(Color.parseColor(nhlPreferences.color20()))
+        title.setTextColor(Color.parseColor(nhlPreferences.color80()))
+        text.setTextColor(Color.parseColor(nhlPreferences.color80()))
+        allowButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
+        allowButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
         allowButton.setOnClickListener {
             vibrate(mainActivity, 10)
             Objects.requireNonNull(dialog).cancel()

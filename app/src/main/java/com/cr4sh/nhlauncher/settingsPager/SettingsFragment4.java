@@ -26,7 +26,7 @@ import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 public class SettingsFragment4 extends Fragment {
     private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
-    private NHLPreferences NHLPreferences;
+    private NHLPreferences nhlPreferences;
 
     public SettingsFragment4() {
         // Required empty public constructor
@@ -39,7 +39,7 @@ public class SettingsFragment4 extends Fragment {
 
         View view = inflater.inflate(R.layout.settings_layout4, container, false);
 
-        NHLPreferences = new NHLPreferences(requireActivity());
+        nhlPreferences = new NHLPreferences(requireActivity());
 
         // Get the TextViews from the layout
         TextView title = view.findViewById(R.id.bt_info2);
@@ -60,10 +60,10 @@ public class SettingsFragment4 extends Fragment {
         setClickableSpan(textView2, "https://github.com/skydoves/PowerSpinner");
         setClickableSpan(textView3, "https://github.com/QuadFlask/colorpicker");
 
-        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        textView1.setLinkTextColor(Color.parseColor(NHLPreferences.color80()));
-        textView2.setLinkTextColor(Color.parseColor(NHLPreferences.color80()));
-        textView3.setLinkTextColor(Color.parseColor(NHLPreferences.color80()));
+        title.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        textView1.setLinkTextColor(Color.parseColor(nhlPreferences.color80()));
+        textView2.setLinkTextColor(Color.parseColor(nhlPreferences.color80()));
+        textView3.setLinkTextColor(Color.parseColor(nhlPreferences.color80()));
 
         github.setOnClickListener(v -> {
             VibrationUtils.vibrate(mainActivity, 10);
@@ -93,7 +93,7 @@ public class SettingsFragment4 extends Fragment {
     }
 
     private void setButtonColors(Button button) {
-        button.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
-        button.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        button.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
+        button.setTextColor(Color.parseColor(nhlPreferences.color80()));
     }
 }

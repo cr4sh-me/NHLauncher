@@ -28,7 +28,7 @@ class ThrottlingDialog : AppCompatDialogFragment() {
         val view = inflater.inflate(R.layout.throttling_dialog, container, false)
 
 //        MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
-        val NHLPreferences = NHLPreferences(requireActivity())
+        val nhlPreferences = NHLPreferences(requireActivity())
         isCancelable = false
         val bkg = view.findViewById<LinearLayout>(R.id.custom_theme_dialog_background)
         val title = view.findViewById<TextView>(R.id.dialog_title)
@@ -37,13 +37,13 @@ class ThrottlingDialog : AppCompatDialogFragment() {
         val cancelButton = view.findViewById<Button>(R.id.cancel_button)
 
         // Apply custom themes
-        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()))
-        title.setTextColor(Color.parseColor(NHLPreferences.color80()))
-        text.setTextColor(Color.parseColor(NHLPreferences.color80()))
-        setupButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()))
-        setupButton.setTextColor(Color.parseColor(NHLPreferences.color80()))
-        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()))
-        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()))
+        bkg.setBackgroundColor(Color.parseColor(nhlPreferences.color20()))
+        title.setTextColor(Color.parseColor(nhlPreferences.color80()))
+        text.setTextColor(Color.parseColor(nhlPreferences.color80()))
+        setupButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
+        setupButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
+        cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
+        cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
         setupButton.setOnClickListener { view12: View? ->
             vibrate(mainActivity, 10)
             Objects.requireNonNull(dialog).cancel()

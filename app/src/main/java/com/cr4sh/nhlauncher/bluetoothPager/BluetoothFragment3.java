@@ -16,7 +16,7 @@ import com.cr4sh.nhlauncher.utils.NHLPreferences;
 
 public class BluetoothFragment3 extends Fragment {
 
-    NHLPreferences NHLPreferences;
+    NHLPreferences nhlPreferences;
 
     public BluetoothFragment3() {
         // Required empty public constructor
@@ -28,7 +28,7 @@ public class BluetoothFragment3 extends Fragment {
 
         View view = inflater.inflate(R.layout.bt_layout3, container, false);
 
-        NHLPreferences = new NHLPreferences(requireActivity());
+        nhlPreferences = new NHLPreferences(requireActivity());
 
 
         return view;
@@ -42,8 +42,8 @@ public class BluetoothFragment3 extends Fragment {
     }
 
     private void setButtonColors(Button button) {
-        button.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
-        button.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        button.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
+        button.setTextColor(Color.parseColor(nhlPreferences.color80()));
     }
 
 }

@@ -34,7 +34,7 @@ class NhlColorPickerDialog(
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.color_picker_dialog, container, false)
-        val NHLPreferences = NHLPreferences(requireActivity())
+        val nhlPreferences = NHLPreferences(requireActivity())
         val title = view.findViewById<TextView>(R.id.dialog_title)
         val bkg = view.findViewById<LinearLayout>(R.id.custom_theme_dialog_background)
         val colorPickerView = view.findViewById<ColorPickerView>(R.id.color_picker_view)
@@ -43,14 +43,14 @@ class NhlColorPickerDialog(
         val cancelButton = view.findViewById<Button>(R.id.cancel_button)
 
         // Apply custom themes
-        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()))
-        title.setTextColor(Color.parseColor(NHLPreferences.color80()))
-        hexColorValue.setTextColor(Color.parseColor(NHLPreferences.color80()))
-        hexColorValue.background.mutate().setTint(Color.parseColor(NHLPreferences.color50()))
-        applyColors.setBackgroundColor(Color.parseColor(NHLPreferences.color50()))
-        applyColors.setTextColor(Color.parseColor(NHLPreferences.color80()))
-        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()))
-        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()))
+        bkg.setBackgroundColor(Color.parseColor(nhlPreferences.color20()))
+        title.setTextColor(Color.parseColor(nhlPreferences.color80()))
+        hexColorValue.setTextColor(Color.parseColor(nhlPreferences.color80()))
+        hexColorValue.background.mutate().setTint(Color.parseColor(nhlPreferences.color50()))
+        applyColors.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
+        applyColors.setTextColor(Color.parseColor(nhlPreferences.color80()))
+        cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
+        cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
         colorPickerView.setInitialColor(Color.parseColor(hexColorShade), true)
         hexColorValue.setText(button.text)
         colorPickerView.addOnColorChangedListener { selectedColor: Int ->

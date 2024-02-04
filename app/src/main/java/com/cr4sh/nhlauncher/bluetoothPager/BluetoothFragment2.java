@@ -26,7 +26,7 @@ import com.cr4sh.nhlauncher.utils.VibrationUtils;
 
 public class BluetoothFragment2 extends Fragment {
 
-    NHLPreferences NHLPreferences;
+    NHLPreferences nhlPreferences;
 
     private String flood = null;
     private String reverse = null;
@@ -41,7 +41,7 @@ public class BluetoothFragment2 extends Fragment {
 
         View view = inflater.inflate(R.layout.bt_layout2, container, false);
 
-        NHLPreferences = new NHLPreferences(requireActivity());
+        nhlPreferences = new NHLPreferences(requireActivity());
 
         LinearLayout l2pingContainer = view.findViewById(R.id.l2pingContainer);
         LinearLayout redfangContainer = view.findViewById(R.id.redfangContainer);
@@ -55,17 +55,17 @@ public class BluetoothFragment2 extends Fragment {
         TextView sdpText = view.findViewById(R.id.sdpText);
         TextView rfcommText = view.findViewById(R.id.rfcommText);
 
-        l2pingText.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        redfangText.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        bluerangerText.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        sdpText.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        rfcommText.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        l2pingText.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        redfangText.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        bluerangerText.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        sdpText.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        rfcommText.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
-        setContainerBackground(l2pingContainer, NHLPreferences.color50());
-        setContainerBackground(redfangContainer, NHLPreferences.color50());
-        setContainerBackground(bluerangerContainer, NHLPreferences.color50());
-        setContainerBackground(sdpContainer, NHLPreferences.color50());
-        setContainerBackground(rfcommContainer, NHLPreferences.color50());
+        setContainerBackground(l2pingContainer, nhlPreferences.color50());
+        setContainerBackground(redfangContainer, nhlPreferences.color50());
+        setContainerBackground(bluerangerContainer, nhlPreferences.color50());
+        setContainerBackground(sdpContainer, nhlPreferences.color50());
+        setContainerBackground(rfcommContainer, nhlPreferences.color50());
 
         TextView l2pingInfo = view.findViewById(R.id.l2pingInfo);
         TextView redfangInfo = view.findViewById(R.id.redfangInfo);
@@ -73,10 +73,10 @@ public class BluetoothFragment2 extends Fragment {
         TextView sdpInfo = view.findViewById(R.id.sdpInfo);
 //        TextView rfcommInfo = view.findViewById(R.id.rfcomm)
 
-        l2pingInfo.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        redfangInfo.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        bluerangerInfo.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        sdpInfo.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        l2pingInfo.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        redfangInfo.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        bluerangerInfo.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        sdpInfo.setTextColor(Color.parseColor(nhlPreferences.color80()));
 //        rfcommInfo.setTextColor(Color.parseColor(myPreferences.color50()));
 
         // Find Buttons and set background and text colors
@@ -98,36 +98,36 @@ public class BluetoothFragment2 extends Fragment {
         TextView countText = view.findViewById(R.id.l2ping_count);
         TextView countEdit = view.findViewById(R.id.l2ping_count_edit);
 
-        sizeText.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        sizeEdit.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        sizeText.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        sizeEdit.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
-        countText.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        countEdit.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        countText.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        countEdit.setTextColor(Color.parseColor(nhlPreferences.color80()));
 //
-        sizeEdit.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
-        countEdit.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
+        sizeEdit.setHintTextColor(Color.parseColor(nhlPreferences.color50()));
+        countEdit.setHintTextColor(Color.parseColor(nhlPreferences.color50()));
 
-        sizeEdit.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
-        countEdit.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
+        sizeEdit.getBackground().mutate().setTint(Color.parseColor(nhlPreferences.color50()));
+        countEdit.getBackground().mutate().setTint(Color.parseColor(nhlPreferences.color50()));
 
         CheckBox floodPingCheckbox = view.findViewById(R.id.flood);
         CheckBox reversePingCheckBox = view.findViewById(R.id.reversePing);
 
-        floodPingCheckbox.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        reversePingCheckBox.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        floodPingCheckbox.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        reversePingCheckBox.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
         int[][] states = {{android.R.attr.state_checked}, {}};
-        int[] colors = {Color.parseColor(NHLPreferences.color80()), Color.parseColor(NHLPreferences.color80())};
+        int[] colors = {Color.parseColor(nhlPreferences.color80()), Color.parseColor(nhlPreferences.color80())};
         CompoundButtonCompat.setButtonTintList(floodPingCheckbox, new ColorStateList(states, colors));
         CompoundButtonCompat.setButtonTintList(reversePingCheckBox, new ColorStateList(states, colors));
 
         TextView rangeText = view.findViewById(R.id.redfang_range);
         EditText rangeEdit = view.findViewById(R.id.redfang_range_edit);
 
-        rangeText.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        rangeEdit.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        rangeEdit.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
-        rangeEdit.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
+        rangeText.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        rangeEdit.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        rangeEdit.setHintTextColor(Color.parseColor(nhlPreferences.color50()));
+        rangeEdit.getBackground().mutate().setTint(Color.parseColor(nhlPreferences.color50()));
 
         floodPingCheckbox.setOnClickListener(v -> {
             if (floodPingCheckbox.isChecked())
@@ -176,8 +176,8 @@ public class BluetoothFragment2 extends Fragment {
     }
 
     private void setButtonColors(Button button) {
-        button.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
-        button.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        button.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
+        button.setTextColor(Color.parseColor(nhlPreferences.color80()));
     }
 
 }

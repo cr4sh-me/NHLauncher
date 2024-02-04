@@ -54,7 +54,7 @@ public class BluetoothFragment1 extends Fragment {
     private final String APP_SCRIPTS_PATH = "/data/data/com.offsec.nethunter/scripts";
     private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
     public String scanTime = "10";
-    NHLPreferences NHLPreferences;
+    NHLPreferences nhlPreferences;
     ScrollView scrollView;
     List<Integer> imageList;
     private Handler mainHandler;
@@ -85,7 +85,7 @@ public class BluetoothFragment1 extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.bt_layout1, container, false);
 
-        NHLPreferences = new NHLPreferences(requireActivity());
+        nhlPreferences = new NHLPreferences(requireActivity());
         mainHandler = new Handler(Looper.getMainLooper());
         bt_smd = new File("/sys/module/hci_smd/parameters/hcismd_set");
         String CHROOT_PATH = "/data/local/nhsystem/kali-arm64";
@@ -99,16 +99,16 @@ public class BluetoothFragment1 extends Fragment {
         TextView servicesText = view.findViewById(R.id.servicesText);
         TextView scanText = view.findViewById(R.id.scanText);
 
-        scanText.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        scanText.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
         scanButton = view.findViewById(R.id.scanButton);
         Button scanTimeButton = view.findViewById(R.id.scanTime);
 
-        scanButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
-        scanButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        scanButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
+        scanButton.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
-        scanTimeButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
-        scanTimeButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        scanTimeButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
+        scanTimeButton.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
         binderButton = view.findViewById(R.id.bluebinderButton);
         servicesButton = view.findViewById(R.id.btServicesButton);
@@ -120,15 +120,15 @@ public class BluetoothFragment1 extends Fragment {
                 R.drawable.kali_wireless_attacks_trans
         );
 
-        description.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        interfacesText.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        servicesText.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        description.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        interfacesText.setTextColor(Color.parseColor(nhlPreferences.color80()));
+        servicesText.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
-        binderButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
-        binderButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        binderButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
+        binderButton.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
-        servicesButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
-        servicesButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
+        servicesButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
+        servicesButton.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
         try {
             loadIfaces();
@@ -203,12 +203,12 @@ public class BluetoothFragment1 extends Fragment {
             ssb.append(bluetooth_address);
 
             bluetoothButton.setText(ssb);
-            bluetoothButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
+            bluetoothButton.setTextColor(Color.parseColor(nhlPreferences.color80()));
 
             // Set the background drawable for each button
             GradientDrawable drawable = new GradientDrawable();
             drawable.setCornerRadius(60);
-            drawable.setStroke(8, Color.parseColor(NHLPreferences.color80()));
+            drawable.setStroke(8, Color.parseColor(nhlPreferences.color80()));
             bluetoothButton.setBackground(drawable);
 
             // Calculate button height dynamically
@@ -232,11 +232,11 @@ public class BluetoothFragment1 extends Fragment {
 
     private void handleButtonClick(Button clickedButton) {
         if (selectedButton != null) {
-            selectedButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
+            selectedButton.setTextColor(Color.parseColor(nhlPreferences.color80()));
             // Change the background drawable for the previously selected button
             GradientDrawable drawable = new GradientDrawable();
             drawable.setCornerRadius(60);
-            drawable.setStroke(8, Color.parseColor(NHLPreferences.color80()));
+            drawable.setStroke(8, Color.parseColor(nhlPreferences.color80()));
             selectedButton.setBackground(drawable);
         }
 
@@ -245,10 +245,10 @@ public class BluetoothFragment1 extends Fragment {
             selectedButton = null;
         } else {
             // Set the text and background color for the clicked button to indicate selection
-            clickedButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
+            clickedButton.setTextColor(Color.parseColor(nhlPreferences.color50()));
             GradientDrawable selectedDrawable = new GradientDrawable();
             selectedDrawable.setCornerRadius(60);
-            selectedDrawable.setStroke(8, Color.parseColor(NHLPreferences.color50()));
+            selectedDrawable.setStroke(8, Color.parseColor(nhlPreferences.color50()));
             clickedButton.setBackground(selectedDrawable);
             selectedButton = clickedButton;
         }
@@ -488,11 +488,11 @@ public class BluetoothFragment1 extends Fragment {
             choosenButton.setText(binderButtonText);
 
             if (value) {
-                choosenButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
-                choosenButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
+                choosenButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
+                choosenButton.setTextColor(Color.parseColor(nhlPreferences.color80()));
             } else {
-                choosenButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
-                choosenButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
+                choosenButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()));
+                choosenButton.setTextColor(Color.parseColor(nhlPreferences.color50()));
             }
         });
     }
@@ -506,13 +506,13 @@ public class BluetoothFragment1 extends Fragment {
         if (outputHCI[0].isEmpty()) {
             mainHandler.post(() -> {
                 hciIfaces.add("None");
-                CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(requireActivity(), hciIfaces, imageList, NHLPreferences.color20(), NHLPreferences.color80());
+                CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(requireActivity(), hciIfaces, imageList, nhlPreferences.color20(), nhlPreferences.color80());
                 ifaces.setAdapter(customSpinnerAdapter);
             });
         } else {
             final String[] ifacesArray = outputHCI[0].split("\n");
             mainHandler.post(() -> {
-                CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(requireActivity(), List.of(ifacesArray), imageList, Objects.requireNonNull(NHLPreferences.color20()), NHLPreferences.color80());
+                CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(requireActivity(), List.of(ifacesArray), imageList, Objects.requireNonNull(nhlPreferences.color20()), nhlPreferences.color80());
                 ifaces.setAdapter(customSpinnerAdapter);
             });
         }
@@ -531,7 +531,7 @@ public class BluetoothFragment1 extends Fragment {
     private void setContainerBackground(LinearLayout container) {
         GradientDrawable drawable = new GradientDrawable();
         drawable.setCornerRadius(60);
-        drawable.setStroke(8, Color.parseColor(NHLPreferences.color50()));
+        drawable.setStroke(8, Color.parseColor(nhlPreferences.color50()));
         container.setBackground(drawable);
     }
 
