@@ -1,22 +1,26 @@
-package com.cr4sh.nhlauncher.utils;
+package com.cr4sh.nhlauncher.utils
 
-import android.content.Context;
-import android.os.Build;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
+import android.content.Context
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 
-public class VibrationUtils {
+object VibrationUtils {
     // Vibrations method
-    public static void vibrate(Context context, long milliseconds) {
-        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        NHLPreferences NHLPreferences = new NHLPreferences(context);
-        if (NHLPreferences.vibrationOn()) {
-            if (vibrator != null && vibrator.hasVibrator()) {
+    @JvmStatic
+    fun vibrate(context: Context, milliseconds: Long) {
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val nhlPreferences = NHLPreferences(context)
+        if (nhlPreferences.vibrationOn()) {
+            if (vibrator.hasVibrator()) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    VibrationEffect vibrationEffect = VibrationEffect.createOneShot(milliseconds, VibrationEffect.DEFAULT_AMPLITUDE);
-                    vibrator.vibrate(vibrationEffect);
+                    val vibrationEffect = VibrationEffect.createOneShot(
+                        milliseconds,
+                        VibrationEffect.DEFAULT_AMPLITUDE
+                    )
+                    vibrator.vibrate(vibrationEffect)
                 } else {
-                    vibrator.vibrate(milliseconds);
+                    vibrator.vibrate(milliseconds)
                 }
             }
         }

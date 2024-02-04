@@ -44,23 +44,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SpecialFeatures.SpecialFeaturesActivity"
+            android:name=".specialFeatures.SpecialFeaturesActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".WpsAttacks.WPSAttack"
+            android:name=".wpsAttacks.WPSAttack"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MDKDeauth.MDKDeauth"
+            android:name=".mdkDeauth.MDKDeauth"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".BluetoothPager.BluetoothActivity"
+            android:name=".bluetoothPager.BluetoothActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SettingsPager.SettingsActivity"
+            android:name=".settingsPager.SettingsActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
     </application>

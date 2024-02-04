@@ -44,7 +44,7 @@
             app:spinner_popup_elevation="10dp" />
     </LinearLayout>
 
-    <com.cr4sh.nhlauncher.Overrides.FastScrollRecyclerView
+    <com.cr4sh.nhlauncher.overrides.FastScrollRecyclerView
         android:id="@+id/stats_recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -56,7 +56,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerBg1">
 
-    </com.cr4sh.nhlauncher.Overrides.FastScrollRecyclerView>
+    </com.cr4sh.nhlauncher.overrides.FastScrollRecyclerView>
 
     <TextView
         android:id="@+id/no_tools_text"

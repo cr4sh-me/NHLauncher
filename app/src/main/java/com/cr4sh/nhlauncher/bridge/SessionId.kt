@@ -1,48 +1,34 @@
-package com.cr4sh.nhlauncher.bridge;
+package com.cr4sh.nhlauncher.bridge
 
-import androidx.annotation.NonNull;
-
-import java.util.Objects;
+import java.util.Objects
 
 /**
  * @author kiva
  */
-public class SessionId {
-    /**
-     * Created a new session.
-     */
-    public static final SessionId NEW_SESSION = SessionId.of("new");
+class SessionId internal constructor(val sessionId: String) {
 
-    private final String sessionId;
-
-    SessionId(String sessionId) {
-        this.sessionId = sessionId;
+    override fun toString(): String {
+        return "TerminalSession { id = $sessionId }"
     }
 
-    public static SessionId of(String sessionId) {
-        return new SessionId(sessionId);
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+        val sessionId1 = other as SessionId
+        return sessionId == sessionId1.sessionId
     }
 
-    public String getSessionId() {
-        return sessionId;
+    override fun hashCode(): Int {
+        return Objects.hash(sessionId)
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return "TerminalSession { id = " + sessionId + " }";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SessionId sessionId1 = (SessionId) o;
-        return Objects.equals(sessionId, sessionId1.sessionId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(sessionId);
+    companion object {
+        /**
+         * Created a new session.
+         */
+        val NEW_SESSION = of("new")
+        fun of(sessionId: String): SessionId {
+            return SessionId(sessionId)
+        }
     }
 }

@@ -92,7 +92,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <com.cr4sh.nhlauncher.Overrides.FastScrollRecyclerView
+        <com.cr4sh.nhlauncher.overrides.FastScrollRecyclerView
             android:id="@+id/recyclerViewCategories"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -100,7 +100,7 @@
             android:layout_below="@id/dialog_title"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
-        </com.cr4sh.nhlauncher.Overrides.FastScrollRecyclerView>
+        </com.cr4sh.nhlauncher.overrides.FastScrollRecyclerView>
 
         <LinearLayout
             android:id="@+id/btn_container"
@@ -132,7 +132,7 @@
 
     </RelativeLayout>
 
-    <com.cr4sh.nhlauncher.Overrides.FastScrollRecyclerView
+    <com.cr4sh.nhlauncher.overrides.FastScrollRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"

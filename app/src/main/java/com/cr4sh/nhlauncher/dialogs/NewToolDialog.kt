@@ -1,117 +1,127 @@
-package com.cr4sh.nhlauncher.dialogs;
+package com.cr4sh.nhlauncher.dialogs
 
-import android.annotation.SuppressLint;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.annotation.SuppressLint
+import android.database.Cursor
+import android.database.SQLException
+import android.graphics.Color
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatDialogFragment
+import com.cr4sh.nhlauncher.MainActivity
+import com.cr4sh.nhlauncher.R
+import com.cr4sh.nhlauncher.database.DBHandler
+import com.cr4sh.nhlauncher.database.DBHandler.Companion.insertTool
+import com.cr4sh.nhlauncher.utils.MainUtils
+import com.cr4sh.nhlauncher.utils.NHLManager
+import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
+import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import java.util.Objects
 
-import androidx.appcompat.app.AppCompatDialogFragment;
-
-import com.cr4sh.nhlauncher.Database.DBHandler;
-import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.R;
-import com.cr4sh.nhlauncher.utils.MainUtils;
-import com.cr4sh.nhlauncher.utils.NHLManager;
-import com.cr4sh.nhlauncher.utils.NHLPreferences;
-import com.cr4sh.nhlauncher.utils.ToastUtils;
-import com.cr4sh.nhlauncher.utils.VibrationUtils;
-
-import java.util.Objects;
-
-public class NewToolDialog extends AppCompatDialogFragment {
-
-    private final MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
+class NewToolDialog : AppCompatDialogFragment() {
+    private val mainActivity = NHLManager.getInstance().mainActivity
 
     @SuppressLint("Recycle")
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.new_tool_dialog, container, false);
-
-        MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
-        NHLPreferences NHLPreferences = new NHLPreferences(requireActivity());
-
-        assert getArguments() != null;
-        String category = getArguments().getString("category");
-
-        LinearLayout bkg = view.findViewById(R.id.custom_theme_dialog_background);
-        TextView title = view.findViewById(R.id.dialog_title);
-        EditText myName = view.findViewById(R.id.textview1);
-        EditText myDescription = view.findViewById(R.id.textview2);
-        EditText myCmd = view.findViewById(R.id.textview3);
-        Button cancelButton = view.findViewById(R.id.cancel_button);
-        Button saveButton = view.findViewById(R.id.save_button);
-
-        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()));
-        title.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        myName.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        myDescription.setTextColor(Color.parseColor(NHLPreferences.color80()));
-        myCmd.setTextColor(Color.parseColor(NHLPreferences.color80()));
-
-        myName.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
-        myName.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
-        myCmd.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
-        myCmd.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
-        myDescription.getBackground().mutate().setTint(Color.parseColor(NHLPreferences.color50()));
-        myDescription.setHintTextColor(Color.parseColor(NHLPreferences.color50()));
-
-
-        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()));
-        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()));
-
-        saveButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()));
-        saveButton.setTextColor(Color.parseColor(NHLPreferences.color80()));
-
-        saveButton.setOnClickListener(view12 -> {
-            VibrationUtils.vibrate(mainActivity, 10);
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.new_tool_dialog, container, false)
+        val mainUtils = MainUtils((requireActivity() as MainActivity))
+        val NHLPreferences = NHLPreferences(requireActivity())
+        assert(arguments != null)
+        val category = requireArguments().getString("category")
+        val bkg = view.findViewById<LinearLayout>(R.id.custom_theme_dialog_background)
+        val title = view.findViewById<TextView>(R.id.dialog_title)
+        val myName = view.findViewById<EditText>(R.id.textview1)
+        val myDescription = view.findViewById<EditText>(R.id.textview2)
+        val myCmd = view.findViewById<EditText>(R.id.textview3)
+        val cancelButton = view.findViewById<Button>(R.id.cancel_button)
+        val saveButton = view.findViewById<Button>(R.id.save_button)
+        bkg.setBackgroundColor(Color.parseColor(NHLPreferences.color20()))
+        title.setTextColor(Color.parseColor(NHLPreferences.color80()))
+        myName.setTextColor(Color.parseColor(NHLPreferences.color80()))
+        myDescription.setTextColor(Color.parseColor(NHLPreferences.color80()))
+        myCmd.setTextColor(Color.parseColor(NHLPreferences.color80()))
+        myName.background.mutate().setTint(Color.parseColor(NHLPreferences.color50()))
+        myName.setHintTextColor(Color.parseColor(NHLPreferences.color50()))
+        myCmd.background.mutate().setTint(Color.parseColor(NHLPreferences.color50()))
+        myCmd.setHintTextColor(Color.parseColor(NHLPreferences.color50()))
+        myDescription.background.mutate().setTint(Color.parseColor(NHLPreferences.color50()))
+        myDescription.setHintTextColor(Color.parseColor(NHLPreferences.color50()))
+        cancelButton.setBackgroundColor(Color.parseColor(NHLPreferences.color80()))
+        cancelButton.setTextColor(Color.parseColor(NHLPreferences.color50()))
+        saveButton.setBackgroundColor(Color.parseColor(NHLPreferences.color50()))
+        saveButton.setTextColor(Color.parseColor(NHLPreferences.color80()))
+        saveButton.setOnClickListener {
+            vibrate(mainActivity, 10)
             // Idiot protection...
-            if (myName.getText().toString().isEmpty()) {
-                ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.name_empty));
-            } else if (myDescription.getText().toString().isEmpty()) {
-                ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.desc_empty));
-            } else if (myCmd.getText().toString().isEmpty()) {
-                ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.cmd_empty));
+            if (myName.text.toString().isEmpty()) {
+                showCustomToast(requireActivity(), resources.getString(R.string.name_empty))
+            } else if (myDescription.text.toString().isEmpty()) {
+                showCustomToast(requireActivity(), resources.getString(R.string.desc_empty))
+            } else if (myCmd.text.toString().isEmpty()) {
+                showCustomToast(requireActivity(), resources.getString(R.string.cmd_empty))
             } else {
-                try (SQLiteOpenHelper dbHandler = new DBHandler(requireActivity());
-                     SQLiteDatabase db = dbHandler.getReadableDatabase()) {
-
-                    Cursor cursor;
-                    String[] selectionArgs = {myName.getText().toString()};
-                    cursor = db.query("TOOLS", new String[]{"NAME"}, "NAME LIKE ?", selectionArgs, null, null, null, null);
-
-                    if (cursor.getCount() == 0) {
-                        // What did you expect here ??
-                        DBHandler.insertTool(db, 0, category, 0, myName.getText().toString().trim(), myDescription.getText().toString().trim(), myDescription.getText().toString().trim(), myCmd.getText().toString().trim(), "kali_menu", 0);
-                        mainUtils.restartSpinner();
-                        Objects.requireNonNull(getDialog()).cancel();
-                        ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.added));
-                    } else {
-                        ToastUtils.showCustomToast(requireActivity(), getResources().getString(R.string.name_exist));
+                try {
+                    DBHandler(requireActivity()).use { dbHandler ->
+                        dbHandler.readableDatabase.use { db ->
+                            val cursor: Cursor
+                            val selectionArgs = arrayOf(myName.text.toString())
+                            cursor = db.query(
+                                "TOOLS",
+                                arrayOf("NAME"),
+                                "NAME LIKE ?",
+                                selectionArgs,
+                                null,
+                                null,
+                                null,
+                                null
+                            )
+                            if (cursor.count == 0) {
+                                // What did you expect here ??
+                                insertTool(
+                                    db,
+                                    0,
+                                    category,
+                                    0,
+                                    myName.text.toString().trim { it <= ' ' },
+                                    myDescription.text.toString().trim { it <= ' ' },
+                                    myDescription.text.toString().trim { it <= ' ' },
+                                    myCmd.text.toString().trim { it <= ' ' },
+                                    "kali_menu",
+                                    0
+                                )
+                                mainUtils.restartSpinner()
+                                Objects.requireNonNull(dialog).cancel()
+                                showCustomToast(
+                                    requireActivity(),
+                                    resources.getString(R.string.added)
+                                )
+                            } else {
+                                showCustomToast(
+                                    requireActivity(),
+                                    resources.getString(R.string.name_exist)
+                                )
+                            }
+                        }
                     }
-
-                } catch (SQLException e) {
+                } catch (e: SQLException) {
                     // Handle the exception here, for example:
-                    ToastUtils.showCustomToast(requireActivity(), "E: " + e);
+                    showCustomToast(requireActivity(), "E: $e")
                 }
             }
-
-        });
-
-        cancelButton.setOnClickListener(view1 -> {
-            VibrationUtils.vibrate(mainActivity, 10);
-            Objects.requireNonNull(getDialog()).cancel();
-        });
-
-        return view;
-
+        }
+        cancelButton.setOnClickListener {
+            vibrate(mainActivity, 10)
+            Objects.requireNonNull(dialog).cancel()
+        }
+        return view
     }
 }
