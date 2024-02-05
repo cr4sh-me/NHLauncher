@@ -259,7 +259,7 @@ class MainActivity : AppCompatActivity() {
         rollCategories =
             findViewById(R.id.showCategoriesImage) // Init rollCategories before spinnerChanger method
         rollCategoriesText =
-            findViewById(R.id.showCategoriesText) // Init rollCategoruesText before spinnerChanger method
+            findViewById(R.id.showCategoriesText) // Init rollCategoriesText before spinnerChanger method
         mainUtils.spinnerChanger(if (isFavourite == 0) 1 else 0)
         currentCategoryNumber = if (isFavourite == 0) 1 else 0
         searchIcon = findViewById(R.id.searchIcon)

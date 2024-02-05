@@ -1,538 +1,566 @@
-package com.cr4sh.nhlauncher.bluetoothPager;
+package com.cr4sh.nhlauncher.bluetoothPager
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.GradientDrawable;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.StyleSpan;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.Spinner
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import com.cr4sh.nhlauncher.R
+import com.cr4sh.nhlauncher.bridge.Bridge.Companion.createExecuteIntent
+import com.cr4sh.nhlauncher.overrides.CustomSpinnerAdapter
+import com.cr4sh.nhlauncher.utils.DialogUtils
+import com.cr4sh.nhlauncher.utils.NHLManager
+import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.ShellExecuter
+import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
+import java.io.File
+import java.lang.ref.WeakReference
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
-import androidx.fragment.app.Fragment;
 
-import com.cr4sh.nhlauncher.R;
-import com.cr4sh.nhlauncher.bridge.Bridge;
-import com.cr4sh.nhlauncher.overrides.CustomSpinnerAdapter;
-import com.cr4sh.nhlauncher.utils.DialogUtils;
-import com.cr4sh.nhlauncher.utils.NHLManager;
-import com.cr4sh.nhlauncher.utils.NHLPreferences;
-import com.cr4sh.nhlauncher.utils.ShellExecuter;
-import com.cr4sh.nhlauncher.utils.ToastUtils;
+@Suppress("SameParameterValue")
+class BluetoothFragment1 : Fragment() {
+    private val exe = ShellExecuter()
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-public class BluetoothFragment1 extends Fragment {
-
-    private static String selected_iface;
-    private static Button selectedButton = null;
-    final ShellExecuter exe = new ShellExecuter();
     @SuppressLint("SdCardPath")
-    private final String APP_SCRIPTS_PATH = "/data/data/com.offsec.nethunter/scripts";
-    private final ExecutorService executor = NHLManager.getInstance().getExecutorService();
-    public String scanTime = "10";
-    NHLPreferences nhlPreferences;
-    ScrollView scrollView;
-    List<Integer> imageList;
-    private Handler mainHandler;
-    private Button binderButton;
-    private Button servicesButton;
-    private Button scanButton;
-    private Spinner ifaces;
-    private File bt_smd;
-    private File bluebinder;
-    private LinearLayout buttonContainer;
-
-    public BluetoothFragment1() {
-        // Required empty public constructor
-    }
-
-    public static String getSelectedTarget() {
-        return selectedButton.getText().toString();
-    }
-
-    public static String getSelectedIface() {
-        return selected_iface;
-    }
-
+    private val appScriptsPath = "/data/data/com.offsec.nethunter/scripts"
+    private val executor = NHLManager.getInstance().executorService
+    var scanTime = "10"
+    var nhlPreferences: NHLPreferences? = null
+    private var scrollView: ScrollView? = null
+    private var imageList: List<Int>? = null
+    private lateinit var mainHandler: Handler
+    private lateinit var binderButton: Button
+    private lateinit var servicesButton: Button
+    private lateinit var scanButton: Button
+    private lateinit var ifaces: Spinner
+    private var btSmd: File? = null
+    private var bluebinder: File? = null
+    private var buttonContainer: LinearLayout? = null
     @SuppressLint("SetTextI18n")
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.bt_layout1, container, false);
-
-        nhlPreferences = new NHLPreferences(requireActivity());
-        mainHandler = new Handler(Looper.getMainLooper());
-        bt_smd = new File("/sys/module/hci_smd/parameters/hcismd_set");
-        String CHROOT_PATH = "/data/local/nhsystem/kali-arm64";
-        bluebinder = new File(CHROOT_PATH + "/usr/sbin/bluebinder");
-
-        scrollView = view.findViewById(R.id.scrollView2);
-        buttonContainer = view.findViewById(R.id.buttonContainer);
-
-        TextView description = view.findViewById(R.id.bt_info2);
-        TextView interfacesText = view.findViewById(R.id.interfacesText);
-        TextView servicesText = view.findViewById(R.id.servicesText);
-        TextView scanText = view.findViewById(R.id.scanText);
-
-        scanText.setTextColor(Color.parseColor(nhlPreferences.color80()));
-
-        scanButton = view.findViewById(R.id.scanButton);
-        Button scanTimeButton = view.findViewById(R.id.scanTime);
-
-        scanButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
-        scanButton.setTextColor(Color.parseColor(nhlPreferences.color80()));
-
-        scanTimeButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
-        scanTimeButton.setTextColor(Color.parseColor(nhlPreferences.color80()));
-
-        binderButton = view.findViewById(R.id.bluebinderButton);
-        servicesButton = view.findViewById(R.id.btServicesButton);
-        ifaces = view.findViewById(R.id.hci_interface);
-        LinearLayout ifacesContainer = view.findViewById(R.id.spinnerContainer);
-        setContainerBackground(ifacesContainer);
-
-        imageList = List.of(
-                R.drawable.kali_wireless_attacks_trans
-        );
-
-        description.setTextColor(Color.parseColor(nhlPreferences.color80()));
-        interfacesText.setTextColor(Color.parseColor(nhlPreferences.color80()));
-        servicesText.setTextColor(Color.parseColor(nhlPreferences.color80()));
-
-        binderButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
-        binderButton.setTextColor(Color.parseColor(nhlPreferences.color80()));
-
-        servicesButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
-        servicesButton.setTextColor(Color.parseColor(nhlPreferences.color80()));
-
+        val view = inflater.inflate(R.layout.bt_layout1, container, false)
+        nhlPreferences = NHLPreferences(requireActivity())
+        mainHandler = Handler(Looper.getMainLooper())
+        btSmd = File("/sys/module/hci_smd/parameters/hcismd_set")
+        val chrootPath = "/data/local/nhsystem/kali-arm64"
+        bluebinder = File("$chrootPath/usr/sbin/bluebinder")
+        scrollView = view.findViewById(R.id.scrollView2)
+        buttonContainer = view.findViewById(R.id.buttonContainer)
+        val description = view.findViewById<TextView>(R.id.bt_info2)
+        val interfacesText = view.findViewById<TextView>(R.id.interfacesText)
+        val servicesText = view.findViewById<TextView>(R.id.servicesText)
+        val scanText = view.findViewById<TextView>(R.id.scanText)
+        scanText.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        scanButton = view.findViewById(R.id.scanButton)
+        val scanTimeButton = view.findViewById<Button>(R.id.scanTime)
+        scanButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
+        scanButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        scanTimeButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
+        scanTimeButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        binderButton = view.findViewById(R.id.bluebinderButton)
+        servicesButton = view.findViewById(R.id.btServicesButton)
+        ifaces = view.findViewById(R.id.hci_interface)
+        val ifacesContainer = view.findViewById<LinearLayout>(R.id.spinnerContainer)
+        setContainerBackground(ifacesContainer)
+        imageList = listOf(
+            R.drawable.kali_wireless_attacks_trans
+        )
+        description.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        interfacesText.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        servicesText.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        binderButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
+        binderButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        servicesButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
+        servicesButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         try {
-            loadIfaces();
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
+            loadIfaces()
+        } catch (e: ExecutionException) {
+            throw RuntimeException(e)
+        } catch (e: InterruptedException) {
+            throw RuntimeException(e)
         }
-        getBinderStatus();
-        getBtServicesStatus();
-
-        ifaces.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int pos, long id) {
-                selected_iface = parentView.getItemAtPosition(pos).toString();
+        binderStatus
+        btServicesStatus
+        ifaces.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>,
+                selectedItemView: View,
+                pos: Int,
+                id: Long
+            ) {
+                selectedIface = parentView.getItemAtPosition(pos).toString()
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
                 // TODO document why this method is empty
             }
-        });
-
-        binderButton.setOnClickListener(v -> {
+        }
+        binderButton.setOnClickListener {
             try {
-                lockButton(false, "Please wait...", binderButton);
-                binderAction();
-            } catch (ExecutionException | InterruptedException e) {
-                throw new RuntimeException(e);
+                lockButton(false, "Please wait...", binderButton)
+                binderAction()
+            } catch (e: ExecutionException) {
+                throw RuntimeException(e)
+            } catch (e: InterruptedException) {
+                throw RuntimeException(e)
             }
-        });
-
-        servicesButton.setOnClickListener(v -> {
+        }
+        servicesButton.setOnClickListener {
             try {
-                lockButton(false, "Please wait...", servicesButton);
-                btServicesAction();
-            } catch (ExecutionException | InterruptedException e) {
-                throw new RuntimeException(e);
+                lockButton(false, "Please wait...", servicesButton)
+                btServicesAction()
+            } catch (e: ExecutionException) {
+                throw RuntimeException(e)
+            } catch (e: InterruptedException) {
+                throw RuntimeException(e)
             }
-        });
-
-        scanButton.setOnClickListener(v -> runBtScan());
-
-        DialogUtils dialogUtils = new DialogUtils(requireActivity().getSupportFragmentManager());
-
-        scanTimeButton.setOnClickListener(v -> dialogUtils.openScanTimeDialog(1, this));
-
-        return view;
+        }
+        scanButton.setOnClickListener { runBtScan() }
+        val dialogUtils = DialogUtils(requireActivity().supportFragmentManager)
+        scanTimeButton.setOnClickListener { dialogUtils.openScanTimeDialog(1, this) }
+        return view
     }
 
     @SuppressLint("SetTextI18n")
-    private void createButtons(String[] devices) {
-        buttonContainer.removeAllViews(); // Clear previous buttons
-
-        int buttonCount = 4;
-        int scrollViewHeight = scrollView.getHeight();
-        int buttonPadding = 15;
-
-        for (String device : devices) {
-            Button bluetoothButton = new Button(requireActivity());
-
-            String cleanText = device.replaceAll("[\\[\\]]", "");
+    private fun createButtons(devices: Array<String>) {
+        buttonContainer!!.removeAllViews() // Clear previous buttons
+        val buttonCount = 4
+        val scrollViewHeight = scrollView!!.height
+        val buttonPadding = 15
+        for (device in devices) {
+            val bluetoothButton = Button(requireActivity())
+            val cleanText = device.replace("[\\[\\]]".toRegex(), "")
 
             // Assume MAC address is always 17 characters
-            String bluetooth_name = (cleanText.substring(18)).strip();
-            String bluetooth_address = (cleanText.substring(0, 18)).strip();
-
-            Log.d("HDH", bluetooth_name + " - " + bluetooth_address);
-
-            SpannableStringBuilder ssb = new SpannableStringBuilder();
+            val bluetoothName = cleanText.substring(18).trim()
+            val bluetoothAddress = cleanText.substring(0, 18).trim()
+            Log.d("HDH", "$bluetoothName - $bluetoothAddress")
+            val ssb = SpannableStringBuilder()
             // Set bold style for BT address
-            ssb.append(bluetooth_name, new StyleSpan(Typeface.BOLD), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            ssb.append("\n");
-            ssb.append(bluetooth_address);
-
-            bluetoothButton.setText(ssb);
-            bluetoothButton.setTextColor(Color.parseColor(nhlPreferences.color80()));
+            ssb.append(bluetoothName, StyleSpan(Typeface.BOLD), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            ssb.append("\n")
+            ssb.append(bluetoothAddress)
+            bluetoothButton.text = ssb
+            bluetoothButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
 
             // Set the background drawable for each button
-            GradientDrawable drawable = new GradientDrawable();
-            drawable.setCornerRadius(60);
-            drawable.setStroke(8, Color.parseColor(nhlPreferences.color80()));
-            bluetoothButton.setBackground(drawable);
+            val drawable = GradientDrawable()
+            drawable.cornerRadius = 60f
+            drawable.setStroke(8, Color.parseColor(nhlPreferences!!.color80()))
+            bluetoothButton.background = drawable
 
             // Calculate button height dynamically
-            int buttonHeight = (scrollViewHeight / buttonCount) - buttonPadding;
+            val buttonHeight = scrollViewHeight / buttonCount - buttonPadding
 
             // Set layout parameters for the button
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    buttonHeight
-            );
-            layoutParams.setMargins(0, (buttonPadding / 2), 0, (buttonPadding / 2));
-            bluetoothButton.setLayoutParams(layoutParams);
+            val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                buttonHeight
+            )
+            layoutParams.setMargins(0, buttonPadding / 2, 0, buttonPadding / 2)
+            bluetoothButton.layoutParams = layoutParams
 
             // Add click listener to handle button selection
-            bluetoothButton.setOnClickListener(v -> handleButtonClick(bluetoothButton));
+            bluetoothButton.setOnClickListener { handleButtonClick(bluetoothButton) }
 
             // Add the button to the container
-            buttonContainer.addView(bluetoothButton);
+            buttonContainer!!.addView(bluetoothButton)
         }
     }
 
-    private void handleButtonClick(Button clickedButton) {
+    private fun handleButtonClick(clickedButton: Button) {
         if (selectedButton != null) {
-            selectedButton.setTextColor(Color.parseColor(nhlPreferences.color80()));
+            selectedButton!!.setTextColor(
+                Color.parseColor(
+                    nhlPreferences!!.color80()
+                )
+            )
             // Change the background drawable for the previously selected button
-            GradientDrawable drawable = new GradientDrawable();
-            drawable.setCornerRadius(60);
-            drawable.setStroke(8, Color.parseColor(nhlPreferences.color80()));
-            selectedButton.setBackground(drawable);
+            val drawable = GradientDrawable()
+            drawable.cornerRadius = 60f
+            drawable.setStroke(8, Color.parseColor(nhlPreferences!!.color80()))
+            selectedButton!!.background = drawable
         }
 
         // If the clicked button is the same as the selected button, deselect it
-        if (selectedButton == clickedButton) {
-            selectedButton = null;
+        if (selectedButton === clickedButton) {
+            selectedButton = null
         } else {
             // Set the text and background color for the clicked button to indicate selection
-            clickedButton.setTextColor(Color.parseColor(nhlPreferences.color50()));
-            GradientDrawable selectedDrawable = new GradientDrawable();
-            selectedDrawable.setCornerRadius(60);
-            selectedDrawable.setStroke(8, Color.parseColor(nhlPreferences.color50()));
-            clickedButton.setBackground(selectedDrawable);
-            selectedButton = clickedButton;
+            clickedButton.setTextColor(Color.parseColor(nhlPreferences!!.color50()))
+            val selectedDrawable = GradientDrawable()
+            selectedDrawable.cornerRadius = 60f
+            selectedDrawable.setStroke(8, Color.parseColor(nhlPreferences!!.color50()))
+            clickedButton.background = selectedDrawable
+            selectedButton = clickedButton
         }
     }
 
-    private void runBtScan() {
-        if (!selected_iface.equals("None")) {
-            executor.submit(() -> {
+    private fun runBtScan() {
+        if (selectedIface != "None") {
+            executor!!.submit {
                 try {
-                    Future<String> future1 = executor.submit(() -> exe.RunAsRootOutput(APP_SCRIPTS_PATH + "/bootkali custom_cmd hciconfig " + selected_iface + " | grep 'UP RUNNING' | cut -f2 -d$'\\t'"));
-                    String hci_current = future1.get();
-                    if (!hci_current.equals("UP RUNNING ")) {
-                        exe.RunAsRoot(new String[]{APP_SCRIPTS_PATH + "/bootkali custom_cmd hciconfig " + selected_iface + " up"});
+                    val future1 =
+                        executor.submit<String> { exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hciconfig $selectedIface | grep 'UP RUNNING' | cut -f2 -d$'\\t'") }
+                    val hciCurrent = future1.get()
+                    if (hciCurrent != "UP RUNNING ") {
+                        exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd hciconfig $selectedIface up"))
                     }
-
-                    mainHandler.post(() -> {
-                        buttonContainer.removeAllViews();
-                        lockButton(false, "Scanning...", scanButton);
-                    });
-
-                    Future<String> future2 = executor.submit(() -> exe.RunAsRootOutput(APP_SCRIPTS_PATH + "/bootkali custom_cmd hcitool -i " + selected_iface + " scan  --length " + scanTime + " | grep -A 1000 \"Scanning ...\" | awk '/Scanning .../{flag=1;next}/--/{flag=0}flag'\n"));
-                    String scanOutput = future2.get();
-                    Log.d("hcitool", scanOutput);
-
-                    if (!scanOutput.isEmpty()) {
-                        String[] devicesList = scanOutput.split("\n");
-                        Log.d("hcitool", "not empty: " + Arrays.toString(devicesList));
-                        mainHandler.post(() -> {
-                            createButtons(devicesList);
-                            lockButton(true, "Scan", scanButton);
-                        });
+                    mainHandler.post {
+                        buttonContainer!!.removeAllViews()
+                        lockButton(false, "Scanning...", scanButton)
+                    }
+                    val future2 =
+                        executor.submit<String> { exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hcitool -i $selectedIface scan  --length $scanTime | grep -A 1000 \"Scanning ...\" | awk '/Scanning .../{flag=1;next}/--/{flag=0}flag'\n") }
+                    val scanOutput = future2.get()
+                    Log.d("hcitool", scanOutput)
+                    if (scanOutput.isNotEmpty()) {
+                        val devicesList =
+                            scanOutput.split("\n".toRegex()).dropLastWhile { it.isEmpty() }
+                                .toTypedArray()
+                        Log.d("hcitool", "not empty: " + devicesList.contentToString())
+                        mainHandler.post {
+                            createButtons(devicesList)
+                            lockButton(true, "Scan", scanButton)
+                        }
                     } else {
-                        mainHandler.post(() -> lockButton(true, "No devices found...", scanButton));
+                        mainHandler.post { lockButton(true, "No devices found...", scanButton) }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            });
+            }
         } else {
-            ToastUtils.showCustomToast(requireActivity(), "no selected interface!");
+            showCustomToast(requireActivity(), "no selected interface!")
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (executor != null && !executor.isShutdown()) {
-            executor.shutdown();
+    override fun onDestroy() {
+        super.onDestroy()
+        if (executor != null && !executor.isShutdown) {
+            executor.shutdown()
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    public void getBinderStatus() {
-
-        executor.submit(() -> {
-            try {
-                boolean isBinderRunning = isBinderRunning();
-                mainHandler.post(() -> lockButton(true, isBinderRunning ? "Stop Bluebinder" : "Start Bluebinder", binderButton));
-            } catch (ExecutionException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        executor.submit(() -> {
-            try {
-                loadIfaces();
-            } catch (ExecutionException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    @SuppressLint("SetTextI18n")
-    public void getBtServicesStatus() {
-
-        executor.submit(() -> {
-            try {
-                boolean isBtServicesRunning = isBtServicesRunning();
-                mainHandler.post(() -> lockButton(true, isBtServicesRunning ? "Stop BT Services" : "Start BT Services", servicesButton));
-            } catch (ExecutionException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-    }
-
-    public boolean isBinderRunning() throws ExecutionException, InterruptedException {
-
-        Future<String> future1 = executor.submit(() -> exe.RunAsRootOutput(APP_SCRIPTS_PATH + "/bootkali custom_cmd hciconfig | grep hci | cut -d: -f1"));
-
-        Future<String> future2 = executor.submit(() -> exe.RunAsRootOutput("pidof bluebinder"));
-
-        String outputHCI = future1.get();  // Get the result from the Future
-        String binder_statusCMD = future2.get();  // Get the result from the Future
-
-        if (!bt_smd.exists()) {
-            return !binder_statusCMD.isEmpty();
-        } else {
-            return outputHCI.contains("hci0");
-        }
-    }
-
-    public boolean isBtServicesRunning() throws ExecutionException, InterruptedException {
-        Future<String> future1 = executor.submit(() -> exe.RunAsRootOutput(APP_SCRIPTS_PATH + "/bootkali custom_cmd service dbus status | grep dbus"));
-        Future<String> future2 = executor.submit(() -> exe.RunAsRootOutput(APP_SCRIPTS_PATH + "/bootkali custom_cmd service bluetooth status | grep bluetooth"));
-
-        String dbus_statusCMD = future1.get();
-        String bt_statusCMD = future2.get();
-
-        Log.d("DEBSHIT", dbus_statusCMD + " " + bt_statusCMD);
-
-        return dbus_statusCMD.equals("dbus is running.") && bt_statusCMD.equals("bluetooth is running.");
-    }
-
-    @SuppressLint("SetTextI18n")
-    private void binderAction() throws ExecutionException, InterruptedException {
-
-        if (bluebinder.exists()) {
-            executor.submit(() -> {
+    @get:SuppressLint("SetTextI18n")
+    val binderStatus: Unit
+        get() {
+            executor!!.submit {
                 try {
-                    boolean isRunningBeforeAction = isBinderRunning();
+                    val isBinderRunning = isBinderRunning
+                    mainHandler.post {
+                        lockButton(
+                            true,
+                            if (isBinderRunning) "Stop Bluebinder" else "Start Bluebinder",
+                            binderButton
+                        )
+                    }
+                } catch (e: ExecutionException) {
+                    throw RuntimeException(e)
+                } catch (e: InterruptedException) {
+                    throw RuntimeException(e)
+                }
+            }
+            executor.submit {
+                try {
+                    loadIfaces()
+                } catch (e: ExecutionException) {
+                    throw RuntimeException(e)
+                } catch (e: InterruptedException) {
+                    throw RuntimeException(e)
+                }
+            }
+        }
+
+    @get:SuppressLint("SetTextI18n")
+    val btServicesStatus: Unit
+        get() {
+            executor!!.submit {
+                try {
+                    val isBtServicesRunning = isBtServicesRunning
+                    mainHandler.post {
+                        lockButton(
+                            true,
+                            if (isBtServicesRunning) "Stop BT Services" else "Start BT Services",
+                            servicesButton
+                        )
+                    }
+                } catch (e: ExecutionException) {
+                    throw RuntimeException(e)
+                } catch (e: InterruptedException) {
+                    throw RuntimeException(e)
+                }
+            }
+        }
+
+    @get:Throws(
+        ExecutionException::class,
+        InterruptedException::class
+    )
+    val isBinderRunning: Boolean
+        get() {
+            val future1 =
+                executor!!.submit<String> { exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hciconfig | grep hci | cut -d: -f1") }
+            val future2 = executor.submit<String> { exe.RunAsRootOutput("pidof bluebinder") }
+            val outputHCI = future1.get() // Get the result from the Future
+            val binderStatusCmd = future2.get() // Get the result from the Future
+            return if (!btSmd!!.exists()) {
+                binderStatusCmd.isNotEmpty()
+            } else {
+                outputHCI.contains("hci0")
+            }
+        }
+
+    @get:Throws(
+        ExecutionException::class,
+        InterruptedException::class
+    )
+    val isBtServicesRunning: Boolean
+        get() {
+            val future1 =
+                executor!!.submit<String> { exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd service dbus status | grep dbus") }
+            val future2 =
+                executor.submit<String> { exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd service bluetooth status | grep bluetooth") }
+            val dbusStatusCmd = future1.get()
+            val btStatusCmd = future2.get()
+            Log.d("DEBSHIT", "$dbusStatusCmd $btStatusCmd")
+            return dbusStatusCmd == "dbus is running." && btStatusCmd == "bluetooth is running."
+        }
+
+    @SuppressLint("SetTextI18n")
+    @Throws(ExecutionException::class, InterruptedException::class)
+    private fun binderAction() {
+        if (bluebinder!!.exists()) {
+            executor!!.submit {
+                try {
+                    val isRunningBeforeAction = isBinderRunning
 
                     // Check if binder is running
                     if (!isRunningBeforeAction) {
                         // Start bluebinder process in the background
-                        startBinder();
+                        startBinder()
                     } else {
                         // Stop bluebinder process in the background
-                        stopBinder();
+                        stopBinder()
                     }
 
                     // Schedule periodic updates using ScheduledExecutorService
-                    ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-                    scheduledExecutorService.scheduleAtFixedRate(() -> {
+                    val scheduledExecutorService = Executors.newScheduledThreadPool(1)
+                    scheduledExecutorService.scheduleAtFixedRate({
                         try {
-                            boolean isRunningAfterAction = isBinderRunning();
+                            val isRunningAfterAction = isBinderRunning
                             if (isRunningBeforeAction != isRunningAfterAction) {
                                 // Update button text on the UI thread
-                                mainHandler.post(() -> {
-                                    getBinderStatus();
-                                    scheduledExecutorService.shutdown();
-                                });
+                                mainHandler.post {
+                                    binderStatus
+                                    scheduledExecutorService.shutdown()
+                                }
                             }
-                        } catch (Exception e) {
+                        } catch (e: Exception) {
                             // Log exceptions
-                            Log.e("ERROR", "Exception during periodic update", e);
+                            Log.e("ERROR", "Exception during periodic update", e)
                         }
-                    }, 0, 1, TimeUnit.SECONDS);
-                } catch (Exception e) {
+                    }, 0, 1, TimeUnit.SECONDS)
+                } catch (e: Exception) {
                     // Log exceptions
-                    Log.e("ERROR", "Exception during binderAction", e);
+                    Log.e("ERROR", "Exception during binderAction", e)
                 }
-            });
-
+            }
         } else {
-            ToastUtils.showCustomToast(requireActivity(), "Bluebinder is not installed. Launch setup first...");
+            showCustomToast(requireActivity(), "Bluebinder is not installed. Launch setup first...")
         }
     }
 
     @SuppressLint("SetTextI18n")
-    private void btServicesAction() throws ExecutionException, InterruptedException {
+    @Throws(ExecutionException::class, InterruptedException::class)
+    private fun btServicesAction() {
 
         // Check if BT Services are running
-        boolean areServicesRunning = isBtServicesRunning();
-
-        executor.submit(() -> {
+        val areServicesRunning = isBtServicesRunning
+        executor!!.submit {
             try {
                 if (!areServicesRunning) {
                     // Start BT Services
-                    startBtServices();
+                    startBtServices()
                 } else {
                     // Stop BT Services
-                    stopBtServices();
+                    stopBtServices()
                 }
 
                 // Wait for the action to complete
-                Thread.sleep(1000); // Adjust the sleep duration if needed
+                Thread.sleep(1000) // Adjust the sleep duration if needed
 
                 // Update button text on the UI thread
-                mainHandler.post(() -> {
-                    Log.d("DEBUG", "Update on UI thread");
-                    getBtServicesStatus();
-                });
-            } catch (Exception e) {
+                mainHandler.post {
+                    Log.d("DEBUG", "Update on UI thread")
+                    btServicesStatus
+                }
+            } catch (e: Exception) {
                 // Log exceptions
-                Log.e("ERROR", "Exception during btServicesAction", e);
+                Log.e("ERROR", "Exception during btServicesAction", e)
             }
-        });
-
-    }
-
-    private void startBinder() {
-        if (bt_smd.exists()) {
-            executor.execute(() -> {
-                exe.RunAsRoot(new String[]{"svc bluetooth disable"});
-                exe.RunAsRoot(new String[]{"echo 0 > " + bt_smd});
-                exe.RunAsRoot(new String[]{"echo 1 > " + bt_smd});
-                exe.RunAsRoot(new String[]{"svc bluetooth enable"});
-            });
-        } else {
-            executor.execute(() -> exe.RunAsRoot(new String[]{"svc bluetooth disable"}));
-            run_cmd("echo -ne \"\\033]0;Bluebinder\\007\" && clear;bluebinder || bluebinder;exit");
         }
     }
 
-    private void stopBinder() {
-        if (bt_smd.exists()) {
-            executor.execute(() -> exe.RunAsRoot(new String[]{"echo 0 > " + bt_smd}));
+    private fun startBinder() {
+        if (btSmd!!.exists()) {
+            executor!!.execute {
+                exe.RunAsRoot(arrayOf("svc bluetooth disable"))
+                exe.RunAsRoot(arrayOf("echo 0 > $btSmd"))
+                exe.RunAsRoot(arrayOf("echo 1 > $btSmd"))
+                exe.RunAsRoot(arrayOf("svc bluetooth enable"))
+            }
         } else {
-            executor.execute(() -> {
-                exe.RunAsRoot(new String[]{APP_SCRIPTS_PATH + "/bootkali custom_cmd pkill bluebinder;exit"});
-                exe.RunAsRoot(new String[]{"svc bluetooth enable"});
-            });
+            executor!!.execute { exe.RunAsRoot(arrayOf("svc bluetooth disable")) }
+            runCmd("echo -ne \"\\033]0;Bluebinder\\007\" && clear;bluebinder || bluebinder;exit")
         }
     }
 
-    private void startBtServices() {
-        executor.submit(() -> {
-            exe.RunAsRoot(new String[]{APP_SCRIPTS_PATH + "/bootkali custom_cmd service dbus start"});
-            exe.RunAsRoot(new String[]{APP_SCRIPTS_PATH + "/bootkali custom_cmd service bluetooth start"});
-        });
+    private fun stopBinder() {
+        if (btSmd!!.exists()) {
+            executor!!.execute { exe.RunAsRoot(arrayOf("echo 0 > $btSmd")) }
+        } else {
+            executor!!.execute {
+                exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd pkill bluebinder;exit"))
+                exe.RunAsRoot(arrayOf("svc bluetooth enable"))
+            }
+        }
     }
 
-    private void stopBtServices() {
-        executor.submit(() -> {
+    private fun startBtServices() {
+        executor!!.submit {
+            exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service dbus start"))
+            exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service bluetooth start"))
+        }
+    }
+
+    private fun stopBtServices() {
+        executor!!.submit {
+
             // Stop BT services
-            exe.RunAsRoot(new String[]{APP_SCRIPTS_PATH + "/bootkali custom_cmd service bluetooth stop"});
-            exe.RunAsRoot(new String[]{APP_SCRIPTS_PATH + "/bootkali custom_cmd service dbus stop"});
-
-            Log.d("BT Services", "Stop operation completed");
-        });
-    }
-
-    private void lockButton(boolean value, String binderButtonText, Button choosenButton) {
-        mainHandler.post(() -> {
-            choosenButton.setEnabled(value);
-            choosenButton.setText(binderButtonText);
-
-            if (value) {
-                choosenButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
-                choosenButton.setTextColor(Color.parseColor(nhlPreferences.color80()));
-            } else {
-                choosenButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()));
-                choosenButton.setTextColor(Color.parseColor(nhlPreferences.color50()));
-            }
-        });
-    }
-
-    private void loadIfaces() throws ExecutionException, InterruptedException {
-        final String[] outputHCI = {""};
-        Future<String> future1 = executor.submit(() -> exe.RunAsRootOutput(APP_SCRIPTS_PATH + "/bootkali custom_cmd hciconfig | grep hci | cut -d: -f1"));
-        outputHCI[0] = future1.get();
-        final ArrayList<String> hciIfaces = new ArrayList<>();
-        Log.d("Ifaces", Arrays.toString(outputHCI[0].split("\n")));
-        if (outputHCI[0].isEmpty()) {
-            mainHandler.post(() -> {
-                hciIfaces.add("None");
-                CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(requireActivity(), hciIfaces, imageList, nhlPreferences.color20(), nhlPreferences.color80());
-                ifaces.setAdapter(customSpinnerAdapter);
-            });
-        } else {
-            final String[] ifacesArray = outputHCI[0].split("\n");
-            mainHandler.post(() -> {
-                CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(requireActivity(), List.of(ifacesArray), imageList, Objects.requireNonNull(nhlPreferences.color20()), nhlPreferences.color80());
-                ifaces.setAdapter(customSpinnerAdapter);
-            });
+            exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service bluetooth stop"))
+            exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service dbus stop"))
+            Log.d("BT Services", "Stop operation completed")
         }
     }
 
-    public void run_cmd(String cmd) {
-        @SuppressLint("SdCardPath") Intent intent = Bridge.Companion.createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd, false);
-        requireActivity().startActivity(intent);
+    private fun lockButton(value: Boolean, binderButtonText: String, choosenButton: Button?) {
+        mainHandler.post {
+            choosenButton!!.isEnabled = value
+            choosenButton.text = binderButtonText
+            if (value) {
+                choosenButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
+                choosenButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+            } else {
+                choosenButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color80()))
+                choosenButton.setTextColor(Color.parseColor(nhlPreferences!!.color50()))
+            }
+        }
     }
 
-    public void run_cmd_background(String cmd) {
-        @SuppressLint("SdCardPath") Intent intent = Bridge.Companion.createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd, true);
-        requireActivity().startActivity(intent);
+    @Throws(ExecutionException::class, InterruptedException::class)
+    private fun loadIfaces() {
+        val outputHCI = arrayOf("")
+        val future1 =
+            executor!!.submit<String> { exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hciconfig | grep hci | cut -d: -f1") }
+        outputHCI[0] = future1.get()
+        val hciIfaces = ArrayList<String?>()
+        Log.d(
+            "Ifaces",
+            outputHCI[0].split("\n".toRegex()).dropLastWhile { it.isEmpty() }
+                .toTypedArray().contentToString())
+        if (outputHCI[0].isEmpty()) {
+            mainHandler.post {
+                hciIfaces.add("None")
+                val customSpinnerAdapter = CustomSpinnerAdapter(
+                    requireActivity(),
+                    hciIfaces,
+                    imageList!!,
+                    nhlPreferences!!.color20()!!,
+                    nhlPreferences!!.color80()!!
+                )
+                ifaces.adapter = customSpinnerAdapter
+            }
+        } else {
+            val ifacesArray = outputHCI[0].split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+
+            mainHandler.post {
+                val color20 = nhlPreferences?.color20()
+                val color80 = nhlPreferences?.color80()
+
+                if (color20 != null) {
+                    val customSpinnerAdapter = color80?.let {
+                        CustomSpinnerAdapter(
+                            requireActivity(),
+                            ifacesArray.toList(),
+                            imageList!!,
+                            color20,
+                            it // Provide a default color or handle null case
+                        )
+                    }
+                    ifaces.adapter = customSpinnerAdapter
+                } else {
+                    // Handle the case when color20 is null
+                }
+            }
+
+        }
     }
 
-    private void setContainerBackground(LinearLayout container) {
-        GradientDrawable drawable = new GradientDrawable();
-        drawable.setCornerRadius(60);
-        drawable.setStroke(8, Color.parseColor(nhlPreferences.color50()));
-        container.setBackground(drawable);
+    private fun runCmd(cmd: String?) {
+        @SuppressLint("SdCardPath") val intent =
+            createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd!!, false)
+        requireActivity().startActivity(intent)
     }
 
+//    private fun run_cmd_background(cmd: String?) {
+//        @SuppressLint("SdCardPath") val intent =
+//            createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd!!, true)
+//        requireActivity().startActivity(intent)
+//    }
+
+    private fun setContainerBackground(container: LinearLayout) {
+        val drawable = GradientDrawable()
+        drawable.cornerRadius = 60f
+        drawable.setStroke(8, Color.parseColor(nhlPreferences!!.color50()))
+        container.background = drawable
+    }
+
+    companion object {
+        var selectedIface: String? = null
+            private set
+
+        private var selectedButtonWeakRef: WeakReference<Button>? = null
+
+        var selectedButton: Button?
+            get() = selectedButtonWeakRef?.get()
+            set(value) {
+                selectedButtonWeakRef = value?.let { WeakReference(it) }
+            }
+        val selectedTarget: String
+            get() = selectedButton!!.text.toString()
+    }
 }

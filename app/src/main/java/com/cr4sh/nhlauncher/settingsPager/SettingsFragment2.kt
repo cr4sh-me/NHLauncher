@@ -1,282 +1,344 @@
-package com.cr4sh.nhlauncher.settingsPager;
+package com.cr4sh.nhlauncher.settingsPager
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.CompoundButton
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
+import androidx.core.widget.CompoundButtonCompat
+import androidx.fragment.app.Fragment
+import com.cr4sh.nhlauncher.MainActivity
+import com.cr4sh.nhlauncher.R
+import com.cr4sh.nhlauncher.utils.DialogUtils
+import com.cr4sh.nhlauncher.utils.NHLManager
+import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
+import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.flask.colorpicker.ColorPickerView
+import java.util.Locale
+import kotlin.math.roundToInt
 
-import androidx.core.widget.CompoundButtonCompat;
-import androidx.fragment.app.Fragment;
-
-import com.cr4sh.nhlauncher.MainActivity;
-import com.cr4sh.nhlauncher.R;
-import com.cr4sh.nhlauncher.utils.DialogUtils;
-import com.cr4sh.nhlauncher.utils.NHLManager;
-import com.cr4sh.nhlauncher.utils.NHLPreferences;
-import com.cr4sh.nhlauncher.utils.ToastUtils;
-import com.cr4sh.nhlauncher.utils.VibrationUtils;
-import com.flask.colorpicker.ColorPickerView;
-
-public class SettingsFragment2 extends Fragment {
-    NHLPreferences nhlPreferences;
-    String hexColorString;
-    MainActivity mainActivity = NHLManager.getInstance().getMainActivity();
-
-
-    public SettingsFragment2() {
-        // Required empty public constructor
-    }
-
+class SettingsFragment2 : Fragment() {
+    var nhlPreferences: NHLPreferences? = null
+    private var hexColorString: String? = null
+    var mainActivity: MainActivity = NHLManager.getInstance().mainActivity
     @SuppressLint("SetTextI18n")
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.settings_layout2, container, false);
-
-        nhlPreferences = new NHLPreferences(requireActivity());
-
-        LinearLayout manualBox = view.findViewById(R.id.hiddenLayout);
-        LinearLayout advancedMode = view.findViewById(R.id.advancedLayout);
-//        TextView title = view.findViewById(R.id.dialog_title);
-        TextView text2 = view.findViewById(R.id.text_second);
-//        ScrollView bkg = view.findViewById(R.id.custom_theme_dialog_background);
-        ColorPickerView colorPickerView = view.findViewById(R.id.colorPickerView);
-//        ImageView alphaTileView1 = view.findViewById(R.id.alphaTileView1);
-
-        RelativeLayout alphaLayout = view.findViewById(R.id.alphaLayout);
-        ImageView alphaTileView1 = view.findViewById(R.id.alphaTileView1);
-        ImageView alphaTileView2 = view.findViewById(R.id.alphaTileView2);
-        ImageView alphaTileView3 = view.findViewById(R.id.alphaTileView3);
-
-        RelativeLayout alphaLayoutAdv = view.findViewById(R.id.alphaLayoutAdv);
-        ImageView alphaTileViewAdv1 = view.findViewById(R.id.alphaTileViewAdv1);
-        ImageView alphaTileViewAdv2 = view.findViewById(R.id.alphaTileViewAdv2);
-        ImageView alphaTileViewAdv3 = view.findViewById(R.id.alphaTileViewAdv3);
-
-        Button hexColorValue1 = view.findViewById(R.id.customHexColor1);
-        Button hexColorValue2 = view.findViewById(R.id.customHexColor2);
-        Button hexColorValue3 = view.findViewById(R.id.customHexColor3);
-        EditText hexColorValue = view.findViewById(R.id.customHexColor);
-        CheckBox dynamicThemes = view.findViewById(R.id.dynamic_themes_checkbox);
-        CheckBox advancedThemes = view.findViewById(R.id.advanced_themes_checkbox);
-        Button applyColors = view.findViewById(R.id.apply_custom_colors);
-//        Button cancelButton = view.findViewById(R.id.cancel_button);
-
-        hexColorString = nhlPreferences.color100();
-        hexColorValue.setText(hexColorString);
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.settings_layout2, container, false)
+        nhlPreferences = NHLPreferences(requireActivity())
+        val manualBox = view.findViewById<LinearLayout>(R.id.hiddenLayout)
+        val advancedMode = view.findViewById<LinearLayout>(R.id.advancedLayout)
+        //        TextView title = view.findViewById(R.id.dialog_title);
+        val text2 = view.findViewById<TextView>(R.id.text_second)
+        //        ScrollView bkg = view.findViewById(R.id.custom_theme_dialog_background);
+        val colorPickerView = view.findViewById<ColorPickerView>(R.id.colorPickerView)
+        //        ImageView alphaTileView1 = view.findViewById(R.id.alphaTileView1);
+        val alphaLayout = view.findViewById<RelativeLayout>(R.id.alphaLayout)
+        val alphaTileView1 = view.findViewById<ImageView>(R.id.alphaTileView1)
+        val alphaTileView2 = view.findViewById<ImageView>(R.id.alphaTileView2)
+        val alphaTileView3 = view.findViewById<ImageView>(R.id.alphaTileView3)
+        val alphaLayoutAdv = view.findViewById<RelativeLayout>(R.id.alphaLayoutAdv)
+        val alphaTileViewAdv1 = view.findViewById<ImageView>(R.id.alphaTileViewAdv1)
+        val alphaTileViewAdv2 = view.findViewById<ImageView>(R.id.alphaTileViewAdv2)
+        val alphaTileViewAdv3 = view.findViewById<ImageView>(R.id.alphaTileViewAdv3)
+        val hexColorValue1 = view.findViewById<Button>(R.id.customHexColor1)
+        val hexColorValue2 = view.findViewById<Button>(R.id.customHexColor2)
+        val hexColorValue3 = view.findViewById<Button>(R.id.customHexColor3)
+        val hexColorValue = view.findViewById<EditText>(R.id.customHexColor)
+        val dynamicThemes = view.findViewById<CheckBox>(R.id.dynamic_themes_checkbox)
+        val advancedThemes = view.findViewById<CheckBox>(R.id.advanced_themes_checkbox)
+        val applyColors = view.findViewById<Button>(R.id.apply_custom_colors)
+        //        Button cancelButton = view.findViewById(R.id.cancel_button);
+        hexColorString = nhlPreferences!!.color100()
+        hexColorValue.setText(hexColorString)
 
 
         // Checkbox set
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            dynamicThemes.setChecked(nhlPreferences.dynamicThemeBool());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            dynamicThemes.isChecked = nhlPreferences!!.dynamicThemeBool()
         } else {
-            dynamicThemes.setEnabled(false);
+            dynamicThemes.isEnabled = false
         }
-
-        if (dynamicThemes.isChecked()) {
-            manualBox.setVisibility(View.GONE);
+        if (dynamicThemes.isChecked) {
+            manualBox.visibility = View.GONE
         } else {
-            manualBox.setVisibility(View.VISIBLE);
-            colorPickerView.setInitialColor(Color.parseColor(nhlPreferences.color100()), true);
+            manualBox.visibility = View.VISIBLE
+            colorPickerView.setInitialColor(Color.parseColor(nhlPreferences!!.color100()), true)
         }
-
-        if (nhlPreferences.advancedThemeBool()) {
-            advancedThemes.setChecked(true);
-            advancedMode.setVisibility(View.VISIBLE);
-            alphaLayout.setVisibility(View.GONE);
-            hexColorValue.setVisibility(View.GONE);
-            colorPickerView.setVisibility(View.GONE);
-            hexColorValue1.setText(nhlPreferences.color80());
-            hexColorValue2.setText(nhlPreferences.color50());
-            hexColorValue3.setText(nhlPreferences.color20());
-
-            alphaLayoutAdv.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorValue3.getText().toString(), 0.5f)));
-            alphaTileViewAdv1.setBackgroundColor(Color.parseColor(nhlPreferences.color80()));
-            alphaTileViewAdv2.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
-            alphaTileViewAdv3.setBackgroundColor(Color.parseColor(nhlPreferences.color20()));
-
-
+        if (nhlPreferences!!.advancedThemeBool()) {
+            advancedThemes.isChecked = true
+            advancedMode.visibility = View.VISIBLE
+            alphaLayout.visibility = View.GONE
+            hexColorValue.visibility = View.GONE
+            colorPickerView.visibility = View.GONE
+            hexColorValue1.text = nhlPreferences!!.color80()
+            hexColorValue2.text = nhlPreferences!!.color50()
+            hexColorValue3.text = nhlPreferences!!.color20()
+            alphaLayoutAdv.setBackgroundColor(
+                Color.parseColor(
+                    adjustColorBrightness(
+                        hexColorValue3.text.toString(),
+                        0.5f
+                    )
+                )
+            )
+            alphaTileViewAdv1.setBackgroundColor(Color.parseColor(nhlPreferences!!.color80()))
+            alphaTileViewAdv2.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
+            alphaTileViewAdv3.setBackgroundColor(Color.parseColor(nhlPreferences!!.color20()))
         } else {
-            advancedThemes.setChecked(false);
-            advancedMode.setVisibility(View.GONE);
-            alphaLayout.setVisibility(View.VISIBLE);
-            hexColorValue.setVisibility(View.VISIBLE);
-            colorPickerView.setVisibility(View.VISIBLE);
-            colorPickerView.setInitialColor(Color.parseColor(nhlPreferences.color100()), true);
-
-            alphaLayout.setBackgroundColor(Color.parseColor(adjustColorBrightness(nhlPreferences.color20(), 0.5f)));
-            alphaTileView1.setBackgroundColor(Color.parseColor(nhlPreferences.color80()));
-            alphaTileView2.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
-            alphaTileView3.setBackgroundColor(Color.parseColor(nhlPreferences.color20()));
+            advancedThemes.isChecked = false
+            advancedMode.visibility = View.GONE
+            alphaLayout.visibility = View.VISIBLE
+            hexColorValue.visibility = View.VISIBLE
+            colorPickerView.visibility = View.VISIBLE
+            colorPickerView.setInitialColor(Color.parseColor(nhlPreferences!!.color100()), true)
+            alphaLayout.setBackgroundColor(
+                Color.parseColor(
+                    adjustColorBrightness(
+                        nhlPreferences!!.color20(), 0.5f
+                    )
+                )
+            )
+            alphaTileView1.setBackgroundColor(Color.parseColor(nhlPreferences!!.color80()))
+            alphaTileView2.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
+            alphaTileView3.setBackgroundColor(Color.parseColor(nhlPreferences!!.color20()))
         }
 
         // Apply custom themes
-        text2.setTextColor(Color.parseColor(nhlPreferences.color80()));
-        dynamicThemes.setTextColor(Color.parseColor(nhlPreferences.color80()));
-        advancedThemes.setTextColor(Color.parseColor(nhlPreferences.color80()));
-
-        int[][] states = {{android.R.attr.state_checked}, {}};
-        int[] colors = {Color.parseColor(nhlPreferences.color80()), Color.parseColor(nhlPreferences.color80())};
-        CompoundButtonCompat.setButtonTintList(dynamicThemes, new ColorStateList(states, colors));
-        CompoundButtonCompat.setButtonTintList(advancedThemes, new ColorStateList(states, colors));
-
-        hexColorValue.setTextColor(Color.parseColor(nhlPreferences.color80()));
-        hexColorValue.getBackground().mutate().setTint(Color.parseColor(nhlPreferences.color50()));
-        hexColorValue1.setTextColor(Color.parseColor(nhlPreferences.color80()));
-        hexColorValue1.setHintTextColor(Color.parseColor(nhlPreferences.color80()));
-        hexColorValue1.getBackground().mutate().setTint(Color.parseColor(nhlPreferences.color50()));
-        hexColorValue2.setTextColor(Color.parseColor(nhlPreferences.color80()));
-        hexColorValue2.setHintTextColor(Color.parseColor(nhlPreferences.color80()));
-        hexColorValue2.getBackground().mutate().setTint(Color.parseColor(nhlPreferences.color50()));
-        hexColorValue3.setTextColor(Color.parseColor(nhlPreferences.color80()));
-        hexColorValue3.setHintTextColor(Color.parseColor(nhlPreferences.color80()));
-        hexColorValue3.getBackground().mutate().setTint(Color.parseColor(nhlPreferences.color50()));
-
-        applyColors.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
-        applyColors.setTextColor(Color.parseColor(nhlPreferences.color80()));
-
-        hexColorValue.setEnabled(false);
-
-        dynamicThemes.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        text2.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        dynamicThemes.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        advancedThemes.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        val states = arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf())
+        val colors = intArrayOf(
+            Color.parseColor(
+                nhlPreferences!!.color80()
+            ), Color.parseColor(nhlPreferences!!.color80())
+        )
+        CompoundButtonCompat.setButtonTintList(dynamicThemes, ColorStateList(states, colors))
+        CompoundButtonCompat.setButtonTintList(advancedThemes, ColorStateList(states, colors))
+        hexColorValue.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        hexColorValue.background.mutate().setTint(
+            Color.parseColor(
+                nhlPreferences!!.color50()
+            )
+        )
+        hexColorValue1.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        hexColorValue1.setHintTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        hexColorValue1.background.mutate().setTint(
+            Color.parseColor(
+                nhlPreferences!!.color50()
+            )
+        )
+        hexColorValue2.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        hexColorValue2.setHintTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        hexColorValue2.background.mutate().setTint(
+            Color.parseColor(
+                nhlPreferences!!.color50()
+            )
+        )
+        hexColorValue3.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        hexColorValue3.setHintTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        hexColorValue3.background.mutate().setTint(
+            Color.parseColor(
+                nhlPreferences!!.color50()
+            )
+        )
+        applyColors.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
+        applyColors.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        hexColorValue.isEnabled = false
+        dynamicThemes.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             if (isChecked) {
-                manualBox.setVisibility(View.GONE);
+                manualBox.visibility = View.GONE
             } else {
-                manualBox.setVisibility(View.VISIBLE);
-//                colorPickerView.setInitialColor(Color.parseColor(myPreferences.color100()));
+                manualBox.visibility = View.VISIBLE
+                //                colorPickerView.setInitialColor(Color.parseColor(myPreferences.color100()));
             }
-        });
-
-        advancedThemes.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        }
+        advancedThemes.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             if (isChecked) {
-                advancedMode.setVisibility(View.VISIBLE);
-                alphaLayout.setVisibility(View.GONE);
-                hexColorValue.setVisibility(View.GONE);
-                colorPickerView.setVisibility(View.GONE);
-                hexColorValue1.setText(nhlPreferences.color80());
-                hexColorValue2.setText(nhlPreferences.color50());
-                hexColorValue3.setText(nhlPreferences.color20());
-
-                alphaLayoutAdv.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorValue3.getText().toString(), 0.5f)));
-                alphaTileViewAdv1.setBackgroundColor(Color.parseColor(nhlPreferences.color80()));
-                alphaTileViewAdv2.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
-                alphaTileViewAdv3.setBackgroundColor(Color.parseColor(nhlPreferences.color20()));
-
+                advancedMode.visibility = View.VISIBLE
+                alphaLayout.visibility = View.GONE
+                hexColorValue.visibility = View.GONE
+                colorPickerView.visibility = View.GONE
+                hexColorValue1.text = nhlPreferences!!.color80()
+                hexColorValue2.text = nhlPreferences!!.color50()
+                hexColorValue3.text = nhlPreferences!!.color20()
+                alphaLayoutAdv.setBackgroundColor(
+                    Color.parseColor(
+                        adjustColorBrightness(
+                            hexColorValue3.text.toString(),
+                            0.5f
+                        )
+                    )
+                )
+                alphaTileViewAdv1.setBackgroundColor(Color.parseColor(nhlPreferences!!.color80()))
+                alphaTileViewAdv2.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
+                alphaTileViewAdv3.setBackgroundColor(Color.parseColor(nhlPreferences!!.color20()))
             } else {
-                advancedMode.setVisibility(View.GONE);
-                alphaLayout.setVisibility(View.VISIBLE);
-                hexColorValue.setVisibility(View.VISIBLE);
-                colorPickerView.setVisibility(View.VISIBLE);
-                colorPickerView.setInitialColor(Color.parseColor(nhlPreferences.color100()), true);
-
-                alphaLayout.setBackgroundColor(Color.parseColor(adjustColorBrightness(nhlPreferences.color20(), 0.5f)));
-                alphaTileView1.setBackgroundColor(Color.parseColor(nhlPreferences.color80()));
-                alphaTileView2.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
-                alphaTileView3.setBackgroundColor(Color.parseColor(nhlPreferences.color20()));
+                advancedMode.visibility = View.GONE
+                alphaLayout.visibility = View.VISIBLE
+                hexColorValue.visibility = View.VISIBLE
+                colorPickerView.visibility = View.VISIBLE
+                colorPickerView.setInitialColor(Color.parseColor(nhlPreferences!!.color100()), true)
+                alphaLayout.setBackgroundColor(
+                    Color.parseColor(
+                        adjustColorBrightness(
+                            nhlPreferences!!.color20(), 0.5f
+                        )
+                    )
+                )
+                alphaTileView1.setBackgroundColor(Color.parseColor(nhlPreferences!!.color80()))
+                alphaTileView2.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
+                alphaTileView3.setBackgroundColor(Color.parseColor(nhlPreferences!!.color20()))
             }
-        });
-
-        hexColorValue1.setOnClickListener(v -> {
-            VibrationUtils.vibrate(mainActivity, 10);
-            openPickerDialog(hexColorValue1, alphaTileViewAdv1, nhlPreferences.color80());
-        });
-        hexColorValue2.setOnClickListener(v -> {
-            VibrationUtils.vibrate(mainActivity, 10);
-            openPickerDialog(hexColorValue2, alphaTileViewAdv2, nhlPreferences.color50());
-        });
-        hexColorValue3.setOnClickListener(v -> {
-            VibrationUtils.vibrate(mainActivity, 10);
-            openPickerDialog(hexColorValue3, alphaTileViewAdv3, nhlPreferences.color20());
-        });
-
-        colorPickerView.addOnColorChangedListener(selectedColor -> {
-            hexColorValue.setText(("#" + Integer.toHexString(selectedColor)).toUpperCase());
-            hexColorString = ("#" + Integer.toHexString(selectedColor)).toUpperCase();
+        }
+        hexColorValue1.setOnClickListener {
+            vibrate(mainActivity, 10)
+            openPickerDialog(hexColorValue1, alphaTileViewAdv1, nhlPreferences!!.color80())
+        }
+        hexColorValue2.setOnClickListener {
+            vibrate(mainActivity, 10)
+            openPickerDialog(hexColorValue2, alphaTileViewAdv2, nhlPreferences!!.color50())
+        }
+        hexColorValue3.setOnClickListener {
+            vibrate(mainActivity, 10)
+            openPickerDialog(hexColorValue3, alphaTileViewAdv3, nhlPreferences!!.color20())
+        }
+        colorPickerView.addOnColorChangedListener { selectedColor: Int ->
+            hexColorValue.setText(
+                ("#" + Integer.toHexString(selectedColor)).uppercase(
+                    Locale.getDefault()
+                )
+            )
+            hexColorString =
+                ("#" + Integer.toHexString(selectedColor)).uppercase(Locale.getDefault())
 
 //            alphaLayout.setBackgroundColor(Color.parseColor(adjustColorBrightness(nhlPreferences.color20(), 0.5f)));
-            alphaTileView1.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.8f)));
-            alphaTileView2.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.5f)));
-            alphaTileView3.setBackgroundColor(Color.parseColor(adjustColorBrightness(hexColorString, 0.2f)));
-        });
-
-        applyColors.setOnClickListener(v -> {
-            VibrationUtils.vibrate(mainActivity, 10);
-            if (hexColorValue1.getText().length() < 0 || hexColorValue1.getText().length() < 0 || hexColorValue1.getText().length() < 0) {
-                ToastUtils.showCustomToast(requireActivity(), "Empty color values! Use brain...");
+            alphaTileView1.setBackgroundColor(
+                Color.parseColor(
+                    adjustColorBrightness(
+                        hexColorString,
+                        0.8f
+                    )
+                )
+            )
+            alphaTileView2.setBackgroundColor(
+                Color.parseColor(
+                    adjustColorBrightness(
+                        hexColorString,
+                        0.5f
+                    )
+                )
+            )
+            alphaTileView3.setBackgroundColor(
+                Color.parseColor(
+                    adjustColorBrightness(
+                        hexColorString,
+                        0.2f
+                    )
+                )
+            )
+        }
+        applyColors.setOnClickListener {
+            vibrate(mainActivity, 10)
+            if (hexColorValue1.text.length < 0 || hexColorValue1.text.length < 0 || hexColorValue1.text.length < 0) {
+                showCustomToast(requireActivity(), "Empty color values! Use brain...")
             } else {
-                if (advancedThemes.isChecked()) {
-                    String color100 = nhlPreferences.color100();
-                    String color80 = hexColorValue1.getText().toString();
-                    String color50 = hexColorValue2.getText().toString();
-                    String color20 = hexColorValue3.getText().toString();
-                    saveColor80(color100, color80, color50, color20, dynamicThemes.isChecked(), advancedThemes.isChecked());
+                if (advancedThemes.isChecked) {
+                    val color100 = nhlPreferences!!.color100()
+                    val color80 = hexColorValue1.text.toString()
+                    val color50 = hexColorValue2.text.toString()
+                    val color20 = hexColorValue3.text.toString()
+                    saveColor80(
+                        color100,
+                        color80,
+                        color50,
+                        color20,
+                        dynamicThemes.isChecked,
+                        advancedThemes.isChecked
+                    )
                 } else {
-                    String color100 = hexColorString;
-                    int color80Int = ((ColorDrawable) alphaTileView1.getBackground()).getColor();
-                    int color50Int = ((ColorDrawable) alphaTileView2.getBackground()).getColor();
-                    int color20Int = ((ColorDrawable) alphaTileView3.getBackground()).getColor();
-
-                    String color80 = String.format("#%06X", (0xFFFFFF & color80Int));
-                    String color50 = String.format("#%06X", (0xFFFFFF & color50Int));
-                    String color20 = String.format("#%06X", (0xFFFFFF & color20Int));
-
-                    saveColor80(color100, color80, color50, color20, dynamicThemes.isChecked(), advancedThemes.isChecked());
+                    val color100 = hexColorString
+                    val color80Int = (alphaTileView1.background as ColorDrawable).color
+                    val color50Int = (alphaTileView2.background as ColorDrawable).color
+                    val color20Int = (alphaTileView3.background as ColorDrawable).color
+                    val color80 = String.format("#%06X", 0xFFFFFF and color80Int)
+                    val color50 = String.format("#%06X", 0xFFFFFF and color50Int)
+                    val color20 = String.format("#%06X", 0xFFFFFF and color20Int)
+                    saveColor80(
+                        color100,
+                        color80,
+                        color50,
+                        color20,
+                        dynamicThemes.isChecked,
+                        advancedThemes.isChecked
+                    )
                 }
-                mainActivity.recreate(); // recreate MainActivity below
-                requireActivity().recreate(); // recreate this activity AFTER to prevent closing db for stats
+                mainActivity.recreate() // recreate MainActivity below
+                requireActivity().recreate() // recreate this activity AFTER to prevent closing db for stats
             }
-        });
-
-        return view;
+        }
+        return view
     }
 
-    public String adjustColorBrightness(String hexColor, float factor) {
+    private fun adjustColorBrightness(hexColor: String?, factor: Float): String {
         // https://github.com/edelstone/tints-and-shades
-
-        int color = Color.parseColor(hexColor);
-        int r = Color.red(color);
-        int g = Color.green(color);
-        int b = Color.blue(color);
-
-        double r_math = r * factor;
-        double g_math = g * factor;
-        double b_math = b * factor;
-        return String.format("#%02X%02X%02X", Math.round(r_math), Math.round(g_math), Math.round(b_math));
+        val color = Color.parseColor(hexColor)
+        val r = Color.red(color)
+        val g = Color.green(color)
+        val b = Color.blue(color)
+        val rMath = (r * factor).toDouble()
+        val gMath = (g * factor).toDouble()
+        val bMath = (b * factor).toDouble()
+        return String.format(
+            "#%02X%02X%02X",
+            rMath.roundToInt(),
+            gMath.roundToInt(),
+            bMath.roundToInt()
+        )
     }
 
     @SuppressLint("SetTextI18n")
-    private void openPickerDialog(Button button, ImageView alpha, String colorShade) {
-        DialogUtils dialogUtils = new DialogUtils(requireActivity().getSupportFragmentManager());
-        dialogUtils.openNhlColorPickerDialog(button, alpha, colorShade);
+    private fun openPickerDialog(button: Button, alpha: ImageView, colorShade: String?) {
+        val dialogUtils = DialogUtils(requireActivity().supportFragmentManager)
+        dialogUtils.openNhlColorPickerDialog(button, alpha, colorShade)
     }
 
-    private void saveColor80(String color100, String color80, String color50, String color20, boolean dynamicThemeBool, boolean advThemeBool) {
-        Log.d("SavedColors", "100: " + color100 + " 80: " + color80 + " 50: " + color50 + " 20: " + color20);
+    private fun saveColor80(
+        color100: String?,
+        color80: String,
+        color50: String,
+        color20: String,
+        dynamicThemeBool: Boolean,
+        advThemeBool: Boolean
+    ) {
+        Log.d("SavedColors", "100: $color100 80: $color80 50: $color50 20: $color20")
         // Save the color values and frame drawable to SharedPreferences
-        SharedPreferences prefs = requireActivity().getSharedPreferences("customColors", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("color100", color100);
-        editor.putString("color80", color80);
-        editor.putString("color50", color50);
-        editor.putString("color20", color20);
-        editor.putBoolean("dynamicThemeBool", dynamicThemeBool);
-        editor.putBoolean("advancedThemeBool", advThemeBool);
-        editor.apply();
+        val prefs = requireActivity().getSharedPreferences("customColors", Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.putString("color100", color100)
+        editor.putString("color80", color80)
+        editor.putString("color50", color50)
+        editor.putString("color20", color20)
+        editor.putBoolean("dynamicThemeBool", dynamicThemeBool)
+        editor.putBoolean("advancedThemeBool", advThemeBool)
+        editor.apply()
     }
-
 }

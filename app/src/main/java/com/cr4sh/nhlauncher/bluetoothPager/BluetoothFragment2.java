@@ -147,11 +147,11 @@ public class BluetoothFragment2 extends Fragment {
         l2pingButton.setOnClickListener(v -> {
             VibrationUtils.vibrate(requireActivity(), 10);
 
-            String l2ping_target = BluetoothFragment1.getSelectedTarget();
+            String l2ping_target = BluetoothFragment1.Companion.getSelectedTarget();
             if (!l2ping_target.equals("")) {
                 String l2ping_size = sizeEdit.getText().toString();
                 String l2ping_count = countEdit.getText().toString();
-                String l2ping_interface = BluetoothFragment1.getSelectedIface(); // TODO do this
+                String l2ping_interface = BluetoothFragment1.Companion.getSelectedIface(); // TODO do this
                 run_cmd("echo -ne \"\\033]0;Pinging BT device\\007\" && clear;l2ping -i " + l2ping_interface + " -s " + l2ping_size + " -c " + l2ping_count + flood + reverse + " " + l2ping_target + " && echo \"\nPinging done, closing in 3 secs..\";sleep 3 && exit");
             } else {
                 ToastUtils.showCustomToast(requireActivity(), "No target address!");
