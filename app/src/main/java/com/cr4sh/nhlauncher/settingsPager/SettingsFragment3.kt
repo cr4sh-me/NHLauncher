@@ -1,6 +1,5 @@
 package com.cr4sh.nhlauncher.settingsPager
 
-import android.annotation.SuppressLint
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
@@ -13,7 +12,9 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.statsRecycler.StatsAdapter
 import com.cr4sh.nhlauncher.statsRecycler.StatsItem
@@ -22,11 +23,11 @@ import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
 import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener
 import com.skydoves.powerspinner.PowerSpinnerView
-import java.util.concurrent.ExecutionException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SettingsFragment3 : Fragment() {
-    private val mainActivity = NHLManager.getInstance().mainActivity
-    private val executor = NHLManager.getInstance().executorService
+    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
     private var mDatabase: SQLiteDatabase? = null
     var adapter: StatsAdapter? = null
     private var nhlPreferences: NHLPreferences? = null
@@ -71,27 +72,31 @@ class SettingsFragment3 : Fragment() {
         return view
     }
 
-    @SuppressLint("SetTextI18n", "Recycle")
-    fun spinnerChanger(category: Int) {
-        val future = executor.submit {
+    private fun spinnerChanger(category: Int) {
+        // Use lifecycleScope to launch a coroutine
+        mainActivity.lifecycleScope.launch(Dispatchers.IO) {
             val cursor: Cursor
             val projection = arrayOf("CATEGORY", "FAVOURITE", "NAME", "ICON", "USAGE")
             val selection: String
             val selectionArgs: Array<String>
+
             when (category) {
                 0 -> {
                     selection = "USAGE > ?"
                     selectionArgs = arrayOf("0")
                 }
+
                 1 -> {
                     selection = "FAVOURITE = ? AND USAGE > ?"
                     selectionArgs = arrayOf("1", "0")
                 }
+
                 else -> {
                     selection = "CATEGORY = ? AND USAGE > ?"
                     selectionArgs = arrayOf((category - 1).toString(), "0")
                 }
             }
+
             cursor = mDatabase!!.query(
                 "TOOLS",
                 projection,
@@ -102,6 +107,7 @@ class SettingsFragment3 : Fragment() {
                 nhlPreferences!!.sortingMode(),
                 null
             )
+
             if (cursor.count == 0) {
                 mainActivity.runOnUiThread {
                     noToolsText.visibility = View.VISIBLE
@@ -123,16 +129,14 @@ class SettingsFragment3 : Fragment() {
                     val item = StatsItem(toolName, toolIcon, toolUsageString)
                     newItemList.add(item)
                 }
-                mainActivity.runOnUiThread { adapter!!.updateData(newItemList) }
+
+                mainActivity.runOnUiThread {
+                    adapter!!.updateData(newItemList)
+                }
             }
+
             cursor.close()
         }
-        try {
-            future.get() // This will wait for the background task to complete
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
-        } catch (e: ExecutionException) {
-            e.printStackTrace()
-        }
     }
+
 }

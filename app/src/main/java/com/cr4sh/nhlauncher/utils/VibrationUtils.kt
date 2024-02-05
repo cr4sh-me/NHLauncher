@@ -13,7 +13,8 @@ object VibrationUtils {
     @JvmStatic
     @RequiresApi(Build.VERSION_CODES.S)
     fun vibrate(context: Context, milliseconds: Long) {
-        val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+        val vibratorManager =
+            context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
         val vibrator = vibratorManager.defaultVibrator
 //        val vibrator = VibratorManager
         val nhlPreferences = NHLPreferences(context)

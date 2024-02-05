@@ -8,16 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cr4sh.nhlauncher.R
 
 class NHLViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    @JvmField
     var imageView: ImageView
-
-    @JvmField
     var nameView: TextView
-
-    @JvmField
     var descriptionView: TextView
-
-    @JvmField
     var buttonView: LinearLayout
 
     init {

@@ -18,12 +18,15 @@ class SettingsPager(fragment: FragmentActivity?) : FragmentStateAdapter(
             0 -> {
                 SettingsFragment1()
             }
+
             1 -> {
                 SettingsFragment2()
             }
+
             2 -> {
                 SettingsFragment3()
             }
+
             else -> {
                 SettingsFragment4()
             }

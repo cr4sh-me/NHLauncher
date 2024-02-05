@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -145,7 +146,9 @@ public class BluetoothFragment2 extends Fragment {
 
 
         l2pingButton.setOnClickListener(v -> {
-            VibrationUtils.vibrate(requireActivity(), 10);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                VibrationUtils.vibrate(requireActivity(), 10);
+            }
 
             String l2ping_target = BluetoothFragment1.Companion.getSelectedTarget();
             if (!l2ping_target.equals("")) {
@@ -164,7 +167,7 @@ public class BluetoothFragment2 extends Fragment {
     }
 
     public void run_cmd(String cmd) {
-        @SuppressLint("SdCardPath") Intent intent = Bridge.Companion.createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd, false);
+        @SuppressLint("SdCardPath") Intent intent = Bridge.Companion.createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd);
         requireActivity().startActivity(intent);
     }
 

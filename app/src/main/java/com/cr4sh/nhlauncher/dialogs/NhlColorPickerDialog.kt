@@ -2,6 +2,7 @@ package com.cr4sh.nhlauncher.dialogs
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,23 +12,26 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDialogFragment
+import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 import com.flask.colorpicker.ColorPickerView
 import java.util.Locale
-import java.util.Objects
 
 class NhlColorPickerDialog(
     private val button: Button,
     private val alpha: ImageView,
     private val hexColorShade: String
 ) : AppCompatDialogFragment() {
-    private val mainActivity = NHLManager.getInstance().mainActivity
+    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
+
     private var hexColorString: String? = null
 
+    @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,15 +63,15 @@ class NhlColorPickerDialog(
             )
             hexColorValue.setText(hexColorString)
         }
-        applyColors.setOnClickListener { v: View? ->
+        applyColors.setOnClickListener {
             vibrate(mainActivity, 10)
             alpha.setBackgroundColor(Color.parseColor(hexColorString))
             button.text = hexColorString
-            Objects.requireNonNull(dialog).cancel()
+            dialog?.cancel()
         }
-        cancelButton.setOnClickListener { view1: View? ->
+        cancelButton.setOnClickListener {
             vibrate(mainActivity, 10)
-            Objects.requireNonNull(dialog).cancel()
+            dialog?.cancel()
         }
         return view
     }

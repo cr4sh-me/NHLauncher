@@ -3,6 +3,7 @@ package com.cr4sh.nhlauncher.utils
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.ContextCompat
+import com.cr4sh.nhlauncher.MainActivity
 import com.google.android.material.R
 import java.util.Locale
 
@@ -11,7 +12,7 @@ class NHLPreferences(context: Context) {
     private val nhlPrefs: SharedPreferences
     private val setupPrefs: SharedPreferences
     private val customColorsPrefs: SharedPreferences
-    private val context = NHLManager.getInstance().mainActivity
+    private val context: MainActivity = NHLManager.instance.mainActivity
 
     init {
 //        this.context = mainActivity;

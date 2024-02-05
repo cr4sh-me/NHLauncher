@@ -12,6 +12,7 @@ class NHLSpecialViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var nameView: TextView
     var descriptionView: TextView
     var buttonView: LinearLayout
+
     init {
         buttonView = itemView.findViewById(R.id.button_view)
         imageView = itemView.findViewById(R.id.button_icon)

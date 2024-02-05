@@ -23,6 +23,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.database.DBBackup
@@ -36,12 +37,12 @@ import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
 import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener
 import com.skydoves.powerspinner.PowerSpinnerView
+import kotlinx.coroutines.launch
 
 class SettingsFragment1 : Fragment() {
-    private val executor = NHLManager.getInstance().executorService
     var nhlPreferences: NHLPreferences? = null
     var mainUtils: MainUtils? = null
-    var mainActivity: MainActivity = NHLManager.getInstance().mainActivity
+    val mainActivity: MainActivity = NHLManager.instance.mainActivity
     private lateinit var updateButton: Button
     private var newSortingModeSetting: String? = null
     private var newLanguageNameSetting: String? = null
@@ -49,6 +50,7 @@ class SettingsFragment1 : Fragment() {
     private lateinit var vibrationsCheckbox: CheckBox
     private lateinit var newButtonsStyle: CheckBox
     private lateinit var overlayCheckbox: CheckBox
+
     @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
@@ -127,18 +129,23 @@ class SettingsFragment1 : Fragment() {
             null -> {
                 powerSpinnerView2.selectItemByIndex(0)
             }
+
             "USAGE DESC" -> {
                 powerSpinnerView2.selectItemByIndex(1)
             }
+
             "CASE WHEN NAME GLOB '[A-Za-z]*' THEN 0 ELSE 1 END, NAME ASC" -> {
                 powerSpinnerView2.selectItemByIndex(2)
             }
+
             "CASE WHEN NAME GLOB '[A-Za-z]*' THEN 0 ELSE 1 END, NAME DESC" -> {
                 powerSpinnerView2.selectItemByIndex(3)
             }
+
             "CASE WHEN NAME GLOB '[0-9]*' THEN 0 ELSE 1 END, NAME ASC" -> {
                 powerSpinnerView2.selectItemByIndex(4)
             }
+
             "CASE WHEN NAME GLOB '[0-9]*' THEN 0 ELSE 1 END, NAME COLLATE NOCASE DESC" -> {
                 powerSpinnerView2.selectItemByIndex(5)
             }
@@ -180,18 +187,23 @@ class SettingsFragment1 : Fragment() {
                     0 -> {
                         saveNhlSettings(null)
                     }
+
                     1 -> {
                         saveNhlSettingsTemp("USAGE DESC")
                     }
+
                     2 -> {
                         saveNhlSettingsTemp("CASE WHEN NAME GLOB '[A-Za-z]*' THEN 0 ELSE 1 END, NAME ASC")
                     }
+
                     3 -> {
                         saveNhlSettingsTemp("CASE WHEN NAME GLOB '[A-Za-z]*' THEN 0 ELSE 1 END, NAME DESC")
                     }
+
                     4 -> {
                         saveNhlSettingsTemp("CASE WHEN NAME GLOB '[0-9]*' THEN 0 ELSE 1 END, NAME ASC")
                     }
+
                     5 -> {
                         saveNhlSettingsTemp("CASE WHEN NAME GLOB '[0-9]*' THEN 0 ELSE 1 END, NAME COLLATE NOCASE DESC")
                     }
@@ -202,38 +214,53 @@ class SettingsFragment1 : Fragment() {
             vibrate(mainActivity, 10)
             checkUpdate.text = requireActivity().resources.getString(R.string.update_wait)
             // Create an instance of UpdateCheckerUtils
-            updateCheckerUtils.checkUpdateAsync { updateResult: UpdateCheckResult ->
-                // Run on the UI thread to update the UI components
-                requireActivity().runOnUiThread {
-                    Log.d("testmessageout", "msg: " + updateResult.message)
-                    checkUpdate.text = updateResult.message
-                    if (updateResult.isUpdateAvailable) {
-                        showCustomToast(
-                            requireActivity(),
-                            requireActivity().resources.getString(R.string.update_avaiable)
-                        )
-                        updateButton.visibility = View.VISIBLE
-                        val rainbowColors = IntArray(100)
-                        for (i in 0..99) {
-                            val hue = i.toFloat() / 100 * 360 // Distribute hues evenly
-                            rainbowColors[i] = Color.HSVToColor(floatArrayOf(hue, 1.0f, 1.0f))
+            val updateCheckListener = object : UpdateCheckerUtils.UpdateCheckListener {
+                override fun onUpdateCheckCompleted(updateResult: UpdateCheckResult?) {
+                    // Run on the UI thread to update the UI components
+                    requireActivity().runOnUiThread {
+                        if (updateResult != null) {
+                            Log.d("testmessageout", "msg: " + updateResult.message)
                         }
-                        val colorAnimator = ValueAnimator.ofArgb(*rainbowColors)
-                        colorAnimator.setDuration(5000)
-                        colorAnimator.interpolator = LinearInterpolator()
-                        colorAnimator.repeatCount = ValueAnimator.INFINITE
-                        colorAnimator.repeatMode = ValueAnimator.RESTART
-                        colorAnimator.addUpdateListener { animation: ValueAnimator ->
-                            val animatedColor = animation.animatedValue as Int
-                            updateButton.setBackgroundColor(animatedColor)
+                        if (updateResult != null) {
+                            checkUpdate.text = updateResult.message
                         }
-                        colorAnimator.start()
-                    } else {
-                        updateButton.visibility = View.GONE
+                        if (updateResult != null) {
+                            if (updateResult.isUpdateAvailable) {
+                                showCustomToast(
+                                    requireActivity(),
+                                    requireActivity().resources.getString(R.string.update_avaiable)
+                                )
+                                updateButton.visibility = View.VISIBLE
+                                val rainbowColors = IntArray(100)
+                                for (i in 0..99) {
+                                    val hue = i.toFloat() / 100 * 360 // Distribute hues evenly
+                                    rainbowColors[i] =
+                                        Color.HSVToColor(floatArrayOf(hue, 1.0f, 1.0f))
+                                }
+                                val colorAnimator = ValueAnimator.ofArgb(*rainbowColors)
+                                colorAnimator.setDuration(5000)
+                                colorAnimator.interpolator = LinearInterpolator()
+                                colorAnimator.repeatCount = ValueAnimator.INFINITE
+                                colorAnimator.repeatMode = ValueAnimator.RESTART
+                                colorAnimator.addUpdateListener { animation: ValueAnimator ->
+                                    val animatedColor = animation.animatedValue as Int
+                                    updateButton.setBackgroundColor(animatedColor)
+                                }
+                                colorAnimator.start()
+                            } else {
+                                updateButton.visibility = View.GONE
+                            }
+                        }
                     }
                 }
             }
+            updateCheckerUtils.checkUpdateAsync(updateCheckListener)
         }
+
+
+
+
+
         updateButton.setOnClickListener {
             vibrate(mainActivity, 10)
             val intent = Intent(Intent.ACTION_VIEW)
@@ -242,17 +269,20 @@ class SettingsFragment1 : Fragment() {
         }
         runSetup.setOnClickListener {
             vibrate(mainActivity, 10)
-            mainUtils!!.run_cmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit")
+            mainUtils!!.runCmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit")
         }
         backupDb.setOnClickListener {
             vibrate(mainActivity, 10)
             val dbb = DBBackup()
-            executor.execute { dbb.createBackup(requireContext()) }
+            mainActivity.lifecycleScope.launch {
+                dbb.createBackup(requireContext())
+            }
         }
         restoreDb.setOnClickListener {
             vibrate(mainActivity, 10)
             val dbb = DBBackup()
-            executor.execute { dbb.restoreBackup(requireContext()) }
+            mainActivity.lifecycleScope.launch {
+                dbb.restoreBackup(requireContext())             }
         }
         saveButton.setOnClickListener {
             vibrate(mainActivity, 10)
@@ -269,6 +299,7 @@ class SettingsFragment1 : Fragment() {
         return view
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun applySettings() {
         vibrate(mainActivity, 10)
 

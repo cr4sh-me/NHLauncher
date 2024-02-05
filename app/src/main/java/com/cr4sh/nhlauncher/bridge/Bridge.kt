@@ -49,9 +49,8 @@ class Bridge private constructor() {
         fun createExecuteIntent(
             executablePath: String,
             command: String,
-            foreground: Boolean
         ): Intent {
-            return createExecuteIntent(SessionId.NEW_SESSION, executablePath, command, foreground)
+            return createExecuteIntent(SessionId.NEW_SESSION, executablePath, command)
         }
     }
 }

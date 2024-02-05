@@ -2,6 +2,7 @@ package com.cr4sh.nhlauncher.dialogs
 
 import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
@@ -16,10 +18,11 @@ import com.cr4sh.nhlauncher.utils.MainUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
-import java.util.Objects
 
 class FirstSetupDialog : AppCompatDialogFragment() {
-    private val mainActivity = NHLManager.getInstance().mainActivity
+    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
+
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,13 +47,13 @@ class FirstSetupDialog : AppCompatDialogFragment() {
         cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
         setupButton.setOnClickListener {
             vibrate(mainActivity, 10)
-            Objects.requireNonNull(dialog).cancel()
-            mainUtils.run_cmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit")
+            dialog?.cancel()
+            mainUtils.runCmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit")
             firstSetupCompleted()
         }
         cancelButton.setOnClickListener {
             vibrate(mainActivity, 10)
-            Objects.requireNonNull(dialog).cancel()
+            dialog?.cancel()
             firstSetupCompleted()
         }
         return view

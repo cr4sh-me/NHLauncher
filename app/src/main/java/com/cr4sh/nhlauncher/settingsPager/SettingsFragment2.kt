@@ -19,6 +19,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.widget.CompoundButtonCompat
 import androidx.fragment.app.Fragment
 import com.cr4sh.nhlauncher.MainActivity
@@ -35,7 +36,9 @@ import kotlin.math.roundToInt
 class SettingsFragment2 : Fragment() {
     var nhlPreferences: NHLPreferences? = null
     private var hexColorString: String? = null
-    var mainActivity: MainActivity = NHLManager.getInstance().mainActivity
+    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
+
+    @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

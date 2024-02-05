@@ -11,6 +11,7 @@ class CategoriesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var categoryLayout: ConstraintLayout
     var imageView: ImageView
     var nameView: TextView
+
     init {
         categoryLayout = itemView.findViewById(R.id.spinnerBackground)
         imageView = itemView.findViewById(R.id.button_icon)

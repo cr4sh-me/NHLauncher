@@ -21,19 +21,22 @@ import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.bridge.Bridge.Companion.createExecuteIntent
 import com.cr4sh.nhlauncher.overrides.CustomSpinnerAdapter
 import com.cr4sh.nhlauncher.utils.DialogUtils
-import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ShellExecuter
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.lang.ref.WeakReference
 import java.util.concurrent.ExecutionException
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 
 @Suppress("SameParameterValue")
@@ -42,7 +45,7 @@ class BluetoothFragment1 : Fragment() {
 
     @SuppressLint("SdCardPath")
     private val appScriptsPath = "/data/data/com.offsec.nethunter/scripts"
-    private val executor = NHLManager.getInstance().executorService
+//    private val executor = NHLManager.getInstance().executorService
     var scanTime = "10"
     var nhlPreferences: NHLPreferences? = null
     private var scrollView: ScrollView? = null
@@ -55,6 +58,7 @@ class BluetoothFragment1 : Fragment() {
     private var btSmd: File? = null
     private var bluebinder: File? = null
     private var buttonContainer: LinearLayout? = null
+
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -96,11 +100,12 @@ class BluetoothFragment1 : Fragment() {
         servicesButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
         servicesButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         try {
-            loadIfaces()
-        } catch (e: ExecutionException) {
-            throw RuntimeException(e)
-        } catch (e: InterruptedException) {
-            throw RuntimeException(e)
+            CoroutineScope(Dispatchers.IO).launch {
+                loadIfaces()
+            }
+        } catch (e: Exception) {
+            // Log exceptions or handle them appropriately
+            Log.e("ERROR", "Exception during loadIfaces", e)
         }
         binderStatus
         btServicesStatus
@@ -121,21 +126,23 @@ class BluetoothFragment1 : Fragment() {
         binderButton.setOnClickListener {
             try {
                 lockButton(false, "Please wait...", binderButton)
-                binderAction()
-            } catch (e: ExecutionException) {
-                throw RuntimeException(e)
-            } catch (e: InterruptedException) {
-                throw RuntimeException(e)
+                CoroutineScope(Dispatchers.IO).launch {
+                    binderAction()
+                }
+            } catch (e: Exception) {
+                // Log exceptions or handle them appropriately
+                Log.e("ERROR", "Exception during binderButton click", e)
             }
         }
         servicesButton.setOnClickListener {
-            try {
-                lockButton(false, "Please wait...", servicesButton)
-                btServicesAction()
-            } catch (e: ExecutionException) {
-                throw RuntimeException(e)
-            } catch (e: InterruptedException) {
-                throw RuntimeException(e)
+            CoroutineScope(Dispatchers.Main).launch {
+                try {
+                    lockButton(false, "Please wait...", servicesButton)
+                    btServicesAction()
+                } catch (e: Exception) {
+                    // Log exceptions or handle them appropriately
+                    Log.e("ERROR", "Exception during servicesButton click", e)
+                }
             }
         }
         scanButton.setOnClickListener { runBtScan() }
@@ -221,25 +228,21 @@ class BluetoothFragment1 : Fragment() {
 
     private fun runBtScan() {
         if (selectedIface != "None") {
-            executor!!.submit {
+            lifecycleScope.launch(Dispatchers.IO) {
                 try {
-                    val future1 =
-                        executor.submit<String> { exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hciconfig $selectedIface | grep 'UP RUNNING' | cut -f2 -d$'\\t'") }
-                    val hciCurrent = future1.get()
-                    if (hciCurrent != "UP RUNNING ") {
+                    val future1 = exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hciconfig $selectedIface | grep 'UP RUNNING' | cut -f2 -d$'\\t'")
+                    if (future1 != "UP RUNNING ") {
                         exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd hciconfig $selectedIface up"))
                     }
                     mainHandler.post {
                         buttonContainer!!.removeAllViews()
                         lockButton(false, "Scanning...", scanButton)
                     }
-                    val future2 =
-                        executor.submit<String> { exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hcitool -i $selectedIface scan  --length $scanTime | grep -A 1000 \"Scanning ...\" | awk '/Scanning .../{flag=1;next}/--/{flag=0}flag'\n") }
-                    val scanOutput = future2.get()
-                    Log.d("hcitool", scanOutput)
-                    if (scanOutput.isNotEmpty()) {
+                    val future2 = exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hcitool -i $selectedIface scan  --length $scanTime | grep -A 1000 \"Scanning ...\" | awk '/Scanning .../{flag=1;next}/--/{flag=0}flag'\n")
+                    Log.d("hcitool", future2)
+                    if (future2.isNotEmpty()) {
                         val devicesList =
-                            scanOutput.split("\n".toRegex()).dropLastWhile { it.isEmpty() }
+                            future2.split("\n".toRegex()).dropLastWhile { it.isEmpty() }
                                 .toTypedArray()
                         Log.d("hcitool", "not empty: " + devicesList.contentToString())
                         mainHandler.post {
@@ -260,148 +263,149 @@ class BluetoothFragment1 : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (executor != null && !executor.isShutdown) {
-            executor.shutdown()
-        }
     }
 
-    @get:SuppressLint("SetTextI18n")
-    val binderStatus: Unit
+    private val binderStatus: Unit
         get() {
-            executor!!.submit {
+            CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    val isBinderRunning = isBinderRunning
-                    mainHandler.post {
+                    val isBinderRunningValue = isBinderRunning()
+
+                    withContext(Dispatchers.Main) {
                         lockButton(
                             true,
-                            if (isBinderRunning) "Stop Bluebinder" else "Start Bluebinder",
+                            if (isBinderRunningValue) "Stop Bluebinder" else "Start Bluebinder",
                             binderButton
                         )
                     }
-                } catch (e: ExecutionException) {
-                    throw RuntimeException(e)
-                } catch (e: InterruptedException) {
-                    throw RuntimeException(e)
-                }
-            }
-            executor.submit {
-                try {
-                    loadIfaces()
-                } catch (e: ExecutionException) {
-                    throw RuntimeException(e)
-                } catch (e: InterruptedException) {
+
+                    // Run loadIfaces on the background thread
+                    try {
+                        loadIfaces()
+                    } catch (e: Exception) {
+                        // Log exceptions
+                        throw RuntimeException(e)
+                    }
+                } catch (e: Exception) {
+                    // Log exceptions
                     throw RuntimeException(e)
                 }
             }
         }
 
-    @get:SuppressLint("SetTextI18n")
-    val btServicesStatus: Unit
+
+
+    private val btServicesStatus: Unit
         get() {
-            executor!!.submit {
+            CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    val isBtServicesRunning = isBtServicesRunning
-                    mainHandler.post {
+                    val isBtServicesRunning = isBtServicesRunning()
+                    withContext(Dispatchers.Main) {
                         lockButton(
                             true,
                             if (isBtServicesRunning) "Stop BT Services" else "Start BT Services",
                             servicesButton
                         )
                     }
-                } catch (e: ExecutionException) {
-                    throw RuntimeException(e)
-                } catch (e: InterruptedException) {
+                } catch (e: Exception) {
+                    // Log exceptions
                     throw RuntimeException(e)
                 }
             }
         }
 
-    @get:Throws(
-        ExecutionException::class,
-        InterruptedException::class
-    )
-    val isBinderRunning: Boolean
-        get() {
-            val future1 =
-                executor!!.submit<String> { exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hciconfig | grep hci | cut -d: -f1") }
-            val future2 = executor.submit<String> { exe.RunAsRootOutput("pidof bluebinder") }
-            val outputHCI = future1.get() // Get the result from the Future
-            val binderStatusCmd = future2.get() // Get the result from the Future
+    @Throws(ExecutionException::class, InterruptedException::class)
+    suspend fun isBinderRunning(): Boolean {
+        return try {
+            val outputHCI = withContext(Dispatchers.IO) {
+                exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hciconfig | grep hci | cut -d: -f1")
+            }
+            val binderStatusCmd = withContext(Dispatchers.IO) {
+                exe.RunAsRootOutput("pidof bluebinder")
+            }
             return if (!btSmd!!.exists()) {
                 binderStatusCmd.isNotEmpty()
             } else {
                 outputHCI.contains("hci0")
             }
+        } catch (e: Exception) {
+            // Log exceptions
+            Log.e("ERROR", "Exception during isBinderRunning", e)
+            false
         }
+    }
 
-    @get:Throws(
-        ExecutionException::class,
-        InterruptedException::class
-    )
-    val isBtServicesRunning: Boolean
-        get() {
-            val future1 =
-                executor!!.submit<String> { exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd service dbus status | grep dbus") }
-            val future2 =
-                executor.submit<String> { exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd service bluetooth status | grep bluetooth") }
-            val dbusStatusCmd = future1.get()
-            val btStatusCmd = future2.get()
+
+    @Throws(ExecutionException::class, InterruptedException::class)
+    suspend fun isBtServicesRunning(): Boolean {
+        return try {
+            val dbusStatusCmd = withContext(Dispatchers.IO) {
+                exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd service dbus status | grep dbus")
+            }
+            val btStatusCmd = withContext(Dispatchers.IO) {
+                exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd service bluetooth status | grep bluetooth")
+            }
             Log.d("DEBSHIT", "$dbusStatusCmd $btStatusCmd")
-            return dbusStatusCmd == "dbus is running." && btStatusCmd == "bluetooth is running."
+            dbusStatusCmd == "dbus is running." && btStatusCmd == "bluetooth is running."
+        } catch (e: Exception) {
+            // Log exceptions
+            Log.e("ERROR", "Exception during isBtServicesRunning", e)
+            false
         }
+    }
 
     @SuppressLint("SetTextI18n")
     @Throws(ExecutionException::class, InterruptedException::class)
-    private fun binderAction() {
+    private suspend fun binderAction() {
         if (bluebinder!!.exists()) {
-            executor!!.submit {
-                try {
-                    val isRunningBeforeAction = isBinderRunning
+            try {
+                val isRunningBeforeAction = isBinderRunning()
 
-                    // Check if binder is running
-                    if (!isRunningBeforeAction) {
-                        // Start bluebinder process in the background
-                        startBinder()
-                    } else {
-                        // Stop bluebinder process in the background
-                        stopBinder()
-                    }
-
-                    // Schedule periodic updates using ScheduledExecutorService
-                    val scheduledExecutorService = Executors.newScheduledThreadPool(1)
-                    scheduledExecutorService.scheduleAtFixedRate({
-                        try {
-                            val isRunningAfterAction = isBinderRunning
-                            if (isRunningBeforeAction != isRunningAfterAction) {
-                                // Update button text on the UI thread
-                                mainHandler.post {
-                                    binderStatus
-                                    scheduledExecutorService.shutdown()
-                                }
-                            }
-                        } catch (e: Exception) {
-                            // Log exceptions
-                            Log.e("ERROR", "Exception during periodic update", e)
-                        }
-                    }, 0, 1, TimeUnit.SECONDS)
-                } catch (e: Exception) {
-                    // Log exceptions
-                    Log.e("ERROR", "Exception during binderAction", e)
+                // Check if binder is running
+                if (!isRunningBeforeAction) {
+                    // Start bluebinder process in the background
+                    startBinder()
+                } else {
+                    // Stop bluebinder process in the background
+                    stopBinder()
                 }
+
+                // Schedule periodic updates using coroutine delay
+                while (true) {
+                    delay(1000) // Adjust the delay duration if needed
+
+                    try {
+                        val isRunningAfterAction = isBinderRunning()
+                        if (isRunningBeforeAction != isRunningAfterAction) {
+                            // Update button text on the UI thread
+                            mainHandler.post {
+                                binderStatus
+                            }
+                            break
+                        }
+                    } catch (e: Exception) {
+                        // Log exceptions
+                        Log.e("ERROR", "Exception during periodic update", e)
+                    }
+                }
+            } catch (e: Exception) {
+                // Log exceptions
+                Log.e("ERROR", "Exception during binderAction", e)
             }
         } else {
             showCustomToast(requireActivity(), "Bluebinder is not installed. Launch setup first...")
         }
     }
 
+
     @SuppressLint("SetTextI18n")
     @Throws(ExecutionException::class, InterruptedException::class)
-    private fun btServicesAction() {
+    private suspend fun btServicesAction() {
+        try {
+            // Check if BT Services are running
+            val areServicesRunning = isBtServicesRunning()
 
-        // Check if BT Services are running
-        val areServicesRunning = isBtServicesRunning
-        executor!!.submit {
-            try {
+            withContext(Dispatchers.IO) {
                 if (!areServicesRunning) {
                     // Start BT Services
                     startBtServices()
@@ -409,63 +413,88 @@ class BluetoothFragment1 : Fragment() {
                     // Stop BT Services
                     stopBtServices()
                 }
+            }
 
-                // Wait for the action to complete
-                Thread.sleep(1000) // Adjust the sleep duration if needed
+            // Wait for the action to complete
+            delay(1000) // Adjust the delay duration if needed
 
-                // Update button text on the UI thread
-                mainHandler.post {
-                    Log.d("DEBUG", "Update on UI thread")
-                    btServicesStatus
+            // Update button text on the UI thread
+            mainHandler.post {
+                Log.d("DEBUG", "Update on UI thread")
+                btServicesStatus
+            }
+        } catch (e: Exception) {
+            // Log exceptions
+            Log.e("ERROR", "Exception during btServicesAction", e)
+        }
+    }
+
+
+    private suspend fun startBinder() {
+        try {
+            withContext(Dispatchers.IO) {
+                if (btSmd!!.exists()) {
+                    // Start binder with Bluetooth service manipulation
+                    exe.RunAsRoot(arrayOf("svc bluetooth disable"))
+                    exe.RunAsRoot(arrayOf("echo 0 > $btSmd"))
+                    exe.RunAsRoot(arrayOf("echo 1 > $btSmd"))
+                    exe.RunAsRoot(arrayOf("svc bluetooth enable"))
+                } else {
+                    // Disable Bluetooth service and launch bluebinder
+                    exe.RunAsRoot(arrayOf("svc bluetooth disable"))
+                    runCmd("echo -ne \"\\033]0;Bluebinder\\007\" && clear;bluebinder || bluebinder;exit")
                 }
-            } catch (e: Exception) {
-                // Log exceptions
-                Log.e("ERROR", "Exception during btServicesAction", e)
             }
+        } catch (e: Exception) {
+            Log.e("ERROR", "Exception during startBinder", e)
         }
     }
 
-    private fun startBinder() {
-        if (btSmd!!.exists()) {
-            executor!!.execute {
-                exe.RunAsRoot(arrayOf("svc bluetooth disable"))
-                exe.RunAsRoot(arrayOf("echo 0 > $btSmd"))
-                exe.RunAsRoot(arrayOf("echo 1 > $btSmd"))
-                exe.RunAsRoot(arrayOf("svc bluetooth enable"))
+
+    private suspend fun stopBinder() {
+        try {
+            withContext(Dispatchers.IO) {
+                if (btSmd!!.exists()) {
+                    // Stop binder
+                    exe.RunAsRoot(arrayOf("echo 0 > $btSmd"))
+                } else {
+                    // Stop binder and enable Bluetooth service
+                    exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd pkill bluebinder;exit"))
+                    exe.RunAsRoot(arrayOf("svc bluetooth enable"))
+                }
             }
-        } else {
-            executor!!.execute { exe.RunAsRoot(arrayOf("svc bluetooth disable")) }
-            runCmd("echo -ne \"\\033]0;Bluebinder\\007\" && clear;bluebinder || bluebinder;exit")
+        } catch (e: Exception) {
+            Log.e("ERROR", "Exception during stopBinder", e)
         }
     }
 
-    private fun stopBinder() {
-        if (btSmd!!.exists()) {
-            executor!!.execute { exe.RunAsRoot(arrayOf("echo 0 > $btSmd")) }
-        } else {
-            executor!!.execute {
-                exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd pkill bluebinder;exit"))
-                exe.RunAsRoot(arrayOf("svc bluetooth enable"))
+
+    private suspend fun startBtServices() {
+        try {
+            withContext(Dispatchers.IO) {
+                // Start BT services
+                exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service dbus start"))
+                exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service bluetooth start"))
             }
+        } catch (e: Exception) {
+            Log.e("ERROR", "Exception during startBtServices", e)
         }
     }
 
-    private fun startBtServices() {
-        executor!!.submit {
-            exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service dbus start"))
-            exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service bluetooth start"))
-        }
-    }
 
-    private fun stopBtServices() {
-        executor!!.submit {
-
-            // Stop BT services
-            exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service bluetooth stop"))
-            exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service dbus stop"))
+    private suspend fun stopBtServices() {
+        try {
+            withContext(Dispatchers.IO) {
+                // Stop BT services
+                exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service bluetooth stop"))
+                exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service dbus stop"))
+            }
             Log.d("BT Services", "Stop operation completed")
+        } catch (e: Exception) {
+            Log.e("ERROR", "Exception during stopBtServices", e)
         }
     }
+
 
     private fun lockButton(value: Boolean, binderButtonText: String, choosenButton: Button?) {
         mainHandler.post {
@@ -481,58 +510,61 @@ class BluetoothFragment1 : Fragment() {
         }
     }
 
-    @Throws(ExecutionException::class, InterruptedException::class)
-    private fun loadIfaces() {
-        val outputHCI = arrayOf("")
-        val future1 =
-            executor!!.submit<String> { exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hciconfig | grep hci | cut -d: -f1") }
-        outputHCI[0] = future1.get()
-        val hciIfaces = ArrayList<String?>()
-        Log.d(
-            "Ifaces",
-            outputHCI[0].split("\n".toRegex()).dropLastWhile { it.isEmpty() }
-                .toTypedArray().contentToString())
-        if (outputHCI[0].isEmpty()) {
-            mainHandler.post {
-                hciIfaces.add("None")
-                val customSpinnerAdapter = CustomSpinnerAdapter(
-                    requireActivity(),
-                    hciIfaces,
-                    imageList!!,
-                    nhlPreferences!!.color20()!!,
-                    nhlPreferences!!.color80()!!
-                )
-                ifaces.adapter = customSpinnerAdapter
+    private suspend fun loadIfaces() {
+        try {
+            val outputHCI = withContext(Dispatchers.IO) {
+                exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hciconfig | grep hci | cut -d: -f1")
             }
-        } else {
-            val ifacesArray = outputHCI[0].split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-
-            mainHandler.post {
-                val color20 = nhlPreferences?.color20()
-                val color80 = nhlPreferences?.color80()
-
-                if (color20 != null) {
-                    val customSpinnerAdapter = color80?.let {
-                        CustomSpinnerAdapter(
-                            requireActivity(),
-                            ifacesArray.toList(),
-                            imageList!!,
-                            color20,
-                            it // Provide a default color or handle null case
-                        )
-                    }
+            val hciIfaces = ArrayList<String?>()
+            Log.d(
+                "Ifaces",
+                outputHCI.split("\n".toRegex()).dropLastWhile { it.isEmpty() }
+                    .toTypedArray().contentToString()
+            )
+            if (outputHCI.isEmpty()) {
+                withContext(Dispatchers.Main) {
+                    hciIfaces.add("None")
+                    val customSpinnerAdapter = CustomSpinnerAdapter(
+                        requireActivity(),
+                        hciIfaces,
+                        imageList!!,
+                        nhlPreferences!!.color20()!!,
+                        nhlPreferences!!.color80()!!
+                    )
                     ifaces.adapter = customSpinnerAdapter
-                } else {
-                    // Handle the case when color20 is null
+                }
+            } else {
+                val ifacesArray = outputHCI.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+
+                withContext(Dispatchers.Main) {
+                    val color20 = nhlPreferences?.color20()
+                    val color80 = nhlPreferences?.color80()
+
+                    if (color20 != null) {
+                        val customSpinnerAdapter = color80?.let {
+                            CustomSpinnerAdapter(
+                                requireActivity(),
+                                ifacesArray.toList(),
+                                imageList!!,
+                                color20,
+                                it // Provide a default color or handle null case
+                            )
+                        }
+                        ifaces.adapter = customSpinnerAdapter
+                    } else {
+                        // Handle the case when color20 is null
+                    }
                 }
             }
-
+        } catch (e: Exception) {
+            Log.e("ERROR", "Exception during loadIfaces", e)
         }
     }
 
+
     private fun runCmd(cmd: String?) {
         @SuppressLint("SdCardPath") val intent =
-            createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd!!, false)
+            createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd!!)
         requireActivity().startActivity(intent)
     }
 

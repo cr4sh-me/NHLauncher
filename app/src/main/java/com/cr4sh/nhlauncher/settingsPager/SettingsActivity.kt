@@ -19,7 +19,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class SettingsActivity : AppCompatActivity() {
-    private val mainActivity = NHLManager.getInstance().mainActivity
+    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //        overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);

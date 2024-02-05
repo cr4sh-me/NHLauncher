@@ -18,9 +18,11 @@ class BluetoothPager(fragment: FragmentActivity?) : FragmentStateAdapter(
             0 -> {
                 BluetoothFragment1()
             }
+
             1 -> {
                 BluetoothFragment2()
             }
+
             else -> {
                 BluetoothFragment5()
             }

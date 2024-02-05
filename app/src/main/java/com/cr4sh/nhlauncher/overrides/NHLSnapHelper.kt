@@ -6,12 +6,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 
 class NHLSnapHelper : LinearSnapHelper() {
-    private val mainActivity = NHLManager.getInstance().mainActivity
+    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
     private var mVerticalHelper: OrientationHelper? = null
+
     @Throws(IllegalStateException::class)
     override fun attachToRecyclerView(recyclerView: RecyclerView?) {
         super.attachToRecyclerView(recyclerView)

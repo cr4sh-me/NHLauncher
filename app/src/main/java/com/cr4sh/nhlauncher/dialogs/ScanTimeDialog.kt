@@ -2,6 +2,7 @@ package com.cr4sh.nhlauncher.dialogs
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +11,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDialogFragment
-import com.cr4sh.nhlauncher.bluetoothPager.BluetoothFragment1
+import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
+import com.cr4sh.nhlauncher.bluetoothPager.BluetoothFragment1
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
@@ -20,8 +23,10 @@ import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 import java.util.Objects
 
 class ScanTimeDialog(private val wpsAttack: BluetoothFragment1) : AppCompatDialogFragment() {
-    private val mainActivity = NHLManager.getInstance().mainActivity
+    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
 
+
+    @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,7 +69,7 @@ class ScanTimeDialog(private val wpsAttack: BluetoothFragment1) : AppCompatDialo
                     val number = customPin.text.toString().toInt()
                     if (number > 0) {
                         wpsAttack.scanTime = customPin.text.toString()
-                        Objects.requireNonNull(dialog).cancel()
+                        dialog?.cancel()
                     } else {
                         showCustomToast(requireActivity(), "Are you dumb?")
                     }
@@ -73,7 +78,7 @@ class ScanTimeDialog(private val wpsAttack: BluetoothFragment1) : AppCompatDialo
         }
         cancelButton.setOnClickListener { view12: View? ->
             vibrate(mainActivity, 10)
-            Objects.requireNonNull(dialog).cancel()
+            dialog?.cancel()
             if (option == 1) {
                 wpsAttack.scanTime = "15"
             }

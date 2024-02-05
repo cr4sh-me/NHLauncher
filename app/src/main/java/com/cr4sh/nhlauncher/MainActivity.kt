@@ -16,6 +16,7 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
@@ -28,14 +29,16 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import com.cr4sh.nhlauncher.categoriesRecycler.CategoriesAdapter
-import com.cr4sh.nhlauncher.specialFeatures.SpecialFeaturesActivity
 import com.cr4sh.nhlauncher.buttonsRecycler.NHLAdapter
 import com.cr4sh.nhlauncher.buttonsRecycler.NHLItem
+import com.cr4sh.nhlauncher.categoriesRecycler.CategoriesAdapter
 import com.cr4sh.nhlauncher.database.DBHandler
 import com.cr4sh.nhlauncher.settingsPager.SettingsActivity
+import com.cr4sh.nhlauncher.specialFeatures.SpecialFeaturesActivity
 import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.MainUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
@@ -43,12 +46,18 @@ import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.PermissionUtils
 import com.cr4sh.nhlauncher.utils.ToastUtils
 import com.cr4sh.nhlauncher.utils.VibrationUtils
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
-    private val executor = NHLManager.getInstance().executorService
+//    private val executor = NHLManager.getInstance().executorService
     var buttonCategory: String? = null
     var buttonName: String? = null
     var buttonDescription: String? = null
@@ -89,6 +98,8 @@ class MainActivity : AppCompatActivity() {
     private var permissionDialogShown = false
     private var firstSetupDialogShown = false
 
+    @OptIn(DelicateCoroutinesApi::class)
+    @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("Recycle", "ResourceType", "CutPasteId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear)
         }
-        NHLManager.getInstance().mainActivity = this
+        NHLManager.instance.mainActivity = this
         val dialogUtils = DialogUtils(this.supportFragmentManager)
 
         // Check for nethunter and terminal apps
@@ -180,7 +191,10 @@ class MainActivity : AppCompatActivity() {
         mainUtils = MainUtils(this)
 
         // Setup colors and settings
-        executor.submit { mainUtils.changeLanguage(nhlPreferences.languageLocale()) }
+// Assuming mainUtils.changeLanguage is a suspend function
+        GlobalScope.launch(Dispatchers.Default) {
+            mainUtils.changeLanguage(nhlPreferences.languageLocale())
+        }
 
         // Setting up new spinner
         valuesList = listOf(
@@ -219,43 +233,47 @@ class MainActivity : AppCompatActivity() {
         val adapter2 = CategoriesAdapter()
 
         // Fill categories recycler
-        executor.submit {
+        // Assuming mainUtils.changeLanguage is a suspend function
+        GlobalScope.launch(Dispatchers.Default) {
             adapter2.updateData(valuesList, imageList)
             listViewCategories.adapter = adapter2
         }
 
         // Check if there is any favourite tool in db, and open Favourite Tools category by default
-        val favoriteCountFuture = executor.submit<Int> {
-            var isFavourite = 0
-            val selection = "FAVOURITE = ?"
-            val selectionArgs = arrayOf("1")
-            try {
-                mDatabase.query(
-                    "TOOLS",
-                    arrayOf("COUNT(FAVOURITE)"),
-                    selection,
-                    selectionArgs,
-                    "FAVOURITE = 1",
-                    "FAVOURITE = 1",
-                    "1",
-                    "1"
-                ).use { cursor ->
-                    if (cursor.moveToFirst()) {
-                        isFavourite = cursor.getInt(0)
+        // Check if there is any favourite tool in db, and open Favourite Tools category by default
+        val isFavourite: Int = try {
+            runBlocking {
+                withContext(Dispatchers.Default) {
+                    var isFavourite = 0
+                    try {
+                        val selection = "FAVOURITE = ?"
+                        val selectionArgs = arrayOf("1")
+
+                        mDatabase.query(
+                            "TOOLS",
+                            arrayOf("COUNT(FAVOURITE)"),
+                            selection,
+                            selectionArgs,
+                            "FAVOURITE = 1",
+                            "FAVOURITE = 1",
+                            "1",
+                            "1"
+                        ).use { cursor ->
+                            if (cursor.moveToFirst()) {
+                                isFavourite = cursor.getInt(0)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
+                    isFavourite
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
-            isFavourite
-        }
-        val isFavourite: Int
-        isFavourite = try {
-            favoriteCountFuture.get() // This blocks until the task is done
         } catch (e: Exception) {
             e.printStackTrace()
             0 // Default value in case of an exception
         }
+
         rollCategories =
             findViewById(R.id.showCategoriesImage) // Init rollCategories before spinnerChanger method
         rollCategoriesText =
@@ -360,6 +378,7 @@ class MainActivity : AppCompatActivity() {
         rollOutToolbar = AnimationUtils.loadAnimation(this@MainActivity, R.anim.roll_out_toolbar)
         searchIcon.setOnClickListener {
             VibrationUtils.vibrate(this@MainActivity, 10)
+
             if (searchEditText.visibility == View.VISIBLE) {
                 closeSearchBar()
             } else {
@@ -407,74 +426,81 @@ class MainActivity : AppCompatActivity() {
 
             @SuppressLint("SetTextI18n")
             override fun onTextChanged(newText: CharSequence, start: Int, before: Int, count: Int) {
-                val projection =
-                    arrayOf("CATEGORY", "NAME", nhlPreferences.language(), "CMD", "ICON", "USAGE")
+                val projection = arrayOf("CATEGORY", "NAME", nhlPreferences.language(), "CMD", "ICON", "USAGE")
 
                 // Add search filter to query
                 val selection = "NAME LIKE ? OR " + nhlPreferences.language() + " LIKE ?"
                 val selectionArgs = arrayOf("%$newText%", "%$newText%")
-                val orderBy =
-                    "CASE WHEN NAME LIKE '" + newText + "%' THEN 0 ELSE 1 END, " +  // sort by first letter match
-                            "CASE WHEN NAME LIKE '%" + newText + "%' THEN 0 ELSE 1 END, " +  // sort by containing newText
-                            "CASE WHEN " + nhlPreferences.language() + " LIKE '" + newText + "%' THEN 0 ELSE 1 END, " +  // sort by first letter match
-                            "CASE WHEN " + nhlPreferences.language() + " LIKE '%" + newText + "%' THEN 0 ELSE 1 END, " +  // sort by containing newText
-                            "NAME OR " + nhlPreferences.language() + " ASC"
+                val orderBy = "CASE WHEN NAME LIKE '$newText%' THEN 0 ELSE 1 END, " +
+                        "CASE WHEN NAME LIKE '%$newText%' THEN 0 ELSE 1 END, " +
+                        "CASE WHEN " + nhlPreferences.language() + " LIKE '$newText%' THEN 0 ELSE 1 END, " +
+                        "CASE WHEN " + nhlPreferences.language() + " LIKE '%$newText%' THEN 0 ELSE 1 END, " +
+                        "NAME OR " + nhlPreferences.language() + " ASC"
+
                 if (newText.isNotEmpty()) {
                     disableMenu = true
-                    val queryTask = executor.submit<List<NHLItem>> {
-                        val cursor = mDatabase.query(
-                            "TOOLS",
-                            projection,
-                            selection,
-                            selectionArgs,
-                            null,
-                            null,
-                            orderBy,
-                            "50"
-                        )
-                        val newItemList: MutableList<NHLItem> = ArrayList()
-                        if (cursor.count > 0) {
-                            // Create a new itemList from the cursor data
-                            while (cursor.moveToNext()) {
-                                val toolCategory = cursor.getString(0)
-                                val toolName = cursor.getString(1)
-                                val toolDescription = cursor.getString(2)
-                                val toolCmd = cursor.getString(3)
-                                val toolIcon = cursor.getString(4)
-                                val toolUsage = cursor.getInt(5)
-                                val item = NHLItem(
-                                    toolCategory,
-                                    toolName,
-                                    toolDescription,
-                                    toolCmd,
-                                    toolIcon,
-                                    toolUsage
-                                )
-                                newItemList.add(item)
-                            }
-                        } else {
-                            runOnUiThread {
-                                enableAfterAnimation(noToolsText)
-                                noToolsText.text = """
-                                ${resources.getString(R.string.cant_found)}$newText
-                                ${resources.getString(R.string.check_your_query)}
-                                """.trimIndent()
-                            }
-                        }
-                        cursor.close()
-                        newItemList
-                    }
-                    runOnUiThread {
+
+                    lifecycleScope.launch {
                         try {
-                            val newItemList1 = queryTask.get() // This blocks until the task is done
-                            if (newItemList1.isEmpty()) {
+                            val newItemList = withContext(Dispatchers.Default) {
+                                val cursor = mDatabase.query(
+                                    "TOOLS",
+                                    projection,
+                                    selection,
+                                    selectionArgs,
+                                    null,
+                                    null,
+                                    orderBy,
+                                    "50"
+                                )
+                                val itemList: MutableList<NHLItem> = ArrayList()
+
+                                try {
+                                    if (cursor.moveToFirst()) {
+                                        // Process cursor data
+                                        do {
+                                            val toolCategory = cursor.getString(0)
+                                            val toolName = cursor.getString(1)
+                                            val toolDescription = cursor.getString(2)
+                                            val toolCmd = cursor.getString(3)
+                                            val toolIcon = cursor.getString(4)
+                                            val toolUsage = cursor.getInt(5)
+                                            val item = NHLItem(
+                                                toolCategory,
+                                                toolName,
+                                                toolDescription,
+                                                toolCmd,
+                                                toolIcon,
+                                                toolUsage
+                                            )
+                                            itemList.add(item)
+                                        } while (cursor.moveToNext())
+                                    }
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                } finally {
+                                    cursor.close()
+                                }
+
+                                itemList
+                            }
+
+                            if (newItemList.isEmpty()) {
                                 adapter.updateData(ArrayList()) // Empty list to clear existing data
                                 enableAfterAnimation(noToolsText)
-                                noToolsText.text = resources.getString(R.string.db_error)
+                                noToolsText.text = resources.getString(R.string.cant_found) + newText
                             } else {
                                 noToolsText.text = null
                                 disableWhileAnimation(noToolsText)
-                                adapter.updateData(newItemList1)
+                                adapter.updateData(newItemList)
+
+                                recyclerView.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                                    override fun onPreDraw(): Boolean {
+                                        recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
+                                        recyclerView.scrollToPosition(0)
+                                        return true
+                                    }
+                                })
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -492,12 +518,14 @@ class MainActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable) {}
         })
+
+
         toolbar.setOnClickListener {
-            executor.submit {
+            lifecycleScope.launch {
                 VibrationUtils.vibrate(this@MainActivity, 10)
-                val intent = Intent(this, SettingsActivity::class.java)
+                val intent = Intent(this@MainActivity, SettingsActivity::class.java)
                 val animationBundle = ActivityOptions.makeCustomAnimation(
-                    this,
+                    this@MainActivity,
                     R.anim.cat_appear,  // Enter animation
                     R.anim.cat_disappear // Exit animation
                 ).toBundle()
@@ -515,7 +543,11 @@ class MainActivity : AppCompatActivity() {
         // Compare the current time with the target time
         if (formattedTime == targetTime) {
             val handler = Handler(Looper.getMainLooper())
-            adapter.startPapysz()
+            lifecycleScope.launch {
+                // Call the suspend function within a coroutine
+                adapter.startPapysz()
+            }
+
             ToastUtils.showCustomToast(this, "21:37")
             handler.postDelayed(stopPapysz, 5000) // show papysz face for 5s
         }
@@ -541,7 +573,7 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mDatabase.close()
-        NHLManager.getInstance().shutdownExecutorService()
+//        NHLManager.getInstance().shutdownExecutorService()
     }
 
     override fun onPause() {

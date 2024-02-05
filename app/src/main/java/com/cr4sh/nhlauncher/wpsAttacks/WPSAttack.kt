@@ -17,12 +17,10 @@ import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.provider.Settings
 import android.provider.Settings.SettingNotFoundException
 import android.text.Spannable
 import android.text.SpannableStringBuilder
-import android.text.TextUtils.replace
 import android.text.style.StyleSpan
 import android.util.Log
 import android.view.View
@@ -51,7 +49,6 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class WPSAttack : AppCompatActivity() {
-    private val executorService = NHLManager.getInstance().executorService
     var customPINCMD = ""
     var delayCMD = ""
     private lateinit var msg2: TextView
@@ -84,6 +81,7 @@ class WPSAttack : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -380,6 +378,7 @@ class WPSAttack : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun handleButtonClick(clickedButton: Button) {
         vibrate(this, 10)
         if (selectedButton != null) {
@@ -437,14 +436,9 @@ class WPSAttack : AppCompatActivity() {
                 val success = wifiManager!!.startScan()
                 if (!success && isThrottleEnabled) {
                     enableScanButton(false)
+                    buttonContainer!!.removeAllViews()
                     setMessage("Scan limit reached, re-enabling WiFi...")
                     resetWifi()
-                    coroutineScope.launch {
-                        while (isActive) {
-                            delay(5000)
-                            performWifiScan()
-                        }
-                    }
                 } else {
                     enableScanButton(false)
                     buttonContainer!!.removeAllViews()
@@ -510,33 +504,33 @@ class WPSAttack : AppCompatActivity() {
 
     private fun runCmd(cmd: String?) {
         @SuppressLint("SdCardPath") val intent =
-            createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd!!, false)
+            createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd!!)
         startActivity(intent)
     }
 
     private fun enableWifi() {
-        executorService.submit { exe!!.RunAsRoot(arrayOf("svc wifi enable")) }
+        coroutineScope.launch(Dispatchers.IO) {
+            exe?.RunAsRoot(arrayOf("svc wifi enable"))
+        }
     }
 
     private fun resetWifi() {
-        executorService.submit { exe!!.RunAsRoot(arrayOf("svc wifi disable")) }
-        coroutineScope.launch {
-            while (isActive) {
-                delay(3000)
-                exe?.RunAsRoot(arrayOf("svc wifi enable"))
+        coroutineScope.launch(Dispatchers.IO) {
+            exe?.RunAsRoot(arrayOf("svc wifi disable"))
+            delay(3000)
+            exe?.RunAsRoot(arrayOf("svc wifi enable"))
+            delay(3000)
+            runOnUiThread {
+                enableScanButton(true)
+                setMessage("Scan")
             }
         }
-//        Handler().postDelayed(
-//            { executorService.submit { exe!!. } },
-//            3000
-//        )
     }
 
     override fun onDestroy() {
         super.onDestroy()
         // Unregister the BroadcastReceiver to avoid memory leaks
         unregisterReceiver(wifiScanReceiver)
-        //        NHLManager.getInstance().shutdownExecutorService();
     }
 
     companion object {

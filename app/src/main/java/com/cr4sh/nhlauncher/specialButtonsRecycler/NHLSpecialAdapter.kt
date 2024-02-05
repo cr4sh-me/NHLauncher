@@ -6,10 +6,10 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.bluetoothPager.BluetoothActivity
 import com.cr4sh.nhlauncher.utils.NHLManager
@@ -19,7 +19,7 @@ import com.cr4sh.nhlauncher.wpsAttacks.WPSAttack
 import java.util.Locale
 
 class NHLSpecialAdapter : RecyclerView.Adapter<NHLSpecialViewHolder>() {
-    private val myActivity = NHLManager.getInstance().mainActivity
+    private val myActivity: MainActivity = NHLManager.instance.mainActivity
     private val items: MutableList<NHLSpecialItem> = ArrayList()
     private var height = 0
     private var margin = 0

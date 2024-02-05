@@ -2,6 +2,7 @@ package com.cr4sh.nhlauncher.dialogs
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,15 +11,16 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.cr4sh.nhlauncher.R
-import com.cr4sh.nhlauncher.wpsAttacks.WPSAttack
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
-import java.util.Objects
+import com.cr4sh.nhlauncher.wpsAttacks.WPSAttack
 
 class WpsCustomPinDialog(private val wpsAttack: WPSAttack) : AppCompatDialogFragment() {
+    @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,12 +66,12 @@ class WpsCustomPinDialog(private val wpsAttack: WPSAttack) : AppCompatDialogFrag
         setupButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
         cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
         cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
-        setupButton.setOnClickListener { view12: View? ->
+        setupButton.setOnClickListener {
             vibrate(requireActivity(), 10)
             if (customPin.text.toString().isEmpty()) {
                 showCustomToast(requireActivity(), "Empty input!")
             } else {
-                Objects.requireNonNull(dialog).cancel()
+                dialog?.cancel()
                 if (option == 1) {
                     wpsAttack.customPINCMD = " -p " + customPin.text.toString()
                 } else {
@@ -79,7 +81,7 @@ class WpsCustomPinDialog(private val wpsAttack: WPSAttack) : AppCompatDialogFrag
         }
         cancelButton.setOnClickListener {
             vibrate(requireActivity(), 10)
-            Objects.requireNonNull(dialog).cancel()
+            dialog?.cancel()
             if (option == 1) {
                 wpsAttack.customPINCMD = ""
             } else {

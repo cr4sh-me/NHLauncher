@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.BackgroundColorSpan
@@ -12,31 +13,50 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.RelativeLayout
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.MainUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewHolder>() {
-    private val myActivity = NHLManager.getInstance().mainActivity
+    val myActivity: MainActivity = NHLManager.instance.mainActivity
     private val items: MutableList<NHLItem> = ArrayList()
-    private val executor = NHLManager.getInstance().executorService
+//    private val executor = NHLManager.getInstance().executorService
     private var height = 0
     private var margin = 0
     private var drawable: GradientDrawable? = null
     private var nhlPreferences: NHLPreferences? = null
     private var overlay = false
 
-    @SuppressLint("NotifyDataSetChanged") // Clear old data and display new!
-    fun updateData(newData: List<NHLItem>?) {
-        items.clear()
-        items.addAll(newData!!)
-        notifyDataSetChanged()
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateData(newData: List<NHLItem>) {
+        CoroutineScope(Dispatchers.Default).launch {
+            val diffResult = withContext(Dispatchers.Default) {
+                DiffUtil.calculateDiff(NHLItemDiffCallback(items, newData))
+            }
+
+            withContext(Dispatchers.Main) {
+                items.clear()
+                items.addAll(newData)
+                diffResult.dispatchUpdatesTo(this@NHLAdapter)
+            }
+        }
     }
+
+
+
 
     @SuppressLint("NotifyDataSetChanged")
     fun startPapysz() {
@@ -81,6 +101,7 @@ class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewH
     }
 
     // Used to create buttons, and set listeners for them
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onBindViewHolder(
         holder: NHLViewHolder,
         @SuppressLint("RecyclerView") position: Int
@@ -179,7 +200,9 @@ class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewH
             }
             myActivity.buttonUsage = item.usage
             mainUtils.buttonUsageIncrease(item.name)
-            executor.execute { mainUtils.run_cmd(item.cmd) }
+            myActivity.lifecycleScope.launch {
+                mainUtils.runCmd(item.cmd)
+            }
         }
         holder.itemView.setOnLongClickListener {
             vibrate(myActivity, 10)

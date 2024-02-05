@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.utils.MainUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
@@ -16,7 +18,7 @@ import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 
 class CategoriesAdapter : RecyclerView.Adapter<CategoriesViewHolder>() {
-    private val myActivity = NHLManager.getInstance().mainActivity
+    private val myActivity: MainActivity = NHLManager.instance.mainActivity
     private val item: MutableList<String> = ArrayList()
     private val itemImg: MutableList<Int> = ArrayList()
     private var height = 0
@@ -53,6 +55,7 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoriesViewHolder>() {
     }
 
     // Used to create buttons, and set listeners for them
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onBindViewHolder(
         holder: CategoriesViewHolder,
         @SuppressLint("RecyclerView") position: Int

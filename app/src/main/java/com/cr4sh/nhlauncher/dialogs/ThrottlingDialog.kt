@@ -3,6 +3,7 @@ package com.cr4sh.nhlauncher.dialogs
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -11,16 +12,18 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDialogFragment
+import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
-import java.util.Objects
 
 class ThrottlingDialog : AppCompatDialogFragment() {
-    private val mainActivity = NHLManager.getInstance().mainActivity
+    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,17 +47,17 @@ class ThrottlingDialog : AppCompatDialogFragment() {
         setupButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
         cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
         cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
-        setupButton.setOnClickListener { view12: View? ->
+        setupButton.setOnClickListener {
             vibrate(mainActivity, 10)
-            Objects.requireNonNull(dialog).cancel()
+            dialog?.cancel()
             val intent = Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
             startActivity(intent)
             showCustomToast(requireContext(), "Set Wi-Fi scan throttling to off")
             firstSetupCompleted()
         }
-        cancelButton.setOnClickListener { view12: View? ->
+        cancelButton.setOnClickListener {
             vibrate(mainActivity, 10)
-            Objects.requireNonNull(dialog).cancel()
+            dialog?.cancel()
             firstSetupCompleted()
         }
         return view
