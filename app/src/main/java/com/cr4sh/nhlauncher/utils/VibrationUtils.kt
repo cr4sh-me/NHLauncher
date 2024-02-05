@@ -1,15 +1,21 @@
+@file:Suppress("DEPRECATION")
+
 package com.cr4sh.nhlauncher.utils
 
 import android.content.Context
 import android.os.Build
 import android.os.VibrationEffect
-import android.os.Vibrator
+import android.os.VibratorManager
+import androidx.annotation.RequiresApi
 
 object VibrationUtils {
     // Vibrations method
     @JvmStatic
+    @RequiresApi(Build.VERSION_CODES.S)
     fun vibrate(context: Context, milliseconds: Long) {
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+        val vibrator = vibratorManager.defaultVibrator
+//        val vibrator = VibratorManager
         val nhlPreferences = NHLPreferences(context)
         if (nhlPreferences.vibrationOn()) {
             if (vibrator.hasVibrator()) {
