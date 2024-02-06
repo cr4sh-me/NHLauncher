@@ -23,6 +23,7 @@ import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 
 class ThrottlingDialog : AppCompatDialogFragment() {
     private val mainActivity: MainActivity = NHLManager.instance.mainActivity
+
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

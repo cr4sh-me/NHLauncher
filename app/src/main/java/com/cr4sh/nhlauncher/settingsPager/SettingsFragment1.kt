@@ -27,9 +27,10 @@ import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.database.DBBackup
-import com.cr4sh.nhlauncher.utils.MainUtils
+import com.cr4sh.nhlauncher.utils.LanguageChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.UpdateCheckerUtils
 import com.cr4sh.nhlauncher.utils.UpdateCheckerUtils.UpdateCheckResult
@@ -41,8 +42,9 @@ import kotlinx.coroutines.launch
 
 class SettingsFragment1 : Fragment() {
     var nhlPreferences: NHLPreferences? = null
-    var mainUtils: MainUtils? = null
+    var mainUtils: NHLUtils? = null
     val mainActivity: MainActivity = NHLManager.instance.mainActivity
+    private val languageChanger = LanguageChanger()
     private lateinit var updateButton: Button
     private var newSortingModeSetting: String? = null
     private var newLanguageNameSetting: String? = null
@@ -59,7 +61,7 @@ class SettingsFragment1 : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.settings_layout1, container, false)
         nhlPreferences = NHLPreferences(requireActivity())
-        mainUtils = MainUtils(mainActivity)
+        mainUtils = NHLUtils(mainActivity)
         vibrationsCheckbox = view.findViewById(R.id.vibrations_checkbox)
         newButtonsStyle = view.findViewById(R.id.newbuttons_checkbox)
         overlayCheckbox = view.findViewById(R.id.overlay_checkbox)
@@ -114,12 +116,12 @@ class SettingsFragment1 : Fragment() {
         setButtonColors(saveButton)
         vibrationsCheckbox.isChecked = nhlPreferences!!.vibrationOn()
         newButtonsStyle.isChecked = nhlPreferences!!.isNewButtonStyleActive
+
+//        nhlPreferences!!.languageLocale()?.let { languageChanger.setLocale(this.context, it) }
+
         overlayCheckbox.isChecked = nhlPreferences!!.isButtonOverlayActive
-        val resources = mainActivity.resources
-        val configuration = resources?.configuration
-        val localeList = configuration?.locales
-        val currentLocale = localeList?.get(0)
-        val currentLanguageCode = currentLocale?.language
+
+        val currentLanguageCode = nhlPreferences!!.languageLocale()
         if (currentLanguageCode == "pl") {
             powerSpinnerView.selectItemByIndex(1)
         } else if (currentLanguageCode == "en") {
@@ -257,10 +259,6 @@ class SettingsFragment1 : Fragment() {
             updateCheckerUtils.checkUpdateAsync(updateCheckListener)
         }
 
-
-
-
-
         updateButton.setOnClickListener {
             vibrate(mainActivity, 10)
             val intent = Intent(Intent.ACTION_VIEW)
@@ -282,7 +280,8 @@ class SettingsFragment1 : Fragment() {
             vibrate(mainActivity, 10)
             val dbb = DBBackup()
             mainActivity.lifecycleScope.launch {
-                dbb.restoreBackup(requireContext())             }
+                dbb.restoreBackup(requireContext())
+            }
         }
         saveButton.setOnClickListener {
             vibrate(mainActivity, 10)
@@ -343,8 +342,8 @@ class SettingsFragment1 : Fragment() {
         editor.putString("language", languageName)
         editor.putString("languageLocale", languageLocale)
         editor.apply()
-        mainUtils!!.changeLanguage(languageLocale)
-        //        requireActivity().recreate();
+
+        nhlPreferences?.languageLocale()?.let { languageChanger.setLocale(mainActivity, it) }
     }
 
     private fun saveVibrationsPref(vibrations: Boolean) {
@@ -361,7 +360,6 @@ class SettingsFragment1 : Fragment() {
         val editor = prefs.edit()
         editor.putBoolean("isNewButtonStyleActive", active)
         editor.apply()
-        //        mainActivity.recreate();
     }
 
     private fun saveOverlayPref(active: Boolean) {

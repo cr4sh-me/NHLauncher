@@ -12,9 +12,9 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
-import com.cr4sh.nhlauncher.utils.MainUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 
 class CategoriesAdapter : RecyclerView.Adapter<CategoriesViewHolder>() {
@@ -60,7 +60,7 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoriesViewHolder>() {
         holder: CategoriesViewHolder,
         @SuppressLint("RecyclerView") position: Int
     ) {
-        val mainUtils = MainUtils(myActivity)
+        val mainUtils = NHLUtils(myActivity)
         val categoryName = item[position]
         val categoryImage = itemImg[position].toString()
         holder.nameView.text = categoryName

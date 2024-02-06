@@ -14,9 +14,9 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
-import com.cr4sh.nhlauncher.utils.MainUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 
 class FirstSetupDialog : AppCompatDialogFragment() {
@@ -28,7 +28,7 @@ class FirstSetupDialog : AppCompatDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.first_setup_dialog, container, false)
-        val mainUtils = MainUtils((requireActivity() as MainActivity))
+        val mainUtils = NHLUtils((requireActivity() as MainActivity))
         val nhlPreferences = NHLPreferences(requireActivity())
         isCancelable = false
         val bkg = view.findViewById<LinearLayout>(R.id.custom_theme_dialog_background)

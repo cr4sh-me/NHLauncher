@@ -17,7 +17,6 @@ import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.PermissionUtils
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
-import java.util.Objects
 
 class PermissionDialog : AppCompatDialogFragment() {
     private val mainActivity: MainActivity = NHLManager.instance.mainActivity

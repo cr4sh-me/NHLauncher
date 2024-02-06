@@ -44,15 +44,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".utils.LanguageChanger"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".specialFeatures.SpecialFeaturesActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".wpsAttacks.WPSAttack"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".mdkDeauth.MDKDeauth"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

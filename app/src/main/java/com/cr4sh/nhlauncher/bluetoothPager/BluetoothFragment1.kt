@@ -45,7 +45,8 @@ class BluetoothFragment1 : Fragment() {
 
     @SuppressLint("SdCardPath")
     private val appScriptsPath = "/data/data/com.offsec.nethunter/scripts"
-//    private val executor = NHLManager.getInstance().executorService
+
+    //    private val executor = NHLManager.getInstance().executorService
     var scanTime = "10"
     var nhlPreferences: NHLPreferences? = null
     private var scrollView: ScrollView? = null
@@ -230,7 +231,8 @@ class BluetoothFragment1 : Fragment() {
         if (selectedIface != "None") {
             lifecycleScope.launch(Dispatchers.IO) {
                 try {
-                    val future1 = exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hciconfig $selectedIface | grep 'UP RUNNING' | cut -f2 -d$'\\t'")
+                    val future1 =
+                        exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hciconfig $selectedIface | grep 'UP RUNNING' | cut -f2 -d$'\\t'")
                     if (future1 != "UP RUNNING ") {
                         exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd hciconfig $selectedIface up"))
                     }
@@ -238,7 +240,8 @@ class BluetoothFragment1 : Fragment() {
                         buttonContainer!!.removeAllViews()
                         lockButton(false, "Scanning...", scanButton)
                     }
-                    val future2 = exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hcitool -i $selectedIface scan  --length $scanTime | grep -A 1000 \"Scanning ...\" | awk '/Scanning .../{flag=1;next}/--/{flag=0}flag'\n")
+                    val future2 =
+                        exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hcitool -i $selectedIface scan  --length $scanTime | grep -A 1000 \"Scanning ...\" | awk '/Scanning .../{flag=1;next}/--/{flag=0}flag'\n")
                     Log.d("hcitool", future2)
                     if (future2.isNotEmpty()) {
                         val devicesList =
@@ -292,7 +295,6 @@ class BluetoothFragment1 : Fragment() {
                 }
             }
         }
-
 
 
     private val btServicesStatus: Unit
@@ -534,7 +536,8 @@ class BluetoothFragment1 : Fragment() {
                     ifaces.adapter = customSpinnerAdapter
                 }
             } else {
-                val ifacesArray = outputHCI.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                val ifacesArray =
+                    outputHCI.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
                 withContext(Dispatchers.Main) {
                     val color20 = nhlPreferences?.color20()

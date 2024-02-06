@@ -11,8 +11,8 @@ import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.database.DBHandler.Companion.insertTool
 import com.cr4sh.nhlauncher.database.DBHandler.Companion.updateTool
 import com.cr4sh.nhlauncher.utils.DialogUtils
-import com.cr4sh.nhlauncher.utils.MainUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
+import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import java.io.File
 import java.io.FileInputStream
@@ -22,7 +22,7 @@ import java.io.FileOutputStream
 // This class is backing up and restoring buttons
 class DBBackup {
     val mainActivity: MainActivity = NHLManager.instance.mainActivity
-    private val mainUtils: MainUtils = MainUtils(mainActivity)
+    private val mainUtils: NHLUtils = NHLUtils(mainActivity)
     private val dialogUtils: DialogUtils = DialogUtils(mainActivity.supportFragmentManager)
 
     fun createBackup(context: Context) {

@@ -18,12 +18,11 @@ import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.database.DBHandler
 import com.cr4sh.nhlauncher.database.DBHandler.Companion.updateToolCmd
-import com.cr4sh.nhlauncher.utils.MainUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
-import java.util.Objects
 
 class EditableDialog : AppCompatDialogFragment() {
     private val mainActivity: MainActivity = NHLManager.instance.mainActivity
@@ -35,7 +34,7 @@ class EditableDialog : AppCompatDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.editable_dialog, container, false)
-        val mainUtils = MainUtils((requireActivity() as MainActivity))
+        val mainUtils = NHLUtils((requireActivity() as MainActivity))
         val nhlPreferences = NHLPreferences(requireActivity())
         assert(arguments != null)
         val name = requireArguments().getString("name")

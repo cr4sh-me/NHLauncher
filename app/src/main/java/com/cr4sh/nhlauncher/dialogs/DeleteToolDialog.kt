@@ -19,13 +19,12 @@ import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.database.DBHandler
 import com.cr4sh.nhlauncher.database.DBHandler.Companion.deleteTool
-import com.cr4sh.nhlauncher.utils.MainUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 import java.util.Locale
-import java.util.Objects
 
 class DeleteToolDialog : AppCompatDialogFragment() {
     val mainActivity: MainActivity = NHLManager.instance.mainActivity
@@ -37,7 +36,7 @@ class DeleteToolDialog : AppCompatDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.delete_tool_dialog, container, false)
-        val mainUtils = MainUtils((requireActivity() as MainActivity))
+        val mainUtils = NHLUtils((requireActivity() as MainActivity))
         val nhlPreferences = NHLPreferences(requireActivity())
         assert(arguments != null)
         val name = requireArguments().getString("name")

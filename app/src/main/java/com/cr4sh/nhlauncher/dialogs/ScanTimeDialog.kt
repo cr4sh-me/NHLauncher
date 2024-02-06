@@ -20,7 +20,6 @@ import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
-import java.util.Objects
 
 class ScanTimeDialog(private val wpsAttack: BluetoothFragment1) : AppCompatDialogFragment() {
     private val mainActivity: MainActivity = NHLManager.instance.mainActivity

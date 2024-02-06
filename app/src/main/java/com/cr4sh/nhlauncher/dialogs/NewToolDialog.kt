@@ -19,12 +19,11 @@ import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.database.DBHandler
 import com.cr4sh.nhlauncher.database.DBHandler.Companion.insertTool
-import com.cr4sh.nhlauncher.utils.MainUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
-import java.util.Objects
 
 class NewToolDialog : AppCompatDialogFragment() {
     private val mainActivity: MainActivity = NHLManager.instance.mainActivity
@@ -36,7 +35,7 @@ class NewToolDialog : AppCompatDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.new_tool_dialog, container, false)
-        val mainUtils = MainUtils((requireActivity() as MainActivity))
+        val mainUtils = NHLUtils((requireActivity() as MainActivity))
         val nhlPreferences = NHLPreferences(requireActivity())
         assert(arguments != null)
         val category = requireArguments().getString("category")

@@ -3,23 +3,19 @@ package com.cr4sh.nhlauncher.utils
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.ContextCompat
-import com.cr4sh.nhlauncher.MainActivity
 import com.google.android.material.R
 import java.util.Locale
 
 // This class read, store and return SharedPreferences
-class NHLPreferences(context: Context) {
-    private val nhlPrefs: SharedPreferences
-    private val setupPrefs: SharedPreferences
-    private val customColorsPrefs: SharedPreferences
-    private val context: MainActivity = NHLManager.instance.mainActivity
-
-    init {
-//        this.context = mainActivity;
-        customColorsPrefs = context.getSharedPreferences("customColors", Context.MODE_PRIVATE)
-        nhlPrefs = context.getSharedPreferences("nhlSettings", Context.MODE_PRIVATE)
-        setupPrefs = context.getSharedPreferences("setupSettings", Context.MODE_PRIVATE)
-    }
+class NHLPreferences(//    private val context: MainActivity = NHLManager.instance.mainActivity
+    private val context: Context
+) {
+    private val nhlPrefs: SharedPreferences =
+        context.getSharedPreferences("nhlSettings", Context.MODE_PRIVATE)
+    private val setupPrefs: SharedPreferences =
+        context.getSharedPreferences("setupSettings", Context.MODE_PRIVATE)
+    private val customColorsPrefs: SharedPreferences =
+        context.getSharedPreferences("customColors", Context.MODE_PRIVATE)
 
     fun color80(): String? {
         return if (dynamicThemeBool()) {
@@ -82,19 +78,13 @@ class NHLPreferences(context: Context) {
     }
 
     fun language(): String? {
-        return if (Locale.getDefault().language != "pl") {
-            nhlPrefs.getString("language", "DESCRIPTION_EN")
-        } else {
-            nhlPrefs.getString("language", "DESCRIPTION_PL")
-        }
+        val languageShit = Locale.getDefault().language.uppercase()
+        val languageShit2 = "DESCRIPTION_$languageShit"
+        return nhlPrefs.getString("language", languageShit2)
     }
 
     fun languageLocale(): String? {
-        return if (Locale.getDefault().language != "pl") {
-            nhlPrefs.getString("languageLocale", "EN")
-        } else {
-            nhlPrefs.getString("languageLocale", "PL")
-        }
+        return nhlPrefs.getString("languageLocale", Locale.getDefault().language)
     }
 
     fun sortingMode(): String? {
@@ -116,4 +106,12 @@ class NHLPreferences(context: Context) {
         get() = nhlPrefs.getInt("recyclerHeight", 0)
     val isButtonOverlayActive: Boolean
         get() = nhlPrefs.getBoolean("isButtonOverlayActive", false)
+    val isPixieDustActive: Boolean
+        get() = nhlPrefs.getBoolean("isPixieDustActive", false)
+    val isPixieForceActive: Boolean
+        get() = nhlPrefs.getBoolean("isPixieForceActive", false)
+    val isOnlineBfActive: Boolean
+        get() = nhlPrefs.getBoolean("isOnlineBfActive", false)
+    val isWpsButtonActive: Boolean
+        get() = nhlPrefs.getBoolean("isWpsButtonActive", false)
 }

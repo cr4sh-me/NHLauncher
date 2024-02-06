@@ -37,7 +37,6 @@ import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.bridge.Bridge.Companion.createExecuteIntent
 import com.cr4sh.nhlauncher.specialFeatures.SpecialFeaturesActivity
 import com.cr4sh.nhlauncher.utils.DialogUtils
-import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ShellExecuter
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
@@ -170,17 +169,26 @@ class WPSAttack : AppCompatActivity() {
                 nhlPreferences!!.color80()
             )
         )
+
+        pixieDustCheckbox.isChecked = nhlPreferences!!.isPixieDustActive
+        pixieForceCheckbox.isChecked = nhlPreferences!!.isPixieForceActive
+        bruteCheckbox.isChecked = nhlPreferences!!.isOnlineBfActive
+        wpsButtonCheckbox.isChecked = nhlPreferences!!.isWpsButtonActive
+
         pixieDustCheckbox.setOnClickListener {
             vibrate(this, 10)
             pixieCMD = if (pixieDustCheckbox.isChecked) " -K" else ""
+            savePixieDust(pixieDustCheckbox.isChecked)
         }
         pixieForceCheckbox.setOnClickListener {
             vibrate(this, 10)
             pixieforceCMD = if (pixieForceCheckbox.isChecked) " -F" else ""
+            savePixieForce(pixieForceCheckbox.isChecked)
         }
         bruteCheckbox.setOnClickListener {
             vibrate(this, 10)
             bruteCMD = if (bruteCheckbox.isChecked) " -B" else ""
+            saveOnlineBf(bruteCheckbox.isChecked)
         }
         customPinCheckbox.setOnClickListener {
             vibrate(this, 10)
@@ -195,6 +203,7 @@ class WPSAttack : AppCompatActivity() {
             pbcCMD = if (wpsButtonCheckbox.isChecked) {
                 " --pbc"
             } else ""
+            saveWpsButton(wpsButtonCheckbox.isChecked)
         }
         enableScanButton(true)
         scanButton.setOnClickListener {
@@ -541,4 +550,38 @@ class WPSAttack : AppCompatActivity() {
             return lines[1].trim { it <= ' ' }
         }
     }
+
+    private fun savePixieDust(active: Boolean) {
+        // Save the color values and frame drawable to SharedPreferences
+        val prefs = getSharedPreferences("nhlSettings", Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.putBoolean("isPixieDustActive", active)
+        editor.apply()
+    }
+
+    private fun savePixieForce(active: Boolean) {
+        // Save the color values and frame drawable to SharedPreferences
+        val prefs = getSharedPreferences("nhlSettings", Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.putBoolean("isPixieForceActive", active)
+        editor.apply()
+    }
+
+    private fun saveOnlineBf(active: Boolean) {
+        // Save the color values and frame drawable to SharedPreferences
+        val prefs = getSharedPreferences("nhlSettings", Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.putBoolean("isOnlineBfActive", active)
+        editor.apply()
+    }
+
+    private fun saveWpsButton(active: Boolean) {
+        // Save the color values and frame drawable to SharedPreferences
+        val prefs = getSharedPreferences("nhlSettings", Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.putBoolean("isWpsButtonActive", active)
+        editor.apply()
+    }
+
+
 }

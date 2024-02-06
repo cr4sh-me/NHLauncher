@@ -19,7 +19,8 @@ import java.net.UnknownHostException
 
 class UpdateCheckerUtils {
     private val mainActivity: MainActivity = NHLManager.instance.mainActivity
-//    private val executor = NHLManager.getInstance().executorService
+
+    //    private val executor = NHLManager.getInstance().executorService
     private val uiHandler = Handler(Looper.getMainLooper())
     fun checkUpdateAsync(listener: UpdateCheckListener) {
         mainActivity.lifecycleScope.launch(Dispatchers.IO) {

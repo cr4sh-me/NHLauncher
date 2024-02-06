@@ -40,9 +40,10 @@ import com.cr4sh.nhlauncher.database.DBHandler
 import com.cr4sh.nhlauncher.settingsPager.SettingsActivity
 import com.cr4sh.nhlauncher.specialFeatures.SpecialFeaturesActivity
 import com.cr4sh.nhlauncher.utils.DialogUtils
-import com.cr4sh.nhlauncher.utils.MainUtils
+import com.cr4sh.nhlauncher.utils.LanguageChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.PermissionUtils
 import com.cr4sh.nhlauncher.utils.ToastUtils
 import com.cr4sh.nhlauncher.utils.VibrationUtils
@@ -57,7 +58,7 @@ import java.util.Calendar
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
-//    private val executor = NHLManager.getInstance().executorService
+    //    private val executor = NHLManager.getInstance().executorService
     var buttonCategory: String? = null
     var buttonName: String? = null
     var buttonDescription: String? = null
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var imageList: List<Int>
     private lateinit var rollCategoriesText: TextView
     private lateinit var rollCategories: ImageView
-    lateinit var mainUtils: MainUtils
+    lateinit var mainUtils: NHLUtils
     lateinit var nhlPreferences: NHLPreferences
 
     // Stop papysz easteregg
@@ -149,8 +150,17 @@ class MainActivity : AppCompatActivity() {
             return
         }
         nhlPreferences = NHLPreferences(this)
+
+        val languageChanger = LanguageChanger()
+        nhlPreferences.languageLocale()?.let { languageChanger.setLocale(this@MainActivity, it) }
+
+
+        // set language
+
         resetRecyclerHeight()
         setContentView(R.layout.activity_main)
+
+
         val rootView = findViewById<View>(android.R.id.content)
 
         // Apply custom colors
@@ -188,13 +198,10 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         // Get functions from this class
-        mainUtils = MainUtils(this)
-
+        mainUtils = NHLUtils(this)
         // Setup colors and settings
 // Assuming mainUtils.changeLanguage is a suspend function
-        GlobalScope.launch(Dispatchers.Default) {
-            mainUtils.changeLanguage(nhlPreferences.languageLocale())
-        }
+
 
         // Setting up new spinner
         valuesList = listOf(
@@ -426,7 +433,8 @@ class MainActivity : AppCompatActivity() {
 
             @SuppressLint("SetTextI18n")
             override fun onTextChanged(newText: CharSequence, start: Int, before: Int, count: Int) {
-                val projection = arrayOf("CATEGORY", "NAME", nhlPreferences.language(), "CMD", "ICON", "USAGE")
+                val projection =
+                    arrayOf("CATEGORY", "NAME", nhlPreferences.language(), "CMD", "ICON", "USAGE")
 
                 // Add search filter to query
                 val selection = "NAME LIKE ? OR " + nhlPreferences.language() + " LIKE ?"
@@ -488,13 +496,15 @@ class MainActivity : AppCompatActivity() {
                             if (newItemList.isEmpty()) {
                                 adapter.updateData(ArrayList()) // Empty list to clear existing data
                                 enableAfterAnimation(noToolsText)
-                                noToolsText.text = resources.getString(R.string.cant_found) + newText
+                                noToolsText.text =
+                                    resources.getString(R.string.cant_found) + newText
                             } else {
                                 noToolsText.text = null
                                 disableWhileAnimation(noToolsText)
                                 adapter.updateData(newItemList)
 
-                                recyclerView.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                                recyclerView.viewTreeObserver.addOnPreDrawListener(object :
+                                    ViewTreeObserver.OnPreDrawListener {
                                     override fun onPreDraw(): Boolean {
                                         recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
                                         recyclerView.scrollToPosition(0)

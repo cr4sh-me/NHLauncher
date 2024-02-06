@@ -20,9 +20,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.utils.DialogUtils
-import com.cr4sh.nhlauncher.utils.MainUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +33,8 @@ import java.util.Locale
 class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewHolder>() {
     val myActivity: MainActivity = NHLManager.instance.mainActivity
     private val items: MutableList<NHLItem> = ArrayList()
-//    private val executor = NHLManager.getInstance().executorService
+
+    //    private val executor = NHLManager.getInstance().executorService
     private var height = 0
     private var margin = 0
     private var drawable: GradientDrawable? = null
@@ -54,8 +55,6 @@ class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewH
             }
         }
     }
-
-
 
 
     @SuppressLint("NotifyDataSetChanged")
@@ -106,7 +105,7 @@ class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewH
         holder: NHLViewHolder,
         @SuppressLint("RecyclerView") position: Int
     ) {
-        val mainUtils = MainUtils(myActivity)
+        val mainUtils = NHLUtils(myActivity)
         val dialogUtils = DialogUtils(myActivity.supportFragmentManager)
         val item = getItem(position)
         val searchQuery = editText.text.toString().uppercase(Locale.getDefault())

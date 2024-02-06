@@ -15,8 +15,8 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.utils.DialogUtils
-import com.cr4sh.nhlauncher.utils.MainUtils
 import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 
@@ -28,7 +28,7 @@ class ButtonMenuDialog(private var myActivity: MainActivity) : AppCompatDialogFr
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.button_menu_dialog, container, false)
-        val mainUtils = MainUtils(myActivity)
+        val mainUtils = NHLUtils(myActivity)
         val nhlPreferences = NHLPreferences(myActivity)
         val bkg = view.findViewById<LinearLayout>(R.id.custom_theme_dialog_background)
         val title = view.findViewById<TextView>(R.id.dialog_title)
@@ -61,8 +61,8 @@ class ButtonMenuDialog(private var myActivity: MainActivity) : AppCompatDialogFr
 
         option1.setOnClickListener {
             vibrate(myActivity, 10)
-                    dialogUtils.openEditableDialog(myActivity.buttonName, myActivity.buttonCmd)
-                    dialog?.cancel()
+            dialogUtils.openEditableDialog(myActivity.buttonName, myActivity.buttonCmd)
+            dialog?.cancel()
         }
         option2.setOnClickListener {
             vibrate(myActivity, 10)
