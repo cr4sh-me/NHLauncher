@@ -181,5 +181,6 @@
     <string name="wps_desc_short">USE ONESHOT SCRIPT TO PERFORM WPS ATTACKS</string>
     <string name="bt_short">PERFORM VARIOUS BLUETOOTH ATTACKS</string>
     <string name="bt_toolkit">BLUETOOTH TOOLKIT</string>
+    <string name="wifi_networks_will_be_displayed_here">WiFi networks will be displayed here</string>
 
 </resources>

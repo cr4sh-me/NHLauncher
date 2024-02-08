@@ -30,6 +30,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/wps_info" />
 
+    <TextView
+        android:id="@+id/text_msg"
+        android:gravity="center"
+        android:text="@string/wifi_networks_will_be_displayed_here"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/messageBox2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wps_info2"/>
+
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"

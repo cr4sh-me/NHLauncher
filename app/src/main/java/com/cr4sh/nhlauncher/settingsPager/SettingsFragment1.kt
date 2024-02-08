@@ -285,7 +285,9 @@ class SettingsFragment1 : Fragment() {
         }
         saveButton.setOnClickListener {
             vibrate(mainActivity, 10)
-            applySettings()
+            mainActivity.lifecycleScope.launch {
+                applySettings()
+            }
         }
         powerSpinnerView.spinnerOutsideTouchListener =
             OnSpinnerOutsideTouchListener { _: View?, _: MotionEvent? ->
