@@ -6,12 +6,12 @@ import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
-import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
+import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.bridge.Bridge
-import com.cr4sh.nhlauncher.buttonsRecycler.NHLAdapter
-import com.cr4sh.nhlauncher.buttonsRecycler.NHLItem
 import com.cr4sh.nhlauncher.database.DBHandler
+import com.cr4sh.nhlauncher.recyclers.buttonsRecycler.NHLAdapter
+import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.buttonsRecycler.NHLItem
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

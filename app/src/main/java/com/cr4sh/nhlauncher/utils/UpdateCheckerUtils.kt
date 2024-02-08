@@ -4,8 +4,8 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
-import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
+import com.cr4sh.nhlauncher.activities.MainActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteCantOpenDatabaseException
 import android.database.sqlite.SQLiteDatabase
 import android.os.Environment
 import android.util.Log
-import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
+import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.database.DBHandler.Companion.insertTool
 import com.cr4sh.nhlauncher.database.DBHandler.Companion.updateTool
 import com.cr4sh.nhlauncher.utils.DialogUtils

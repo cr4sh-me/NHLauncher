@@ -37,7 +37,7 @@ object ToastUtils {
         toast.setGravity(Gravity.BOTTOM, 0, 150)
         // Create and show the toast
         toast.duration = Toast.LENGTH_SHORT
-        toast.view = layout // TODO fix this shit
+        toast.view = layout // TODO fix this shit }
         toast.show()
     }
 }

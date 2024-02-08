@@ -23,7 +23,8 @@
             android:id="@+id/searchIcon"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_margin="5dp" />
+            android:layout_margin="5dp"
+            tools:ignore="ContentDescription" />
 
         <EditText
             android:id="@+id/search_edit_text"

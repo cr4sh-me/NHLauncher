@@ -9,7 +9,7 @@ import android.os.Environment
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.cr4sh.nhlauncher.MainActivity
+import com.cr4sh.nhlauncher.activities.MainActivity
 
 class PermissionUtils(private val myActivity: MainActivity) {
     val isRoot: Boolean

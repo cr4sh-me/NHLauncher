@@ -14,10 +14,10 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.cr4sh.nhlauncher.R
+import com.cr4sh.nhlauncher.activities.wpsAttacks.WPSAttack
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
-import com.cr4sh.nhlauncher.wpsAttacks.WPSAttack
 
 class WpsCustomPinDialog(private val wpsAttack: WPSAttack) : AppCompatDialogFragment() {
     @RequiresApi(Build.VERSION_CODES.S)

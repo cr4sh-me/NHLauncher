@@ -1,6 +1,6 @@
 package com.cr4sh.nhlauncher.utils
 
-import com.cr4sh.nhlauncher.MainActivity
+import com.cr4sh.nhlauncher.activities.MainActivity
 
 class NHLManager private constructor() {
     lateinit var mainActivity: MainActivity

@@ -6,45 +6,29 @@ import android.content.Context
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
-import androidx.annotation.RequiresApi
-
+import android.os.VibratorManager
 
 object VibrationUtils {
     // Vibrations method
     @JvmStatic
-    @RequiresApi(Build.VERSION_CODES.S)
     fun vibrate(context: Context, milliseconds: Long) {
-//        val vibratorManager =
-//            context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-//        val vibrator = vibratorManager.defaultVibrator
-////        val vibrator = VibratorManager
-//        val nhlPreferences = NHLPreferences(context)
-//        if (nhlPreferences.vibrationOn()) {
-//            if (vibrator.hasVibrator()) {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                    val vibrationEffect = VibrationEffect.createOneShot(
-//                        milliseconds,
-//                        VibrationEffect.DEFAULT_AMPLITUDE
-//                    )
-//                    vibrator.vibrate(vibrationEffect)
-//                } else {
-//                    vibrator.vibrate(milliseconds)
-//                }
-//            }
-//        }
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        val NHLPreferences = NHLPreferences(context)
-        if (NHLPreferences.vibrationOn()) {
-            if (vibrator.hasVibrator()) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val nhlPreferences = NHLPreferences(context)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            val vibrator = vibratorManager.defaultVibrator
+            if (nhlPreferences.vibrationOn()) {
+                if (vibrator.hasVibrator()) {
                     val vibrationEffect = VibrationEffect.createOneShot(
-                        milliseconds,
-                        VibrationEffect.DEFAULT_AMPLITUDE
+                            milliseconds,
+                            VibrationEffect.DEFAULT_AMPLITUDE
                     )
                     vibrator.vibrate(vibrationEffect)
-                } else {
-                    vibrator.vibrate(milliseconds)
                 }
+            }
+        } else {
+            val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (vibrator.hasVibrator()) {
+                    vibrator.vibrate(milliseconds)
             }
         }
     }

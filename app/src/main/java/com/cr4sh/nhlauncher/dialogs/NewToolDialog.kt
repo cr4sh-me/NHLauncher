@@ -15,8 +15,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDialogFragment
-import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
+import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.database.DBHandler
 import com.cr4sh.nhlauncher.database.DBHandler.Companion.insertTool
 import com.cr4sh.nhlauncher.utils.NHLManager

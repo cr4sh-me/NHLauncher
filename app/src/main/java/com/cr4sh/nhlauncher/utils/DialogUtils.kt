@@ -6,8 +6,8 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
-import com.cr4sh.nhlauncher.MainActivity
-import com.cr4sh.nhlauncher.bluetoothPager.BluetoothFragment1
+import com.cr4sh.nhlauncher.activities.MainActivity
+import com.cr4sh.nhlauncher.activities.wpsAttacks.WPSAttack
 import com.cr4sh.nhlauncher.dialogs.AppsDialog
 import com.cr4sh.nhlauncher.dialogs.ButtonMenuDialog
 import com.cr4sh.nhlauncher.dialogs.DeleteToolDialog
@@ -21,7 +21,7 @@ import com.cr4sh.nhlauncher.dialogs.RootDialog
 import com.cr4sh.nhlauncher.dialogs.ScanTimeDialog
 import com.cr4sh.nhlauncher.dialogs.ThrottlingDialog
 import com.cr4sh.nhlauncher.dialogs.WpsCustomPinDialog
-import com.cr4sh.nhlauncher.wpsAttacks.WPSAttack
+import com.cr4sh.nhlauncher.pagers.bluetoothPager.BluetoothFragment1
 import kotlinx.coroutines.launch
 
 // This class creates and opens Dialogs
