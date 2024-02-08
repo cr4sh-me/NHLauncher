@@ -63,6 +63,7 @@ class WPSAttack : AppCompatActivity() {
     private var wifiScanReceiver: BroadcastReceiver? = null
     private lateinit var scanButton: Button
     private var exe: ShellExecuter? = null
+    private lateinit var textMessage: TextView
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     override fun onPause() {
@@ -135,6 +136,10 @@ class WPSAttack : AppCompatActivity() {
         cancelButton.setTextColor(Color.parseColor(nhlPreferences!!.color50()))
         launchAttackButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
         launchAttackButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+
+        textMessage = findViewById(R.id.text_msg)
+        textMessage.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+
         val pixieDustCheckbox = findViewById<CheckBox>(R.id.pixie)
         val pixieForceCheckbox = findViewById<CheckBox>(R.id.pixieforce)
         val bruteCheckbox = findViewById<CheckBox>(R.id.brute)
@@ -171,9 +176,17 @@ class WPSAttack : AppCompatActivity() {
         )
 
         pixieDustCheckbox.isChecked = nhlPreferences!!.isPixieDustActive
+        pixieCMD = if (pixieDustCheckbox.isChecked) " -K" else ""
+
+
         pixieForceCheckbox.isChecked = nhlPreferences!!.isPixieForceActive
+        pixieforceCMD = if (pixieForceCheckbox.isChecked) " -F" else ""
+
         bruteCheckbox.isChecked = nhlPreferences!!.isOnlineBfActive
+        bruteCMD = if (bruteCheckbox.isChecked) " -B" else ""
+
         wpsButtonCheckbox.isChecked = nhlPreferences!!.isWpsButtonActive
+        pbcCMD = if (wpsButtonCheckbox.isChecked) { " --pbc" } else ""
 
         pixieDustCheckbox.setOnClickListener {
             vibrate(this, 10)
@@ -271,9 +284,11 @@ class WPSAttack : AppCompatActivity() {
 //                wifiManager!!.disconnect() // disconnect from active ap to prevent issues
                 val bssid =
                     extractBSSID(selectedButton!!.text.toString()) // Extract SSID from button text
+                Log.d("LogShit",
+                    "cd /root/OneShot && python3 oneshot.py -b $bssid -i wlan0 $pixieCMD $pixieforceCMD $bruteCMD $customPINCMD $delayCMD $pbcCMD"
+                )
                 runCmd(
-                    "cd /root/OneShot && python3 oneshot.py -b " + bssid +
-                            " -i " + "wlan0" + pixieCMD + pixieforceCMD + bruteCMD + customPINCMD + delayCMD + pbcCMD
+                    "cd /root/OneShot && python3 oneshot.py -b $bssid -i wlan0 $pixieCMD $pixieforceCMD $bruteCMD $customPINCMD $delayCMD $pbcCMD"
                 )
             }
         }
@@ -301,6 +316,7 @@ class WPSAttack : AppCompatActivity() {
             }
             val results = wifiManager!!.scanResults
             if (results.isNotEmpty()) {
+                textMessage.visibility = View.GONE
                 Log.d("ResultsScan", "results found : $results")
                 // Check if there are any WPS networks
                 var hasWpsNetworks = false
@@ -324,6 +340,7 @@ class WPSAttack : AppCompatActivity() {
                 Log.d("ResultsScan", "results not found : $results")
                 buttonContainer!!.removeAllViews()
                 setMessage("No WiFi networks found!")
+                textMessage.visibility = View.VISIBLE
             }
             enableScanButton(true)
         } catch (e: Exception) {
@@ -340,10 +357,12 @@ class WPSAttack : AppCompatActivity() {
         val scrollViewHeight = scrollView.height
         val buttonPadding = 15
 
-        // Sort the results by signal strength in descending order
-        results.sortedBy { it.level }
 
-        for (result in results) {
+        // Sort the results by signal strength in descending order
+        for (result in results.sortedByDescending { it.level }) {
+
+            Log.d("LevelShit", "lvl:" +  result.level)
+
             if (result.capabilities != null && result.capabilities.contains("WPS")) {
                 val wifiButton = Button(this)
 
@@ -460,6 +479,7 @@ class WPSAttack : AppCompatActivity() {
         } else {
             buttonContainer!!.removeAllViews()
             setMessage("Please enable location services first!")
+            textMessage.visibility = View.VISIBLE
         }
     }
 
@@ -469,6 +489,7 @@ class WPSAttack : AppCompatActivity() {
             scanButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
             scanButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         } else {
+            textMessage.visibility = View.VISIBLE
             scanButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color80()))
             scanButton.setTextColor(Color.parseColor(nhlPreferences!!.color50()))
         }
@@ -485,6 +506,7 @@ class WPSAttack : AppCompatActivity() {
                 // Permission denied, show a message or handle accordingly
                 buttonContainer!!.removeAllViews()
                 setMessage("Location permission denied. Cannot scan for networks.")
+                textMessage.visibility = View.VISIBLE
             }
         }
     }

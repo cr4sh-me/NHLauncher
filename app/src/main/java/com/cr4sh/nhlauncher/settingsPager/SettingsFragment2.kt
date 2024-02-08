@@ -22,6 +22,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.widget.CompoundButtonCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.MainActivity
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.utils.DialogUtils
@@ -30,6 +31,7 @@ import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 import com.flask.colorpicker.ColorPickerView
+import kotlinx.coroutines.launch
 import java.util.Locale
 import kotlin.math.roundToInt
 
@@ -261,41 +263,43 @@ class SettingsFragment2 : Fragment() {
         }
         applyColors.setOnClickListener {
             vibrate(mainActivity, 10)
-            if (hexColorValue1.text.length < 0 || hexColorValue1.text.length < 0 || hexColorValue1.text.length < 0) {
-                showCustomToast(requireActivity(), "Empty color values! Use brain...")
-            } else {
-                if (advancedThemes.isChecked) {
-                    val color100 = nhlPreferences!!.color100()
-                    val color80 = hexColorValue1.text.toString()
-                    val color50 = hexColorValue2.text.toString()
-                    val color20 = hexColorValue3.text.toString()
-                    saveColor80(
-                        color100,
-                        color80,
-                        color50,
-                        color20,
-                        dynamicThemes.isChecked,
-                        advancedThemes.isChecked
-                    )
+            mainActivity.lifecycleScope.launch {
+                if (hexColorValue1.text.length < 0 || hexColorValue1.text.length < 0 || hexColorValue1.text.length < 0) {
+                    showCustomToast(requireActivity(), "Empty color values! Use brain...")
                 } else {
-                    val color100 = hexColorString
-                    val color80Int = (alphaTileView1.background as ColorDrawable).color
-                    val color50Int = (alphaTileView2.background as ColorDrawable).color
-                    val color20Int = (alphaTileView3.background as ColorDrawable).color
-                    val color80 = String.format("#%06X", 0xFFFFFF and color80Int)
-                    val color50 = String.format("#%06X", 0xFFFFFF and color50Int)
-                    val color20 = String.format("#%06X", 0xFFFFFF and color20Int)
-                    saveColor80(
-                        color100,
-                        color80,
-                        color50,
-                        color20,
-                        dynamicThemes.isChecked,
-                        advancedThemes.isChecked
-                    )
+                    if (advancedThemes.isChecked) {
+                        val color100 = nhlPreferences!!.color100()
+                        val color80 = hexColorValue1.text.toString()
+                        val color50 = hexColorValue2.text.toString()
+                        val color20 = hexColorValue3.text.toString()
+                        saveColor80(
+                            color100,
+                            color80,
+                            color50,
+                            color20,
+                            dynamicThemes.isChecked,
+                            advancedThemes.isChecked
+                        )
+                    } else {
+                        val color100 = hexColorString
+                        val color80Int = (alphaTileView1.background as ColorDrawable).color
+                        val color50Int = (alphaTileView2.background as ColorDrawable).color
+                        val color20Int = (alphaTileView3.background as ColorDrawable).color
+                        val color80 = String.format("#%06X", 0xFFFFFF and color80Int)
+                        val color50 = String.format("#%06X", 0xFFFFFF and color50Int)
+                        val color20 = String.format("#%06X", 0xFFFFFF and color20Int)
+                        saveColor80(
+                            color100,
+                            color80,
+                            color50,
+                            color20,
+                            dynamicThemes.isChecked,
+                            advancedThemes.isChecked
+                        )
+                    }
+                    mainActivity.recreate() // recreate MainActivity below
+                    requireActivity().recreate() // recreate this activity AFTER to prevent closing db for stats
                 }
-                mainActivity.recreate() // recreate MainActivity below
-                requireActivity().recreate() // recreate this activity AFTER to prevent closing db for stats
             }
         }
         return view

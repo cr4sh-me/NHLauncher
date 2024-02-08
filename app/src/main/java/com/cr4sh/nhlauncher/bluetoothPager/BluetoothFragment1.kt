@@ -126,7 +126,6 @@ class BluetoothFragment1 : Fragment() {
         }
         binderButton.setOnClickListener {
             try {
-                lockButton(false, "Please wait...", binderButton)
                 CoroutineScope(Dispatchers.IO).launch {
                     binderAction()
                 }
@@ -260,12 +259,10 @@ class BluetoothFragment1 : Fragment() {
                 }
             }
         } else {
-            showCustomToast(requireActivity(), "no selected interface!")
+            requireActivity().runOnUiThread {
+                showCustomToast(requireActivity(), "no selected interface!")
+            }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     private val binderStatus: Unit
@@ -360,6 +357,7 @@ class BluetoothFragment1 : Fragment() {
     @Throws(ExecutionException::class, InterruptedException::class)
     private suspend fun binderAction() {
         if (bluebinder!!.exists()) {
+            lockButton(false, "Please wait...", binderButton)
             try {
                 val isRunningBeforeAction = isBinderRunning()
 
@@ -395,7 +393,9 @@ class BluetoothFragment1 : Fragment() {
                 Log.e("ERROR", "Exception during binderAction", e)
             }
         } else {
-            showCustomToast(requireActivity(), "Bluebinder is not installed. Launch setup first...")
+            requireActivity().runOnUiThread {
+                showCustomToast(requireActivity(), "Bluebinder is not installed. Launch setup first...")
+            }
         }
     }
 
