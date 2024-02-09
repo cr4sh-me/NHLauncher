@@ -14,13 +14,14 @@ object VibrationUtils {
     fun vibrate(context: Context, milliseconds: Long) {
         val nhlPreferences = NHLPreferences(context)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            val vibratorManager =
+                context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
             val vibrator = vibratorManager.defaultVibrator
             if (nhlPreferences.vibrationOn()) {
                 if (vibrator.hasVibrator()) {
                     val vibrationEffect = VibrationEffect.createOneShot(
-                            milliseconds,
-                            VibrationEffect.DEFAULT_AMPLITUDE
+                        milliseconds,
+                        VibrationEffect.DEFAULT_AMPLITUDE
                     )
                     vibrator.vibrate(vibrationEffect)
                 }
@@ -28,7 +29,7 @@ object VibrationUtils {
         } else {
             val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             if (vibrator.hasVibrator()) {
-                    vibrator.vibrate(milliseconds)
+                vibrator.vibrate(milliseconds)
             }
         }
     }

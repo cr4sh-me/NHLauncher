@@ -11,7 +11,7 @@ import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 
 class NHLSnapHelper : LinearSnapHelper() {
-    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
+    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     private var mVerticalHelper: OrientationHelper? = null
 
     @Throws(IllegalStateException::class)
@@ -42,7 +42,9 @@ class NHLSnapHelper : LinearSnapHelper() {
     }
 
     private fun distanceToStart(targetView: View, helper: OrientationHelper?): Int {
-        vibrate(mainActivity, 10)
+        if (mainActivity != null) {
+            vibrate(mainActivity, 10)
+        }
         return helper!!.getDecoratedStart(targetView) - helper.startAfterPadding
     }
 
@@ -87,7 +89,9 @@ class NHLSnapHelper : LinearSnapHelper() {
         velocityX: Int,
         velocityY: Int
     ): Int {
-        vibrate(mainActivity, 10)
+        if (mainActivity != null) {
+            vibrate(mainActivity, 10)
+        }
         return RecyclerView.NO_POSITION
     }
 }

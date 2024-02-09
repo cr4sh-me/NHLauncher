@@ -1,4 +1,4 @@
-package com.cr4sh.nhlauncher.pagers.bluetoothPager.settingsPager
+package com.cr4sh.nhlauncher.pagers.settingsPager
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -38,7 +38,7 @@ import kotlin.math.roundToInt
 class SettingsFragment2 : Fragment() {
     var nhlPreferences: NHLPreferences? = null
     private var hexColorString: String? = null
-    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
+    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
 
     @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("SetTextI18n")
@@ -215,15 +215,21 @@ class SettingsFragment2 : Fragment() {
             }
         }
         hexColorValue1.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             openPickerDialog(hexColorValue1, alphaTileViewAdv1, nhlPreferences!!.color80())
         }
         hexColorValue2.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             openPickerDialog(hexColorValue2, alphaTileViewAdv2, nhlPreferences!!.color50())
         }
         hexColorValue3.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             openPickerDialog(hexColorValue3, alphaTileViewAdv3, nhlPreferences!!.color20())
         }
         colorPickerView.addOnColorChangedListener { selectedColor: Int ->
@@ -262,8 +268,10 @@ class SettingsFragment2 : Fragment() {
             )
         }
         applyColors.setOnClickListener {
-            vibrate(mainActivity, 10)
-            mainActivity.lifecycleScope.launch {
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
+            mainActivity?.lifecycleScope?.launch {
                 if (hexColorValue1.text.length < 0 || hexColorValue1.text.length < 0 || hexColorValue1.text.length < 0) {
                     showCustomToast(requireActivity(), "Empty color values! Use brain...")
                 } else {

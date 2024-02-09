@@ -19,7 +19,7 @@ import com.cr4sh.nhlauncher.utils.PermissionUtils
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 
 class PermissionDialog : AppCompatDialogFragment() {
-    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
+    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
@@ -39,7 +39,9 @@ class PermissionDialog : AppCompatDialogFragment() {
         allowButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
         allowButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
         allowButton.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             dialog?.cancel()
             val permissionUtils = PermissionUtils((requireActivity() as MainActivity))
             permissionUtils.takePermissions()

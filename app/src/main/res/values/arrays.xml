@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="applejuice">
+        <item>ADVERTISE RANDOMLY</item>
+        <item>Airpods</item>
+        <item>Airpods Pro</item>
+        <item>Airpods Max</item>
+        <item>Airpods Gen 2</item>
+        <item>Airpods Gen 3</item>
+        <item>Airpods Pro Gen 2</item>
+        <item>PowerBeats</item>
+        <item>PowerBeats Pro</item>
+        <item>Beats Solo Pro</item>
+        <item>Beats Studio Buds</item>
+        <item>Beats Flex</item>
+        <item>BeatsX</item>
+        <item>Beats Solo3</item>
+        <item>Beats Studio3</item>
+        <item>Beats Studio Pro</item>
+        <item>Beats Fit Pro</item>
+        <item>Beats Studio Buds+</item>
+        <item>AppleTV Setup</item>
+        <item>AppleTV Pair</item>
+        <item>AppleTV New User</item>
+        <item>AppleTV AppleID Setup</item>
+        <item>AppleTV Wireless Audio Sync</item>
+        <item>AppleTV Homekit Setup</item>
+        <item>AppleTV Keyboard</item>
+        <item>AppleTV Connecting to Network</item>
+        <item>Homepod Setup</item>
+        <item>Setup New Phone</item>
+        <item>Transfer Number to New Phone</item>
+        <item>TV Color Balance</item>
+    </string-array>
+</resources>

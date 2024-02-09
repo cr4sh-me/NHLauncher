@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,24 +15,29 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.widget.CompoundButtonCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.bridge.Bridge.Companion.createExecuteIntent
 import com.cr4sh.nhlauncher.pagers.bluetoothPager.BluetoothFragment1.Companion.selectedIface
 import com.cr4sh.nhlauncher.pagers.bluetoothPager.BluetoothFragment1.Companion.selectedTarget
+import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import kotlinx.coroutines.launch
 
 class BluetoothFragment2 : Fragment() {
     var nhlPreferences: NHLPreferences? = null
-    private var flood: String? = null
-    private var reverse: String? = null
+    private var dialogUtils: DialogUtils? = null
+    private var flood: String = ""
+    private var reverse: String = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.bt_layout2, container, false)
         nhlPreferences = NHLPreferences(requireActivity())
+        dialogUtils = DialogUtils(requireActivity().supportFragmentManager)
         val l2pingContainer = view.findViewById<LinearLayout>(R.id.l2pingContainer)
         val redfangContainer = view.findViewById<LinearLayout>(R.id.redfangContainer)
         val bluerangerContainer = view.findViewById<LinearLayout>(R.id.bluerangerContainer)
@@ -107,29 +111,74 @@ class BluetoothFragment2 : Fragment() {
         rangeEdit.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         rangeEdit.setHintTextColor(Color.parseColor(nhlPreferences!!.color50()))
         rangeEdit.background.mutate().setTint(Color.parseColor(nhlPreferences!!.color50()))
-        floodPingCheckbox.setOnClickListener { v: View? ->
-            flood = if (floodPingCheckbox.isChecked) //                flood = " -f ";
-                "n" else ""
+        floodPingCheckbox.setOnClickListener {
+            flood = if (floodPingCheckbox.isChecked) "-f" else ""
         }
         reversePingCheckBox.setOnClickListener {
-            reverse = if (reversePingCheckBox.isChecked) " -r " else ""
+            reverse = if (reversePingCheckBox.isChecked) "-r" else ""
         }
         l2pingButton.setOnClickListener {
             vibrate(requireActivity(), 10)
-            val target = selectedTarget
 
-            if(checkForSelectedTarget()){
-                val l2pingSize = sizeEdit.text.toString()
-                val l2pingCount = countEdit.text.toString()
-                val l2pingInterface = selectedIface // TODO do this
-                run_cmd("echo -ne \"\\033]0;Pinging BT device\\007\" && clear;l2ping -i $l2pingInterface -s $l2pingSize -c $l2pingCount$flood$reverse $target && echo \"\nPinging done, closing in 3 secs..\";sleep 3 && exit")
-                // TODO fix l2ping command
+            if (sizeEdit.text.isEmpty() or countEdit.text.isEmpty()) {
+                requireActivity().lifecycleScope.launch {
+                    showCustomToast(
+                        requireActivity(),
+                        "Are you dumb?"
+                    )
+                }
+            } else {
+                if (checkForSelectedTarget()) {
+                    val l2pingSize = sizeEdit.text.toString()
+                    val l2pingCount = countEdit.text.toString()
+                    runCmd("echo -ne \"\\033]0;Pinging BT device\\007\" && clear;l2ping -i $selectedIface -s $l2pingSize -c $l2pingCount $flood $reverse $selectedTarget")
+                }
             }
         }
+
+        redfangButton.setOnClickListener {
+            vibrate(requireActivity(), 10)
+
+            if (rangeEdit.text.isEmpty()) {
+                requireActivity().lifecycleScope.launch {
+                    showCustomToast(
+                        requireActivity(),
+                        "Are you dumb?"
+                    )
+                }
+            } else {
+                if (checkForSelectedInterface()) {
+                    val redfangRange = rangeEdit.text.toString()
+                    val redfangLogPath = "/root/redfang.log"
+                    runCmd("echo -ne \"\\033]0;RedFang\\007\" && clear;fang -r $redfangRange -o $redfangLogPath")
+                }
+            }
+        }
+
+        bluerangerButton.setOnClickListener {
+            if (checkForSelectedTarget()) {
+                runCmd("echo -ne \"\\033]0;Blueranger\\007\" && clear;blueranger $selectedIface $selectedTarget")
+            }
+        }
+
+        sdpButton.setOnClickListener {
+            if (checkForSelectedTarget()) {
+                requireActivity().lifecycleScope.launch {
+                    dialogUtils!!.openSdpToolDialog()
+                }
+            }
+        }
+
+        rfcommButton.setOnClickListener {
+            if (checkForSelectedTarget()) {
+                runCmd("echo -ne \"\\033]0;RFComm scan\\007\" && clear;rfcomm_scan $selectedTarget")
+            }
+        }
+
         return view
     }
 
-    fun run_cmd(cmd: String?) {
+    private fun runCmd(cmd: String?) {
         @SuppressLint("SdCardPath") val intent =
             createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd!!)
         requireActivity().startActivity(intent)
@@ -143,11 +192,40 @@ class BluetoothFragment2 : Fragment() {
     }
 
     private fun checkForSelectedTarget(): Boolean {
-        return if(selectedTarget == null){
-            requireActivity().runOnUiThread {
+        return when {
+            selectedTarget == null && selectedIface == "None" -> {
+                showToast("No interface & target address selected!")
+                false
+            }
+
+            selectedTarget == null && selectedIface != "None" -> {
+                showToast("No target address selected!")
+                false
+            }
+
+            selectedTarget != null && selectedIface == "None" -> {
+                showToast("No interface selected!")
+                false
+            }
+
+            else -> true
+        }
+    }
+
+    private fun showToast(message: String) {
+        requireActivity().lifecycleScope.launch {
+            showCustomToast(requireActivity(), message)
+        }
+    }
+
+
+    private fun checkForSelectedInterface(): Boolean {
+        // Check for interface only
+        return if (selectedIface == "None") {
+            requireActivity().lifecycleScope.launch {
                 showCustomToast(
                     requireActivity(),
-                    "No target address!"
+                    "No selected interface!"
                 )
             }
             false

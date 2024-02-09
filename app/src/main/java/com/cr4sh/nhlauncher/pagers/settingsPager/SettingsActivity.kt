@@ -1,4 +1,4 @@
-package com.cr4sh.nhlauncher.pagers.bluetoothPager.settingsPager
+package com.cr4sh.nhlauncher.pagers.settingsPager
 
 import android.app.ActivityOptions
 import android.content.Intent
@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
+import com.cr4sh.nhlauncher.pagers.bluetoothPager.settingsPager.SettingsPager
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
@@ -19,7 +20,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class SettingsActivity : AppCompatActivity() {
-    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
+    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //        overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
@@ -36,7 +37,9 @@ class SettingsActivity : AppCompatActivity() {
         cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
         cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
         cancelButton.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             val intent = Intent(this@SettingsActivity, MainActivity::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             val animationBundle = ActivityOptions.makeCustomAnimation(

@@ -7,7 +7,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -182,7 +183,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="10dp"
                         android:gravity="center"
-                        android:hint="00803789EE76-00803789EEff" />
+                        android:text="00803789EE76-00803789EEff" />
 
                 </LinearLayout>
 

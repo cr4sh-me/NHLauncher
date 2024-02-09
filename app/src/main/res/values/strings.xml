@@ -94,7 +94,6 @@
     <string name="all_file_perm">All file permissons!</string>
     <string name="allow">Allow</string>
 
-
     <string-array name="categories">
         <item>AL - All categories</item>
         <item>FT - Favourite Tools</item>
@@ -182,5 +181,10 @@
     <string name="bt_short">PERFORM VARIOUS BLUETOOTH ATTACKS</string>
     <string name="bt_toolkit">BLUETOOTH TOOLKIT</string>
     <string name="wifi_networks_will_be_displayed_here">WiFi networks will be displayed here</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="sdp_tool">SDP TOOL</string>
+    <string name="scan_is_running_please_wait">Scan is running, please wait!</string>
+    <string name="advertise">Advertise</string>
+    <string name="bledesc">These scripts are an experimental PoC that uses Bluetooth Low Energy (BLE) to send proximity pairing messages to Apple devices</string>
 
 </resources>

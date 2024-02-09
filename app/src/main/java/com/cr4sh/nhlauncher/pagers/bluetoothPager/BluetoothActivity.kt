@@ -90,13 +90,4 @@ class BluetoothActivity : AppCompatActivity() {
             }
         }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        // Unregister the BroadcastReceiver to avoid memory leaks
-//        unregisterReceiver(wifiScanReceiver);
-//        if (countdownHandler != null) {
-//            countdownHandler.removeCallbacksAndMessages(null);
-//        }
-    }
 }

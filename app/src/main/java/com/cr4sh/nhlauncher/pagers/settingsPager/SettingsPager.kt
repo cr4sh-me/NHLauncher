@@ -3,6 +3,10 @@ package com.cr4sh.nhlauncher.pagers.bluetoothPager.settingsPager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.cr4sh.nhlauncher.pagers.settingsPager.SettingsFragment1
+import com.cr4sh.nhlauncher.pagers.settingsPager.SettingsFragment2
+import com.cr4sh.nhlauncher.pagers.settingsPager.SettingsFragment3
+import com.cr4sh.nhlauncher.pagers.settingsPager.SettingsFragment4
 
 class SettingsPager(fragment: FragmentActivity?) : FragmentStateAdapter(
     fragment!!

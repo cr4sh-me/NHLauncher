@@ -27,7 +27,7 @@ import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 import java.util.Locale
 
 class DeleteToolDialog : AppCompatDialogFragment() {
-    val mainActivity: MainActivity = NHLManager.instance.mainActivity
+    val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
 
     @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("SetTextI18n")
@@ -55,7 +55,9 @@ class DeleteToolDialog : AppCompatDialogFragment() {
         assert(name != null)
         title.text = name!!.uppercase(Locale.getDefault())
         deleteButton.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             // Some idiot protection
             try {
                 val dbHandler: SQLiteOpenHelper = DBHandler(activity)
@@ -102,7 +104,9 @@ class DeleteToolDialog : AppCompatDialogFragment() {
             dialog?.cancel()
         }
         cancelButton.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             dialog?.cancel()
         }
         return view

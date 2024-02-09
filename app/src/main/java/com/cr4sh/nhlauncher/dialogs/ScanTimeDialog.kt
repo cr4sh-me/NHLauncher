@@ -22,8 +22,7 @@ import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 
 class ScanTimeDialog(private val wpsAttack: BluetoothFragment1) : AppCompatDialogFragment() {
-    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
-
+    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
 
     @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("SetTextI18n")
@@ -60,7 +59,9 @@ class ScanTimeDialog(private val wpsAttack: BluetoothFragment1) : AppCompatDialo
         cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
         cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
         setupButton.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             if (customPin.text.toString().isEmpty()) {
                 showCustomToast(requireActivity(), "Empty input")
             } else {
@@ -75,8 +76,10 @@ class ScanTimeDialog(private val wpsAttack: BluetoothFragment1) : AppCompatDialo
                 }
             }
         }
-        cancelButton.setOnClickListener { view12: View? ->
-            vibrate(mainActivity, 10)
+        cancelButton.setOnClickListener {
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             dialog?.cancel()
             if (option == 1) {
                 wpsAttack.scanTime = "15"

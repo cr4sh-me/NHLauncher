@@ -8,11 +8,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
-import com.cr4sh.nhlauncher.recyclers.buttonsRecycler.NHLItemDiffCallback
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.statsRecycler.StatsHolder
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.statsRecycler.StatsItem
 import com.cr4sh.nhlauncher.utils.NHLManager
@@ -24,7 +24,7 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class StatsAdapter : RecyclerView.Adapter<StatsHolder>() {
-    private val myActivity: MainActivity = NHLManager.instance.mainActivity
+    private val myActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     private val items: MutableList<StatsItem> = ArrayList()
     private var originalHeight = 0
     private var height = 0
@@ -46,7 +46,7 @@ class StatsAdapter : RecyclerView.Adapter<StatsHolder>() {
                 DiffUtil.calculateDiff(StatsItemDiffCallback(items, newData))
             }
 
-            withContext(Dispatchers.Main) {
+            myActivity?.lifecycleScope?.launch {
                 items.clear()
                 items.addAll(newData)
                 diffResult.dispatchUpdatesTo(this@StatsAdapter)
@@ -55,7 +55,7 @@ class StatsAdapter : RecyclerView.Adapter<StatsHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StatsHolder {
-        nhlPreferences = NHLPreferences(myActivity)
+        nhlPreferences = myActivity?.let { NHLPreferences(it) }
         originalHeight = parent.measuredHeight
         margin = 20
         height = originalHeight / 8 - margin // Button height without margin
@@ -83,15 +83,19 @@ class StatsAdapter : RecyclerView.Adapter<StatsHolder>() {
         holder.nameView.text = item.name.uppercase(Locale.getDefault())
         holder.usageText.text = item.usage.uppercase(Locale.getDefault())
         @SuppressLint("DiscouragedApi") val imageResourceId =
-            myActivity.resources.getIdentifier(item.image, "drawable", myActivity.packageName)
-        holder.imageView.setImageResource(imageResourceId)
+            myActivity?.resources?.getIdentifier(item.image, "drawable", myActivity.packageName)
+        if (imageResourceId != null) {
+            holder.imageView.setImageResource(imageResourceId)
+        }
         if (overlay) {
             holder.imageView.setColorFilter(
                 Color.parseColor(nhlPreferences!!.color80()),
                 PorterDuff.Mode.MULTIPLY
             )
         }
-        holder.imageView.setImageResource(imageResourceId)
+        if (imageResourceId != null) {
+            holder.imageView.setImageResource(imageResourceId)
+        }
         holder.nameView.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         holder.usageText.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         holder.itemView.background = drawable

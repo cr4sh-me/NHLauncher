@@ -1,4 +1,4 @@
-package com.cr4sh.nhlauncher.pagers.bluetoothPager.settingsPager
+package com.cr4sh.nhlauncher.pagers.settingsPager
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
@@ -16,8 +16,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
-import com.cr4sh.nhlauncher.recyclers.statsRecycler.StatsAdapter
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.statsRecycler.StatsItem
+import com.cr4sh.nhlauncher.recyclers.statsRecycler.StatsAdapter
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
@@ -27,7 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SettingsFragment3 : Fragment() {
-    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
+    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     private var mDatabase: SQLiteDatabase? = null
     var adapter: StatsAdapter? = null
     private var nhlPreferences: NHLPreferences? = null
@@ -39,7 +39,7 @@ class SettingsFragment3 : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.settings_layout3, container, false)
         nhlPreferences = NHLPreferences(requireActivity())
-        mDatabase = mainActivity.mDatabase
+        mDatabase = mainActivity?.mDatabase
         val spinnerBg1 = view.findViewById<LinearLayout>(R.id.spinnerBg1)
         val title = view.findViewById<TextView>(R.id.bt_info2)
         val powerSpinnerView = view.findViewById<PowerSpinnerView>(R.id.categories_spinner)
@@ -74,7 +74,7 @@ class SettingsFragment3 : Fragment() {
 
     private fun spinnerChanger(category: Int) {
         // Use lifecycleScope to launch a coroutine
-        mainActivity.lifecycleScope.launch(Dispatchers.IO) {
+        mainActivity?.lifecycleScope?.launch(Dispatchers.IO) {
             val cursor: Cursor
             val projection = arrayOf("CATEGORY", "FAVOURITE", "NAME", "ICON", "USAGE")
             val selection: String
@@ -104,17 +104,17 @@ class SettingsFragment3 : Fragment() {
                 selectionArgs,
                 null,
                 null,
-                nhlPreferences!!.sortingMode(),
+                "USAGE DESC",
                 null
             )
 
             if (cursor.count == 0) {
-                mainActivity.runOnUiThread {
+                mainActivity.lifecycleScope.launch {
                     noToolsText.visibility = View.VISIBLE
                     recyclerView.visibility = View.GONE
                 }
             } else {
-                mainActivity.runOnUiThread {
+                mainActivity.lifecycleScope.launch {
                     noToolsText.visibility = View.GONE
                     recyclerView.visibility = View.VISIBLE
                 }
@@ -130,7 +130,7 @@ class SettingsFragment3 : Fragment() {
                     newItemList.add(item)
                 }
 
-                mainActivity.runOnUiThread {
+                mainActivity.lifecycleScope.launch {
                     adapter!!.updateData(newItemList)
                 }
             }

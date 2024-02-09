@@ -1,15 +1,10 @@
 package com.cr4sh.nhlauncher.pagers.bluetoothPager
 
 import android.annotation.SuppressLint
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
@@ -26,10 +21,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
-import com.cr4sh.nhlauncher.bridge.Bridge.Companion.createExecuteIntent
+import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.overrides.CustomSpinnerAdapter
 import com.cr4sh.nhlauncher.utils.DialogUtils
+import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ShellExecuter
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils
@@ -48,13 +45,12 @@ class BluetoothFragment1 : Fragment() {
 
     @SuppressLint("SdCardPath")
     private val appScriptsPath = "/data/data/com.offsec.nethunter/scripts"
-
-    //    private val executor = NHLManager.getInstance().executorService
     var scanTime = "10"
     var nhlPreferences: NHLPreferences? = null
+    private var nhlUtils: NHLUtils? = null
+    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     private var scrollView: ScrollView? = null
     private var imageList: List<Int>? = null
-    private lateinit var mainHandler: Handler
     private lateinit var binderButton: Button
     private lateinit var servicesButton: Button
     private lateinit var scanButton: Button
@@ -72,7 +68,7 @@ class BluetoothFragment1 : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.bt_layout1, container, false)
         nhlPreferences = NHLPreferences(requireActivity())
-        mainHandler = Handler(Looper.getMainLooper())
+        nhlUtils = mainActivity?.let { NHLUtils(it) }
         btSmd = File("/sys/module/hci_smd/parameters/hcismd_set")
         val chrootPath = "/data/local/nhsystem/kali-arm64"
         bluebinder = File("$chrootPath/usr/sbin/bluebinder")
@@ -105,13 +101,15 @@ class BluetoothFragment1 : Fragment() {
         servicesButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
         servicesButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         try {
-            CoroutineScope(Dispatchers.IO).launch {
+            lifecycleScope.launch(Dispatchers.Default) {
                 loadIfaces()
             }
         } catch (e: Exception) {
             // Log exceptions or handle them appropriately
             Log.e("ERROR", "Exception during loadIfaces", e)
         }
+        lockButton(false, "Please wait...", binderButton)
+        lockButton(false, "Please wait...", servicesButton)
         binderStatus
         btServicesStatus
         ifaces.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -139,9 +137,11 @@ class BluetoothFragment1 : Fragment() {
             }
         }
         servicesButton.setOnClickListener {
-            CoroutineScope(Dispatchers.Main).launch {
+            lifecycleScope.launch(Dispatchers.Default) {
                 try {
-                    lockButton(false, "Please wait...", servicesButton)
+                    lifecycleScope.launch {
+                        lockButton(false, "Please wait...", servicesButton)
+                    }
                     btServicesAction()
                 } catch (e: Exception) {
                     // Log exceptions or handle them appropriately
@@ -195,7 +195,7 @@ class BluetoothFragment1 : Fragment() {
             bluetoothButton.layoutParams = layoutParams
 
             // Add click listener to handle button selection
-            bluetoothButton.setOnClickListener { handleButtonClick(bluetoothButton)}
+            bluetoothButton.setOnClickListener { handleButtonClick(bluetoothButton) }
             bluetoothButton.setOnLongClickListener { handleLongButtonClick(bluetoothButton.text.toString()) }
 
             // Add the button to the container
@@ -206,15 +206,8 @@ class BluetoothFragment1 : Fragment() {
     private fun handleLongButtonClick(bluetoothButton: String): Boolean {
         val macAddressPattern = Regex("""([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})""")
         val macAddress = macAddressPattern.find(bluetoothButton)?.value
-        requireActivity().copyToClipboard(macAddress.toString())
+        nhlUtils?.copyToClipboard(macAddress.toString())
         return true
-    }
-
-    // TODO move this copy function to utils
-    private fun Context.copyToClipboard(text: CharSequence){
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("Copied!", text)
-        clipboard.setPrimaryClip(clip)
     }
 
     private fun handleButtonClick(clickedButton: Button) {
@@ -252,16 +245,16 @@ class BluetoothFragment1 : Fragment() {
     private fun runBtScan() {
         VibrationUtils.vibrate(requireActivity(), 10)
         if (selectedIface != "None") {
-            lifecycleScope.launch(Dispatchers.IO) {
+            lifecycleScope.launch(Dispatchers.Default) {
                 try {
+                    lifecycleScope.launch {
+                        buttonContainer!!.removeAllViews()
+                        lockButton(false, "Scanning...", scanButton)
+                    }
                     val future1 =
                         exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hciconfig $selectedIface | grep 'UP RUNNING' | cut -f2 -d$'\\t'")
                     if (future1 != "UP RUNNING ") {
                         exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd hciconfig $selectedIface up"))
-                    }
-                    mainHandler.post {
-                        buttonContainer!!.removeAllViews()
-                        lockButton(false, "Scanning...", scanButton)
                     }
                     val future2 =
                         exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hcitool -i $selectedIface scan  --length $scanTime | grep -A 1000 \"Scanning ...\" | awk '/Scanning .../{flag=1;next}/--/{flag=0}flag'\n")
@@ -271,19 +264,19 @@ class BluetoothFragment1 : Fragment() {
                             future2.split("\n".toRegex()).dropLastWhile { it.isEmpty() }
                                 .toTypedArray()
                         Log.d("hcitool", "not empty: " + devicesList.contentToString())
-                        mainHandler.post {
+                        lifecycleScope.launch {
                             createButtons(devicesList)
                             lockButton(true, "Scan", scanButton)
                         }
                     } else {
-                        mainHandler.post { lockButton(true, "No devices found...", scanButton) }
+                        lifecycleScope.launch { lockButton(true, "No devices found!", scanButton) }
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
         } else {
-            requireActivity().runOnUiThread {
+            requireActivity().lifecycleScope.launch {
                 showCustomToast(requireActivity(), "no selected interface!")
             }
         }
@@ -295,7 +288,7 @@ class BluetoothFragment1 : Fragment() {
                 try {
                     val isBinderRunningValue = isBinderRunning()
 
-                    withContext(Dispatchers.Main) {
+                    lifecycleScope.launch {
                         lockButton(
                             true,
                             if (isBinderRunningValue) "Stop Bluebinder" else "Start Bluebinder",
@@ -323,7 +316,7 @@ class BluetoothFragment1 : Fragment() {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val isBtServicesRunning = isBtServicesRunning()
-                    withContext(Dispatchers.Main) {
+                    lifecycleScope.launch {
                         lockButton(
                             true,
                             if (isBtServicesRunning) "Stop BT Services" else "Start BT Services",
@@ -402,7 +395,7 @@ class BluetoothFragment1 : Fragment() {
                         val isRunningAfterAction = isBinderRunning()
                         if (isRunningBeforeAction != isRunningAfterAction) {
                             // Update button text on the UI thread
-                            mainHandler.post {
+                            lifecycleScope.launch {
                                 binderStatus
                             }
                             break
@@ -417,7 +410,7 @@ class BluetoothFragment1 : Fragment() {
                 Log.e("ERROR", "Exception during binderAction", e)
             }
         } else {
-            requireActivity().runOnUiThread {
+            requireActivity().lifecycleScope.launch {
                 showCustomToast(
                     requireActivity(),
                     "Bluebinder is not installed. Launch setup first..."
@@ -448,7 +441,7 @@ class BluetoothFragment1 : Fragment() {
             delay(1000) // Adjust the delay duration if needed
 
             // Update button text on the UI thread
-            mainHandler.post {
+            lifecycleScope.launch {
                 Log.d("DEBUG", "Update on UI thread")
                 btServicesStatus
             }
@@ -471,7 +464,7 @@ class BluetoothFragment1 : Fragment() {
                 } else {
                     // Disable Bluetooth service and launch bluebinder
                     exe.RunAsRoot(arrayOf("svc bluetooth disable"))
-                    runCmd("echo -ne \"\\033]0;Bluebinder\\007\" && clear;bluebinder || bluebinder;exit")
+                    nhlUtils?.runCmd("echo -ne \"\\033]0;Bluebinder\\007\" && clear;bluebinder || bluebinder;exit")
                 }
             }
         } catch (e: Exception) {
@@ -481,6 +474,9 @@ class BluetoothFragment1 : Fragment() {
 
 
     private suspend fun stopBinder() {
+        lifecycleScope.launch {
+            buttonContainer!!.removeAllViews() // Clear previous buttons
+        }
         try {
             withContext(Dispatchers.IO) {
                 if (btSmd!!.exists()) {
@@ -526,7 +522,7 @@ class BluetoothFragment1 : Fragment() {
 
 
     private fun lockButton(value: Boolean, binderButtonText: String, choosenButton: Button?) {
-        mainHandler.post {
+        lifecycleScope.launch {
             choosenButton!!.isEnabled = value
             choosenButton.text = binderButtonText
             if (value) {
@@ -551,7 +547,7 @@ class BluetoothFragment1 : Fragment() {
                     .toTypedArray().contentToString()
             )
             if (outputHCI.isEmpty()) {
-                withContext(Dispatchers.Main) {
+                lifecycleScope.launch {
                     hciIfaces.add("None")
                     val customSpinnerAdapter = CustomSpinnerAdapter(
                         requireActivity(),
@@ -566,7 +562,7 @@ class BluetoothFragment1 : Fragment() {
                 val ifacesArray =
                     outputHCI.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
-                withContext(Dispatchers.Main) {
+                lifecycleScope.launch {
                     val color20 = nhlPreferences?.color20()
                     val color80 = nhlPreferences?.color80()
 
@@ -591,28 +587,15 @@ class BluetoothFragment1 : Fragment() {
         }
     }
 
-
-    private fun runCmd(cmd: String?) {
-        @SuppressLint("SdCardPath") val intent =
-            createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd!!)
-        requireActivity().startActivity(intent)
-    }
-
-//    private fun run_cmd_background(cmd: String?) {
-//        @SuppressLint("SdCardPath") val intent =
-//            createExecuteIntent("/data/data/com.offsec.nhterm/files/usr/bin/kali", cmd!!, true)
-//        requireActivity().startActivity(intent)
-//    }
-
     private fun setContainerBackground(container: LinearLayout) {
         val drawable = GradientDrawable()
-        drawable.cornerRadius = 60f
+        drawable.cornerRadius = 20f
         drawable.setStroke(8, Color.parseColor(nhlPreferences!!.color50()))
         container.background = drawable
     }
 
     companion object {
-        var selectedIface: String? = null
+        var selectedIface: String = "None"
         var selectedTarget: String? = null
     }
 }

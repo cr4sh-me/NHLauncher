@@ -1,7 +1,6 @@
 package com.cr4sh.nhlauncher.recyclers.statsRecycler
 
 import androidx.recyclerview.widget.DiffUtil
-import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.buttonsRecycler.NHLItem
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.statsRecycler.StatsItem
 
 class StatsItemDiffCallback(

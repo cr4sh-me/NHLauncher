@@ -27,7 +27,7 @@ class NhlColorPickerDialog(
     private val alpha: ImageView,
     private val hexColorShade: String
 ) : AppCompatDialogFragment() {
-    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
+    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
 
     private var hexColorString: String? = null
 
@@ -64,13 +64,17 @@ class NhlColorPickerDialog(
             hexColorValue.setText(hexColorString)
         }
         applyColors.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             alpha.setBackgroundColor(Color.parseColor(hexColorString))
             button.text = hexColorString
             dialog?.cancel()
         }
         cancelButton.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             dialog?.cancel()
         }
         return view

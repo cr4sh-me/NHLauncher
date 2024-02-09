@@ -1,4 +1,4 @@
-package com.cr4sh.nhlauncher.pagers.bluetoothPager.settingsPager
+package com.cr4sh.nhlauncher.pagers.settingsPager
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -22,7 +22,7 @@ import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 
 class SettingsFragment4 : Fragment() {
-    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
+    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     private var nhlPreferences: NHLPreferences? = null
 
     @SuppressLint("SetTextI18n")
@@ -55,7 +55,9 @@ class SettingsFragment4 : Fragment() {
         textView2.setLinkTextColor(Color.parseColor(nhlPreferences!!.color80()))
         textView3.setLinkTextColor(Color.parseColor(nhlPreferences!!.color80()))
         github.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             val intent =
                 Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/cr4sh-me/NHLauncher"))
             startActivity(intent)
@@ -67,7 +69,9 @@ class SettingsFragment4 : Fragment() {
         val spannableString = SpannableString(textView.text)
         val clickableSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                vibrate(mainActivity, 10)
+                if (mainActivity != null) {
+                    vibrate(mainActivity, 10)
+                }
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(intent)
             }

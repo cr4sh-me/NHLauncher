@@ -1,25 +1,28 @@
 package com.cr4sh.nhlauncher.utils
 
 import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.bridge.Bridge
 import com.cr4sh.nhlauncher.database.DBHandler
 import com.cr4sh.nhlauncher.recyclers.buttonsRecycler.NHLAdapter
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.buttonsRecycler.NHLItem
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class NHLUtils(private val mainActivity: MainActivity) : AppCompatActivity() {
+class NHLUtils(
+    private val mainActivity: MainActivity
+) : AppCompatActivity() {
     private val mDatabase: SQLiteDatabase = mainActivity.mDatabase
     private val nhlPreferences: NHLPreferences = NHLPreferences(mainActivity)
 
@@ -38,20 +41,18 @@ class NHLUtils(private val mainActivity: MainActivity) : AppCompatActivity() {
     // Increase button usage by 1
     fun buttonUsageIncrease(name: String?) {
         if (name != null) {
-            DBHandler.updateToolUsage(mDatabase, name, mainActivity.buttonUsage + 1)
+            lifecycleScope.launch(Dispatchers.IO){
+                DBHandler.updateToolUsage(mDatabase, name, mainActivity.buttonUsage + 1)
+            }
         }
         restartSpinner()
     }
 
     // Queries db for buttons with given categories and display them!
-    @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("SetTextI18n", "Recycle")
     fun spinnerChanger(category: Int) {
-
         nhlPreferences.language()?.let { Log.d("Yesd", it) }
         nhlPreferences.languageLocale()?.let { Log.d("Yesd", it) }
-
-
         mainActivity.changeCategoryPreview(category) // Set category preview
 
         // Obtain references to app resources and button layout
@@ -83,9 +84,7 @@ class NHLUtils(private val mainActivity: MainActivity) : AppCompatActivity() {
             MainActivity.disableMenu = false
         }
 
-        layout.itemAnimator = DefaultItemAnimator()
-
-        GlobalScope.launch(Dispatchers.Main) {
+        mainActivity.lifecycleScope.launch {
             try {
                 val newItemList = withContext(Dispatchers.Default) {
                     val cursor = mDatabase.query(
@@ -186,5 +185,11 @@ class NHLUtils(private val mainActivity: MainActivity) : AppCompatActivity() {
 
         // Close cursor
         cursor.close()
+    }
+
+    fun copyToClipboard(text: CharSequence) {
+        val clipboard = mainActivity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("Copied!", text)
+        clipboard.setPrimaryClip(clip)
     }
 }

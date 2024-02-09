@@ -32,7 +32,7 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewHolder>() {
-    val myActivity: MainActivity = NHLManager.instance.mainActivity
+    private val myActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     private val items: MutableList<NHLItem> = ArrayList()
 
     //    private val executor = NHLManager.getInstance().executorService
@@ -48,7 +48,7 @@ class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewH
                 DiffUtil.calculateDiff(NHLItemDiffCallback(items, newData))
             }
 
-            withContext(Dispatchers.Main) {
+            myActivity?.lifecycleScope?.launch {
                 items.clear()
                 items.addAll(newData)
                 diffResult.dispatchUpdatesTo(this@NHLAdapter)
@@ -56,25 +56,15 @@ class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewH
         }
     }
 
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun startPapysz() {
-        // Replace all item images with a papysz
-        for (item in items) {
-            item.image = "papysz2"
-        }
-        notifyDataSetChanged()
-    }
-
     private fun saveRecyclerHeight(active: Int) {
-        val prefs = myActivity.getSharedPreferences("nhlSettings", Context.MODE_PRIVATE)
-        val editor = prefs.edit()
-        editor.putInt("recyclerHeight", active)
-        editor.apply()
+        val prefs = myActivity?.getSharedPreferences("nhlSettings", Context.MODE_PRIVATE)
+        val editor = prefs?.edit()
+        editor?.putInt("recyclerHeight", active)
+        editor?.apply()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NHLViewHolder {
-        nhlPreferences = NHLPreferences(myActivity)
+        nhlPreferences = myActivity?.let { NHLPreferences(it) }
         val originalHeight: Int
         if (nhlPreferences!!.recyclerMainHeight == 0) {
             originalHeight = parent.measuredHeight
@@ -105,8 +95,8 @@ class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewH
         holder: NHLViewHolder,
         @SuppressLint("RecyclerView") position: Int
     ) {
-        val mainUtils = NHLUtils(myActivity)
-        val dialogUtils = DialogUtils(myActivity.supportFragmentManager)
+        val mainUtils = myActivity?.let { NHLUtils(it) }
+        val dialogUtils = myActivity?.let { DialogUtils(it.supportFragmentManager) }
         val item = getItem(position)
         val searchQuery = editText.text.toString().uppercase(Locale.getDefault())
         if (searchQuery.isNotEmpty()) {
@@ -179,8 +169,10 @@ class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewH
             holder.descriptionView.text = item.description.uppercase(Locale.getDefault())
         }
         @SuppressLint("DiscouragedApi") val imageResourceId =
-            myActivity.resources.getIdentifier(item.image, "drawable", myActivity.packageName)
-        holder.imageView.setImageResource(imageResourceId)
+            myActivity?.resources?.getIdentifier(item.image, "drawable", myActivity.packageName)
+        if (imageResourceId != null) {
+            holder.imageView.setImageResource(imageResourceId)
+        }
         if (overlay) {
             holder.imageView.setColorFilter(
                 Color.parseColor(nhlPreferences!!.color80()),
@@ -195,21 +187,23 @@ class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewH
         holder.buttonView.layoutParams = params
         holder.itemView.setOnClickListener {
             if (editText.text.toString().isNotEmpty()) {
-                myActivity.onBackPressedDispatcher.onBackPressed() // close searchbar
+                myActivity?.onBackPressedDispatcher?.onBackPressed() // close searchbar
             }
-            myActivity.buttonUsage = item.usage
-            mainUtils.buttonUsageIncrease(item.name)
-            myActivity.lifecycleScope.launch {
-                mainUtils.runCmd(item.cmd)
+            myActivity?.buttonUsage = item.usage
+            mainUtils?.buttonUsageIncrease(item.name)
+            myActivity?.lifecycleScope?.launch {
+                mainUtils?.runCmd(item.cmd)
             }
         }
         holder.itemView.setOnLongClickListener {
-            vibrate(myActivity, 10)
-            myActivity.buttonCategory = item.category
-            myActivity.buttonName = item.name
-            myActivity.buttonDescription = item.description
-            myActivity.buttonCmd = item.cmd
-            dialogUtils.openButtonMenuDialog(myActivity)
+            if (myActivity != null) {
+                vibrate(myActivity, 10)
+            }
+            myActivity?.buttonCategory = item.category
+            myActivity?.buttonName = item.name
+            myActivity?.buttonDescription = item.description
+            myActivity?.buttonCmd = item.cmd
+            dialogUtils?.openButtonMenuDialog(myActivity)
             false
         }
     }

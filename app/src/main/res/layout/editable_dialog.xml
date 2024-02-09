@@ -23,6 +23,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:text="@string/loading"
+        android:textIsSelectable="true"
         android:textSize="16sp" />
 
     <EditText

@@ -20,7 +20,7 @@ import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 
 class FirstSetupDialog : AppCompatDialogFragment() {
-    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
+    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
@@ -46,13 +46,17 @@ class FirstSetupDialog : AppCompatDialogFragment() {
         cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
         cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
         setupButton.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             dialog?.cancel()
             mainUtils.runCmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit")
             firstSetupCompleted()
         }
         cancelButton.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             dialog?.cancel()
             firstSetupCompleted()
         }

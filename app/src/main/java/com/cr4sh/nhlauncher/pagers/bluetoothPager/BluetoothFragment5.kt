@@ -1,113 +1,133 @@
-package com.cr4sh.nhlauncher.pagers.bluetoothPager;
+package com.cr4sh.nhlauncher.pagers.bluetoothPager
 
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.cr4sh.nhlauncher.R
+import com.cr4sh.nhlauncher.activities.MainActivity
+import com.cr4sh.nhlauncher.utils.NHLManager
+import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.NHLUtils
+import com.cr4sh.nhlauncher.utils.ToastUtils
+import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
+import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener
+import com.skydoves.powerspinner.PowerSpinnerView
+import kotlinx.coroutines.launch
 
-import androidx.core.widget.CompoundButtonCompat;
-import androidx.fragment.app.Fragment;
+class BluetoothFragment5 : Fragment() {
+    var nhlPreferences: NHLPreferences? = null
+    private var nhlUtils: NHLUtils? = null
+    val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
+    private var advertiseSingle: String = ""
+    private var advertiseRandom: String = ""
 
-import com.cr4sh.nhlauncher.R;
-import com.cr4sh.nhlauncher.utils.NHLPreferences;
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.bt_layout5, container, false)
+        nhlPreferences = NHLPreferences(requireActivity())
+        nhlUtils = mainActivity?.let { NHLUtils(it) }
+        val juiceInfo = view.findViewById<TextView>(R.id.juiceInfo)
+        val startButton = view.findViewById<Button>(R.id.startButton)
+        val spinnerBg1 = view.findViewById<LinearLayout>(R.id.bottomContainer)
+        val powerSpinnerView = view.findViewById<PowerSpinnerView>(R.id.applejuice_spinner)
+        val intervalText = view.findViewById<TextView>(R.id.interval_count)
+        val intervalEditText = view.findViewById<EditText>(R.id.interval_count_edit)
 
-import java.util.List;
+        setButtonColors(startButton)
 
-public class BluetoothFragment5 extends Fragment {
+        juiceInfo.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
 
-    NHLPreferences nhlPreferences;
+        intervalText.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        intervalEditText.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        intervalEditText.setHintTextColor(Color.parseColor(nhlPreferences!!.color50()))
+        intervalEditText.background.mutate().setTint(Color.parseColor(nhlPreferences!!.color50()))
 
-    public BluetoothFragment5() {
-        // Required empty public constructor
+
+        powerSpinnerView.setBackgroundColor(Color.parseColor(nhlPreferences!!.color20()))
+        powerSpinnerView.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        powerSpinnerView.setHintTextColor(Color.parseColor(nhlPreferences!!.color50()))
+        powerSpinnerView.dividerColor = Color.parseColor(nhlPreferences!!.color80())
+
+        powerSpinnerView.spinnerOutsideTouchListener =
+            OnSpinnerOutsideTouchListener { _: View?, _: MotionEvent? ->
+                powerSpinnerView.selectItemByIndex(powerSpinnerView.selectedIndex)
+            }
+
+        val gd = GradientDrawable()
+        gd.setStroke(8, Color.parseColor(nhlPreferences!!.color50())) // Stroke width and color
+        gd.cornerRadius = 20f
+        spinnerBg1.background = gd
+
+        powerSpinnerView.setOnSpinnerItemSelectedListener(
+            OnSpinnerItemSelectedListener { _: Int, _: String?, newIndex: Int, _: String? ->
+                if(newIndex == 0){
+                    advertiseRandom = "-r"
+                    advertiseSingle = ""
+                } else {
+                    advertiseRandom = ""
+                    advertiseSingle = "-d $newIndex"
+                }
+            })
+
+        powerSpinnerView.selectItemByIndex(0)
+
+        startButton.setOnClickListener{
+            if(intervalEditText.text.isNotEmpty()){
+                if(checkForSelectedInterface()){
+                    nhlUtils?.runCmd("cd /root/AppleJuice && python3 app.py $advertiseSingle $advertiseRandom -i ${intervalEditText.text}")
+                }
+            } else {
+                requireActivity().lifecycleScope.launch {
+                    showToast("Are you dumb?")
+                }
+            }
+        }
+
+        return view
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.bt_layout5, container, false);
-
-        nhlPreferences = new NHLPreferences(requireActivity());
-
-        TextView juiceInfo = view.findViewById(R.id.juiceInfo);
-//        Spinner customAdvertise = view.findViewById(R.id.advertise);
-        CheckBox randomCheckbox = view.findViewById(R.id.random);
-        Button customAdvertise = view.findViewById(R.id.custom);
-        Button startButton = view.findViewById(R.id.startButton);
-        Button intervalButton = view.findViewById(R.id.interval);
-
-
-        startButton.setTextColor(Color.parseColor(nhlPreferences.color80()));
-        startButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
-
-        customAdvertise.setTextColor(Color.parseColor(nhlPreferences.color80()));
-        customAdvertise.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
-
-        intervalButton.setTextColor(Color.parseColor(nhlPreferences.color80()));
-        intervalButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
-
-        juiceInfo.setTextColor(Color.parseColor(nhlPreferences.color80()));
-
-        randomCheckbox.setTextColor(Color.parseColor(nhlPreferences.color80()));
-
-        List<Integer> imageList = List.of();
-
-        List<String> valueList = List.of(
-                "Airpods",
-                "Airpods Pro",
-                "Airpods Max",
-                "Airpods Gen 2",
-                "Airpods Gen 3",
-                "Airpods Pro Gen 2",
-                "PowerBeats",
-                "PowerBeats Pro",
-                "Beats Solo Pro",
-                "Beats Studio Buds",
-                "Beats Flex",
-                "BeatsX",
-                "Beats Solo3",
-                "Beats Studio3",
-                "Beats Studio Pro",
-                "Beats Fit Pro",
-                "Beats Studio Buds+",
-                "AppleTV Setup",
-                "AppleTV Pair",
-                "AppleTV New User",
-                "AppleTV AppleID Setup",
-                "AppleTV Wireless Audio Sync",
-                "AppleTV Homekit Setup",
-                "AppleTV Keyboard",
-                "AppleTV 'Connecting to Network'",
-                "Homepod Setup",
-                "Setup New Phone",
-                "Transfer Number to New Phone",
-                "TV Color Balance"
-        );
-
-        int[][] states = {{android.R.attr.state_checked}, {}};
-        int[] colors = {Color.parseColor(nhlPreferences.color80()), Color.parseColor(nhlPreferences.color80())};
-        CompoundButtonCompat.setButtonTintList(randomCheckbox, new ColorStateList(states, colors));
-
-        return view;
+    private fun showToast(message: String) {
+        requireActivity().lifecycleScope.launch {
+            ToastUtils.showCustomToast(requireActivity(), message)
+        }
     }
 
-    private void setContainerBackground(LinearLayout container) {
-        GradientDrawable drawable = new GradientDrawable();
-        drawable.setCornerRadius(60);
-        drawable.setStroke(8, Color.parseColor(nhlPreferences.color50()));
-        container.setBackground(drawable);
+    private fun checkForSelectedInterface(): Boolean {
+        // Check for interface only
+        return if (BluetoothFragment1.selectedIface == "None") {
+            requireActivity().lifecycleScope.launch {
+                ToastUtils.showCustomToast(
+                    requireActivity(),
+                    "No selected interface!"
+                )
+            }
+            false
+        } else {
+            true
+        }
     }
 
-    private void setButtonColors(Button button) {
-        button.setBackgroundColor(Color.parseColor(nhlPreferences.color50()));
-        button.setTextColor(Color.parseColor(nhlPreferences.color80()));
+    private fun setContainerBackground(container: LinearLayout) {
+        val drawable = GradientDrawable()
+        drawable.cornerRadius = 60f
+        drawable.setStroke(8, Color.parseColor(nhlPreferences!!.color50()))
+        container.background = drawable
     }
 
+    private fun setButtonColors(button: Button) {
+        button.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
+        button.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+    }
 }

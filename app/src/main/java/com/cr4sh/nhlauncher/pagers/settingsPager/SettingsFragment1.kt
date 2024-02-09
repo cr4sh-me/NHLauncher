@@ -1,4 +1,4 @@
-package com.cr4sh.nhlauncher.pagers.bluetoothPager.settingsPager
+package com.cr4sh.nhlauncher.pagers.settingsPager
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 class SettingsFragment1 : Fragment() {
     var nhlPreferences: NHLPreferences? = null
     var mainUtils: NHLUtils? = null
-    val mainActivity: MainActivity = NHLManager.instance.mainActivity
+    val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     private val languageChanger = LanguageChanger()
     private lateinit var updateButton: Button
     private var newSortingModeSetting: String? = null
@@ -61,7 +61,7 @@ class SettingsFragment1 : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.settings_layout1, container, false)
         nhlPreferences = NHLPreferences(requireActivity())
-        mainUtils = NHLUtils(mainActivity)
+        mainUtils = mainActivity?.let { NHLUtils(it) }
         vibrationsCheckbox = view.findViewById(R.id.vibrations_checkbox)
         newButtonsStyle = view.findViewById(R.id.newbuttons_checkbox)
         overlayCheckbox = view.findViewById(R.id.overlay_checkbox)
@@ -213,13 +213,15 @@ class SettingsFragment1 : Fragment() {
             })
         val updateCheckerUtils = UpdateCheckerUtils()
         checkUpdate.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             checkUpdate.text = requireActivity().resources.getString(R.string.update_wait)
             // Create an instance of UpdateCheckerUtils
             val updateCheckListener = object : UpdateCheckerUtils.UpdateCheckListener {
                 override fun onUpdateCheckCompleted(updateResult: UpdateCheckResult?) {
                     // Run on the UI thread to update the UI components
-                    requireActivity().runOnUiThread {
+                    requireActivity().lifecycleScope.launch {
                         if (updateResult != null) {
                             Log.d("testmessageout", "msg: " + updateResult.message)
                         }
@@ -260,32 +262,42 @@ class SettingsFragment1 : Fragment() {
         }
 
         updateButton.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             val intent = Intent(Intent.ACTION_VIEW)
             intent.setData(Uri.parse("https://github.com/cr4sh-me/NHLauncher/releases/latest"))
             startActivity(intent)
         }
         runSetup.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             mainUtils!!.runCmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit")
         }
         backupDb.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             val dbb = DBBackup()
-            mainActivity.lifecycleScope.launch {
+            mainActivity?.lifecycleScope?.launch {
                 dbb.createBackup(requireContext())
             }
         }
         restoreDb.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             val dbb = DBBackup()
-            mainActivity.lifecycleScope.launch {
+            mainActivity?.lifecycleScope?.launch {
                 dbb.restoreBackup(requireContext())
             }
         }
         saveButton.setOnClickListener {
-            vibrate(mainActivity, 10)
-            mainActivity.lifecycleScope.launch {
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
+            mainActivity?.lifecycleScope?.launch {
                 applySettings()
             }
         }
@@ -302,7 +314,9 @@ class SettingsFragment1 : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.S)
     private fun applySettings() {
-        vibrate(mainActivity, 10)
+        if (mainActivity != null) {
+            vibrate(mainActivity, 10)
+        }
 
         // Apply the settings to SharedPreferences
         saveVibrationsPref(vibrationsCheckbox.isChecked)
@@ -317,7 +331,7 @@ class SettingsFragment1 : Fragment() {
             newLanguageNameSetting = null.toString()
             newLanguageLocaleSetting = null.toString()
         }
-        mainActivity.recreate()
+        mainActivity?.recreate()
         requireActivity().recreate()
     }
 

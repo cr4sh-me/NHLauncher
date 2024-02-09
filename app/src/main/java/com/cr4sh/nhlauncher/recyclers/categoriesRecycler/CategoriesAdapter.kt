@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.cr4sh.nhlauncher.R
@@ -23,7 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class CategoriesAdapter : RecyclerView.Adapter<CategoriesViewHolder>() {
-    private val myActivity: MainActivity = NHLManager.instance.mainActivity
+    private val myActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     private val item: MutableList<String> = ArrayList()
     private val itemImg: MutableList<Int> = ArrayList()
     private var height = 0
@@ -46,7 +47,7 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoriesViewHolder>() {
                 DiffUtil.calculateDiff(CategoriesItemDiffCallback(item, newData, itemImg, newData2))
             }
 
-            withContext(Dispatchers.Main) {
+            myActivity?.lifecycleScope?.launch {
                 item.clear()
                 itemImg.clear()
                 item.addAll(newData)
@@ -58,7 +59,7 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoriesViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesViewHolder {
-        nhlPreferences = NHLPreferences(myActivity)
+        nhlPreferences = myActivity?.let { NHLPreferences(it) }
         val originalHeight = parent.measuredHeight
         margin = 20
         height = originalHeight / 8 - margin // Button height without margin
@@ -82,15 +83,17 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoriesViewHolder>() {
         holder: CategoriesViewHolder,
         @SuppressLint("RecyclerView") position: Int
     ) {
-        val mainUtils = NHLUtils(myActivity)
+        val mainUtils = myActivity?.let { NHLUtils(it) }
         val categoryName = item[position]
         val categoryImage = itemImg[position].toString()
         holder.nameView.text = categoryName
 
         // Load image dynamically based on categoryImage
         @SuppressLint("DiscouragedApi") val imageResourceId =
-            myActivity.resources.getIdentifier(categoryImage, "drawable", myActivity.packageName)
-        holder.imageView.setImageResource(imageResourceId)
+            myActivity?.resources?.getIdentifier(categoryImage, "drawable", myActivity.packageName)
+        if (imageResourceId != null) {
+            holder.imageView.setImageResource(imageResourceId)
+        }
         holder.imageView.setColorFilter(
             Color.parseColor(nhlPreferences!!.color80()),
             PorterDuff.Mode.MULTIPLY
@@ -104,10 +107,12 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoriesViewHolder>() {
 //        Log.d("CategoriesAdapter", "Parent height: " + originalHeight);
 //        Log.d("CategoriesAdapter", "Button height with margin: " + (height + margin));
         holder.itemView.setOnClickListener {
-            vibrate(myActivity, 10)
-            myActivity.backButton.callOnClick()
-            mainUtils.spinnerChanger(position)
-            myActivity.currentCategoryNumber = position
+            if (myActivity != null) {
+                vibrate(myActivity, 10)
+            }
+            myActivity?.backButton?.callOnClick()
+            mainUtils?.spinnerChanger(position)
+            myActivity?.currentCategoryNumber = position
         }
     }
 

@@ -2,15 +2,15 @@ package com.cr4sh.nhlauncher.activities
 
 import android.annotation.SuppressLint
 import android.app.ActivityOptions
+import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -34,7 +34,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.specialFeatures.SpecialFeaturesActivity
 import com.cr4sh.nhlauncher.database.DBHandler
-import com.cr4sh.nhlauncher.pagers.bluetoothPager.settingsPager.SettingsActivity
+import com.cr4sh.nhlauncher.pagers.settingsPager.SettingsActivity
 import com.cr4sh.nhlauncher.recyclers.buttonsRecycler.NHLAdapter
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.CategoriesAdapter
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.buttonsRecycler.NHLItem
@@ -44,7 +44,6 @@ import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.PermissionUtils
-import com.cr4sh.nhlauncher.utils.ToastUtils
 import com.cr4sh.nhlauncher.utils.VibrationUtils
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -52,9 +51,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     //    private val executor = NHLManager.getInstance().executorService
@@ -76,8 +72,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var mainUtils: NHLUtils
     lateinit var nhlPreferences: NHLPreferences
 
-    // Stop papysz easteregg
-    private var stopPapysz = Runnable { mainUtils.restartSpinner() }
     lateinit var searchEditText: EditText
     private lateinit var rollCategoriesLayout: LinearLayout
     private lateinit var categoriesLayout: RelativeLayout
@@ -104,8 +98,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        NHLManager.instance.mainActivity = this
-
+        NHLManager.getInstance().setMainActivity(this)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             overrideActivityTransition(
@@ -119,38 +112,38 @@ class MainActivity : AppCompatActivity() {
         val dialogUtils = DialogUtils(this.supportFragmentManager)
 
         // Check for nethunter and terminal apps
-//        val pm = packageManager
-//        try {
-//            // First, check if the com.offsec.nethunter and com.offsec.nhterm packages exist
-//            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES)
-//            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES)
-//
-//            // Then, check if the com.offsec.nhterm.ui.term.NeoTermRemoteInterface activity exists within com.offsec.nhterm
-//            val intent = Intent()
-//            intent.setComponent(
-//                ComponentName(
-//                    "com.offsec.nhterm",
-//                    "com.offsec.nhterm.ui.term.NeoTermRemoteInterface"
-//                )
-//            )
-//            val activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-//            if (activities.isEmpty()) {
-//                // The activity is missing
-//                dialogUtils.openMissingActivityDialog()
-//                return
-//            }
-//        } catch (e: PackageManager.NameNotFoundException) {
-//            // One of the packages is missing
-//            dialogUtils.openAppsDialog()
-//            return
-//        }
+        val pm = packageManager
+        try {
+            // First, check if the com.offsec.nethunter and com.offsec.nhterm packages exist
+            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES)
+            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES)
+
+            // Then, check if the com.offsec.nhterm.ui.term.NeoTermRemoteInterface activity exists within com.offsec.nhterm
+            val intent = Intent()
+            intent.setComponent(
+                ComponentName(
+                    "com.offsec.nhterm",
+                    "com.offsec.nhterm.ui.term.NeoTermRemoteInterface"
+                )
+            )
+            val activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+            if (activities.isEmpty()) {
+                // The activity is missing
+                dialogUtils.openMissingActivityDialog()
+                return
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            // One of the packages is missing
+            dialogUtils.openAppsDialog()
+            return
+        }
         val permissionUtils = PermissionUtils(this)
 
         // Check for root permissions
-//        if (!permissionUtils.isRoot) {
-//            dialogUtils.openRootDialog()
-//            return
-//        }
+        if (!permissionUtils.isRoot) {
+            dialogUtils.openRootDialog()
+            return
+        }
         nhlPreferences = NHLPreferences(this)
 
         val languageChanger = LanguageChanger()
@@ -201,9 +194,6 @@ class MainActivity : AppCompatActivity() {
 
         // Get functions from this class
         mainUtils = NHLUtils(this)
-        // Setup colors and settings
-// Assuming mainUtils.changeLanguage is a suspend function
-
 
         // Setting up new spinner
         valuesList = listOf(
@@ -305,7 +295,7 @@ class MainActivity : AppCompatActivity() {
         specialButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
         val categoriesAppear = AnimationUtils.loadAnimation(this@MainActivity, R.anim.cat_appear)
         rollCategoriesLayout.setOnClickListener {
-            runOnUiThread {
+            lifecycleScope.launch {
                 VibrationUtils.vibrate(this@MainActivity, 10)
 
                 // Check if searchView is not opened, prevent opening 2 things at the same time
@@ -535,38 +525,18 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent, animationBundle)
             }
         }
-
-        // Start papysz easteregg
-        val calendar = Calendar.getInstance()
-        val currentTime = calendar.time
-        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
-        val formattedTime = sdf.format(currentTime)
-        val targetTime = "21:37"
-
-        // Compare the current time with the target time
-        if (formattedTime == targetTime) {
-            val handler = Handler(Looper.getMainLooper())
-            lifecycleScope.launch {
-                // Call the suspend function within a coroutine
-                adapter.startPapysz()
-            }
-
-            ToastUtils.showCustomToast(this, "21:37")
-            handler.postDelayed(stopPapysz, 5000) // show papysz face for 5s
-        }
         onBackPressedDispatcher.addCallback(onBackPressedCallback)
-//        getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback)
     }
 
     fun disableWhileAnimation(v: View?) {
-        runOnUiThread {
+        lifecycleScope.launch {
             v!!.isEnabled = false
             v.visibility = View.GONE
         }
     }
 
     fun enableAfterAnimation(v: View?) {
-        runOnUiThread {
+        lifecycleScope.launch {
             v!!.isEnabled = true
             v.visibility = View.VISIBLE
         }

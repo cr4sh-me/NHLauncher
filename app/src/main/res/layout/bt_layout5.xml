@@ -11,50 +11,75 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="10dp"
-        android:text="Apple BLE proximity pairing message spoofing "
+        android:text="@string/bledesc"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <Button
-        android:id="@+id/interval"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:text="Custom interval"
-        app:layout_constraintTop_toBottomOf="@+id/juiceInfo" />
 
     <LinearLayout
         android:id="@+id/bottomContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginHorizontal="50dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/interval">
+        app:layout_constraintTop_toBottomOf="@+id/juiceInfo">
 
-        <CheckBox
-            android:id="@+id/random"
+        <com.skydoves.powerspinner.PowerSpinnerView
+            android:id="@+id/applejuice_spinner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:layout_weight="1"
-            android:checked="true"
+            android:layout_margin="10dp"
             android:gravity="center"
-            android:text="Random advertise" />
-
-        <Button
-            android:id="@+id/custom"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="10dp"
-            android:layout_weight="1"
-            android:text="Custom advertise" />
+            android:hint="@string/advertise"
+            android:padding="10dp"
+            android:textSize="15sp"
+            app:spinner_arrow_show="false"
+            app:spinner_divider_show="true"
+            app:spinner_divider_size="0.1dp"
+            app:spinner_item_array="@array/applejuice"
+            app:spinner_item_height="50dp"
+            app:spinner_popup_animation="dropdown"
+            app:spinner_popup_elevation="10dp"
+            app:spinner_popup_height="350dp" />
 
     </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/interval"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginHorizontal="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/bottomContainer">
+
+        <TextView
+            android:id="@+id/interval_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Interval (ms)"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/interval_count_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="200"
+            android:inputType="number"
+            android:maxLength="10"
+            android:text="200" />
+
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/startButton"
@@ -62,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
         android:text="Start"
-        app:layout_constraintTop_toBottomOf="@+id/bottomContainer" />
+        app:layout_constraintTop_toBottomOf="@+id/interval" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

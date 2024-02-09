@@ -25,7 +25,7 @@ import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 
 class EditableDialog : AppCompatDialogFragment() {
-    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
+    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
 
     @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("SetTextI18n")
@@ -57,7 +57,9 @@ class EditableDialog : AppCompatDialogFragment() {
         cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
         currentCommand.text = requireActivity().resources.getString(R.string.current_cmd) + cmd
         saveButton.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
 
             // Idiot protection...
             if (newCmd.text.toString().isEmpty()) {
@@ -85,7 +87,9 @@ class EditableDialog : AppCompatDialogFragment() {
             }
         }
         cancelButton.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             dialog?.cancel()
         }
         return view

@@ -19,6 +19,7 @@ import com.cr4sh.nhlauncher.dialogs.NhlColorPickerDialog
 import com.cr4sh.nhlauncher.dialogs.PermissionDialog
 import com.cr4sh.nhlauncher.dialogs.RootDialog
 import com.cr4sh.nhlauncher.dialogs.ScanTimeDialog
+import com.cr4sh.nhlauncher.dialogs.SdpToolDialog
 import com.cr4sh.nhlauncher.dialogs.ThrottlingDialog
 import com.cr4sh.nhlauncher.dialogs.WpsCustomPinDialog
 import com.cr4sh.nhlauncher.pagers.bluetoothPager.BluetoothFragment1
@@ -26,10 +27,10 @@ import kotlinx.coroutines.launch
 
 // This class creates and opens Dialogs
 class DialogUtils(private val fragmentManager: FragmentManager) {
-    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
-    private val lifecycleScope = mainActivity.lifecycleScope
+    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
+    private val lifecycleScope = mainActivity?.lifecycleScope
     fun openEditableDialog(name: String?, cmd: String?) {
-        lifecycleScope.launch {
+        lifecycleScope?.launch {
             val editableDialog = EditableDialog()
             val args = Bundle()
             args.putString("name", name)
@@ -40,7 +41,7 @@ class DialogUtils(private val fragmentManager: FragmentManager) {
     }
 
     fun openNewToolDialog(category: String?) {
-        lifecycleScope.launch {
+        lifecycleScope?.launch {
             val ntDialog = NewToolDialog()
             val args = Bundle()
             args.putString("category", category)
@@ -50,7 +51,7 @@ class DialogUtils(private val fragmentManager: FragmentManager) {
     }
 
     fun openDeleteToolDialog(name: String?) {
-        lifecycleScope.launch {
+        lifecycleScope?.launch {
             val dtDialog = DeleteToolDialog()
             val args = Bundle()
             args.putString("name", name)
@@ -60,21 +61,21 @@ class DialogUtils(private val fragmentManager: FragmentManager) {
     }
 
     fun openAppsDialog() {
-        lifecycleScope.launch {
+        lifecycleScope?.launch {
             val apDialog = AppsDialog()
             apDialog.show(fragmentManager, "AppsDialog")
         }
     }
 
     fun openRootDialog() {
-        lifecycleScope.launch {
+        lifecycleScope?.launch {
             val rootDialog = RootDialog()
             rootDialog.show(fragmentManager, "RootDialog")
         }
     }
 
     fun openFirstSetupDialog() {
-        lifecycleScope.launch {
+        lifecycleScope?.launch {
             val fsDialog = FirstSetupDialog()
             fsDialog.show(fragmentManager, "FirstSetupDialog")
         }
@@ -89,41 +90,41 @@ class DialogUtils(private val fragmentManager: FragmentManager) {
         }
         fragmentManager.beginTransaction().add(Fragment(), "TempFragment").commitNow()
         fragmentManager.executePendingTransactions()
-        lifecycleScope.launch {
+        lifecycleScope?.launch {
             val pmDialog = PermissionDialog()
             pmDialog.show(fragmentManager, "PermissionsDialog")
         }
     }
 
     fun openMissingActivityDialog() {
-        lifecycleScope.launch {
+        lifecycleScope?.launch {
             val maDialog = MissingActivityDialog()
             maDialog.show(fragmentManager, "MissingActivityDialog")
         }
     }
 
     fun openButtonMenuDialog(myActivity: MainActivity?) {
-        lifecycleScope.launch {
+        lifecycleScope?.launch {
             myActivity?.let { ButtonMenuDialog(it) }?.show(fragmentManager, "ButtonMenuDialog")
         }
     }
 
     fun openNhlColorPickerDialog(button: Button, alpha: ImageView, colorShade: String?) {
-        lifecycleScope.launch {
+        lifecycleScope?.launch {
             colorShade?.let { NhlColorPickerDialog(button, alpha, it) }
                 ?.show(fragmentManager, "NhlColorPickerDialog")
         }
     }
 
     fun openThrottlingDialog() {
-        lifecycleScope.launch {
+        lifecycleScope?.launch {
             val thDialog = ThrottlingDialog()
             thDialog.show(fragmentManager, "PermissionsDialog")
         }
     }
 
     fun openWpsCustomSetting(number: Int, activity: WPSAttack?) {
-        lifecycleScope.launch {
+        lifecycleScope?.launch {
             val pinDialog = activity?.let { WpsCustomPinDialog(it) }
             val args = Bundle()
             args.putInt("option", number)
@@ -133,12 +134,19 @@ class DialogUtils(private val fragmentManager: FragmentManager) {
     }
 
     fun openScanTimeDialog(number: Int, activity: BluetoothFragment1?) {
-        lifecycleScope.launch {
+        lifecycleScope?.launch {
             val pinDialog = activity?.let { ScanTimeDialog(it) }
             val args = Bundle()
             args.putInt("option", number)
             pinDialog?.arguments = args
             pinDialog?.show(fragmentManager, "PermissionsDialog")
+        }
+    }
+
+    fun openSdpToolDialog() {
+        lifecycleScope?.launch {
+            val sdpDialog = SdpToolDialog()
+            sdpDialog.show(fragmentManager, "SdpToolDialog")
         }
     }
 

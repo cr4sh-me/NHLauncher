@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteCantOpenDatabaseException
 import android.database.sqlite.SQLiteDatabase
 import android.os.Environment
 import android.util.Log
+import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.database.DBHandler.Companion.insertTool
@@ -14,6 +15,7 @@ import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -21,9 +23,10 @@ import java.io.FileOutputStream
 
 // This class is backing up and restoring buttons
 class DBBackup {
-    val mainActivity: MainActivity = NHLManager.instance.mainActivity
-    private val mainUtils: NHLUtils = NHLUtils(mainActivity)
-    private val dialogUtils: DialogUtils = DialogUtils(mainActivity.supportFragmentManager)
+    val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
+    private val mainUtils: NHLUtils? = mainActivity?.let { NHLUtils(it) }
+    private val dialogUtils: DialogUtils? =
+        mainActivity?.let { DialogUtils(it.supportFragmentManager) }
 
     fun createBackup(context: Context) {
         try {
@@ -82,13 +85,12 @@ class DBBackup {
             }
         } catch (e: FileNotFoundException) {
             showToastOnMainThread(context.resources.getString(R.string.backup_failed))
-            mainActivity.runOnUiThread { dialogUtils.openPermissionsDialog() }
+            mainActivity?.lifecycleScope?.launch { dialogUtils?.openPermissionsDialog() }
         } catch (e: Exception) {
             showToastOnMainThread("E: $e")
         }
     }
 
-    @SuppressLint("Range")
     fun restoreBackup(context: Context) {
         try {
             @SuppressLint("SdCardPath") val file = File("/sdcard/NHLauncher/backup.db")
@@ -136,12 +138,12 @@ class DBBackup {
                 val category = backupCursor.getString(1)
                 val favourite = backupCursor.getInt(2)
                 val name = backupCursor.getString(3)
-                val description_en = backupCursor.getString(4)
-                val description_pl = backupCursor.getString(5)
+                val descriptionEn = backupCursor.getString(4)
+                val descriptionPl = backupCursor.getString(5)
                 val cmd = backupCursor.getString(6)
                 val icon = backupCursor.getString(7)
 
-                // Not checking FAVOURITE, CMD and USAGE, because these values can be changed and it can cause duplicated buttons!!!
+                // Not checking FAVOURITE, CMD, and USAGE, because these values can be changed and it can cause duplicated buttons!!!
                 val existingCursor = existingDB.query(
                     "TOOLS",
                     null,
@@ -150,22 +152,29 @@ class DBBackup {
                         system.toString(),
                         category,
                         name,
-                        description_en,
-                        description_pl,
+                        descriptionEn,
+                        descriptionPl,
                         icon
                     ),
                     null,
                     null,
                     null
                 )
+
                 var existingUsage = 0
-                if (existingCursor.count > 0) {
+
+                // Check if the cursor has columns "FAVOURITE" and "USAGE"
+                val favouriteColumnIndex = existingCursor.getColumnIndex("FAVOURITE")
+                val usageColumnIndex = existingCursor.getColumnIndex("USAGE")
+
+                if (existingCursor.count > 0 && favouriteColumnIndex != -1 && usageColumnIndex != -1) {
                     // Get the existing favorite value for the tool
                     existingCursor.moveToFirst()
-                    val existingFavorite =
-                        existingCursor.getInt(existingCursor.getColumnIndex("FAVOURITE"))
-                    existingUsage = existingCursor.getInt(existingCursor.getColumnIndex("USAGE"))
+                    val existingFavorite = existingCursor.getInt(favouriteColumnIndex)
+                    existingUsage = existingCursor.getInt(usageColumnIndex)
+
                     existingCursor.close()
+
                     // Only update the favorite value if it is different from the existing value
                     if (existingFavorite != 1) {
                         Log.d("CRS", "$name Updated\n")
@@ -175,8 +184,8 @@ class DBBackup {
                             category,
                             favourite,
                             name,
-                            description_en,
-                            description_pl,
+                            descriptionEn,
+                            descriptionPl,
                             cmd,
                             icon,
                             existingUsage
@@ -189,38 +198,38 @@ class DBBackup {
                             category,
                             1,
                             name,
-                            description_en,
-                            description_pl,
+                            descriptionEn,
+                            descriptionPl,
                             cmd,
                             icon,
                             existingUsage
                         )
                     }
                 } else {
-                    Log.d("CRS", name + "Inserted\n")
+                    Log.d("CRS", "$name Inserted\n")
                     insertTool(
                         existingDB,
                         system,
                         category,
                         favourite,
                         name,
-                        description_en,
-                        description_pl,
+                        descriptionEn,
+                        descriptionPl,
                         cmd,
                         icon,
                         existingUsage
                     )
                 }
-                existingCursor.close()
             }
+
             backupCursor.close()
             backupDB.close()
             existingDB.close()
             showToastOnMainThread(context.resources.getString(R.string.bp_restored))
-            mainActivity.runOnUiThread { mainUtils.restartSpinner() }
+            mainActivity?.lifecycleScope?.launch { mainUtils?.restartSpinner() }
         } catch (e: SQLiteCantOpenDatabaseException) {
             showToastOnMainThread(context.resources.getString(R.string.restore_fail))
-            mainActivity.runOnUiThread { dialogUtils.openPermissionsDialog() }
+            mainActivity?.lifecycleScope?.launch { dialogUtils?.openPermissionsDialog() }
         } catch (e: Exception) {
             showToastOnMainThread("E: $e")
             Log.d("DBBACKUPERR", "E: $e")
@@ -229,6 +238,6 @@ class DBBackup {
 
     private fun showToastOnMainThread(message: String) {
         // Using the main thread's handler to post a runnable
-        mainActivity.runOnUiThread { showCustomToast(mainActivity, message) }
+        mainActivity?.lifecycleScope?.launch { showCustomToast(mainActivity, message) }
     }
 }

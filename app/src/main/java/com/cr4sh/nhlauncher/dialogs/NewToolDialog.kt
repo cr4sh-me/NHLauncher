@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.database.Cursor
 import android.database.SQLException
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
@@ -26,9 +24,8 @@ import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 
 class NewToolDialog : AppCompatDialogFragment() {
-    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
+    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
 
-    @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("Recycle")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,7 +59,9 @@ class NewToolDialog : AppCompatDialogFragment() {
         saveButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
         saveButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
         saveButton.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             // Idiot protection...
             if (myName.text.toString().isEmpty()) {
                 showCustomToast(requireActivity(), resources.getString(R.string.name_empty))
@@ -121,7 +120,9 @@ class NewToolDialog : AppCompatDialogFragment() {
             }
         }
         cancelButton.setOnClickListener {
-            vibrate(mainActivity, 10)
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
             dialog?.cancel()
         }
         return view

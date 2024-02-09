@@ -4,8 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.ActivityOptions
 import android.content.BroadcastReceiver
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -35,20 +33,24 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
+import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.activities.specialFeatures.SpecialFeaturesActivity
 import com.cr4sh.nhlauncher.bridge.Bridge.Companion.createExecuteIntent
 import com.cr4sh.nhlauncher.utils.DialogUtils
+import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ShellExecuter
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
+// TODO fix wrong button height calculation while keyboard is open
 class WPSAttack : AppCompatActivity() {
     var customPINCMD = ""
     var delayCMD = ""
@@ -66,8 +68,8 @@ class WPSAttack : AppCompatActivity() {
     private lateinit var scanButton: Button
     private var exe: ShellExecuter? = null
     private lateinit var textMessage: TextView
-
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private var nhlUtils: NHLUtils? = null
+    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     override fun onPause() {
         super.onPause()
         if (isFinishing) {
@@ -101,6 +103,7 @@ class WPSAttack : AppCompatActivity() {
         wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
         buttonContainer = findViewById(R.id.buttonContainer)
         nhlPreferences = NHLPreferences(this)
+        nhlUtils = mainActivity?.let { NHLUtils(it) }
         val dialogUtils = DialogUtils(supportFragmentManager)
         msg2.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         try {
@@ -112,9 +115,9 @@ class WPSAttack : AppCompatActivity() {
             dialogUtils.openThrottlingDialog()
         }
         if (isThrottleEnabled) {
-            setMessage2("Wi-Fi throttling enabled")
+            setMessage2("Wi-Fi throttling is enabled")
         } else {
-            setMessage2("Wi-Fi throttling disabled")
+            setMessage2("Wi-Fi throttling is disabled")
         }
         val rootView = findViewById<View>(android.R.id.content)
         rootView.setBackgroundColor(Color.parseColor(nhlPreferences!!.color20()))
@@ -182,29 +185,27 @@ class WPSAttack : AppCompatActivity() {
 
 
         pixieForceCheckbox.isChecked = nhlPreferences!!.isPixieForceActive
-        pixieforceCMD = if (pixieForceCheckbox.isChecked) " -F" else ""
+        pixieforceCMD = if (pixieForceCheckbox.isChecked) "-F" else ""
 
         bruteCheckbox.isChecked = nhlPreferences!!.isOnlineBfActive
-        bruteCMD = if (bruteCheckbox.isChecked) " -B" else ""
+        bruteCMD = if (bruteCheckbox.isChecked) "-B" else ""
 
         wpsButtonCheckbox.isChecked = nhlPreferences!!.isWpsButtonActive
-        pbcCMD = if (wpsButtonCheckbox.isChecked) {
-            " --pbc"
-        } else ""
+        pbcCMD = if (wpsButtonCheckbox.isChecked) "--pbc" else ""
 
         pixieDustCheckbox.setOnClickListener {
             vibrate(this, 10)
-            pixieCMD = if (pixieDustCheckbox.isChecked) " -K" else ""
+            pixieCMD = if (pixieDustCheckbox.isChecked) "-K" else ""
             savePixieDust(pixieDustCheckbox.isChecked)
         }
         pixieForceCheckbox.setOnClickListener {
             vibrate(this, 10)
-            pixieforceCMD = if (pixieForceCheckbox.isChecked) " -F" else ""
+            pixieforceCMD = if (pixieForceCheckbox.isChecked) "-F" else ""
             savePixieForce(pixieForceCheckbox.isChecked)
         }
         bruteCheckbox.setOnClickListener {
             vibrate(this, 10)
-            bruteCMD = if (bruteCheckbox.isChecked) " -B" else ""
+            bruteCMD = if (bruteCheckbox.isChecked) "-B" else ""
             saveOnlineBf(bruteCheckbox.isChecked)
         }
         customPinCheckbox.setOnClickListener {
@@ -218,7 +219,7 @@ class WPSAttack : AppCompatActivity() {
         wpsButtonCheckbox.setOnClickListener {
             vibrate(this, 10)
             pbcCMD = if (wpsButtonCheckbox.isChecked) {
-                " --pbc"
+                "--pbc"
             } else ""
             saveWpsButton(wpsButtonCheckbox.isChecked)
         }
@@ -236,7 +237,7 @@ class WPSAttack : AppCompatActivity() {
                     enableScanButton(false)
                     setMessage("Enabling WiFi...")
                     enableWifi()
-                    coroutineScope.launch {
+                    lifecycleScope.launch {
                         while (isActive) {
                             delay(3000)
                             performWifiScan()
@@ -413,15 +414,8 @@ class WPSAttack : AppCompatActivity() {
     }
 
     private fun handleLongButtonClick(bssid: String): Boolean {
-        this.copyToClipboard(bssid)
+        nhlUtils?.copyToClipboard(bssid)
         return true
-    }
-
-    // TODO move this to utils
-    private fun Context.copyToClipboard(text: CharSequence){
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("Copied!", text)
-        clipboard.setPrimaryClip(clip)
     }
 
     private fun handleButtonClick(clickedButton: Button) {
@@ -557,18 +551,18 @@ class WPSAttack : AppCompatActivity() {
     }
 
     private fun enableWifi() {
-        coroutineScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
             exe?.RunAsRoot(arrayOf("svc wifi enable"))
         }
     }
 
     private fun resetWifi() {
-        coroutineScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
             exe?.RunAsRoot(arrayOf("svc wifi disable"))
             delay(3000)
             exe?.RunAsRoot(arrayOf("svc wifi enable"))
             delay(3000)
-            runOnUiThread {
+            lifecycleScope.launch {
                 enableScanButton(true)
                 setMessage("Scan")
             }

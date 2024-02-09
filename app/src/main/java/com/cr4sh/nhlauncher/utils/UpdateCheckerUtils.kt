@@ -1,7 +1,5 @@
 package com.cr4sh.nhlauncher.utils
 
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
@@ -18,12 +16,9 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 class UpdateCheckerUtils {
-    private val mainActivity: MainActivity = NHLManager.instance.mainActivity
-
-    //    private val executor = NHLManager.getInstance().executorService
-    private val uiHandler = Handler(Looper.getMainLooper())
+    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     fun checkUpdateAsync(listener: UpdateCheckListener) {
-        mainActivity.lifecycleScope.launch(Dispatchers.IO) {
+        mainActivity?.lifecycleScope?.launch(Dispatchers.IO) {
             try {
                 Log.d(TAG, "Checking for updates asynchronously...")
                 val latestVersion = latestAppVersion
@@ -53,7 +48,7 @@ class UpdateCheckerUtils {
         listener: UpdateCheckListener,
         updateResult: UpdateCheckResult
     ) {
-        uiHandler.post {
+        mainActivity?.lifecycleScope?.launch {
             Log.d(TAG, "Posting update check result to the UI thread")
             listener.onUpdateCheckCompleted(updateResult)
         }
@@ -80,10 +75,10 @@ class UpdateCheckerUtils {
                 }
             } catch (e: UnknownHostException) {
                 Log.e(TAG, "Error checking for updates", e)
-                throw IOException(mainActivity.resources.getString(R.string.check_internet_connection))
+                throw IOException(mainActivity?.resources?.getString(R.string.check_internet_connection))
             } catch (e: SocketTimeoutException) {
                 Log.e(TAG, "Error checking for updates", e)
-                throw IOException(mainActivity.resources.getString(R.string.check_internet_connection))
+                throw IOException(mainActivity?.resources?.getString(R.string.check_internet_connection))
             }
         }
 
@@ -102,7 +97,7 @@ class UpdateCheckerUtils {
         val installedVersion = installedVersion
             ?: return UpdateCheckResult(
                 false,
-                mainActivity.resources.getString(R.string.something_fucked_up)
+                mainActivity?.resources?.getString(R.string.something_fucked_up)
             )
         Log.d(TAG, "Current version: $installedVersion")
         val installedParts =
@@ -119,16 +114,16 @@ class UpdateCheckerUtils {
                 Log.d(TAG, "Update available: $latestVersion > $installedVersion")
                 return UpdateCheckResult(
                     true, """
-     ${mainActivity.resources.getString(R.string.update_avaiable)}
-     ${mainActivity.resources.getString(R.string.current_app_version)}$installedVersion
-     ${mainActivity.resources.getString(R.string.new_app_version)}$latestVersion
+     ${mainActivity?.resources?.getString(R.string.update_avaiable)}
+     ${mainActivity?.resources?.getString(R.string.current_app_version)}$installedVersion
+     ${mainActivity?.resources?.getString(R.string.new_app_version)}$latestVersion
      """.trimIndent()
                 )
             } else if (comparisonResult > 0) {
                 Log.d(TAG, "giga chad: $latestVersion <= $installedVersion")
                 return UpdateCheckResult(
                     false,
-                    mainActivity.resources.getString(R.string.giga_chad)
+                    mainActivity?.resources?.getString(R.string.giga_chad)
                 )
             }
             i++
@@ -136,14 +131,17 @@ class UpdateCheckerUtils {
 
         // If loop completes, versions are equal
         Log.d(TAG, "No update needed: $latestVersion == $installedVersion")
-        return UpdateCheckResult(false, mainActivity.resources.getString(R.string.already_updated))
+        return UpdateCheckResult(
+            false,
+            mainActivity?.resources?.getString(R.string.already_updated)
+        )
     }
 
     private val installedVersion: String?
         get() = try {
             val packageInfo =
-                mainActivity.packageManager.getPackageInfo(mainActivity.packageName, 0)
-            packageInfo.versionName
+                mainActivity?.let { mainActivity.packageManager.getPackageInfo(it.packageName, 0) }
+            packageInfo?.versionName
         } catch (e: Exception) {
             Log.e(TAG, "Error getting installed version", e)
             null
