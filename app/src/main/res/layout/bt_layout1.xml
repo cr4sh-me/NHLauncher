@@ -21,10 +21,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="5dp"
         android:text="@string/interfaces"
+        android:padding="5dp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/btServicesButton"
+        app:layout_constraintTop_toBottomOf="@+id/bt_info2"
         tools:layout_editor_absoluteX="0dp" />
 
     <TextView
@@ -35,9 +35,7 @@
         android:padding="5dp"
         android:text="@string/services"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/bt_info2"
-        tools:layout_editor_absoluteX="-16dp" />
-
+        app:layout_constraintTop_toBottomOf="@+id/spinnerContainer" />
 
     <TextView
         android:id="@+id/scanText"
@@ -49,28 +47,163 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerContainer" />
+        app:layout_constraintTop_toBottomOf="@+id/servicesButton" />
+
+    <LinearLayout
+        android:padding="15dp"
+        android:id="@+id/linearContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/interfacesText">
+
+        <!-- First Pair of TextViews -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Left Side -->
+            <TextView
+                android:textStyle="bold"
+                android:id="@+id/bluebinder"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:padding="5dp"
+                android:text="BLUEBINDER" />
+
+            <!-- Centered "-" -->
+            <TextView
+                android:id="@+id/divider1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=":"
+                android:padding="5dp"/>
+
+            <!-- Right Side -->
+            <TextView
+                android:id="@+id/binder_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:padding="5dp"
+                android:text="Please wait..." />
+
+        </LinearLayout>
+
+        <!-- Second Pair of TextViews -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Left Side -->
+            <TextView
+                android:textStyle="bold"
+                android:id="@+id/dbus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:padding="5dp"
+                android:text="DBUS" />
+
+            <!-- Centered "-" -->
+            <TextView
+                android:id="@+id/divider2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=":"
+                android:padding="5dp"/>
+
+            <!-- Right Side -->
+            <TextView
+                android:id="@+id/dbus_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:padding="5dp"
+                android:text="Please wait..." />
+
+        </LinearLayout>
+
+        <!-- Third Pair of TextViews -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Left Side -->
+            <TextView
+                android:textStyle="bold"
+                android:id="@+id/bluetooth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:padding="5dp"
+                android:text="BLUETOOTH" />
+
+            <!-- Centered "-" -->
+            <TextView
+                android:id="@+id/divider3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=":"
+                android:padding="5dp"/>
+
+            <!-- Right Side -->
+            <TextView
+                android:id="@+id/bluetooth_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:padding="5dp"
+                android:text="Please wait..." />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <Button
+        android:layout_marginTop="5dp"
         android:id="@+id/bluebinderButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
+        app:layout_constraintTop_toBottomOf="@id/linearContainer"
         android:text="@string/loading"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/interfacesText" />
+        />
+
 
     <Button
-        android:id="@+id/btServicesButton"
+        app:layout_constraintTop_toBottomOf="@+id/bluebinderButton"
+        android:id="@+id/servicesButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginHorizontal="10dp"
         android:text="@string/loading"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bluebinderButton" />
+        >
+
+
+    </Button>
+
+
 
     <LinearLayout
         android:id="@+id/spinnerContainer"
@@ -114,6 +247,8 @@
         </LinearLayout>
     </ScrollView>
 
+    <!-- Existing Bottom Container -->
+
     <LinearLayout
         android:id="@+id/bottomContainer"
         android:layout_width="match_parent"
@@ -145,6 +280,5 @@
             tools:ignore="ButtonStyle" />
 
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

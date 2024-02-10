@@ -51,10 +51,14 @@ class BluetoothFragment1 : Fragment() {
     private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     private var scrollView: ScrollView? = null
     private var imageList: List<Int>? = null
+    private lateinit var linearContainer: LinearLayout
     private lateinit var binderButton: Button
     private lateinit var servicesButton: Button
     private lateinit var scanButton: Button
     private lateinit var ifaces: Spinner
+    private lateinit var binderTextView: TextView
+    private lateinit var dbusTextView: TextView
+    private lateinit var bluetoothTextView: TextView
     private var btSmd: File? = null
     private var bluebinder: File? = null
     private var buttonContainer: LinearLayout? = null
@@ -74,6 +78,32 @@ class BluetoothFragment1 : Fragment() {
         bluebinder = File("$chrootPath/usr/sbin/bluebinder")
         scrollView = view.findViewById(R.id.scrollView2)
         buttonContainer = view.findViewById(R.id.buttonContainer)
+        linearContainer = view.findViewById(R.id.linearContainer)
+
+        val binderText1 = view.findViewById<TextView>(R.id.bluebinder)
+        val dbusText1 = view.findViewById<TextView>(R.id.dbus)
+        val bluetoothText1= view.findViewById<TextView>(R.id.bluetooth)
+
+        val divider1 = view.findViewById<TextView>(R.id.divider1)
+        val divider2 = view.findViewById<TextView>(R.id.divider2)
+        val divider3 = view.findViewById<TextView>(R.id.divider3)
+
+        binderTextView = view.findViewById(R.id.binder_text)
+        dbusTextView = view.findViewById(R.id.dbus_text)
+        bluetoothTextView = view.findViewById(R.id.bluetooth_text)
+
+        binderText1.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        dbusText1.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        bluetoothText1.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+
+        divider1.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        divider2.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        divider3.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+
+        binderTextView.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        dbusTextView.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        bluetoothTextView.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+
         val description = view.findViewById<TextView>(R.id.bt_info2)
         val interfacesText = view.findViewById<TextView>(R.id.interfacesText)
         val servicesText = view.findViewById<TextView>(R.id.servicesText)
@@ -85,8 +115,11 @@ class BluetoothFragment1 : Fragment() {
         scanButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         scanTimeButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
         scanTimeButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        servicesButton = view.findViewById(R.id.servicesButton)
         binderButton = view.findViewById(R.id.bluebinderButton)
-        servicesButton = view.findViewById(R.id.btServicesButton)
+//        bluetoothButton = view.findViewById(R.id.bluetoothButton)
+//        dbusButton = view.findViewById(R.id.dbusButton)
+
         ifaces = view.findViewById(R.id.hci_interface)
         val ifacesContainer = view.findViewById<LinearLayout>(R.id.spinnerContainer)
         setContainerBackground(ifacesContainer)
@@ -96,10 +129,18 @@ class BluetoothFragment1 : Fragment() {
         description.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         interfacesText.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         servicesText.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        binderButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
-        binderButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        servicesButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
-        servicesButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+
+        val gd = GradientDrawable()
+        gd.setStroke(8, Color.parseColor(nhlPreferences!!.color50())) // Stroke width and color
+        gd.cornerRadius = 60f
+        linearContainer.background = gd
+
+//        binderButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
+//        binderButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+//        dbusButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
+//        dbusButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+//        servicesButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
+//        servicesButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         try {
             lifecycleScope.launch(Dispatchers.Default) {
                 loadIfaces()
@@ -111,7 +152,7 @@ class BluetoothFragment1 : Fragment() {
         lockButton(false, "Please wait...", binderButton)
         lockButton(false, "Please wait...", servicesButton)
         binderStatus
-        btServicesStatus
+        servicesStatus
         ifaces.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>,
@@ -122,10 +163,9 @@ class BluetoothFragment1 : Fragment() {
                 selectedIface = parentView.getItemAtPosition(pos).toString()
             }
 
-            override fun onNothingSelected(parentView: AdapterView<*>?) {
-                // TODO document why this method is empty
-            }
+            override fun onNothingSelected(parentView: AdapterView<*>?) {}
         }
+
         binderButton.setOnClickListener {
             try {
                 CoroutineScope(Dispatchers.IO).launch {
@@ -136,19 +176,61 @@ class BluetoothFragment1 : Fragment() {
                 Log.e("ERROR", "Exception during binderButton click", e)
             }
         }
+
         servicesButton.setOnClickListener {
-            lifecycleScope.launch(Dispatchers.Default) {
-                try {
-                    lifecycleScope.launch {
-                        lockButton(false, "Please wait...", servicesButton)
+            lockButton(false, "Please wait...", servicesButton)
+            try {
+                CoroutineScope(Dispatchers.IO).launch {
+                    // Check if D-Bus is running
+                    val isDbusRunning = isDbusRunning()
+                    val isBluetoothRunning = isBluetoothRunning()
+
+                    // ASSUMING THAT BLUETOOTH SERVICE CANT RUN WITHOUT DBUS STARTED
+                    if(!isDbusRunning && !isBluetoothRunning){
+                        dbusAction(true)
+                        bluetoothAction(true)
+                    } else if (!isBluetoothRunning){
+                        bluetoothAction(true)
+                    } else {
+                        dbusAction(false)
+                        bluetoothAction(false)
                     }
-                    btServicesAction()
-                } catch (e: Exception) {
-                    // Log exceptions or handle them appropriately
-                    Log.e("ERROR", "Exception during servicesButton click", e)
+
+//                    if (isDbusRunning) {
+//                        // D-Bus is running, proceed with Bluetooth action
+//                        bluetoothAction()
+//                    } else {
+//                        dbusAction()
+//                        bluetoothAction()
+//                    }
                 }
+            } catch (e: Exception) {
+                // Log exceptions or handle them appropriately
+                Log.e("ERROR", "Exception during bluetoothButton click", e)
             }
         }
+
+//        bluetoothButton.setOnClickListener {
+//            try {
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    bluetoothAction()
+//                }
+//            } catch (e: Exception) {
+//                // Log exceptions or handle them appropriately
+//                Log.e("ERROR", "Exception during bluetoothButton click", e)
+//            }
+//        }
+//        dbusButton.setOnClickListener {
+//            try {
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    dbusAction()
+//                }
+//            } catch (e: Exception) {
+//                // Log exceptions or handle them appropriately
+//                Log.e("ERROR", "Exception during dbusButton click", e)
+//            }
+//        }
+
         scanButton.setOnClickListener { runBtScan() }
         val dialogUtils = DialogUtils(requireActivity().supportFragmentManager)
         scanTimeButton.setOnClickListener { dialogUtils.openScanTimeDialog(1, this) }
@@ -158,7 +240,7 @@ class BluetoothFragment1 : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun createButtons(devices: Array<String>) {
         buttonContainer!!.removeAllViews() // Clear previous buttons
-        val buttonCount = 4
+        val buttonCount = 3
         val scrollViewHeight = scrollView!!.height
         val buttonPadding = 15
         for (device in devices) {
@@ -289,11 +371,8 @@ class BluetoothFragment1 : Fragment() {
                     val isBinderRunningValue = isBinderRunning()
 
                     lifecycleScope.launch {
-                        lockButton(
-                            true,
-                            if (isBinderRunningValue) "Stop Bluebinder" else "Start Bluebinder",
-                            binderButton
-                        )
+                        binderTextView.text = if(isBinderRunningValue) "Running" else "Down"
+                        lockButton(true, if (isBinderRunningValue) "Stop Bluebinder" else "Start Bluebinder", binderButton)
                     }
 
                     // Run loadIfaces on the background thread
@@ -311,17 +390,34 @@ class BluetoothFragment1 : Fragment() {
         }
 
 
-    private val btServicesStatus: Unit
+
+
+    private val servicesStatus: Unit
         get() {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    val isBtServicesRunning = isBtServicesRunning()
+                    val isDbusRunning = isDbusRunning()
+                    Log.d("DBUSSTATUS", isDbusRunning.toString())
+                    val isBluetoothRunning = isBluetoothRunning()
+                    Log.d("BTSTATUS", isBluetoothRunning.toString())
+
                     lifecycleScope.launch {
-                        lockButton(
-                            true,
-                            if (isBtServicesRunning) "Stop BT Services" else "Start BT Services",
-                            servicesButton
-                        )
+                        dbusTextView.text = if(isDbusRunning) "Running" else "Down"
+                        bluetoothTextView.text = if(isBluetoothRunning) "Running" else "Down"
+                    }
+
+                    if(isDbusRunning && isBluetoothRunning){
+                        lifecycleScope.launch {
+                            lockButton(true, "Stop BT services", servicesButton)
+                        }
+                    } else if (!isDbusRunning && !isBluetoothRunning){
+                        lifecycleScope.launch {
+                            lockButton(true, "Start BT services", servicesButton)
+                        }
+                    } else {
+                        lifecycleScope.launch {
+                            lockButton(true, "Start BT services", servicesButton)
+                        }
                     }
                 } catch (e: Exception) {
                     // Log exceptions
@@ -329,6 +425,26 @@ class BluetoothFragment1 : Fragment() {
                 }
             }
         }
+
+//    private val dbusStatus: Unit
+//        get() {
+//            CoroutineScope(Dispatchers.IO).launch {
+//                try {
+//                    val isDbusRunning = isDbusRunning()
+//                    Log.d("DBUSSTATUS", isDbusRunning.toString())
+//                    lifecycleScope.launch {
+//                        lockButton(
+//                            true,
+//                            if (isDbusRunning) "Stop Dbus Service" else "Start Dbus Service",
+//                            dbusButton
+//                        )
+//                    }
+//                } catch (e: Exception) {
+//                    // Log exceptions
+//                    throw RuntimeException(e)
+//                }
+//            }
+//        }
 
     @Throws(ExecutionException::class, InterruptedException::class)
     suspend fun isBinderRunning(): Boolean {
@@ -353,16 +469,29 @@ class BluetoothFragment1 : Fragment() {
 
 
     @Throws(ExecutionException::class, InterruptedException::class)
-    suspend fun isBtServicesRunning(): Boolean {
+    suspend fun isBluetoothRunning(): Boolean {
+        return try {
+            val btStatusCmd = withContext(Dispatchers.IO) {
+                exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd service bluetooth status | grep bluetooth")
+            }
+            Log.d("BTISRUNNING", btStatusCmd)
+            btStatusCmd == "bluetooth is running."
+        } catch (e: Exception) {
+            // Log exceptions
+            Log.e("ERROR", "Exception during isBtServicesRunning", e)
+            false
+        }
+    }
+
+    @Throws(ExecutionException::class, InterruptedException::class)
+    suspend fun isDbusRunning(): Boolean {
+        Log.d("DBUSISRUNNING", "START")
         return try {
             val dbusStatusCmd = withContext(Dispatchers.IO) {
                 exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd service dbus status | grep dbus")
             }
-            val btStatusCmd = withContext(Dispatchers.IO) {
-                exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd service bluetooth status | grep bluetooth")
-            }
-            Log.d("DEBSHIT", "$dbusStatusCmd $btStatusCmd")
-            dbusStatusCmd == "dbus is running." && btStatusCmd == "bluetooth is running."
+            Log.d("DBUSISRUNNING", dbusStatusCmd)
+            dbusStatusCmd == "dbus is running."
         } catch (e: Exception) {
             // Log exceptions
             Log.e("ERROR", "Exception during isBtServicesRunning", e)
@@ -373,14 +502,14 @@ class BluetoothFragment1 : Fragment() {
     @SuppressLint("SetTextI18n")
     @Throws(ExecutionException::class, InterruptedException::class)
     private suspend fun binderAction() {
+        lockButton(false, "Please wait...", binderButton)
         if (bluebinder!!.exists()) {
-            lockButton(false, "Please wait...", binderButton)
             try {
-                val isRunningBeforeAction = isBinderRunning()
+
+                val isRunningBefore = isBinderRunning()
 
                 // Check if binder is running
-                if (!isRunningBeforeAction) {
-                    // Start bluebinder process in the background
+                if (!isRunningBefore) {
                     startBinder()
                 } else {
                     // Stop bluebinder process in the background
@@ -393,7 +522,7 @@ class BluetoothFragment1 : Fragment() {
 
                     try {
                         val isRunningAfterAction = isBinderRunning()
-                        if (isRunningBeforeAction != isRunningAfterAction) {
+                        if (isRunningBefore != isRunningAfterAction) {
                             // Update button text on the UI thread
                             lifecycleScope.launch {
                                 binderStatus
@@ -422,28 +551,37 @@ class BluetoothFragment1 : Fragment() {
 
     @SuppressLint("SetTextI18n")
     @Throws(ExecutionException::class, InterruptedException::class)
-    private suspend fun btServicesAction() {
+    private suspend fun bluetoothAction(enable: Boolean) {
         try {
             // Check if BT Services are running
-            val areServicesRunning = isBtServicesRunning()
 
-            withContext(Dispatchers.IO) {
-                if (!areServicesRunning) {
-                    // Start BT Services
-                    startBtServices()
-                } else {
-                    // Stop BT Services
-                    stopBtServices()
-                }
+
+            if (enable) {
+                // Start BT Services
+//                startBinder()
+                startBluetooth()
+            } else {
+                // Stop BT Services
+                stopBluetooth()
             }
 
-            // Wait for the action to complete
-            delay(1000) // Adjust the delay duration if needed
+            while (true) {
+                delay(1000) // Adjust the delay duration if needed
 
-            // Update button text on the UI thread
-            lifecycleScope.launch {
-                Log.d("DEBUG", "Update on UI thread")
-                btServicesStatus
+                try {
+                    val isRunningAfterAction = isBluetoothRunning()
+                    Log.d("BTACTION", "enable: $enable == isBtServicesRunning $isRunningAfterAction")
+                    if (enable == isRunningAfterAction) {
+                        // Update button text on the UI thread
+                        lifecycleScope.launch {
+                            servicesStatus
+                        }
+                        break
+                    }
+                } catch (e: Exception) {
+                    // Log exceptions
+                    Log.e("ERROR", "Exception during periodic update", e)
+                }
             }
         } catch (e: Exception) {
             // Log exceptions
@@ -451,8 +589,50 @@ class BluetoothFragment1 : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    @Throws(ExecutionException::class, InterruptedException::class)
+    private suspend fun dbusAction(enable: Boolean) {
+        try {
 
+            if (enable) {
+                // Start Dbus
+                startDbus()
+            } else {
+                // Stop Dbus
+                stopDbus()
+            }
+
+
+            // Schedule periodic updates using coroutine delay
+            while (true) {
+                delay(1000) // Adjust the delay duration if needed
+
+                try {
+                    val isRunningAfterAction = isDbusRunning()
+                    Log.d("DBUSACTION", "enable: $enable == isDbusRunning $isRunningAfterAction")
+                    if (enable == isRunningAfterAction) {
+                        // Update button text on the UI thread
+                        lifecycleScope.launch {
+                            servicesStatus
+                        }
+                        break
+                    }
+                } catch (e: Exception) {
+                    // Log exceptions
+                    Log.e("ERROR", "Exception during periodic update", e)
+                }
+            }
+        } catch (e: Exception) {
+            // Log exceptions
+            Log.e("ERROR", "Exception during btServicesAction", e)
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
     private suspend fun startBinder() {
+        lifecycleScope.launch {
+            binderTextView.text = "Starting..."
+        }
         try {
             withContext(Dispatchers.IO) {
                 if (btSmd!!.exists()) {
@@ -473,9 +653,11 @@ class BluetoothFragment1 : Fragment() {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private suspend fun stopBinder() {
         lifecycleScope.launch {
             buttonContainer!!.removeAllViews() // Clear previous buttons
+            binderTextView.text = "Stopping..."
         }
         try {
             withContext(Dispatchers.IO) {
@@ -494,11 +676,14 @@ class BluetoothFragment1 : Fragment() {
     }
 
 
-    private suspend fun startBtServices() {
+    @SuppressLint("SetTextI18n")
+    private suspend fun startBluetooth() {
+        lifecycleScope.launch {
+            bluetoothTextView.text = "Starting..."
+        }
         try {
             withContext(Dispatchers.IO) {
                 // Start BT services
-                exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service dbus start"))
                 exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service bluetooth start"))
             }
         } catch (e: Exception) {
@@ -506,26 +691,60 @@ class BluetoothFragment1 : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    private suspend fun startDbus() {
+        lifecycleScope.launch {
+            dbusTextView.text = "Starting..."
+        }
+        try {
+            withContext(Dispatchers.IO) {
+                // Start BT services
+                exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service dbus start"))
+            }
+        } catch (e: Exception) {
+            Log.e("ERROR", "Exception during startBtServices", e)
+        }
+    }
 
-    private suspend fun stopBtServices() {
+
+    @SuppressLint("SetTextI18n")
+    private suspend fun stopBluetooth() {
+        lifecycleScope.launch {
+            bluetoothTextView.text = "Stopping..."
+        }
         try {
             withContext(Dispatchers.IO) {
                 // Stop BT services
                 exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service bluetooth stop"))
-                exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service dbus stop"))
             }
-            Log.d("BT Services", "Stop operation completed")
+            Log.d("BT", "Stop operation completed")
         } catch (e: Exception) {
             Log.e("ERROR", "Exception during stopBtServices", e)
         }
     }
 
 
-    private fun lockButton(value: Boolean, binderButtonText: String, choosenButton: Button?) {
+    @SuppressLint("SetTextI18n")
+    private suspend fun stopDbus() {
         lifecycleScope.launch {
-            choosenButton!!.isEnabled = value
+           dbusTextView.text = "Stopping..."
+        }
+        try {
+            withContext(Dispatchers.IO) {
+                // Stop BT services
+                exe.RunAsRoot(arrayOf("$appScriptsPath/bootkali custom_cmd service dbus stop"))
+            }
+            Log.d("DBUS", "Stop operation completed")
+        } catch (e: Exception) {
+            Log.e("ERROR", "Exception during stopBtServices", e)
+        }
+    }
+
+    private fun lockButton(enable: Boolean, binderButtonText: String, choosenButton: Button?) {
+        lifecycleScope.launch {
+            choosenButton!!.isEnabled = enable
             choosenButton.text = binderButtonText
-            if (value) {
+            if (enable) {
                 choosenButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
                 choosenButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
             } else {
@@ -569,7 +788,7 @@ class BluetoothFragment1 : Fragment() {
                     if (color20 != null) {
                         val customSpinnerAdapter = color80?.let {
                             CustomSpinnerAdapter(
-                                requireActivity(),
+                                mainActivity,
                                 ifacesArray.toList(),
                                 imageList!!,
                                 color20,
@@ -597,5 +816,26 @@ class BluetoothFragment1 : Fragment() {
     companion object {
         var selectedIface: String = "None"
         var selectedTarget: String? = null
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    override fun onResume() {
+        super.onResume()
+        if(binderTextView.text.equals("Down") or binderTextView.text.equals("Running")){
+            lifecycleScope.launch {
+//                binderTextView.text = "Reloading..."
+                lockButton(false, "Reloading...", binderButton)
+                binderStatus
+            }
+        }
+        if(dbusTextView.text.equals("Down") or dbusTextView.text.equals("Running") or bluetoothTextView.text.equals("Down") or bluetoothTextView.text.equals("Running")){
+            lifecycleScope.launch {
+//                dbusTextView.text = "Reloading..."
+//                bluetoothTextView.text = "Reloading..."
+                lockButton(false, "Reloading...", servicesButton)
+                servicesStatus
+            }
+        }
     }
 }
