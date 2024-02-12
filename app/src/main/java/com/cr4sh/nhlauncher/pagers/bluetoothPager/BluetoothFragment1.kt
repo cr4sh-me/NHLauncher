@@ -1,28 +1,34 @@
 package com.cr4sh.nhlauncher.pagers.bluetoothPager
 
 import android.annotation.SuppressLint
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.Typeface
+import android.graphics.Typeface.BOLD
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
-import android.widget.Spinner
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
-import com.cr4sh.nhlauncher.overrides.CustomSpinnerAdapter
 import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
@@ -30,12 +36,17 @@ import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ShellExecuter
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils
+import com.skydoves.powerspinner.IconSpinnerAdapter
+import com.skydoves.powerspinner.IconSpinnerItem
+import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener
+import com.skydoves.powerspinner.PowerSpinnerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.time.format.TextStyle
 import java.util.concurrent.ExecutionException
 
 
@@ -50,19 +61,20 @@ class BluetoothFragment1 : Fragment() {
     private var nhlUtils: NHLUtils? = null
     private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     private var scrollView: ScrollView? = null
-    private var imageList: List<Int>? = null
     private lateinit var linearContainer: LinearLayout
     private lateinit var binderButton: Button
     private lateinit var servicesButton: Button
     private lateinit var scanButton: Button
-    private lateinit var ifaces: Spinner
+    private lateinit var ifaces: PowerSpinnerView
     private lateinit var binderTextView: TextView
     private lateinit var dbusTextView: TextView
     private lateinit var bluetoothTextView: TextView
+//    private lateinit var drawable: Drawable
     private var btSmd: File? = null
     private var bluebinder: File? = null
     private var buttonContainer: LinearLayout? = null
     private var selectedButton: Button? = null
+    private lateinit var messageBox: TextView
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -79,6 +91,11 @@ class BluetoothFragment1 : Fragment() {
         scrollView = view.findViewById(R.id.scrollView2)
         buttonContainer = view.findViewById(R.id.buttonContainer)
         linearContainer = view.findViewById(R.id.linearContainer)
+
+        val spinnerTextInfo = view.findViewById<TextView>(R.id.hci_spinner_label)
+        spinnerTextInfo.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+
+        messageBox = view.findViewById(R.id.text_msg)
 
         val binderText1 = view.findViewById<TextView>(R.id.bluebinder)
         val dbusText1 = view.findViewById<TextView>(R.id.dbus)
@@ -104,11 +121,11 @@ class BluetoothFragment1 : Fragment() {
         dbusTextView.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         bluetoothTextView.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
 
+        messageBox.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+
         val description = view.findViewById<TextView>(R.id.bt_info2)
         val interfacesText = view.findViewById<TextView>(R.id.interfacesText)
-        val servicesText = view.findViewById<TextView>(R.id.servicesText)
-        val scanText = view.findViewById<TextView>(R.id.scanText)
-        scanText.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        val spinnerBg1 = view.findViewById<LinearLayout>(R.id.spinnerBg1)
         scanButton = view.findViewById(R.id.scanButton)
         val scanTimeButton = view.findViewById<Button>(R.id.scanTime)
         scanButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
@@ -117,53 +134,61 @@ class BluetoothFragment1 : Fragment() {
         scanTimeButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         servicesButton = view.findViewById(R.id.servicesButton)
         binderButton = view.findViewById(R.id.bluebinderButton)
+        ifaces = view.findViewById(R.id.hci_interface)
+
+        ifaces.setBackgroundColor(Color.parseColor(nhlPreferences!!.color20()))
+        ifaces.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        ifaces.setHintTextColor(Color.parseColor(nhlPreferences!!.color50()))
+        ifaces.dividerColor = Color.parseColor(nhlPreferences!!.color80())
+        ifaces.arrowTint = Color.parseColor(nhlPreferences!!.color80())
+
+        ifaces.spinnerOutsideTouchListener =
+            OnSpinnerOutsideTouchListener { _: View?, _: MotionEvent? ->
+                ifaces.selectItemByIndex(ifaces.selectedIndex)
+            }
+
 //        bluetoothButton = view.findViewById(R.id.bluetoothButton)
 //        dbusButton = view.findViewById(R.id.dbusButton)
 
-        ifaces = view.findViewById(R.id.hci_interface)
-        val ifacesContainer = view.findViewById<LinearLayout>(R.id.spinnerContainer)
-        setContainerBackground(ifacesContainer)
-        imageList = listOf(
-            R.drawable.kali_wireless_attacks_trans
-        )
+//        val ifacesContainer = view.findViewById<LinearLayout>(R.id.spinnerContainer)
+        setContainerBackground(spinnerBg1)
         description.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         interfacesText.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        servicesText.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
 
         val gd = GradientDrawable()
         gd.setStroke(8, Color.parseColor(nhlPreferences!!.color50())) // Stroke width and color
         gd.cornerRadius = 60f
         linearContainer.background = gd
 
-//        binderButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
-//        binderButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-//        dbusButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
-//        dbusButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-//        servicesButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
-//        servicesButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        try {
-            lifecycleScope.launch(Dispatchers.Default) {
-                loadIfaces()
-            }
-        } catch (e: Exception) {
-            // Log exceptions or handle them appropriately
-            Log.e("ERROR", "Exception during loadIfaces", e)
+        ifaces.apply {
+            setSpinnerAdapter(IconSpinnerAdapter(this))
+            lifecycleOwner = this@BluetoothFragment1
         }
+
+//        drawable = mainActivity?.let { ContextCompat.getDrawable(it, R.drawable.kali_wireless_attacks_trans) }!!
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//            drawable.colorFilter = BlendModeColorFilter(Color.parseColor(nhlPreferences!!.color80()), BlendMode.SRC_ATOP)
+//        } else {
+//            @Suppress("DEPRECATION")
+//            drawable.setColorFilter(Color.parseColor(nhlPreferences!!.color80()), PorterDuff.Mode.SRC_ATOP)
+//        }
+
+//        try {
+//            lifecycleScope.launch(Dispatchers.Default) {
+//                loadIfaces()
+//            }
+//        } catch (e: Exception) {
+//            // Log exceptions or handle them appropriately
+//            Log.e("ERROR", "Exception during loadIfaces", e)
+//        }
         lockButton(false, "Please wait...", binderButton)
         lockButton(false, "Please wait...", servicesButton)
         binderStatus
         servicesStatus
-        ifaces.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parentView: AdapterView<*>,
-                selectedItemView: View,
-                pos: Int,
-                id: Long
-            ) {
-                selectedIface = parentView.getItemAtPosition(pos).toString()
-            }
 
-            override fun onNothingSelected(parentView: AdapterView<*>?) {}
+        ifaces.setOnSpinnerItemSelectedListener<IconSpinnerItem> { _, _, _, newItem ->
+            Log.d("SPINNERCLICK", "Selected iface: ${newItem.text}")
+            selectedIface = newItem.text.toString()
         }
 
         binderButton.setOnClickListener {
@@ -210,26 +235,6 @@ class BluetoothFragment1 : Fragment() {
             }
         }
 
-//        bluetoothButton.setOnClickListener {
-//            try {
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    bluetoothAction()
-//                }
-//            } catch (e: Exception) {
-//                // Log exceptions or handle them appropriately
-//                Log.e("ERROR", "Exception during bluetoothButton click", e)
-//            }
-//        }
-//        dbusButton.setOnClickListener {
-//            try {
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    dbusAction()
-//                }
-//            } catch (e: Exception) {
-//                // Log exceptions or handle them appropriately
-//                Log.e("ERROR", "Exception during dbusButton click", e)
-//            }
-//        }
 
         scanButton.setOnClickListener { runBtScan() }
         val dialogUtils = DialogUtils(requireActivity().supportFragmentManager)
@@ -310,6 +315,7 @@ class BluetoothFragment1 : Fragment() {
         // If the clicked button is the same as the selected button, deselect it
         if (selectedButton === clickedButton) {
             selectedButton = null
+            selectedTarget = null
         } else {
             // Set the text and background color for the clicked button to indicate selection
             clickedButton.setTextColor(Color.parseColor(nhlPreferences!!.color50()))
@@ -347,10 +353,12 @@ class BluetoothFragment1 : Fragment() {
                                 .toTypedArray()
                         Log.d("hcitool", "not empty: " + devicesList.contentToString())
                         lifecycleScope.launch {
+                            messageBox.visibility = View.GONE
                             createButtons(devicesList)
                             lockButton(true, "Scan", scanButton)
                         }
                     } else {
+                        messageBox.visibility = View.VISIBLE
                         lifecycleScope.launch { lockButton(true, "No devices found!", scanButton) }
                     }
                 } catch (e: Exception) {
@@ -359,6 +367,7 @@ class BluetoothFragment1 : Fragment() {
             }
         } else {
             requireActivity().lifecycleScope.launch {
+                messageBox.visibility = View.VISIBLE
                 showCustomToast(requireActivity(), "no selected interface!")
             }
         }
@@ -759,45 +768,40 @@ class BluetoothFragment1 : Fragment() {
             val outputHCI = withContext(Dispatchers.IO) {
                 exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd hciconfig | grep hci | cut -d: -f1")
             }
-            val hciIfaces = ArrayList<String?>()
-            Log.d(
-                "Ifaces",
-                outputHCI.split("\n".toRegex()).dropLastWhile { it.isEmpty() }
-                    .toTypedArray().contentToString()
-            )
+
             if (outputHCI.isEmpty()) {
                 lifecycleScope.launch {
-                    hciIfaces.add("None")
-                    val customSpinnerAdapter = CustomSpinnerAdapter(
-                        requireActivity(),
-                        hciIfaces,
-                        imageList!!,
-                        nhlPreferences!!.color20()!!,
-                        nhlPreferences!!.color80()!!
-                    )
-                    ifaces.adapter = customSpinnerAdapter
+                    // Update the iconSpinnerItems list with a default item
+//                    iconSpinnerItems.clear()
+//                    iconSpinnerItems.add(
+//                        IconSpinnerItem(
+//                            "None",
+//                            ContextCompat.getDrawable(requireActivity(), R.drawable.kali_wireless_attacks_trans)
+//                        )
+//                    )
+
+                    ifaces.apply {
+                        setItems(
+                            arrayListOf(IconSpinnerItem(text = "None", icon = null))
+                        )
+                        selectItemByIndex(0) // select a default item.
+                    }
                 }
             } else {
-                val ifacesArray =
-                    outputHCI.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                val ifacesArray = outputHCI.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
                 lifecycleScope.launch {
-                    val color20 = nhlPreferences?.color20()
-                    val color80 = nhlPreferences?.color80()
-
-                    if (color20 != null) {
-                        val customSpinnerAdapter = color80?.let {
-                            CustomSpinnerAdapter(
-                                mainActivity,
-                                ifacesArray.toList(),
-                                imageList!!,
-                                color20,
-                                it // Provide a default color or handle null case
-                            )
-                        }
-                        ifaces.adapter = customSpinnerAdapter
-                    } else {
-                        // Handle the case when color20 is null
+                   ifaces.apply {
+                        setItems(arrayListOf(
+                            *ifacesArray.map {
+                                IconSpinnerItem(
+                                    it,
+                                    iconGravity = Gravity.CENTER,
+                                    icon = null
+                                )
+                            }.toTypedArray()
+                        ))
+                        selectItemByIndex(0) // select a default item.
                     }
                 }
             }
@@ -805,6 +809,7 @@ class BluetoothFragment1 : Fragment() {
             Log.e("ERROR", "Exception during loadIfaces", e)
         }
     }
+
 
     private fun setContainerBackground(container: LinearLayout) {
         val drawable = GradientDrawable()
@@ -824,15 +829,12 @@ class BluetoothFragment1 : Fragment() {
         super.onResume()
         if(binderTextView.text.equals("Down") or binderTextView.text.equals("Running")){
             lifecycleScope.launch {
-//                binderTextView.text = "Reloading..."
                 lockButton(false, "Reloading...", binderButton)
                 binderStatus
             }
         }
         if(dbusTextView.text.equals("Down") or dbusTextView.text.equals("Running") or bluetoothTextView.text.equals("Down") or bluetoothTextView.text.equals("Running")){
             lifecycleScope.launch {
-//                dbusTextView.text = "Reloading..."
-//                bluetoothTextView.text = "Reloading..."
                 lockButton(false, "Reloading...", servicesButton)
                 servicesStatus
             }

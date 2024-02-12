@@ -19,7 +19,7 @@ class CustomSpinnerAdapter(
     private val backgroundColor: String,
     private val textColor: String
 ) : ArrayAdapter<String?>(
-    context!!, R.layout.dropdown_items, values!!
+    context!!, R.layout.dropdown_items, values ?: emptyList()
 ) {
     override fun getDropDownView(position: Int, convertView2: View?, parent: ViewGroup): View? {
         var convertView = convertView2
@@ -30,11 +30,14 @@ class CustomSpinnerAdapter(
         val imageView = convertView?.findViewById<ImageView>(R.id.image_view)
         val textView = convertView?.findViewById<TextView>(R.id.text_view)
         imageView?.setColorFilter(Color.parseColor(textColor), PorterDuff.Mode.MULTIPLY)
-        if (imageList.isNotEmpty()) {
-            imageView?.setImageResource(imageList[position])
-        }
-        if (textView != null) {
-            textView.text = getItem(position)
+        if (position in 0..<count) {
+            imageView?.setColorFilter(Color.parseColor(textColor), PorterDuff.Mode.MULTIPLY)
+            if (imageList.isNotEmpty() && position < imageList.size) {
+                imageView?.setImageResource(imageList[position])
+            }
+            if (textView != null) {
+                textView.text = getItem(position)
+            }
         }
 
         // set background color and text color for dropdown items and selected item in spinner

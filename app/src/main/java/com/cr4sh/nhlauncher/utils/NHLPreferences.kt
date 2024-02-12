@@ -6,8 +6,9 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.R
 import java.util.Locale
 
+
 // This class read, store and return SharedPreferences
-class NHLPreferences(//    private val context: MainActivity = NHLManager.instance.mainActivity
+class  NHLPreferences(//    private val context: MainActivity = NHLManager.instance.mainActivity
     private val context: Context
 ) {
     private val nhlPrefs: SharedPreferences =
@@ -21,7 +22,7 @@ class NHLPreferences(//    private val context: MainActivity = NHLManager.instan
         return if (dynamicThemeBool()) {
             val myColor = ContextCompat.getColor(
                 context,
-                R.color.material_dynamic_secondary80
+                R.color.material_dynamic_primary90
             )
             // Convert the integer color to hexadecimal
             String.format("#%06X", 0xFFFFFF and myColor)
@@ -114,4 +115,13 @@ class NHLPreferences(//    private val context: MainActivity = NHLManager.instan
         get() = nhlPrefs.getBoolean("isOnlineBfActive", false)
     val isWpsButtonActive: Boolean
         get() = nhlPrefs.getBoolean("isWpsButtonActive", false)
+
+
+//    fun getThemeAccentColor(context: Context): Int {
+//        val value = TypedValue()
+//        context.theme.resolveAttribute(R.attr.colorAccent, value, true)
+//        return value.data
+//    }
+
+
 }

@@ -204,7 +204,7 @@ class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewH
             myActivity?.buttonDescription = item.description
             myActivity?.buttonCmd = item.cmd
             dialogUtils?.openButtonMenuDialog(myActivity)
-            false
+            true
         }
     }
 
