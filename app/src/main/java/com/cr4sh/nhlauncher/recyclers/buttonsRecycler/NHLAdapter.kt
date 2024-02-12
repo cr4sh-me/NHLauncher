@@ -196,9 +196,6 @@ class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewH
             }
         }
         holder.itemView.setOnLongClickListener {
-            if (myActivity != null) {
-                vibrate(myActivity, 10)
-            }
             myActivity?.buttonCategory = item.category
             myActivity?.buttonName = item.name
             myActivity?.buttonDescription = item.description
