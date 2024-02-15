@@ -2,7 +2,9 @@ package com.cr4sh.nhlauncher.activities
 
 import android.annotation.SuppressLint
 import android.app.ActivityOptions
+import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -110,38 +112,38 @@ class MainActivity : AppCompatActivity() {
         val dialogUtils = DialogUtils(this.supportFragmentManager)
 
         // Check for nethunter and terminal apps
-//        val pm = packageManager
-//        try {
-//            // First, check if the com.offsec.nethunter and com.offsec.nhterm packages exist
-//            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES)
-//            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES)
-//
-//            // Then, check if the com.offsec.nhterm.ui.term.NeoTermRemoteInterface activity exists within com.offsec.nhterm
-//            val intent = Intent()
-//            intent.setComponent(
-//                ComponentName(
-//                    "com.offsec.nhterm",
-//                    "com.offsec.nhterm.ui.term.NeoTermRemoteInterface"
-//                )
-//            )
-//            val activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-//            if (activities.isEmpty()) {
-//                // The activity is missing
-//                dialogUtils.openMissingActivityDialog()
-//                return
-//            }
-//        } catch (e: PackageManager.NameNotFoundException) {
-//            // One of the packages is missing
-//            dialogUtils.openAppsDialog()
-//            return
-//        }
+        val pm = packageManager
+        try {
+            // First, check if the com.offsec.nethunter and com.offsec.nhterm packages exist
+            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES)
+            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES)
+
+            // Then, check if the com.offsec.nhterm.ui.term.NeoTermRemoteInterface activity exists within com.offsec.nhterm
+            val intent = Intent()
+            intent.setComponent(
+                ComponentName(
+                    "com.offsec.nhterm",
+                    "com.offsec.nhterm.ui.term.NeoTermRemoteInterface"
+                )
+            )
+            val activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+            if (activities.isEmpty()) {
+                // The activity is missing
+                dialogUtils.openMissingActivityDialog()
+                return
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            // One of the packages is missing
+            dialogUtils.openAppsDialog()
+            return
+        }
         val permissionUtils = PermissionUtils(this)
 //
 //        // Check for root permissions
-//        if (!permissionUtils.isRoot) {
-//            dialogUtils.openRootDialog()
-//            return
-//        }
+        if (!permissionUtils.isRoot) {
+            dialogUtils.openRootDialog()
+            return
+        }
         nhlPreferences = NHLPreferences(this)
 
         val languageChanger = LanguageChanger()
