@@ -29,3 +29,4 @@ class BluetoothPager(fragment: FragmentActivity?) : FragmentStateAdapter(
         }
     }
 }
+

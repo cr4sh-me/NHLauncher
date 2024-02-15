@@ -272,7 +272,7 @@ class SettingsFragment2 : Fragment() {
                 vibrate(mainActivity, 10)
             }
             mainActivity?.lifecycleScope?.launch {
-                if (hexColorValue1.text.length < 0 || hexColorValue1.text.length < 0 || hexColorValue1.text.length < 0) {
+                if (hexColorValue1.text.length < 0 || hexColorValue2.text.length < 0 || hexColorValue3.text.length < 0) {
                     showCustomToast(requireActivity(), "Empty color values! Use brain...")
                 } else {
                     if (advancedThemes.isChecked) {

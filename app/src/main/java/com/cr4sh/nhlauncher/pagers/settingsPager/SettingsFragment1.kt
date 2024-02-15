@@ -5,6 +5,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
@@ -20,6 +22,9 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -38,7 +43,9 @@ import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
 import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener
 import com.skydoves.powerspinner.PowerSpinnerView
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 
 class SettingsFragment1 : Fragment() {
     var nhlPreferences: NHLPreferences? = null
@@ -49,6 +56,7 @@ class SettingsFragment1 : Fragment() {
     private var newSortingModeSetting: String? = null
     private var newLanguageNameSetting: String? = null
     private var newLanguageLocaleSetting: String? = null
+    private var buttonsCount: Int? = null
     private lateinit var vibrationsCheckbox: CheckBox
     private lateinit var newButtonsStyle: CheckBox
     private lateinit var overlayCheckbox: CheckBox
@@ -66,11 +74,14 @@ class SettingsFragment1 : Fragment() {
         newButtonsStyle = view.findViewById(R.id.newbuttons_checkbox)
         overlayCheckbox = view.findViewById(R.id.overlay_checkbox)
         val title = view.findViewById<TextView>(R.id.bt_info2)
-        val bkg = view.findViewById<LinearLayout>(R.id.custom_theme_dialog_background)
+        val bkg = view.findViewById<ScrollView>(R.id.custom_theme_dialog_background)
         val runSetup = view.findViewById<Button>(R.id.run_setup)
         val backupDb = view.findViewById<Button>(R.id.db_backup)
         val restoreDb = view.findViewById<Button>(R.id.db_restore)
         val saveButton = view.findViewById<Button>(R.id.save_button)
+        val seekBar = view.findViewById<SeekBar>(R.id.seekbar)
+        val seekBarDesc = view.findViewById<TextView>(R.id.seekbar_description)
+        val seekBarValue = view.findViewById<TextView>(R.id.seekbar_value)
         updateButton = view.findViewById(R.id.update_button)
         val checkUpdate = view.findViewById<TextView>(R.id.checkUpdate)
         val spinnerText1 = view.findViewById<TextView>(R.id.language_spinner_label)
@@ -90,6 +101,17 @@ class SettingsFragment1 : Fragment() {
         powerSpinnerView2.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         powerSpinnerView2.setHintTextColor(Color.parseColor(nhlPreferences!!.color50()))
         powerSpinnerView2.dividerColor = Color.parseColor(nhlPreferences!!.color80())
+
+        seekBarDesc.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        seekBarValue.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+
+        seekBar.progressDrawable.colorFilter = BlendModeColorFilter(
+            Color.parseColor(nhlPreferences!!.color80()), BlendMode.SRC_IN
+        )
+        seekBar.thumb.colorFilter = BlendModeColorFilter(
+            Color.parseColor(nhlPreferences!!.color80()), BlendMode.SRC_IN
+        )
+
         vibrationsCheckbox.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         newButtonsStyle.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         overlayCheckbox.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
@@ -117,7 +139,23 @@ class SettingsFragment1 : Fragment() {
         vibrationsCheckbox.isChecked = nhlPreferences!!.vibrationOn()
         newButtonsStyle.isChecked = nhlPreferences!!.isNewButtonStyleActive
 
-//        nhlPreferences!!.languageLocale()?.let { languageChanger.setLocale(this.context, it) }
+        seekBar.min = 5
+        seekBar.max = 9
+
+        seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                buttonsCount = progress
+                seekBarValue.text = progress.toString()
+                Log.d("SeekBar", "TextView text set to: ${seekBarValue.text}")
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        seekBar.progress = nhlPreferences!!.customButtonsCount
+        seekBarValue.text = nhlPreferences!!.customButtonsCount.toString() // just leave it here...
 
         overlayCheckbox.isChecked = nhlPreferences!!.isButtonOverlayActive
 
@@ -314,25 +352,32 @@ class SettingsFragment1 : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.S)
     private fun applySettings() {
-        if (mainActivity != null) {
-            vibrate(mainActivity, 10)
-        }
+        lifecycleScope.launch(Dispatchers.Default) {
+            if (mainActivity != null) {
+                vibrate(mainActivity, 10)
+            }
+            // Apply the settings to SharedPreferences
+            saveVibrationsPref(vibrationsCheckbox.isChecked)
+            saveNewButtonPref(newButtonsStyle.isChecked)
+            saveOverlayPref(overlayCheckbox.isChecked)
+            if (newSortingModeSetting != null) {
+                saveNhlSettings(newSortingModeSetting)
+                newSortingModeSetting = null.toString()
+            }
+            if (newLanguageNameSetting != null && newLanguageLocaleSetting != null) {
+                saveNhlLanguage(newLanguageNameSetting!!, newLanguageLocaleSetting!!)
+                newLanguageNameSetting = null.toString()
+                newLanguageLocaleSetting = null.toString()
+            }
 
-        // Apply the settings to SharedPreferences
-        saveVibrationsPref(vibrationsCheckbox.isChecked)
-        saveNewButtonPref(newButtonsStyle.isChecked)
-        saveOverlayPref(overlayCheckbox.isChecked)
-        if (newSortingModeSetting != null) {
-            saveNhlSettings(newSortingModeSetting)
-            newSortingModeSetting = null.toString()
+            buttonsCount?.let { saveButtonsCount(it) }
+
+            lifecycleScope.launch {
+                mainActivity?.recreate()
+                requireActivity().recreate()
+                showCustomToast(requireActivity(), "Settings updated!")
+            }
         }
-        if (newLanguageNameSetting != null && newLanguageLocaleSetting != null) {
-            saveNhlLanguage(newLanguageNameSetting!!, newLanguageLocaleSetting!!)
-            newLanguageNameSetting = null.toString()
-            newLanguageLocaleSetting = null.toString()
-        }
-        mainActivity?.recreate()
-        requireActivity().recreate()
     }
 
     private fun setButtonColors(button: Button) {
@@ -394,5 +439,12 @@ class SettingsFragment1 : Fragment() {
     private fun saveNhlLanguageTemp(languageName: String, languageLocale: String) {
         newLanguageNameSetting = languageName
         newLanguageLocaleSetting = languageLocale
+    }
+
+    private fun saveButtonsCount(count: Int) {
+        val prefs = requireActivity().getSharedPreferences("nhlSettings", Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.putInt("customButtonsCount", count)
+        editor.apply()
     }
 }

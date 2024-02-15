@@ -164,7 +164,7 @@
     <string name="general">General</string>
     <string name="root_error">ROOT PERMISSION IS REQUIRED!!!</string>
     <string name="yes">OK</string>
-    <string name="click_to_check_for_updates">Click to check for updates!</string>
+    <string name="click_to_check_for_updates">Click me to check for updates!</string>
     <string name="nhlauncher_add_ons">NHLauncher Add-ons</string>
     <string name="use_themed_icons_overlay">Use themed icons overlay</string>
     <string name="location_denied">Location permission denied!</string>
@@ -182,11 +182,12 @@
     <string name="bt_toolkit">BLUETOOTH TOOLKIT</string>
     <string name="wifi_networks_will_be_displayed_here">WiFi networks will be displayed here</string>
     <string name="copy_to_clipboard">Copy to clipboard</string>
-    <string name="sdp_tool">SDP TOOL</string>
+    <string name="sdp_tool" translatable="false">SDP TOOL</string>
     <string name="scan_is_running_please_wait">Please wait…</string>
     <string name="advertise">Advertise</string>
     <string name="bledesc">These scripts are an experimental PoC that uses Bluetooth Low Energy (BLE) to send proximity pairing messages to Apple devices</string>
     <string name="choose_interface">Choose interface</string>
     <string name="bt_devices_will_be_displayed_here">BT devices will be displayed here</string>
+    <string name="buttons_count_in_layout">Buttons count in layout</string>
 
 </resources>

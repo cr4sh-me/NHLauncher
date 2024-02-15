@@ -9,15 +9,12 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.specialFeatures.SpecialFeaturesActivity
 import com.cr4sh.nhlauncher.utils.NHLPreferences
-import com.cr4sh.nhlauncher.utils.ToastUtils
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.coroutines.launch
 
 class BluetoothActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,6 +74,12 @@ class BluetoothActivity : AppCompatActivity() {
             Color.parseColor(nhlPreferences.color80())
         )
         tabs.setSelectedTabIndicatorColor(Color.parseColor(nhlPreferences.color80()))
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val fragment1 = supportFragmentManager.findFragmentByTag("f0") as BluetoothFragment1?
+        fragment1?.reloadShit()
     }
 
     override fun onPause() {

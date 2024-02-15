@@ -27,12 +27,12 @@
         app:layout_constraintTop_toBottomOf="@+id/spinnerContainer" />
 
     <LinearLayout
-        android:padding="15dp"
         android:id="@+id/linearContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
         android:orientation="vertical"
+        android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/interfacesText">
@@ -45,14 +45,14 @@
 
             <!-- Left Side -->
             <TextView
-                android:textStyle="bold"
                 android:id="@+id/bluebinder"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="start"
                 android:padding="5dp"
-                android:text="BLUEBINDER" />
+                android:text="BLUEBINDER"
+                android:textStyle="bold" />
 
             <!-- Centered "-" -->
             <TextView
@@ -60,8 +60,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text=":"
-                android:padding="5dp"/>
+                android:padding="5dp"
+                android:text=":" />
 
             <!-- Right Side -->
             <TextView
@@ -84,14 +84,14 @@
 
             <!-- Left Side -->
             <TextView
-                android:textStyle="bold"
                 android:id="@+id/dbus"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="start"
                 android:padding="5dp"
-                android:text="DBUS" />
+                android:text="DBUS"
+                android:textStyle="bold" />
 
             <!-- Centered "-" -->
             <TextView
@@ -99,8 +99,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text=":"
-                android:padding="5dp"/>
+                android:padding="5dp"
+                android:text=":" />
 
             <!-- Right Side -->
             <TextView
@@ -123,14 +123,14 @@
 
             <!-- Left Side -->
             <TextView
-                android:textStyle="bold"
                 android:id="@+id/bluetooth"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="start"
                 android:padding="5dp"
-                android:text="BLUETOOTH" />
+                android:text="BLUETOOTH"
+                android:textStyle="bold" />
 
             <!-- Centered "-" -->
             <TextView
@@ -138,8 +138,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text=":"
-                android:padding="5dp"/>
+                android:padding="5dp"
+                android:text=":" />
 
             <!-- Right Side -->
             <TextView
@@ -156,33 +156,30 @@
     </LinearLayout>
 
     <Button
-        android:layout_marginTop="5dp"
         android:id="@+id/bluebinderButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
-        app:layout_constraintTop_toBottomOf="@id/linearContainer"
+        android:layout_marginTop="5dp"
         android:text="@string/loading"
-        />
+        app:layout_constraintTop_toBottomOf="@id/linearContainer" />
 
 
     <Button
-        app:layout_constraintTop_toBottomOf="@+id/bluebinderButton"
         android:id="@+id/servicesButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginHorizontal="10dp"
         android:text="@string/loading"
-        >
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bluebinderButton">
 
 
     </Button>
 
 
     <LinearLayout
-        app:layout_constraintTop_toBottomOf="@id/bt_info2"
         android:id="@+id/spinnerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -190,7 +187,8 @@
         android:orientation="horizontal"
         android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bt_info2">
 
         <TextView
             android:id="@+id/hci_spinner_label"
@@ -202,19 +200,19 @@
             android:textStyle="bold" />
 
         <LinearLayout
-            android:gravity="center"
-            android:layout_gravity="center"
             android:id="@+id/spinnerBg1"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_gravity="center"
             android:layout_weight="1"
+            android:gravity="center"
             android:padding="15dp">
 
             <com.skydoves.powerspinner.PowerSpinnerView
-                android:gravity="center"
                 android:id="@+id/hci_interface"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="@string/loading"
                 app:spinner_arrow_show="false"
                 app:spinner_divider_show="true"
@@ -257,7 +255,7 @@
         app:layout_constraintBottom_toTopOf="@+id/bottomContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/servicesButton"/>
+        app:layout_constraintTop_toBottomOf="@+id/servicesButton" />
 
     <LinearLayout
         android:id="@+id/bottomContainer"

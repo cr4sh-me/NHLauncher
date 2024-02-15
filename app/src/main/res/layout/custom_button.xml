@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:gravity="start"
+            android:gravity="start|top"
             android:maxLines="1"
             android:text="@string/loading"
             android:textSize="14sp"
@@ -45,7 +45,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:gravity="start"
-            android:maxLines="3"
+            android:maxLines="2"
+            android:scrollHorizontally="true"
             android:text="@string/loading"
             android:textSize="12sp"
             tools:ignore="SmallSp" />

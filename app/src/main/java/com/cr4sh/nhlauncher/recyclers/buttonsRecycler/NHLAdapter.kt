@@ -24,7 +24,6 @@ import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,7 +34,6 @@ class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewH
     private val myActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     private val items: MutableList<NHLItem> = ArrayList()
 
-    //    private val executor = NHLManager.getInstance().executorService
     private var height = 0
     private var margin = 0
     private var drawable: GradientDrawable? = null
@@ -74,7 +72,8 @@ class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewH
         }
         overlay = nhlPreferences!!.isButtonOverlayActive
         margin = 20
-        height = originalHeight / 8 - margin // Button height without margin
+        height =
+            originalHeight / nhlPreferences!!.customButtonsCount - margin // Button height without margin
         drawable = GradientDrawable()
         if (nhlPreferences!!.isNewButtonStyleActive) {
             drawable!!.setColor(Color.parseColor(nhlPreferences!!.color50()))

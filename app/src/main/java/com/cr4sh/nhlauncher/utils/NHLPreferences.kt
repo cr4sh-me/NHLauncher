@@ -2,13 +2,15 @@ package com.cr4sh.nhlauncher.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
+import android.os.Build.VERSION
 import androidx.core.content.ContextCompat
 import com.google.android.material.R
 import java.util.Locale
 
 
 // This class read, store and return SharedPreferences
-class  stNHLPreferences(//    private val context: MainActivity = NHLManager.instance.mainActivity
+class NHLPreferences(//    private val context: MainActivity = NHLManager.instance.mainActivity
     private val context: Context
 ) {
     private val nhlPrefs: SharedPreferences =
@@ -27,7 +29,7 @@ class  stNHLPreferences(//    private val context: MainActivity = NHLManager.ins
             // Convert the integer color to hexadecimal
             String.format("#%06X", 0xFFFFFF and myColor)
         } else {
-            customColorsPrefs.getString("color80", "#ADBDCC")
+            customColorsPrefs.getString("color80", "#e94b3c")
         }
     }
 
@@ -40,7 +42,7 @@ class  stNHLPreferences(//    private val context: MainActivity = NHLManager.ins
             // Convert the integer color to hexadecimal
             String.format("#%06X", 0xFFFFFF and myColor)
         } else {
-            customColorsPrefs.getString("color50", "#6C7680")
+            customColorsPrefs.getString("color50", "#4a4a4c")
         }
     }
 
@@ -53,7 +55,7 @@ class  stNHLPreferences(//    private val context: MainActivity = NHLManager.ins
             // Convert the integer color to hexadecimal
             String.format("#%06X", 0xFFFFFF and myColor)
         } else {
-            customColorsPrefs.getString("color20", "#2B2F33")
+            customColorsPrefs.getString("color20", "#2d2926")
         }
     }
 
@@ -71,11 +73,17 @@ class  stNHLPreferences(//    private val context: MainActivity = NHLManager.ins
     }
 
     fun dynamicThemeBool(): Boolean {
-        return customColorsPrefs.getBoolean("dynamicThemeBool", false)
+        return customColorsPrefs.getBoolean(
+            "dynamicThemeBool",
+            VERSION.SDK_INT >= Build.VERSION_CODES.S
+        ) // Enable dynamic colors at first launch if A12+
     }
 
     fun advancedThemeBool(): Boolean {
-        return customColorsPrefs.getBoolean("advancedThemeBool", false)
+        return customColorsPrefs.getBoolean(
+            "advancedThemeBool",
+            VERSION.SDK_INT < Build.VERSION_CODES.S // Enable advanced colors at first launch if lower than A12
+        )
     }
 
     fun language(): String? {
@@ -115,6 +123,9 @@ class  stNHLPreferences(//    private val context: MainActivity = NHLManager.ins
         get() = nhlPrefs.getBoolean("isOnlineBfActive", false)
     val isWpsButtonActive: Boolean
         get() = nhlPrefs.getBoolean("isWpsButtonActive", false)
+
+    val customButtonsCount: Int
+        get() = nhlPrefs.getInt("customButtonsCount", 8)
 
 
 //    fun getThemeAccentColor(context: Context): Int {

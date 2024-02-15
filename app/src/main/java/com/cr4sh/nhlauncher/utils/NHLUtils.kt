@@ -41,7 +41,7 @@ class NHLUtils(
     // Increase button usage by 1
     fun buttonUsageIncrease(name: String?) {
         if (name != null) {
-            lifecycleScope.launch(Dispatchers.IO){
+            lifecycleScope.launch(Dispatchers.IO) {
                 DBHandler.updateToolUsage(mDatabase, name, mainActivity.buttonUsage + 1)
             }
         }

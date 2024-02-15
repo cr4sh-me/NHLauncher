@@ -72,7 +72,7 @@ class BluetoothFragment5 : Fragment() {
 
         powerSpinnerView.setOnSpinnerItemSelectedListener(
             OnSpinnerItemSelectedListener { _: Int, _: String?, newIndex: Int, _: String? ->
-                if(newIndex == 0){
+                if (newIndex == 0) {
                     advertiseRandom = "-r"
                     advertiseSingle = ""
                 } else {
@@ -83,9 +83,9 @@ class BluetoothFragment5 : Fragment() {
 
         powerSpinnerView.selectItemByIndex(0)
 
-        startButton.setOnClickListener{
-            if(intervalEditText.text.isNotEmpty()){
-                if(checkForSelectedInterface()){
+        startButton.setOnClickListener {
+            if (intervalEditText.text.isNotEmpty()) {
+                if (checkForSelectedInterface()) {
                     nhlUtils?.runCmd("cd /root/AppleJuice && python3 app.py $advertiseSingle $advertiseRandom -i ${intervalEditText.text}")
                 }
             } else {

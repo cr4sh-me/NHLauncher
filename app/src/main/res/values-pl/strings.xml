@@ -164,7 +164,7 @@
     <string name="you_can_customize_your_nhlauncher_feedback_here">"Możesz tu dostosować NHLauncher "</string>
     <string name="choose_language">Język aplikacji</string>
     <string name="yes">Tak Panie</string>
-    <string name="click_to_check_for_updates">Kliknij aby sprawdzić aktualizacje</string>
+    <string name="click_to_check_for_updates">Kliknij mnie aby sprawdzić aktualizacje</string>
     <string name="nhlauncher_add_ons">Dodatki NHLauncher</string>
     <string name="use_themed_icons_overlay">Użyj pokrycia z motywem na ikonach</string>
     <string name="location_denied">Odmówiono uprawnień do lokalizacji!</string>
@@ -180,4 +180,12 @@
     <string name="wps_desc_short">UŻYJ SKRYPTU ONESHOT ABY WYKONAĆ ATAKI WPS</string>
     <string name="bt_short">WYKONUJ RÓŹNE ATAKI BLUETOOTH</string>
     <string name="bt_toolkit">NARZĘDZIA BLUETOOTH</string>
+    <string name="wifi_networks_will_be_displayed_here">Sieci WiFi będą tutaj wyświetlane</string>
+    <string name="copy_to_clipboard">Kopiuj do schowka</string>
+    <string name="scan_is_running_please_wait">Proszę czekać...</string>
+    <string name="advertise">Wyświetlanie</string>
+    <string name="bledesc">Te skrypty to eksperymentalny PoC wykorzystujący technologię Bluetooth Low Energy (BLE) do wysyłania wiadomości o parowaniu zbliżeniowym do urządzeń Apple</string>
+    <string name="choose_interface">Wybierz interfejs</string>
+    <string name="bt_devices_will_be_displayed_here">Urządzenia BT będą tutaj wyświetlane</string>
+    <string name="buttons_count_in_layout">Liczba przycisków w widoku</string>
 </resources>

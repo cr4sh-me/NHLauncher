@@ -1,15 +1,9 @@
 package com.cr4sh.nhlauncher.pagers.bluetoothPager
 
 import android.annotation.SuppressLint
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.Typeface
-import android.graphics.Typeface.BOLD
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -24,7 +18,6 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
@@ -46,7 +39,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.time.format.TextStyle
 import java.util.concurrent.ExecutionException
 
 
@@ -69,7 +61,8 @@ class BluetoothFragment1 : Fragment() {
     private lateinit var binderTextView: TextView
     private lateinit var dbusTextView: TextView
     private lateinit var bluetoothTextView: TextView
-//    private lateinit var drawable: Drawable
+
+    //    private lateinit var drawable: Drawable
     private var btSmd: File? = null
     private var bluebinder: File? = null
     private var buttonContainer: LinearLayout? = null
@@ -99,7 +92,7 @@ class BluetoothFragment1 : Fragment() {
 
         val binderText1 = view.findViewById<TextView>(R.id.bluebinder)
         val dbusText1 = view.findViewById<TextView>(R.id.dbus)
-        val bluetoothText1= view.findViewById<TextView>(R.id.bluetooth)
+        val bluetoothText1 = view.findViewById<TextView>(R.id.bluetooth)
 
         val divider1 = view.findViewById<TextView>(R.id.divider1)
         val divider2 = view.findViewById<TextView>(R.id.divider2)
@@ -211,10 +204,10 @@ class BluetoothFragment1 : Fragment() {
                     val isBluetoothRunning = isBluetoothRunning()
 
                     // ASSUMING THAT BLUETOOTH SERVICE CANT RUN WITHOUT DBUS STARTED
-                    if(!isDbusRunning && !isBluetoothRunning){
+                    if (!isDbusRunning && !isBluetoothRunning) {
                         dbusAction(true)
                         bluetoothAction(true)
-                    } else if (!isBluetoothRunning){
+                    } else if (!isBluetoothRunning) {
                         bluetoothAction(true)
                     } else {
                         dbusAction(false)
@@ -380,8 +373,12 @@ class BluetoothFragment1 : Fragment() {
                     val isBinderRunningValue = isBinderRunning()
 
                     lifecycleScope.launch {
-                        binderTextView.text = if(isBinderRunningValue) "Running" else "Down"
-                        lockButton(true, if (isBinderRunningValue) "Stop Bluebinder" else "Start Bluebinder", binderButton)
+                        binderTextView.text = if (isBinderRunningValue) "Running" else "Down"
+                        lockButton(
+                            true,
+                            if (isBinderRunningValue) "Stop Bluebinder" else "Start Bluebinder",
+                            binderButton
+                        )
                     }
 
                     // Run loadIfaces on the background thread
@@ -399,8 +396,6 @@ class BluetoothFragment1 : Fragment() {
         }
 
 
-
-
     private val servicesStatus: Unit
         get() {
             CoroutineScope(Dispatchers.IO).launch {
@@ -411,15 +406,15 @@ class BluetoothFragment1 : Fragment() {
                     Log.d("BTSTATUS", isBluetoothRunning.toString())
 
                     lifecycleScope.launch {
-                        dbusTextView.text = if(isDbusRunning) "Running" else "Down"
-                        bluetoothTextView.text = if(isBluetoothRunning) "Running" else "Down"
+                        dbusTextView.text = if (isDbusRunning) "Running" else "Down"
+                        bluetoothTextView.text = if (isBluetoothRunning) "Running" else "Down"
                     }
 
-                    if(isDbusRunning && isBluetoothRunning){
+                    if (isDbusRunning && isBluetoothRunning) {
                         lifecycleScope.launch {
                             lockButton(true, "Stop BT services", servicesButton)
                         }
-                    } else if (!isDbusRunning && !isBluetoothRunning){
+                    } else if (!isDbusRunning && !isBluetoothRunning) {
                         lifecycleScope.launch {
                             lockButton(true, "Start BT services", servicesButton)
                         }
@@ -579,7 +574,10 @@ class BluetoothFragment1 : Fragment() {
 
                 try {
                     val isRunningAfterAction = isBluetoothRunning()
-                    Log.d("BTACTION", "enable: $enable == isBtServicesRunning $isRunningAfterAction")
+                    Log.d(
+                        "BTACTION",
+                        "enable: $enable == isBtServicesRunning $isRunningAfterAction"
+                    )
                     if (enable == isRunningAfterAction) {
                         // Update button text on the UI thread
                         lifecycleScope.launch {
@@ -736,7 +734,7 @@ class BluetoothFragment1 : Fragment() {
     @SuppressLint("SetTextI18n")
     private suspend fun stopDbus() {
         lifecycleScope.launch {
-           dbusTextView.text = "Stopping..."
+            dbusTextView.text = "Stopping..."
         }
         try {
             withContext(Dispatchers.IO) {
@@ -771,15 +769,6 @@ class BluetoothFragment1 : Fragment() {
 
             if (outputHCI.isEmpty()) {
                 lifecycleScope.launch {
-                    // Update the iconSpinnerItems list with a default item
-//                    iconSpinnerItems.clear()
-//                    iconSpinnerItems.add(
-//                        IconSpinnerItem(
-//                            "None",
-//                            ContextCompat.getDrawable(requireActivity(), R.drawable.kali_wireless_attacks_trans)
-//                        )
-//                    )
-
                     ifaces.apply {
                         setItems(
                             arrayListOf(IconSpinnerItem(text = "None", icon = null))
@@ -788,19 +777,22 @@ class BluetoothFragment1 : Fragment() {
                     }
                 }
             } else {
-                val ifacesArray = outputHCI.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                val ifacesArray =
+                    outputHCI.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
                 lifecycleScope.launch {
-                   ifaces.apply {
-                        setItems(arrayListOf(
-                            *ifacesArray.map {
-                                IconSpinnerItem(
-                                    it,
-                                    iconGravity = Gravity.CENTER,
-                                    icon = null
-                                )
-                            }.toTypedArray()
-                        ))
+                    ifaces.apply {
+                        setItems(
+                            arrayListOf(
+                                *ifacesArray.map {
+                                    IconSpinnerItem(
+                                        it,
+                                        iconGravity = Gravity.CENTER,
+                                        icon = null
+                                    )
+                                }.toTypedArray()
+                            )
+                        )
                         selectItemByIndex(0) // select a default item.
                     }
                 }
@@ -823,17 +815,19 @@ class BluetoothFragment1 : Fragment() {
         var selectedTarget: String? = null
     }
 
-
     @SuppressLint("SetTextI18n")
-    override fun onResume() {
+    fun reloadShit() {
         super.onResume()
-        if(binderTextView.text.equals("Down") or binderTextView.text.equals("Running")){
+        if (binderTextView.text.equals("Down") or binderTextView.text.equals("Running")) {
             lifecycleScope.launch {
                 lockButton(false, "Reloading...", binderButton)
                 binderStatus
             }
         }
-        if(dbusTextView.text.equals("Down") or dbusTextView.text.equals("Running") or bluetoothTextView.text.equals("Down") or bluetoothTextView.text.equals("Running")){
+        if (dbusTextView.text.equals("Down") or dbusTextView.text.equals("Running") or bluetoothTextView.text.equals(
+                "Down"
+            ) or bluetoothTextView.text.equals("Running")
+        ) {
             lifecycleScope.launch {
                 lockButton(false, "Reloading...", servicesButton)
                 servicesStatus
