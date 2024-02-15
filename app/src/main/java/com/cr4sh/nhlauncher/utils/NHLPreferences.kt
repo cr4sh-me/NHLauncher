@@ -8,7 +8,7 @@ import java.util.Locale
 
 
 // This class read, store and return SharedPreferences
-class  NHLPreferences(//    private val context: MainActivity = NHLManager.instance.mainActivity
+class  stNHLPreferences(//    private val context: MainActivity = NHLManager.instance.mainActivity
     private val context: Context
 ) {
     private val nhlPrefs: SharedPreferences =

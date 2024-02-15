@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Base.NHL" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <item name="android:windowSplashScreenBackground">@color/material_dynamic_secondary20</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/nhl_adaptive_splash</item>
+
+    </style>
+
+</resources>
