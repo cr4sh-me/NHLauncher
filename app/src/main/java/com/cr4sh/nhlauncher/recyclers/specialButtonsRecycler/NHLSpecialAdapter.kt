@@ -16,10 +16,12 @@ import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.activities.wpsAttacks.WPSAttack
 import com.cr4sh.nhlauncher.pagers.bluetoothPager.BluetoothActivity
+import com.cr4sh.nhlauncher.pagers.netscannerPager.NetScannerActivity
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.specialButtonsRecycler.NHLSpecialItem
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.specialButtonsRecycler.NHLSpecialViewHolder
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.ToastUtils
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 import java.util.Locale
 
@@ -102,13 +104,19 @@ class NHLSpecialAdapter : RecyclerView.Adapter<NHLSpecialViewHolder>() {
             if (myActivity != null) {
                 vibrate(myActivity, 10)
             }
-            if (position == 0) {
-                val intent = Intent(myActivity, WPSAttack::class.java)
-                myActivity?.startActivity(intent)
-            } else if (position == 1) {
-//                ToastUtils.showCustomToast(myActivity, "Coming soon...");
-                val intent = Intent(myActivity, BluetoothActivity::class.java)
-                myActivity?.startActivity(intent)
+            when (position) {
+                0 -> {
+                    val intent = Intent(myActivity, WPSAttack::class.java)
+                    myActivity?.startActivity(intent)
+                }
+                1 -> {
+                    val intent = Intent(myActivity, BluetoothActivity::class.java)
+                    myActivity?.startActivity(intent)
+                }
+                2 -> {
+                    val intent = Intent(myActivity, NetScannerActivity::class.java)
+                    myActivity?.startActivity(intent)
+                }
             }
         }
     }

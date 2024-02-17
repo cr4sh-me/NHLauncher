@@ -56,41 +56,24 @@ class SpecialFeaturesActivity : AppCompatActivity() {
         val specialItem = NHLSpecialItem(
             resources.getString(R.string.wps_attack),
             resources.getString(R.string.wps_desc_short),
-            "kali_fern_wifi_cracker"
+            "wireless"
         )
         val specialItem2 = NHLSpecialItem(
             resources.getString(R.string.bt_toolkit),
             resources.getString(R.string.bt_short),
-            "kali_spooftooph"
+            "bluetooth"
+        )
+        val specialItem3 = NHLSpecialItem(
+            "Net Scanner",
+            "Description soon",
+            "socat"
         )
         val newItemList: MutableList<NHLSpecialItem> = ArrayList()
         newItemList.add(specialItem)
         newItemList.add(specialItem2)
+        newItemList.add(specialItem3)
         nhlSpecialAdapter.updateData(newItemList)
         specialRecyclerView.adapter = nhlSpecialAdapter
-
-//        customButton1.setBackground(drawable);
-////        customButton2.setBackground(drawable);
-//        customButton3.setBackground(drawable);
-//
-//
-//        customButton1.setOnClickListener(v -> {
-//            VibrationUtils.vibrate(this, 10);
-//            Intent intent = new Intent(this, WPSAttack.class);
-//            startActivity(intent);
-//        });
-
-//        customButton2.setOnClickListener(v -> {
-//            Intent intent = new Intent(this, MDKDeauth.class);
-//            startActivity(intent);
-//        });
-
-//        customButton3.setOnClickListener(v -> {
-//            VibrationUtils.vibrate(this, 10);
-//            ToastUtils.showCustomToast(this, "Coming soon...");
-////            Intent intent = new Intent(this, BluetoothAttacks.class);
-////            startActivity(intent);
-//        });
         cancelButton.setOnClickListener {
             vibrate(this, 10)
             val intent = Intent(this@SpecialFeaturesActivity, MainActivity::class.java)

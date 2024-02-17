@@ -27,6 +27,45 @@ class ShellExecuter {
         }
     }
 
+    fun RunAsRootOutputProgress(command: String, progressCallback: (String) -> Unit): String {
+        var output = StringBuilder()
+        var line: String?
+        try {
+            val process = Runtime.getRuntime().exec("su -mm")
+            val stdin = process.outputStream
+            val stderr = process.errorStream
+            val stdout = process.inputStream
+            Log.d("ShellCommandIs", command)
+            stdin.write((command + '\n').toByteArray())
+            stdin.write("exit\n".toByteArray())
+            stdin.flush()
+            stdin.close()
+            var br = BufferedReader(InputStreamReader(stdout))
+            while (br.readLine().also { line = it } != null) {
+                output.append(line).append('\n')
+                progressCallback.invoke(output.toString())
+            }
+
+            if (output.isNotEmpty()) output = StringBuilder(output.substring(0, output.length - 1))
+
+            br.close()
+            br = BufferedReader(InputStreamReader(stderr))
+            while (br.readLine().also { line = it } != null) {
+                Log.e("Shell Error:", line!!)
+            }
+            br.close()
+            process.waitFor()
+            process.destroy()
+        } catch (e: IOException) {
+            Log.d(TAG, "An IOException was caught: " + e.message)
+        } catch (ex: InterruptedException) {
+            Log.d(TAG, "An InterruptedException was caught: " + ex.message)
+        }
+        return output.toString()
+    }
+
+
+
     fun RunAsRootOutput(command: String): String {
         var output = StringBuilder()
         var line: String?

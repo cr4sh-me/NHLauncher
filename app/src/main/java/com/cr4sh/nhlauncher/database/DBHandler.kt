@@ -112,11 +112,23 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             1,
             "1",
             0,
-            "amass",
+            "OWASP Amass",
             "In-depth Attack Surface Mapping and Asset Discovery",
             "Dogłębne mapowanie obszaru ataku i wykrywanie zasobów",
             "amass -h",
-            "kali_menu",
+            "owasp",
+            0
+        )
+        insertTool(
+            db,
+            1,
+            "1",
+            0,
+            "OWASP Maryam",
+            "Advanced OSINT Framework",
+            "Zaawansowane środowisko OSINT",
+            "maryam -h",
+            "owasp",
             0
         )
         insertTool(
@@ -580,6 +592,18 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             1,
             "1",
             0,
+            "WHOIS",
+            "DOMAIN/IP information tool",
+            "Informacje o domenie/IP",
+            "whois -h",
+            "whois",
+            0
+        )
+        insertTool(
+            db,
+            1,
+            "1",
+            0,
             "whatweb",
             "Next generation web scanner",
             "Nowoczesny skaner stron internetowych",
@@ -587,7 +611,66 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             "kali_whatweb",
             0
         )
-
+        insertTool(
+            db,
+            1,
+            "1",
+            0,
+            "nping",
+            "Universal network packet generator",
+            "Uniwersalny generator pakietów sieciowych",
+            "nping -h",
+            "kali_menu",
+            0
+        )
+        insertTool(
+            db,
+            1,
+            "1",
+            0,
+            "CloudFail",
+            "Utilize misconfigured DNS and old database records to find hidden IP's behind the CloudFlare network",
+            "Wykorzystaj źle skonfigurowany DNS i stare rekordy bazy danych, aby znaleźć ukryte adresy IP za siecią CloudFlare",
+            "cd /root/CloudFail && python3 cloudfail.py -h",
+            "cloudflare",
+            0
+        )
+        insertTool(
+            db,
+            1,
+            "1",
+            0,
+            "CloudMare",
+            "Automatic CloudProxy and Reverse Proxy bypass tool",
+            "Automatyczne narzędzie obejścia CloudProxy i Reverse Proxy",
+            "cd /root/Cloudmare && python Cloudmare.py -h",
+            "cloudflare",
+            0
+        )
+        insertTool(
+            db,
+            1,
+            "1",
+            0,
+            "Sublist3r",
+            "Python tool designed to enumerate subdomains of websites using OSINT",
+            "Narzędzie pythona przeznaczone do wyliczania subdomen stron internetowych wykorzystujących OSINT",
+            "cd /root/Sublist3r && python3 sublist3r.py -h",
+            "kali_menu",
+            0
+        )
+        insertTool(
+            db,
+            1,
+            "1",
+            0,
+            "PWNedOrNot",
+            "OSINT tool for finding passwords of compromised email addresses ",
+            "Narzędzie OSINT do wyszukiwania haseł do zaatakowanych adresów e-mail",
+            "cd /root/pwnedOrNot && python3 pwnedornot.py -h",
+            "pwned",
+            0
+        )
         // Category 2
         insertTool(
             db,
@@ -1160,6 +1243,30 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             1,
             "3",
             0,
+            "vulnx",
+            "Intelligent CMS Shell Injector",
+            "Inteligentny wtryskiwacz powłoki CMS",
+            "vulnx -h",
+            "vulnx",
+            0
+        )
+        insertTool(
+            db,
+            1,
+            "3",
+            0,
+            "DotDotPWN",
+            "The Directory Traversal Fuzzer",
+            "Fuzzer przeglądania katalogów",
+            "dotdotpwn -h",
+            "dotdotpwn",
+            0
+        )
+        insertTool(
+            db,
+            1,
+            "3",
+            0,
             "wpscan",
             "WordPress Security Scanner",
             "Skaner bezpieczeństwa WordPress",
@@ -1699,6 +1806,42 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             "kali_rsmangler",
             0
         )
+        insertTool(
+            db,
+            1,
+            "5",
+            0,
+            "MaskProcessor",
+            "High-Performance Advanced Word Generator",
+            "Wysokowydajny, zaawansowany generator słów",
+            "mp64 -h",
+            "maskprocessor",
+            0
+        )
+        insertTool(
+            db,
+            1,
+            "5",
+            0,
+            "SSH Audit",
+            "SSH server & client configuration auditing",
+            "Audyt konfiguracji serwera i klienta SSH",
+            "ssh-audit -h",
+            "kali_menu",
+            0
+        )
+        insertTool(
+            db,
+            1,
+            "5",
+            0,
+            "Bopscrk",
+            "Generates smart and powerful wordlists",
+            "Generuje inteligentne i wydajne listy słów",
+            "bopscrk -h",
+            "kali_menu",
+            0
+        )
 
         // Category 6
         insertTool(
@@ -1722,7 +1865,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             "FreeRADIUS is a high-performance RADIUS server",
             "FreeRADIUS to wysokowydajny serwer RADIUS",
             "freeradius -h",
-            "kali_menu",
+            "wireless",
             0
         )
         insertTool(
@@ -1838,11 +1981,23 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             1,
             "6",
             0,
+            "EAPHammer",
+            "Targeted evil twin attacks against WPA2-Enterprise networks",
+            "Ukierunkowane ataki typu „evil twin” na sieci WPA2-Enterprise",
+            "eaphammer -h",
+            "eaphammer",
+            0
+        )
+        insertTool(
+            db,
+            1,
+            "6",
+            0,
             "oneshot",
             "Run WPS PIN attacks without monitor mode with the wpa_supplicant",
             "Przeprowadzaj ataki WPS PIN bez trybu monitorowania za pomocą wpa_supplicant",
             "cd /root/OneShot && python3 oneshot.py -i wlan0",
-            "kali_menu",
+            "wireless",
             0
         )
         insertTool(
@@ -1854,7 +2009,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             "Brute force password selection for EAP-MD5 authentication exchanges",
             "Brutalny wybór hasła do wymiany uwierzytelniania EAP-MD5",
             "eapmd5pass",
-            "kali_menu",
+            "wireless",
             0
         )
         insertTool(
@@ -1866,7 +2021,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             "Wi-Fi access point for pentest purposes",
             "Punkt dostępowy Wi-Fi do najświętszych celów",
             "wifi-honey -h",
-            "kali_menu",
+            "wireless",
             0
         )
         insertTool(
@@ -1890,7 +2045,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             "Bluetooth scanner and logger",
             "Skaner Bluetooth i rejestrator",
             "bluelog --help",
-            "kali_menu",
+            "bluetooth",
             0
         )
         insertTool(
@@ -1902,7 +2057,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             "Simple Bash script which uses Link Quality to locate Bluetooth device radios",
             "Skrypt wykorzystuje jakość łącza do lokalizowania radiotelefonów urządzeń Bluetooth",
             "blueranger --help",
-            "kali_menu",
+            "bluetooth",
             0
         )
         insertTool(
@@ -1914,7 +2069,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             "A bluetooth bluesnarfing Utility",
             "Narzędzie do bluesnarfingu Bluetooth",
             "blusnarfer --help",
-            "kali_menu",
+            "bluetooth",
             0
         )
         insertTool(
@@ -1922,11 +2077,11 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             1,
             "6",
             0,
-            "btscanner",
+            "BTScanner",
             "Extract as much information as possible from a BT device without the requirement to pair",
             "Wydobądź jak najwięcej informacji z urządzenia BT bez konieczności parowania",
             "btscanner --help",
-            "kali_menu",
+            "bluetooth",
             0
         )
         insertTool(
@@ -1934,11 +2089,11 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             1,
             "6",
             0,
-            "crackle",
+            "Crackle",
             "Exploits a flaw in the BLE pairing process that allows to guess or very quickly brute force the Temporary Key",
             "Wykorzystuje lukę w procesie parowania BLE, która pozwala odgadnąć klucz tymczasowy",
             "crackle --help",
-            "kali_menu",
+            "bluetooth",
             0
         )
         insertTool(
@@ -1946,11 +2101,11 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             1,
             "6",
             0,
-            "redfang",
-            "fang is a small proof-of-concept application to find non discoveredable bluetooth devices",
-            "fang to mała aplikacja sprawdzająca słuszność koncepcji do znajdowania niewykrywalnych urządzeń Bluetooth",
+            "RedFang",
+            "Fang is a small proof-of-concept application to find non discoveredable bluetooth devices",
+            "Fang to mała aplikacja sprawdzająca słuszność koncepcji do znajdowania niewykrywalnych urządzeń Bluetooth",
             "fang --help",
-            "kali_menu",
+            "bluetooth",
             0
         )
         insertTool(
@@ -1962,7 +2117,19 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             "command line utility for Ubertooth Zero and Ubertooth One",
             "Narzędzie wiersza poleceń dla Ubertooth Zero i Ubertooth One",
             "ubertooth-util -h",
-            "kali_menu",
+            "bluetooth",
+            0
+        )
+        insertTool(
+            db,
+            1,
+            "6",
+            0,
+            "GATTTool",
+            "Tool for Bluetooth Low Energy device",
+            "Narzędzie do urządzenia Bluetooth Low Energy",
+            "gatttool -h",
+            "bluetooth",
             0
         )
         insertTool(
@@ -3064,7 +3231,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             1,
             "13",
             0,
-            "evilginx2",
+            "Evilginx2",
             "Phishing login credentials along with session cookies, allowing for the bypass of 2FA",
             "Dane logowania do phishingu wraz z sesyjnymi plikami cookie, pozwalającymi na ominięcie 2FA",
             "evilginx2",
@@ -3080,7 +3247,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             "An automated phishing tool with 30+ templates",
             "Zautomatyzowane narzędzie do phishingu z ponad 30 szablonami",
             "cd /root/zphisher && bash zphisher.sh",
-            "nhl_zphisher",
+            "phishing",
             0
         )
         insertTool(
@@ -3092,7 +3259,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             "Reverse Proxy. 2FA authentication phishing",
             "Odwrotny serwer proxy. Wyłudzanie informacji o uwierzytelnianiu 2FA",
             "cd /root/Modlishka && ./dist/proxy -h",
-            "kali_menu",
+            "phishing",
             0
         )
         insertTool(
@@ -3100,7 +3267,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             1,
             "13",
             0,
-            "gophish",
+            "GOPhish",
             "Open-source phishing toolkit designed for businesses and penetration testers",
             "Zestaw narzędzi do phishingu typu open source przeznaczony dla firm i testerów penetracyjnych",
             "cd /root/gophish && ./gophish",
@@ -3112,11 +3279,35 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             1,
             "13",
             0,
-            "maskphish",
+            "Maskphish",
             "Simple bash script to hide phishing URL under a normal looking URL",
             "prosty skrypt bash do ukrywania adresu URL phishingu pod normalnie wyglądającym adresem URL",
             "cd /root/maskphish && bash maskphish.sh",
             "nhl_maskphish",
+            0
+        )
+        insertTool(
+            db,
+            1,
+            "13",
+            0,
+            "URLCrazy",
+            "URL hijacking, Phishing, and Corporate Espionage",
+            "Przejmowanie adresów URL, phishing i szpiegostwo korporacyjne",
+            "urlcrazy -h",
+            "urlcrazy",
+            0
+        )
+        insertTool(
+            db,
+            1,
+            "13",
+            0,
+            "DNSTwist",
+            "Permutation Engine for detecting homograph Phishing Attacks",
+            "Silnik permutacji do wykrywania ataków phishingowych na podstawie homografów",
+            "dnstwist -h",
+            "antiphishing",
             0
         )
     }
