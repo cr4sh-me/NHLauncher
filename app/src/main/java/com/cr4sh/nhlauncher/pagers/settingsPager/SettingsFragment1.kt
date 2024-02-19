@@ -37,7 +37,7 @@ import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.UpdateCheckerUtils
 import com.cr4sh.nhlauncher.utils.UpdateCheckerUtils.UpdateCheckResult
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
 import com.skydoves.powerspinner.PowerSpinnerView
 import kotlinx.coroutines.Dispatchers
@@ -175,22 +175,13 @@ class SettingsFragment1 : Fragment() {
             }
         }
         newButtonsStyle.setOnCheckedChangeListener { _: CompoundButton?, _: Boolean ->
-            vibrate(
-                requireActivity(),
-                10
-            )
+            VibrationUtils.vibrate()
         }
         vibrationsCheckbox.setOnCheckedChangeListener { _: CompoundButton?, _: Boolean ->
-            vibrate(
-                requireActivity(),
-                10
-            )
+            VibrationUtils.vibrate()
         }
         overlayCheckbox.setOnCheckedChangeListener { _: CompoundButton?, _: Boolean ->
-            vibrate(
-                requireActivity(),
-                10
-            )
+            VibrationUtils.vibrate()
         }
 
         ColorChanger.setContainerBackground(spinnerBg1, true)
@@ -235,7 +226,7 @@ class SettingsFragment1 : Fragment() {
         val updateCheckerUtils = UpdateCheckerUtils()
         checkUpdate.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             checkUpdate.text = requireActivity().resources.getString(R.string.update_wait)
             // Create an instance of UpdateCheckerUtils
@@ -284,7 +275,7 @@ class SettingsFragment1 : Fragment() {
 
         updateButton.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             val intent = Intent(Intent.ACTION_VIEW)
             intent.setData(Uri.parse("https://github.com/cr4sh-me/NHLauncher/releases/latest"))
@@ -292,13 +283,13 @@ class SettingsFragment1 : Fragment() {
         }
         runSetup.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             mainUtils!!.runCmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit")
         }
         backupDb.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             val dbb = DBBackup()
             mainActivity?.lifecycleScope?.launch {
@@ -307,7 +298,7 @@ class SettingsFragment1 : Fragment() {
         }
         restoreDb.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             val dbb = DBBackup()
             mainActivity?.lifecycleScope?.launch {
@@ -316,7 +307,7 @@ class SettingsFragment1 : Fragment() {
         }
         saveButton.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             mainActivity?.lifecycleScope?.launch {
                 applySettings()
@@ -329,7 +320,7 @@ class SettingsFragment1 : Fragment() {
     private fun applySettings() {
         lifecycleScope.launch(Dispatchers.Default) {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             // Apply the settings to SharedPreferences
             saveVibrationsPref(vibrationsCheckbox.isChecked)

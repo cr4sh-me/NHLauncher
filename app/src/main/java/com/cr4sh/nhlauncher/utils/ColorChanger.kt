@@ -1,8 +1,11 @@
 package com.cr4sh.nhlauncher.utils
 
+import android.app.Activity
+import android.app.Activity.OVERRIDE_TRANSITION_CLOSE
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
@@ -11,6 +14,7 @@ import android.widget.EditText
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.CompoundButtonCompat
+import com.cr4sh.nhlauncher.R
 import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener
 import com.skydoves.powerspinner.PowerSpinnerView
 
@@ -98,5 +102,19 @@ class ColorChanger {
                 )
             }
         }
+
+        fun Activity.activityAnimation() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                overrideActivityTransition(
+                    OVERRIDE_TRANSITION_CLOSE,
+                    R.anim.cat_appear,
+                    R.anim.cat_appear
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear)
+            }
+        }
+
     }
 }

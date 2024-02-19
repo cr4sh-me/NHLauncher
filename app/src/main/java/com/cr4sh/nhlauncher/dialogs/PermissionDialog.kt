@@ -17,7 +17,7 @@ import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.PermissionUtils
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 
 class PermissionDialog : AppCompatDialogFragment() {
     private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
@@ -42,7 +42,7 @@ class PermissionDialog : AppCompatDialogFragment() {
 
         allowButton.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             dialog?.cancel()
             val permissionUtils = PermissionUtils((requireActivity() as MainActivity))

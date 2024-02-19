@@ -22,7 +22,7 @@ import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 
 class NewToolDialog : AppCompatDialogFragment() {
     private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
@@ -56,7 +56,7 @@ class NewToolDialog : AppCompatDialogFragment() {
 
         saveButton.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             // Idiot protection...
             if (myName.text.toString().isEmpty()) {
@@ -117,7 +117,7 @@ class NewToolDialog : AppCompatDialogFragment() {
         }
         cancelButton.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             dialog?.cancel()
         }

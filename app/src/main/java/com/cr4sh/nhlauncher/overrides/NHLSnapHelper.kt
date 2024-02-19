@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.utils.NHLManager
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 
 class NHLSnapHelper : LinearSnapHelper() {
     private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
@@ -43,7 +43,7 @@ class NHLSnapHelper : LinearSnapHelper() {
 
     private fun distanceToStart(targetView: View, helper: OrientationHelper?): Int {
         if (mainActivity != null) {
-            vibrate(mainActivity, 10)
+            VibrationUtils.vibrate()
         }
         return helper!!.getDecoratedStart(targetView) - helper.startAfterPadding
     }
@@ -90,7 +90,7 @@ class NHLSnapHelper : LinearSnapHelper() {
         velocityY: Int
     ): Int {
         if (mainActivity != null) {
-            vibrate(mainActivity, 10)
+            VibrationUtils.vibrate()
         }
         return RecyclerView.NO_POSITION
     }

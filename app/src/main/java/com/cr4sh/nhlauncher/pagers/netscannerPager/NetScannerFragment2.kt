@@ -16,8 +16,7 @@ import java.net.SocketException
 class NetScannerFragment2 : Fragment() {
     var nhlPreferences: NHLPreferences? = null
     private var dialogUtils: DialogUtils? = null
-    private var flood: String = ""
-    private var reverse: String = ""
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

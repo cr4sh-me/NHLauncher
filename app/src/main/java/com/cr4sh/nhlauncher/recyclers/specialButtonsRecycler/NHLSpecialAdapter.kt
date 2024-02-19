@@ -21,7 +21,7 @@ import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.specialButtonsRecycler.
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.specialButtonsRecycler.NHLSpecialViewHolder
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 import java.util.Locale
 
 class NHLSpecialAdapter : RecyclerView.Adapter<NHLSpecialViewHolder>() {
@@ -101,7 +101,7 @@ class NHLSpecialAdapter : RecyclerView.Adapter<NHLSpecialViewHolder>() {
         holder.buttonView.layoutParams = params
         holder.itemView.setOnClickListener {
             if (myActivity != null) {
-                vibrate(myActivity, 10)
+                VibrationUtils.vibrate()
             }
             when (position) {
                 0 -> {

@@ -20,7 +20,7 @@ import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 
 class ThrottlingDialog : AppCompatDialogFragment() {
     private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
@@ -51,7 +51,7 @@ class ThrottlingDialog : AppCompatDialogFragment() {
 
         setupButton.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             dialog?.cancel()
             val intent = Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
@@ -61,7 +61,7 @@ class ThrottlingDialog : AppCompatDialogFragment() {
         }
         cancelButton.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             dialog?.cancel()
             firstSetupCompleted()

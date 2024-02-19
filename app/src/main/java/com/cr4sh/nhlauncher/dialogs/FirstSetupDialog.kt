@@ -18,7 +18,7 @@ import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 
 class FirstSetupDialog : AppCompatDialogFragment() {
     private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
@@ -48,7 +48,7 @@ class FirstSetupDialog : AppCompatDialogFragment() {
 
         setupButton.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             dialog?.cancel()
             mainUtils.runCmd("cd /root/ && apt update && apt -y install git && [ -d NHLauncher_scripts ] && rm -rf NHLauncher_scripts ; git clone https://github.com/cr4sh-me/NHLauncher_scripts || git clone https://github.com/cr4sh-me/NHLauncher_scripts && cd NHLauncher_scripts && chmod +x * && bash nhlauncher_setup.sh && exit")
@@ -56,7 +56,7 @@ class FirstSetupDialog : AppCompatDialogFragment() {
         }
         cancelButton.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             dialog?.cancel()
             firstSetupCompleted()

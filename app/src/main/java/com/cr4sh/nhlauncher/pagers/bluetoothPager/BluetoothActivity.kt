@@ -1,9 +1,7 @@
 package com.cr4sh.nhlauncher.pagers.bluetoothPager
 
-import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -12,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.specialFeatures.SpecialFeaturesActivity
+import com.cr4sh.nhlauncher.utils.ColorChanger.Companion.activityAnimation
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -19,15 +18,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 class BluetoothActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            overrideActivityTransition(
-                OVERRIDE_TRANSITION_OPEN,
-                R.anim.cat_appear,
-                R.anim.cat_appear
-            )
-        } else {
-            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear)
-        }
+
+        activityAnimation()
+
         setContentView(R.layout.bt_layout)
         val nhlPreferences = NHLPreferences(this)
         val rootView = findViewById<View>(android.R.id.content)
@@ -44,12 +37,6 @@ class BluetoothActivity : AppCompatActivity() {
             val intent = Intent(this@BluetoothActivity, SpecialFeaturesActivity::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)
-            val animationBundle = ActivityOptions.makeCustomAnimation(
-                this,
-                R.anim.cat_appear,  // Enter animation
-                R.anim.cat_disappear // Exit animation
-            ).toBundle()
-            startActivity(intent, animationBundle)
             finish()
         }
         val viewPager2 = findViewById<ViewPager2>(R.id.pager)
@@ -85,15 +72,7 @@ class BluetoothActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         if (isFinishing) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                overrideActivityTransition(
-                    OVERRIDE_TRANSITION_CLOSE,
-                    R.anim.cat_appear,
-                    R.anim.cat_appear
-                )
-            } else {
-                overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear)
-            }
+            activityAnimation()
         }
     }
 }

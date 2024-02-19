@@ -21,7 +21,7 @@ import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 import kotlinx.coroutines.launch
 
 class BluetoothFragment2 : Fragment() {
@@ -106,7 +106,7 @@ class BluetoothFragment2 : Fragment() {
             reverse = if (checkboxes[1].isChecked) "-r" else ""
         }
         l2pingButton.setOnClickListener {
-            vibrate(requireActivity(), 10)
+            VibrationUtils.vibrate()
 
             if (sizeEdit.text.isEmpty() or countEdit.text.isEmpty()) {
                 requireActivity().lifecycleScope.launch {
@@ -125,7 +125,7 @@ class BluetoothFragment2 : Fragment() {
         }
 
         redfangButton.setOnClickListener {
-            vibrate(requireActivity(), 10)
+            VibrationUtils.vibrate()
 
             if (rangeEdit.text.isEmpty()) {
                 requireActivity().lifecycleScope.launch {

@@ -2,7 +2,6 @@ package com.cr4sh.nhlauncher.activities.wpsAttacks
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.ActivityOptions
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -38,13 +37,14 @@ import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.activities.specialFeatures.SpecialFeaturesActivity
 import com.cr4sh.nhlauncher.bridge.Bridge.Companion.createExecuteIntent
 import com.cr4sh.nhlauncher.utils.ColorChanger
+import com.cr4sh.nhlauncher.utils.ColorChanger.Companion.activityAnimation
 import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ShellExecuter
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -73,15 +73,7 @@ class WPSAttack : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         if (isFinishing) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                overrideActivityTransition(
-                    OVERRIDE_TRANSITION_CLOSE,
-                    R.anim.cat_appear,
-                    R.anim.cat_appear
-                )
-            } else {
-                overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear)
-            }
+            activityAnimation()
         }
     }
 
@@ -89,15 +81,8 @@ class WPSAttack : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            overrideActivityTransition(
-                OVERRIDE_TRANSITION_OPEN,
-                R.anim.cat_appear,
-                R.anim.cat_appear
-            )
-        } else {
-            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear)
-        }
+        activityAnimation()
+
         exe = ShellExecuter()
         setContentView(R.layout.wps_attack_layout)
         msg2 = findViewById(R.id.messageBox2)
@@ -176,30 +161,30 @@ class WPSAttack : AppCompatActivity() {
         pbcCMD = if (wpsButtonCheckbox.isChecked) "--pbc" else ""
 
         pixieDustCheckbox.setOnClickListener {
-            vibrate(this, 10)
+            VibrationUtils.vibrate()
             pixieCMD = if (pixieDustCheckbox.isChecked) "-K" else ""
             savePixieDust(pixieDustCheckbox.isChecked)
         }
         pixieForceCheckbox.setOnClickListener {
-            vibrate(this, 10)
+            VibrationUtils.vibrate()
             pixieforceCMD = if (pixieForceCheckbox.isChecked) "-F" else ""
             savePixieForce(pixieForceCheckbox.isChecked)
         }
         bruteCheckbox.setOnClickListener {
-            vibrate(this, 10)
+            VibrationUtils.vibrate()
             bruteCMD = if (bruteCheckbox.isChecked) "-B" else ""
             saveOnlineBf(bruteCheckbox.isChecked)
         }
         customPinCheckbox.setOnClickListener {
-            vibrate(this, 10)
+            VibrationUtils.vibrate()
             dialogUtils.openWpsCustomSetting(1, this@WPSAttack)
         }
         delayCheckbox.setOnClickListener {
-            vibrate(this, 10)
+            VibrationUtils.vibrate()
             dialogUtils.openWpsCustomSetting(2, this@WPSAttack)
         }
         wpsButtonCheckbox.setOnClickListener {
-            vibrate(this, 10)
+            VibrationUtils.vibrate()
             pbcCMD = if (wpsButtonCheckbox.isChecked) {
                 "--pbc"
             } else ""
@@ -207,7 +192,7 @@ class WPSAttack : AppCompatActivity() {
         }
         enableScanButton(true)
         scanButton.setOnClickListener {
-            vibrate(this, 10)
+            VibrationUtils.vibrate()
             try {
                 checkThrottling()
             } catch (e: SettingNotFoundException) {
@@ -235,19 +220,14 @@ class WPSAttack : AppCompatActivity() {
 
         // Initialize cancel button
         cancelButton.setOnClickListener {
-            vibrate(this, 10)
+            VibrationUtils.vibrate()
             val intent = Intent(this@WPSAttack, SpecialFeaturesActivity::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            val animationBundle = ActivityOptions.makeCustomAnimation(
-                this,
-                R.anim.cat_appear,  // Enter animation
-                R.anim.cat_disappear // Exit animation
-            ).toBundle()
-            startActivity(intent, animationBundle)
+            startActivity(intent)
             finish()
         }
         msg2.setOnClickListener {
-            vibrate(this, 10)
+            VibrationUtils.vibrate()
             if (isThrottleEnabled) {
                 dialogUtils.openThrottlingDialog()
             }
@@ -264,7 +244,7 @@ class WPSAttack : AppCompatActivity() {
             }
         }
         launchAttackButton.setOnClickListener {
-            vibrate(this, 10)
+            VibrationUtils.vibrate()
             if (selectedButton == null) {
                 showCustomToast(this, "No target selected!")
             } else {
@@ -401,7 +381,7 @@ class WPSAttack : AppCompatActivity() {
     }
 
     private fun handleButtonClick(clickedButton: Button) {
-        vibrate(this, 10)
+        VibrationUtils.vibrate()
         if (selectedButton != null) {
             selectedButton!!.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
             // Change the background drawable for the previously selected button

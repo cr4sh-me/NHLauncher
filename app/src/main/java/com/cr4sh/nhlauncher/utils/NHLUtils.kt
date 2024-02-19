@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
 class NHLUtils(
     private val mainActivity: MainActivity
 ) : AppCompatActivity() {
-    private val mDatabase: SQLiteDatabase = mainActivity.mDatabase
+    private val mDatabase: SQLiteDatabase? = mainActivity.mDatabase
     private val nhlPreferences: NHLPreferences = NHLPreferences(mainActivity)
 
     // NetHunter bridge function
@@ -42,7 +42,9 @@ class NHLUtils(
     fun buttonUsageIncrease(name: String?) {
         if (name != null) {
             lifecycleScope.launch(Dispatchers.IO) {
-                DBHandler.updateToolUsage(mDatabase, name, mainActivity.buttonUsage + 1)
+                if (mDatabase != null) {
+                    DBHandler.updateToolUsage(mDatabase, name, mainActivity.buttonUsage + 1)
+                }
             }
         }
         restartSpinner()
@@ -87,7 +89,7 @@ class NHLUtils(
         mainActivity.lifecycleScope.launch {
             try {
                 val newItemList = withContext(Dispatchers.Default) {
-                    val cursor = mDatabase.query(
+                    val cursor = mDatabase?.query(
                         "TOOLS",
                         projection,
                         selection,
@@ -98,28 +100,30 @@ class NHLUtils(
                         null
                     )
                     val itemList: MutableList<NHLItem> = ArrayList()
-                    if (cursor.count > 0) {
-                        // Create a new itemList from the cursor data
-                        while (cursor.moveToNext()) {
-                            val toolCategory = cursor.getString(0)
-                            val toolName = cursor.getString(2)
-                            val toolDescription = cursor.getString(3)
-                            val toolCmd = cursor.getString(4)
-                            val toolIcon = cursor.getString(5)
-                            val toolUsage = cursor.getInt(6)
+                    if (cursor != null) {
+                        if (cursor.count > 0) {
+                            // Create a new itemList from the cursor data
+                            while (cursor.moveToNext()) {
+                                        val toolCategory = cursor.getString(0)
+                                        val toolName = cursor.getString(2)
+                                        val toolDescription = cursor.getString(3)
+                                        val toolCmd = cursor.getString(4)
+                                        val toolIcon = cursor.getString(5)
+                                        val toolUsage = cursor.getInt(6)
 
-                            val item = NHLItem(
-                                toolCategory,
-                                toolName,
-                                toolDescription,
-                                toolCmd,
-                                toolIcon,
-                                toolUsage
-                            )
-                            itemList.add(item)
+                                        val item = NHLItem(
+                                            toolCategory,
+                                            toolName,
+                                            toolDescription,
+                                            toolCmd,
+                                            toolIcon,
+                                            toolUsage
+                                        )
+                                        itemList.add(item)
+                                    }
                         }
                     }
-                    cursor.close()
+                    cursor?.close()
                     itemList
                 }
 
@@ -155,17 +159,19 @@ class NHLUtils(
     // Refreshes our TextView that is responsible for app background
     // Adds button to favourites bu updating FAVOURITE value
     fun addFavourite() {
-        val cursor = mDatabase.query(
+        val cursor = mDatabase?.query(
             "TOOLS", arrayOf("FAVOURITE", "NAME"), "NAME = ?", arrayOf(
                 mainActivity.buttonName
             ), null, null, null, null
         )
         // Start iteration!
         var isFavourite: String? = null
-        cursor.moveToFirst()
-        while (!cursor.isAfterLast) {
-            isFavourite = cursor.getString(0)
-            cursor.moveToNext()
+        cursor?.moveToFirst()
+        if (cursor != null) {
+            while (!cursor.isAfterLast) {
+                isFavourite = cursor.getString(0)
+                cursor.moveToNext()
+            }
         }
         assert(isFavourite != null)
         if (isFavourite == "1") {
@@ -173,18 +179,26 @@ class NHLUtils(
                 mainActivity,
                 mainActivity.resources.getString(R.string.removed_favourite)
             )
-            mainActivity.buttonName?.let { DBHandler.updateToolFavorite(mDatabase, it, 0) }
+            mainActivity.buttonName?.let {
+                if (mDatabase != null) {
+                    DBHandler.updateToolFavorite(mDatabase, it, 0)
+                }
+            }
         } else {
             ToastUtils.showCustomToast(
                 mainActivity,
                 mainActivity.resources.getString(R.string.added_favourite)
             )
-            mainActivity.buttonName?.let { DBHandler.updateToolFavorite(mDatabase, it, 1) }
+            mainActivity.buttonName?.let {
+                if (mDatabase != null) {
+                    DBHandler.updateToolFavorite(mDatabase, it, 1)
+                }
+            }
         }
         restartSpinner()
 
         // Close cursor
-        cursor.close()
+        cursor?.close()
     }
 
     fun copyToClipboard(text: CharSequence) {

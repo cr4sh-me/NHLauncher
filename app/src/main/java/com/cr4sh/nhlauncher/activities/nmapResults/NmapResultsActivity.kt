@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
+import com.cr4sh.nhlauncher.utils.ColorChanger.Companion.activityAnimation
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils
 import kotlinx.coroutines.launch
@@ -30,6 +31,8 @@ class NmapResultsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.nmap_webview_layout)
+
+        activityAnimation()
 
         nhlPreferences = NHLPreferences(this)
 
@@ -101,5 +104,12 @@ class NmapResultsActivity : AppCompatActivity() {
     private fun setButtonColors(button: Button, cancel: Boolean) {
         button.setBackgroundColor(Color.parseColor(if (cancel) nhlPreferences.color80() else nhlPreferences.color50()))
         button.setTextColor(Color.parseColor(if (cancel) nhlPreferences.color50() else nhlPreferences.color80()))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (isFinishing) {
+            activityAnimation()
+        }
     }
 }

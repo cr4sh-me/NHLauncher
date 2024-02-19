@@ -7,29 +7,37 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import com.cr4sh.nhlauncher.activities.MainActivity
 
-object VibrationUtils {
+class VibrationUtils {
+
     // Vibrations method
-    @JvmStatic
-    fun vibrate(context: Context, milliseconds: Long) {
-        val nhlPreferences = NHLPreferences(context)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager =
-                context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            val vibrator = vibratorManager.defaultVibrator
-            if (nhlPreferences.vibrationOn()) {
-                if (vibrator.hasVibrator()) {
-                    val vibrationEffect = VibrationEffect.createOneShot(
-                        milliseconds,
-                        VibrationEffect.DEFAULT_AMPLITUDE
-                    )
-                    vibrator.vibrate(vibrationEffect)
+
+    companion object {
+        val mainActivity: MainActivity? by lazy { NHLManager.getInstance().getMainActivity() }
+
+        fun vibrate(milliseconds: Long = 10) {
+            val nhlPreferences = mainActivity?.let { NHLPreferences(it) }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val vibratorManager =
+                    mainActivity?.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                val vibrator = vibratorManager.defaultVibrator
+                if (nhlPreferences != null) {
+                    if (nhlPreferences.vibrationOn()) {
+                        if (vibrator.hasVibrator()) {
+                            val vibrationEffect = VibrationEffect.createOneShot(
+                                milliseconds,
+                                VibrationEffect.DEFAULT_AMPLITUDE
+                            )
+                            vibrator.vibrate(vibrationEffect)
+                        }
+                    }
                 }
-            }
-        } else {
-            val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            if (vibrator.hasVibrator()) {
-                vibrator.vibrate(milliseconds)
+            } else {
+                val vibrator = mainActivity?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                if (vibrator.hasVibrator()) {
+                    vibrator.vibrate(milliseconds)
+                }
             }
         }
     }

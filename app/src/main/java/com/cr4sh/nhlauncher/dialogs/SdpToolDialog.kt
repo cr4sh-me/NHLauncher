@@ -29,7 +29,7 @@ class SdpToolDialog : AppCompatDialogFragment() {
 
     @SuppressLint("SdCardPath")
     private val appScriptsPath = "/data/data/com.offsec.nethunter/scripts"
-    val exe = ShellExecuter()
+    private val exe = ShellExecuter()
 
     @SuppressLint("Recycle")
     override fun onCreateView(
@@ -70,7 +70,7 @@ class SdpToolDialog : AppCompatDialogFragment() {
 
         cancelButton.setOnClickListener {
             if (mainActivity != null) {
-                VibrationUtils.vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             dialog?.cancel()
         }

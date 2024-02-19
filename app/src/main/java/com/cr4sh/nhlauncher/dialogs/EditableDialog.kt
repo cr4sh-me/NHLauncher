@@ -23,7 +23,7 @@ import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 
 class EditableDialog : AppCompatDialogFragment() {
     private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
@@ -56,7 +56,7 @@ class EditableDialog : AppCompatDialogFragment() {
         currentCommand.text = requireActivity().resources.getString(R.string.current_cmd) + cmd
         saveButton.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
 
             // Idiot protection...
@@ -86,7 +86,7 @@ class EditableDialog : AppCompatDialogFragment() {
         }
         cancelButton.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             dialog?.cancel()
         }

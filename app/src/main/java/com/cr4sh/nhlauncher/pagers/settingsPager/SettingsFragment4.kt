@@ -20,7 +20,7 @@ import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 
 class SettingsFragment4 : Fragment() {
     private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
@@ -57,7 +57,7 @@ class SettingsFragment4 : Fragment() {
         textView3.setLinkTextColor(Color.parseColor(nhlPreferences!!.color80()))
         github.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             val intent =
                 Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/cr4sh-me/NHLauncher"))
@@ -71,7 +71,7 @@ class SettingsFragment4 : Fragment() {
         val clickableSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
                 if (mainActivity != null) {
-                    vibrate(mainActivity, 10)
+                    VibrationUtils.vibrate()
                 }
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(intent)

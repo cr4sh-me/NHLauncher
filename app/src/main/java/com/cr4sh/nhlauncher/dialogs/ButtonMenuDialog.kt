@@ -19,7 +19,7 @@ import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 
 class ButtonMenuDialog(private var myActivity: MainActivity) : AppCompatDialogFragment() {
     @RequiresApi(Build.VERSION_CODES.S)
@@ -56,17 +56,17 @@ class ButtonMenuDialog(private var myActivity: MainActivity) : AppCompatDialogFr
         description.text = myActivity.buttonDescription.toString().uppercase()
 
         option1.setOnClickListener {
-            vibrate(myActivity, 10)
+            VibrationUtils.vibrate()
             dialogUtils.openEditableDialog(myActivity.buttonName, myActivity.buttonCmd)
             dialog?.cancel()
         }
         option2.setOnClickListener {
-            vibrate(myActivity, 10)
+            VibrationUtils.vibrate()
             mainUtils.addFavourite()
             dialog?.cancel()
         }
         option3.setOnClickListener {
-            vibrate(myActivity, 10)
+            VibrationUtils.vibrate()
             if (!MainActivity.disableMenu) {
                 dialogUtils.openNewToolDialog(myActivity.buttonCategory)
             } else {
@@ -75,12 +75,12 @@ class ButtonMenuDialog(private var myActivity: MainActivity) : AppCompatDialogFr
             dialog?.cancel()
         }
         option4.setOnClickListener {
-            vibrate(myActivity, 10)
+            VibrationUtils.vibrate()
             dialogUtils.openDeleteToolDialog(myActivity.buttonName)
             dialog?.cancel()
         }
         cancelButton.setOnClickListener {
-            vibrate(myActivity, 10)
+            VibrationUtils.vibrate()
             dialog?.cancel()
         }
         return view

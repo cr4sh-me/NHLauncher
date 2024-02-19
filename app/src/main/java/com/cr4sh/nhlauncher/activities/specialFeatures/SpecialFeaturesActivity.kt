@@ -1,10 +1,8 @@
 package com.cr4sh.nhlauncher.activities.specialFeatures
 
-import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -15,22 +13,16 @@ import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.specialButtonsRecycler.NHLSpecialItem
 import com.cr4sh.nhlauncher.recyclers.specialButtonsRecycler.NHLSpecialAdapter
+import com.cr4sh.nhlauncher.utils.ColorChanger.Companion.activityAnimation
 import com.cr4sh.nhlauncher.utils.NHLPreferences
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 
 class SpecialFeaturesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //        overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            overrideActivityTransition(
-                OVERRIDE_TRANSITION_OPEN,
-                R.anim.cat_appear,
-                R.anim.cat_appear
-            )
-        } else {
-            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear)
-        }
+
+        activityAnimation()
+
         setContentView(R.layout.special_fragment_layout)
         val nhlPreferences = NHLPreferences(this)
         val specialRecyclerView = findViewById<RecyclerView>(R.id.special_recycler_view)
@@ -75,15 +67,10 @@ class SpecialFeaturesActivity : AppCompatActivity() {
         nhlSpecialAdapter.updateData(newItemList)
         specialRecyclerView.adapter = nhlSpecialAdapter
         cancelButton.setOnClickListener {
-            vibrate(this, 10)
+            VibrationUtils.vibrate()
             val intent = Intent(this@SpecialFeaturesActivity, MainActivity::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            val animationBundle = ActivityOptions.makeCustomAnimation(
-                this,
-                R.anim.cat_appear,  // Enter animation
-                R.anim.cat_disappear // Exit animation
-            ).toBundle()
-            startActivity(intent, animationBundle)
+            startActivity(intent)
             finish()
         }
     }
@@ -91,15 +78,7 @@ class SpecialFeaturesActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         if (isFinishing) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                overrideActivityTransition(
-                    OVERRIDE_TRANSITION_CLOSE,
-                    R.anim.cat_appear,
-                    R.anim.cat_appear
-                )
-            } else {
-                overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear)
-            }
+            activityAnimation()
         }
     }
 }

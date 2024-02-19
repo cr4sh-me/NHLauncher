@@ -13,11 +13,11 @@ class Bridge private constructor() {
     }
 
     companion object {
-        const val ACTION_EXECUTE = "neoterm.action.remote.execute"
-        const val EXTRA_COMMAND = "neoterm.extra.remote.execute.command"
-        const val EXTRA_EXECUTABLE = "neoterm.extra.remote.execute.executable"
-        const val EXTRA_SESSION_ID = "neoterm.extra.remote.execute.session"
-        const val EXTRA_FOREGROUND = "neoterm.extra.remote.execute.foreground"
+        private const val ACTION_EXECUTE = "neoterm.action.remote.execute"
+        private const val EXTRA_COMMAND = "neoterm.extra.remote.execute.command"
+        private const val EXTRA_EXECUTABLE = "neoterm.extra.remote.execute.executable"
+        private const val EXTRA_SESSION_ID = "neoterm.extra.remote.execute.session"
+        private const val EXTRA_FOREGROUND = "neoterm.extra.remote.execute.foreground"
         private const val NEOTERM_PACKAGE = "com.offsec.nhterm"
         private const val NEOTERM_REMOTE_INTERFACE =
             "com.offsec.nhterm.ui.term.NeoTermRemoteInterface"

@@ -28,7 +28,7 @@ import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 import com.flask.colorpicker.ColorPickerView
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -187,19 +187,19 @@ class SettingsFragment2 : Fragment() {
         }
         hexColorValue1.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             openPickerDialog(hexColorValue1, alphaTileViewAdv1, nhlPreferences!!.color80())
         }
         hexColorValue2.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             openPickerDialog(hexColorValue2, alphaTileViewAdv2, nhlPreferences!!.color50())
         }
         hexColorValue3.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             openPickerDialog(hexColorValue3, alphaTileViewAdv3, nhlPreferences!!.color20())
         }
@@ -240,7 +240,7 @@ class SettingsFragment2 : Fragment() {
         }
         applyColors.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             mainActivity?.lifecycleScope?.launch {
                 if (hexColorValue1.text.length < 0 || hexColorValue2.text.length < 0 || hexColorValue3.text.length < 0) {

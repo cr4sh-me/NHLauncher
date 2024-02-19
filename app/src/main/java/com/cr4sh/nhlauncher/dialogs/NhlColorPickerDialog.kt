@@ -19,7 +19,7 @@ import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 import com.flask.colorpicker.ColorPickerView
 import java.util.Locale
 
@@ -65,7 +65,7 @@ class NhlColorPickerDialog(
         }
         applyColors.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             alpha.setBackgroundColor(Color.parseColor(hexColorString))
             button.text = hexColorString
@@ -73,7 +73,7 @@ class NhlColorPickerDialog(
         }
         cancelButton.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             dialog?.cancel()
         }

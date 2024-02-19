@@ -17,7 +17,7 @@ import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -108,7 +108,7 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoriesViewHolder>() {
 //        Log.d("CategoriesAdapter", "Button height with margin: " + (height + margin));
         holder.itemView.setOnClickListener {
             if (myActivity != null) {
-                vibrate(myActivity, 10)
+                VibrationUtils.vibrate()
             }
             myActivity?.backButton?.callOnClick()
             mainUtils?.spinnerChanger(position)

@@ -643,7 +643,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             "CloudMare",
             "Automatic CloudProxy and Reverse Proxy bypass tool",
             "Automatyczne narzędzie obejścia CloudProxy i Reverse Proxy",
-            "cd /root/Cloudmare && python Cloudmare.py -h",
+            "cd /root/Cloudmare && python3 Cloudmare.py -h",
             "cloudflare",
             0
         )
@@ -3321,15 +3321,14 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
         private const val DB_VERSION = 1
         private var sInstance: DBHandler? = null
 
-        @JvmStatic
         fun insertTool(
             db: SQLiteDatabase,
             system: Int,
             category: String?,
             favourite: Int,
             name: String?,
-            description_en: String?,
-            description_pl: String?,
+            descriptionEN: String?,
+            descriptionPL: String?,
             cmd: String?,
             icon: String?,
             usage: Int
@@ -3339,15 +3338,14 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             toolValues.put("CATEGORY", category)
             toolValues.put("FAVOURITE", favourite)
             toolValues.put("NAME", name)
-            toolValues.put("DESCRIPTION_EN", description_en)
-            toolValues.put("DESCRIPTION_PL", description_pl)
+            toolValues.put("DESCRIPTION_EN", descriptionEN)
+            toolValues.put("DESCRIPTION_PL", descriptionPL)
             toolValues.put("CMD", cmd)
             toolValues.put("ICON", icon)
             toolValues.put("USAGE", usage)
             db.insert("TOOLS", null, toolValues)
         }
 
-        @JvmStatic
         fun updateTool(
             db: SQLiteDatabase,
             system: Int,
@@ -3388,7 +3386,6 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
         }
 
         // Update CMD field
-        @JvmStatic
         fun updateToolCmd(db: SQLiteDatabase, name: String, cmd: String?) {
             val values = ContentValues()
             values.put("CMD", cmd)
@@ -3396,7 +3393,6 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
         }
 
         // Removes given tool by it name
-        @JvmStatic
         fun deleteTool(db: SQLiteDatabase, toolName: String) {
             db.delete("TOOLS", "name=?", arrayOf(toolName))
             //        db.close();

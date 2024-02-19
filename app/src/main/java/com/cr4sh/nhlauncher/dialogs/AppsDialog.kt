@@ -15,7 +15,7 @@ class AppsDialog : DialogFragment() {
         isCancelable = false
         builder.setIcon(android.R.drawable.ic_dialog_alert)
         builder.setMessage(resources.getString(R.string.apps_error))
-        builder.setPositiveButton("Ok") { dialog: DialogInterface, id: Int ->
+        builder.setPositiveButton("Ok") { dialog: DialogInterface, _: Int ->
             dialog.cancel()
             requireActivity().finish()
         }

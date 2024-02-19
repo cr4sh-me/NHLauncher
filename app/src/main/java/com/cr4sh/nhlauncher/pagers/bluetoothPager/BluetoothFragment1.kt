@@ -254,7 +254,7 @@ class BluetoothFragment1 : Fragment() {
     }
 
     private fun handleButtonClick(clickedButton: Button) {
-        VibrationUtils.vibrate(requireActivity(), 10)
+        VibrationUtils.vibrate()
         if (selectedButton != null) {
             selectedButton!!.setTextColor(
                 Color.parseColor(
@@ -280,7 +280,7 @@ class BluetoothFragment1 : Fragment() {
     }
 
     private fun runBtScan() {
-        VibrationUtils.vibrate(requireActivity(), 10)
+        VibrationUtils.vibrate()
         if (selectedIface != "None") {
             lifecycleScope.launch(Dispatchers.Default) {
                 try {

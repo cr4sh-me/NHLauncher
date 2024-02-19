@@ -24,7 +24,7 @@ import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 import java.util.Locale
 
 class DeleteToolDialog : AppCompatDialogFragment() {
@@ -57,7 +57,7 @@ class DeleteToolDialog : AppCompatDialogFragment() {
         title.text = name!!.uppercase(Locale.getDefault())
         deleteButton.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             // Some idiot protection
             try {
@@ -106,7 +106,7 @@ class DeleteToolDialog : AppCompatDialogFragment() {
         }
         cancelButton.setOnClickListener {
             if (mainActivity != null) {
-                vibrate(mainActivity, 10)
+                VibrationUtils.vibrate()
             }
             dialog?.cancel()
         }

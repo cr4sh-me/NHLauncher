@@ -18,7 +18,7 @@ import com.cr4sh.nhlauncher.activities.wpsAttacks.WPSAttack
 import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 
 class WpsCustomPinDialog(private val wpsAttack: WPSAttack) : AppCompatDialogFragment() {
     @RequiresApi(Build.VERSION_CODES.S)
@@ -65,7 +65,7 @@ class WpsCustomPinDialog(private val wpsAttack: WPSAttack) : AppCompatDialogFrag
         ColorChanger.setButtonColors(cancelButton, true)
 
         setupButton.setOnClickListener {
-            vibrate(requireActivity(), 10)
+            VibrationUtils.vibrate()
             if (customPin.text.toString().isEmpty()) {
                 showCustomToast(requireActivity(), "Empty input!")
             } else {
@@ -78,7 +78,7 @@ class WpsCustomPinDialog(private val wpsAttack: WPSAttack) : AppCompatDialogFrag
             }
         }
         cancelButton.setOnClickListener {
-            vibrate(requireActivity(), 10)
+            VibrationUtils.vibrate()
             dialog?.cancel()
             if (option == 1) {
                 wpsAttack.customPINCMD = ""

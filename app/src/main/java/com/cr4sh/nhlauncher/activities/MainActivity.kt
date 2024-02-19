@@ -1,7 +1,6 @@
 package com.cr4sh.nhlauncher.activities
 
 import android.annotation.SuppressLint
-import android.app.ActivityOptions
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -39,6 +38,7 @@ import com.cr4sh.nhlauncher.recyclers.buttonsRecycler.NHLAdapter
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.CategoriesAdapter
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.buttonsRecycler.NHLItem
 import com.cr4sh.nhlauncher.utils.ColorChanger
+import com.cr4sh.nhlauncher.utils.ColorChanger.Companion.activityAnimation
 import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.LanguageChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
@@ -46,15 +46,12 @@ import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.PermissionUtils
 import com.cr4sh.nhlauncher.utils.VibrationUtils
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
-    //    private val executor = NHLManager.getInstance().executorService
     var buttonCategory: String? = null
     var buttonName: String? = null
     var buttonDescription: String? = null
@@ -77,7 +74,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rollCategoriesLayout: LinearLayout
     private lateinit var categoriesLayout: RelativeLayout
     private lateinit var searchIcon: ImageView
-    lateinit var noToolsText: TextView
+    private lateinit var noToolsText: TextView
     private lateinit var rollOut: Animation
     private lateinit var rollToolbar: Animation
     private lateinit var rollOutToolbar: Animation
@@ -93,7 +90,6 @@ class MainActivity : AppCompatActivity() {
     private var permissionDialogShown = false
     private var firstSetupDialogShown = false
 
-    @OptIn(DelicateCoroutinesApi::class)
     @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("Recycle", "ResourceType", "CutPasteId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,15 +97,8 @@ class MainActivity : AppCompatActivity() {
 
         NHLManager.getInstance().setMainActivity(this)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            overrideActivityTransition(
-                OVERRIDE_TRANSITION_OPEN,
-                R.anim.cat_appear,
-                R.anim.cat_appear
-            )
-        } else {
-            overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear)
-        }
+        activityAnimation()
+
         val dialogUtils = DialogUtils(this.supportFragmentManager)
 
         // Check for nethunter and terminal apps
@@ -233,13 +222,11 @@ class MainActivity : AppCompatActivity() {
         val adapter2 = CategoriesAdapter()
 
         // Fill categories recycler
-        // Assuming mainUtils.changeLanguage is a suspend function
-        GlobalScope.launch(Dispatchers.Default) {
+        lifecycleScope.launch(Dispatchers.Default) {
             adapter2.updateData(valuesList, imageList)
             listViewCategories.adapter = adapter2
         }
 
-        // Check if there is any favourite tool in db, and open Favourite Tools category by default
         // Check if there is any favourite tool in db, and open Favourite Tools category by default
         val isFavourite: Int = try {
             runBlocking {
@@ -297,7 +284,7 @@ class MainActivity : AppCompatActivity() {
         val categoriesAppear = AnimationUtils.loadAnimation(this@MainActivity, R.anim.cat_appear)
         rollCategoriesLayout.setOnClickListener {
             lifecycleScope.launch {
-                VibrationUtils.vibrate(this@MainActivity, 10)
+                VibrationUtils.vibrate()
 
                 // Check if searchView is not opened, prevent opening 2 things at the same time
                 if (searchEditText.visibility == View.GONE) {
@@ -319,12 +306,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
         specialButton.setOnClickListener {
-            VibrationUtils.vibrate(this, 10)
+            VibrationUtils.vibrate()
             val intent = Intent(this, SpecialFeaturesActivity::class.java)
             startActivity(intent)
         }
         backButton.setOnClickListener {
-            VibrationUtils.vibrate(this@MainActivity, 10)
+            VibrationUtils.vibrate()
             enableAfterAnimation(toolbar)
             enableAfterAnimation(rollCategoriesLayout)
             disableWhileAnimation(categoriesLayout)
@@ -368,7 +355,7 @@ class MainActivity : AppCompatActivity() {
         rollToolbar = AnimationUtils.loadAnimation(this@MainActivity, R.anim.roll_toolbar)
         rollOutToolbar = AnimationUtils.loadAnimation(this@MainActivity, R.anim.roll_out_toolbar)
         searchIcon.setOnClickListener {
-            VibrationUtils.vibrate(this@MainActivity, 10)
+            VibrationUtils.vibrate()
 
             if (searchEditText.visibility == View.VISIBLE) {
                 closeSearchBar()
@@ -516,14 +503,9 @@ class MainActivity : AppCompatActivity() {
 
         toolbar.setOnClickListener {
             lifecycleScope.launch {
-                VibrationUtils.vibrate(this@MainActivity, 10)
+                VibrationUtils.vibrate()
                 val intent = Intent(this@MainActivity, SettingsActivity::class.java)
-                val animationBundle = ActivityOptions.makeCustomAnimation(
-                    this@MainActivity,
-                    R.anim.cat_appear,  // Enter animation
-                    R.anim.cat_disappear // Exit animation
-                ).toBundle()
-                startActivity(intent, animationBundle)
+                startActivity(intent)
             }
         }
         onBackPressedDispatcher.addCallback(onBackPressedCallback)
@@ -554,15 +536,7 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         if (isFinishing) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                overrideActivityTransition(
-                    OVERRIDE_TRANSITION_CLOSE,
-                    R.anim.cat_appear,
-                    R.anim.cat_appear
-                )
-            } else {
-                overridePendingTransition(R.anim.cat_appear, R.anim.cat_disappear)
-            }
+            activityAnimation()
         }
     }
 
