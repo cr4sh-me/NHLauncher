@@ -2,14 +2,11 @@ package com.cr4sh.nhlauncher.pagers.netscannerPager
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -19,8 +16,6 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
-import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.widget.CompoundButtonCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
@@ -32,10 +27,8 @@ import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ShellExecuter
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
-import com.cr4sh.nhlauncher.utils.VibrationUtils
 import com.skydoves.powerspinner.IconSpinnerAdapter
 import com.skydoves.powerspinner.IconSpinnerItem
-import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener
 import com.skydoves.powerspinner.PowerSpinnerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,10 +41,12 @@ class NetScannerFragment1 : Fragment() {
 
     @SuppressLint("SdCardPath")
     private val appScriptsPath = "/data/data/com.offsec.nethunter/scripts"
-//    private var scanTime = "10"
+
+    //    private var scanTime = "10"
     private var nhlPreferences: NHLPreferences? = null
     private var scriptsCMD: String = ""
-//    private var dnsBruteCMD: String = ""
+
+    //    private var dnsBruteCMD: String = ""
 //    private var smbEnumSharesCMD: String = ""
 //    private var ftpAnonCMD: String = ""
 //    private var smtpEnumCMD: String = ""
@@ -115,7 +110,7 @@ class NetScannerFragment1 : Fragment() {
             view.findViewById(R.id.vuln)
         )
 
-        checkboxes.forEach { checkbox -> checkbox.setOnClickListener { onCheckboxClicked(checkboxes) }}
+        checkboxes.forEach { checkbox -> checkbox.setOnClickListener { onCheckboxClicked(checkboxes) } }
         ColorChanger.setupCheckboxesColors(checkboxes)
 
         val description = view.findViewById<TextView>(R.id.bt_info2)
@@ -132,12 +127,12 @@ class NetScannerFragment1 : Fragment() {
         ColorChanger.setContainerBackground(bg1, true)
         ColorChanger.setContainerBackground(bg2, true)
 
-        mySwitch2.setOnCheckedChangeListener{ _: CompoundButton, b: Boolean ->
-            pnCMD = if(b) "-Pn" else ""
+        mySwitch2.setOnCheckedChangeListener { _: CompoundButton, b: Boolean ->
+            pnCMD = if (b) "-Pn" else ""
         }
 
-        mySwitch3.setOnCheckedChangeListener{ _: CompoundButton, b: Boolean ->
-            ipv6CMD = if(b) "-6" else ""
+        mySwitch3.setOnCheckedChangeListener { _: CompoundButton, b: Boolean ->
+            ipv6CMD = if (b) "-6" else ""
         }
 
         powerSpinnerView2.apply {
@@ -150,7 +145,8 @@ class NetScannerFragment1 : Fragment() {
                     IconSpinnerItem("Normal: -T3", null),
                     IconSpinnerItem("Aggressive (Fast): -T4", null),
                     IconSpinnerItem("Insane (Faster): -T5", null),
-                ))
+                )
+            )
             selectItemByIndex(3) // select a default item.
             lifecycleOwner = this@NetScannerFragment1
         }
@@ -173,7 +169,8 @@ class NetScannerFragment1 : Fragment() {
                     IconSpinnerItem("Stealth Version: -sS -sV", null),
                     IconSpinnerItem("OS Detection: -O", null),
                     IconSpinnerItem("OS Detection SYN: -sS -O", null)
-                ))
+                )
+            )
             selectItemByIndex(0) // select a default item.
             lifecycleOwner = this@NetScannerFragment1
         }
@@ -194,14 +191,19 @@ class NetScannerFragment1 : Fragment() {
         ColorChanger.setPowerSpinnerColor(powerSpinnerView2)
 
         scanButton.setOnClickListener {
-            if(targetIp.text.isEmpty()){
+            if (targetIp.text.isEmpty()) {
                 mainActivity?.lifecycleScope?.launch {
                     showCustomToast(requireActivity(), "Are you dumb?")
                 }
             } else {
 //                xsltproc nmapscan.xml -o /sdcard/nmap_$(date '+%Y-%m-%d_%H-%M-%S').html
-                mainActivity?.lifecycleScope?.launch(Dispatchers.Default){
-                    runNmap(targetIp.text.toString(), powerSpinnerView.text.toString().substringAfter(": "), powerSpinnerView2.text.toString().substringAfter(": "), scanButton)
+                mainActivity?.lifecycleScope?.launch(Dispatchers.Default) {
+                    runNmap(
+                        targetIp.text.toString(),
+                        powerSpinnerView.text.toString().substringAfter(": "),
+                        powerSpinnerView2.text.toString().substringAfter(": "),
+                        scanButton
+                    )
                 }
 
 
@@ -212,8 +214,13 @@ class NetScannerFragment1 : Fragment() {
     }
 
     @SuppressLint("SdCardPath", "SetTextI18n")
-    private suspend fun runNmap(targetIp: String, options: String, options2: String, scanButton: Button) {
-        if(mySwitch.isChecked){
+    private suspend fun runNmap(
+        targetIp: String,
+        options: String,
+        options2: String,
+        scanButton: Button
+    ) {
+        if (mySwitch.isChecked) {
             try {
                 requireActivity().lifecycleScope.launch {
                     lockButton(false, "Scanning...", scanButton)
@@ -236,49 +243,52 @@ class NetScannerFragment1 : Fragment() {
 
                 // 2. Run nmap and create new log file
                 val nmapScan = withContext(Dispatchers.IO) {
-                    exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd nmap $targetIp -oX /root/nmapscan.xml --stylesheet /root/nmap-bootstrap.xsl $options $options2" +
-                            " $scriptsCMD $pnCMD $ipv6CMD" +
-                            "&& echo 'NHLSCANDONE' || echo 'NHLSCANERROR'")
+                    exe.RunAsRootOutput(
+                        "$appScriptsPath/bootkali custom_cmd nmap $targetIp -oX /root/nmapscan.xml --stylesheet /root/nmap-bootstrap.xsl $options $options2" +
+                                " $scriptsCMD $pnCMD $ipv6CMD" +
+                                "&& echo 'NHLSCANDONE' || echo 'NHLSCANERROR'"
+                    )
                 }
 
                 Log.d("NMAPSCAN", nmapScan)
 
                 // Check if nmap didn't throw any errors
                 if (nmapScan.contains("NHLSCANDONE")) {
-                        val ref = withContext(Dispatchers.IO) {
+                    val ref = withContext(Dispatchers.IO) {
 //                            xsltproc -o scanme.html nmap-bootstrap.xsl scanme.xml
-                            exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd xsltproc -o /sdcard/nmap.html /root/nmap-bootstrap.xsl /root/nmapscan.xml && echo 'NHLDONE'")
-                        }
-                        mainActivity?.lifecycleScope?.launch {
-                            lockButton(true, "Scan", scanButton)
-                        }
-                        Log.d("REF", ref)
-                        if (ref.contains("NHLDONE")) {
-                            mainActivity?.lifecycleScope?.launch {
-                                val intent = Intent(activity, NmapResultsActivity::class.java)
-                                intent.putExtra("file_path", filePath)
-                                startActivity(intent)
-                            }
-                        } else {
-                            mainActivity?.lifecycleScope?.launch {
-                                showCustomToast(requireActivity(), "Something went wrong!")
-                            }                        }
+                        exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd xsltproc -o /sdcard/nmap.html /root/nmap-bootstrap.xsl /root/nmapscan.xml && echo 'NHLDONE'")
                     }
-
-                    else {
+                    mainActivity?.lifecycleScope?.launch {
+                        lockButton(true, "Scan", scanButton)
+                    }
+                    Log.d("REF", ref)
+                    if (ref.contains("NHLDONE")) {
+                        mainActivity?.lifecycleScope?.launch {
+                            val intent = Intent(activity, NmapResultsActivity::class.java)
+                            intent.putExtra("file_path", filePath)
+                            startActivity(intent)
+                        }
+                    } else {
+                        mainActivity?.lifecycleScope?.launch {
+                            showCustomToast(requireActivity(), "Something went wrong!")
+                        }
+                    }
+                } else {
                     requireActivity().lifecycleScope.launch {
                         showCustomToast(requireActivity(), "Something went wrong!")
                         lockButton(true, "Scan", scanButton)
                     }
-                    }
+                }
             } catch (e: Exception) {
                 mainActivity?.lifecycleScope?.launch {
                     showCustomToast(requireActivity(), "Something went wrong!")
                 }
             }
         } else {
-            nhlUtils?.runCmd("nmap $targetIp $options $options2 " +
-                    "$scriptsCMD $pnCMD $ipv6CMD")
+            nhlUtils?.runCmd(
+                "nmap $targetIp $options $options2 " +
+                        "$scriptsCMD $pnCMD $ipv6CMD"
+            )
         }
     }
 

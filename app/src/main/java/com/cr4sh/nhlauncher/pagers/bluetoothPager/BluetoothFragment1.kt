@@ -3,7 +3,6 @@ package com.cr4sh.nhlauncher.pagers.bluetoothPager
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Typeface
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -11,7 +10,6 @@ import android.text.style.StyleSpan
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -32,7 +30,6 @@ import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils
 import com.skydoves.powerspinner.IconSpinnerAdapter
 import com.skydoves.powerspinner.IconSpinnerItem
-import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener
 import com.skydoves.powerspinner.PowerSpinnerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

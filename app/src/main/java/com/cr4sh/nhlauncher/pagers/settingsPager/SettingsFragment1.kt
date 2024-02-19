@@ -4,17 +4,14 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
 import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
@@ -42,7 +39,6 @@ import com.cr4sh.nhlauncher.utils.UpdateCheckerUtils
 import com.cr4sh.nhlauncher.utils.UpdateCheckerUtils.UpdateCheckResult
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
-import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener
 import com.skydoves.powerspinner.PowerSpinnerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -1,9 +1,7 @@
 package com.cr4sh.nhlauncher.pagers.bluetoothPager
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +11,6 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.widget.CompoundButtonCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R

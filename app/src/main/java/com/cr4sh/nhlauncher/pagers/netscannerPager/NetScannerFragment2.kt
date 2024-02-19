@@ -1,31 +1,15 @@
 package com.cr4sh.nhlauncher.pagers.netscannerPager
 
-import android.annotation.SuppressLint
-import android.content.res.ColorStateList
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.widget.CompoundButtonCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
-import com.cr4sh.nhlauncher.bridge.Bridge.Companion.createExecuteIntent
-import com.cr4sh.nhlauncher.pagers.bluetoothPager.BluetoothFragment1.Companion.selectedIface
-import com.cr4sh.nhlauncher.pagers.bluetoothPager.BluetoothFragment1.Companion.selectedTarget
 import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.NHLPreferences
-import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
-import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
-import kotlinx.coroutines.launch
 import java.net.NetworkInterface
 import java.net.SocketException
 
@@ -110,7 +94,6 @@ class NetScannerFragment2 : Fragment() {
 
         return ""
     }
-
 
 
 }

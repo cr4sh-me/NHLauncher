@@ -85,15 +85,14 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.cr4sh.nhlauncher.fileprovider"
             android:exported="false"
-            android:launchMode="singleTop"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
 
     </application>
-
 
 
 </manifest>

@@ -5,7 +5,6 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.Intent.ACTION_VIEW
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -18,7 +17,6 @@ import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils
-import com.flask.colorpicker.BuildConfig
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -26,6 +24,7 @@ import java.io.File
 class NmapResultsActivity : AppCompatActivity() {
 
     lateinit var nhlPreferences: NHLPreferences
+
     @SuppressLint("SetJavaScriptEnabled")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,7 +99,7 @@ class NmapResultsActivity : AppCompatActivity() {
     }
 
     private fun setButtonColors(button: Button, cancel: Boolean) {
-        button.setBackgroundColor(Color.parseColor(if(cancel) nhlPreferences.color80() else nhlPreferences.color50()))
-        button.setTextColor(Color.parseColor(if(cancel) nhlPreferences.color50() else nhlPreferences.color80()))
+        button.setBackgroundColor(Color.parseColor(if (cancel) nhlPreferences.color80() else nhlPreferences.color50()))
+        button.setTextColor(Color.parseColor(if (cancel) nhlPreferences.color50() else nhlPreferences.color80()))
     }
 }

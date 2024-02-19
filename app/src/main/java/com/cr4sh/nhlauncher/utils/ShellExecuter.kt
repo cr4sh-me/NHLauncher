@@ -65,7 +65,6 @@ class ShellExecuter {
     }
 
 
-
     fun RunAsRootOutput(command: String): String {
         var output = StringBuilder()
         var line: String?

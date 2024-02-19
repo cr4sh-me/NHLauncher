@@ -21,7 +21,6 @@ import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.specialButtonsRecycler.
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.specialButtonsRecycler.NHLSpecialViewHolder
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
-import com.cr4sh.nhlauncher.utils.ToastUtils
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
 import java.util.Locale
 
@@ -109,10 +108,12 @@ class NHLSpecialAdapter : RecyclerView.Adapter<NHLSpecialViewHolder>() {
                     val intent = Intent(myActivity, WPSAttack::class.java)
                     myActivity?.startActivity(intent)
                 }
+
                 1 -> {
                     val intent = Intent(myActivity, BluetoothActivity::class.java)
                     myActivity?.startActivity(intent)
                 }
+
                 2 -> {
                     val intent = Intent(myActivity, NetScannerActivity::class.java)
                     myActivity?.startActivity(intent)
