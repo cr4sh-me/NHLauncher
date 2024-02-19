@@ -87,6 +87,7 @@ class WpsCustomPinDialog(private val wpsAttack: WPSAttack) : AppCompatDialogFrag
             }
         }
         return view
+
     }
 
     private fun removePrefix(input: String, prefix: String): String {
