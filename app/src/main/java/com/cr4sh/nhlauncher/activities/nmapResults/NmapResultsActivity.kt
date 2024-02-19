@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.Intent.ACTION_VIEW
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.webkit.WebView
 import android.widget.Button
 import androidx.annotation.RequiresApi
@@ -14,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
+import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils
 import com.flask.colorpicker.BuildConfig
 import kotlinx.coroutines.launch
@@ -21,20 +24,31 @@ import java.io.File
 
 
 class NmapResultsActivity : AppCompatActivity() {
+
+    lateinit var nhlPreferences: NHLPreferences
     @SuppressLint("SetJavaScriptEnabled")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.nmap_webview_layout)
 
+        nhlPreferences = NHLPreferences(this)
+
+        val rootView = findViewById<View>(android.R.id.content)
+        rootView.setBackgroundColor(Color.parseColor(nhlPreferences.color20()))
+        val window = this.window
+        window.statusBarColor = Color.parseColor(nhlPreferences.color20())
+        window.navigationBarColor = Color.parseColor(nhlPreferences.color20())
         // Get the file path of the scan results from the intent
         val filePath = intent.getStringExtra("file_path")
-
         // Load the scan results into the WebView
         val webView = findViewById<WebView>(R.id.webview)
         val webSettings = webView.settings
         val openInBrowserButton = findViewById<Button>(R.id.open_in_browser)
         val moveBackButton = findViewById<Button>(R.id.cancel_button)
+
+        setButtonColors(openInBrowserButton, false)
+        setButtonColors(moveBackButton, true)
 
         webSettings.javaScriptEnabled = true
         webView.settings.builtInZoomControls = true
@@ -85,5 +99,8 @@ class NmapResultsActivity : AppCompatActivity() {
         }
     }
 
-
+    private fun setButtonColors(button: Button, cancel: Boolean) {
+        button.setBackgroundColor(Color.parseColor(if(cancel) nhlPreferences.color80() else nhlPreferences.color50()))
+        button.setTextColor(Color.parseColor(if(cancel) nhlPreferences.color50() else nhlPreferences.color80()))
+    }
 }

@@ -16,6 +16,7 @@ import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.pagers.bluetoothPager.BluetoothFragment1.Companion.selectedIface
 import com.cr4sh.nhlauncher.pagers.bluetoothPager.BluetoothFragment1.Companion.selectedTarget
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ShellExecuter
@@ -36,7 +37,6 @@ class SdpToolDialog : AppCompatDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.sdptool_dialog, container, false)
-//        val mainUtils = NHLUtils((requireActivity() as MainActivity))
         val nhlPreferences = NHLPreferences(requireActivity())
         val bkg = view.findViewById<LinearLayout>(R.id.custom_theme_dialog_background)
         val title = view.findViewById<TextView>(R.id.dialog_title)
@@ -48,12 +48,8 @@ class SdpToolDialog : AppCompatDialogFragment() {
 
         sdpText.setTextColor(Color.parseColor(nhlPreferences.color80()))
 
-        copyButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
-        copyButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
-
-        cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
-        cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
-
+        ColorChanger.setButtonColors(copyButton)
+        ColorChanger.setButtonColors(cancelButton, true)
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {

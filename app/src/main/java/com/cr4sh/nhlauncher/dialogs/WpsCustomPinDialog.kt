@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.wpsAttacks.WPSAttack
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
@@ -28,7 +29,6 @@ class WpsCustomPinDialog(private val wpsAttack: WPSAttack) : AppCompatDialogFrag
     ): View? {
         val view = inflater.inflate(R.layout.wps_custom_pin_dialog, container, false)
 
-//        MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
         val nhlPreferences = NHLPreferences(requireActivity())
         assert(arguments != null)
         val option = requireArguments().getInt("option")
@@ -59,13 +59,11 @@ class WpsCustomPinDialog(private val wpsAttack: WPSAttack) : AppCompatDialogFrag
         // Apply custom themes
         bkg.setBackgroundColor(Color.parseColor(nhlPreferences.color20()))
         title.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        customPin.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        customPin.background.mutate().setTint(Color.parseColor(nhlPreferences.color50()))
-        customPin.setHintTextColor(Color.parseColor(nhlPreferences.color50()))
-        setupButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
-        setupButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
-        cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
+
+        ColorChanger.setEditTextColor(customPin)
+        ColorChanger.setButtonColors(setupButton)
+        ColorChanger.setButtonColors(cancelButton, true)
+
         setupButton.setOnClickListener {
             vibrate(requireActivity(), 10)
             if (customPin.text.toString().isEmpty()) {

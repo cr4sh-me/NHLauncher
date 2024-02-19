@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
@@ -49,12 +50,11 @@ class NhlColorPickerDialog(
         // Apply custom themes
         bkg.setBackgroundColor(Color.parseColor(nhlPreferences.color20()))
         title.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        hexColorValue.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        hexColorValue.background.mutate().setTint(Color.parseColor(nhlPreferences.color50()))
-        applyColors.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
-        applyColors.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
-        cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
+        ColorChanger.setEditTextColor(hexColorValue)
+
+        ColorChanger.setButtonColors(applyColors)
+        ColorChanger.setButtonColors(cancelButton, true)
+
         colorPickerView.setInitialColor(Color.parseColor(hexColorShade), true)
         hexColorValue.setText(button.text)
         colorPickerView.addOnColorChangedListener { selectedColor: Int ->

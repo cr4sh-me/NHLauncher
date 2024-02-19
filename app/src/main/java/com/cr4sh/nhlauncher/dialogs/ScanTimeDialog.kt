@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.pagers.bluetoothPager.BluetoothFragment1
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
@@ -32,7 +33,6 @@ class ScanTimeDialog(private val wpsAttack: BluetoothFragment1) : AppCompatDialo
     ): View? {
         val view = inflater.inflate(R.layout.wps_custom_pin_dialog, container, false)
 
-//        MainUtils mainUtils = new MainUtils((MainActivity) requireActivity());
         val nhlPreferences = NHLPreferences(requireActivity())
         assert(arguments != null)
         val option = requireArguments().getInt("option")
@@ -51,13 +51,11 @@ class ScanTimeDialog(private val wpsAttack: BluetoothFragment1) : AppCompatDialo
         // Apply custom themes
         bkg.setBackgroundColor(Color.parseColor(nhlPreferences.color20()))
         title.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        customPin.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        customPin.background.mutate().setTint(Color.parseColor(nhlPreferences.color50()))
-        customPin.setHintTextColor(Color.parseColor(nhlPreferences.color50()))
-        setupButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
-        setupButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
-        cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
+
+        ColorChanger.setEditTextColor(customPin)
+        ColorChanger.setButtonColors(setupButton)
+        ColorChanger.setButtonColors(cancelButton, true)
+
         setupButton.setOnClickListener {
             if (mainActivity != null) {
                 vibrate(mainActivity, 10)

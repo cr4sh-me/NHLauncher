@@ -19,6 +19,7 @@ import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.database.DBHandler
 import com.cr4sh.nhlauncher.database.DBHandler.Companion.deleteTool
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
@@ -48,10 +49,10 @@ class DeleteToolDialog : AppCompatDialogFragment() {
         bkg.setBackgroundColor(Color.parseColor(nhlPreferences.color20()))
         title.setTextColor(Color.parseColor(nhlPreferences.color80()))
         text2.setTextColor(Color.parseColor(nhlPreferences.color50()))
-        cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
-        cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
-        deleteButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
-        deleteButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
+
+        ColorChanger.setButtonColors(deleteButton)
+        ColorChanger.setButtonColors(deleteButton, true)
+
         assert(name != null)
         title.text = name!!.uppercase(Locale.getDefault())
         deleteButton.setOnClickListener {

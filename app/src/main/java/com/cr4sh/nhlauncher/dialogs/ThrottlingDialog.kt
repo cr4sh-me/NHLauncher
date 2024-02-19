@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
@@ -44,10 +45,10 @@ class ThrottlingDialog : AppCompatDialogFragment() {
         bkg.setBackgroundColor(Color.parseColor(nhlPreferences.color20()))
         title.setTextColor(Color.parseColor(nhlPreferences.color80()))
         text.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        setupButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
-        setupButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
-        cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
+
+        ColorChanger.setButtonColors(setupButton)
+        ColorChanger.setButtonColors(cancelButton, true)
+
         setupButton.setOnClickListener {
             if (mainActivity != null) {
                 vibrate(mainActivity, 10)

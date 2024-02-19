@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
@@ -50,11 +51,8 @@ class SettingsFragment2 : Fragment() {
         nhlPreferences = NHLPreferences(requireActivity())
         val manualBox = view.findViewById<LinearLayout>(R.id.hiddenLayout)
         val advancedMode = view.findViewById<LinearLayout>(R.id.advancedLayout)
-        //        TextView title = view.findViewById(R.id.dialog_title);
         val text2 = view.findViewById<TextView>(R.id.text_second)
-        //        ScrollView bkg = view.findViewById(R.id.custom_theme_dialog_background);
         val colorPickerView = view.findViewById<ColorPickerView>(R.id.colorPickerView)
-        //        ImageView alphaTileView1 = view.findViewById(R.id.alphaTileView1);
         val alphaLayout = view.findViewById<RelativeLayout>(R.id.alphaLayout)
         val alphaTileView1 = view.findViewById<ImageView>(R.id.alphaTileView1)
         val alphaTileView2 = view.findViewById<ImageView>(R.id.alphaTileView2)
@@ -67,13 +65,19 @@ class SettingsFragment2 : Fragment() {
         val hexColorValue2 = view.findViewById<Button>(R.id.customHexColor2)
         val hexColorValue3 = view.findViewById<Button>(R.id.customHexColor3)
         val hexColorValue = view.findViewById<EditText>(R.id.customHexColor)
-        val dynamicThemes = view.findViewById<CheckBox>(R.id.dynamic_themes_checkbox)
-        val advancedThemes = view.findViewById<CheckBox>(R.id.advanced_themes_checkbox)
         val applyColors = view.findViewById<Button>(R.id.apply_custom_colors)
-        //        Button cancelButton = view.findViewById(R.id.cancel_button);
         hexColorString = nhlPreferences!!.color100()
         hexColorValue.setText(hexColorString)
 
+        val checkboxes = arrayOf<CheckBox>(
+            view.findViewById(R.id.dynamic_themes_checkbox),
+            view.findViewById(R.id.advanced_themes_checkbox)
+        )
+
+        ColorChanger.setupCheckboxesColors(checkboxes)
+
+        val dynamicThemes = checkboxes[0]
+        val advancedThemes = checkboxes[1]
 
         // Checkbox set
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -128,45 +132,14 @@ class SettingsFragment2 : Fragment() {
 
         // Apply custom themes
         text2.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        dynamicThemes.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        advancedThemes.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        val states = arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf())
-        val colors = intArrayOf(
-            Color.parseColor(
-                nhlPreferences!!.color80()
-            ), Color.parseColor(nhlPreferences!!.color80())
-        )
-        CompoundButtonCompat.setButtonTintList(dynamicThemes, ColorStateList(states, colors))
-        CompoundButtonCompat.setButtonTintList(advancedThemes, ColorStateList(states, colors))
-        hexColorValue.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        hexColorValue.background.mutate().setTint(
-            Color.parseColor(
-                nhlPreferences!!.color50()
-            )
-        )
-        hexColorValue1.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        hexColorValue1.setHintTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        hexColorValue1.background.mutate().setTint(
-            Color.parseColor(
-                nhlPreferences!!.color50()
-            )
-        )
-        hexColorValue2.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        hexColorValue2.setHintTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        hexColorValue2.background.mutate().setTint(
-            Color.parseColor(
-                nhlPreferences!!.color50()
-            )
-        )
-        hexColorValue3.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        hexColorValue3.setHintTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        hexColorValue3.background.mutate().setTint(
-            Color.parseColor(
-                nhlPreferences!!.color50()
-            )
-        )
-        applyColors.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
-        applyColors.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+
+        ColorChanger.setEditTextColor(hexColorValue)
+
+        ColorChanger.setButtonColors(hexColorValue1)
+        ColorChanger.setButtonColors(hexColorValue2)
+        ColorChanger.setButtonColors(hexColorValue3)
+        ColorChanger.setButtonColors(applyColors)
+
         hexColorValue.isEnabled = false
         dynamicThemes.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             if (isChecked) {

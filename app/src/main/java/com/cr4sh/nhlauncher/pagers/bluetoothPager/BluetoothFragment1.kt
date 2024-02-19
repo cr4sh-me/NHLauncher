@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
@@ -129,51 +130,19 @@ class BluetoothFragment1 : Fragment() {
         binderButton = view.findViewById(R.id.bluebinderButton)
         ifaces = view.findViewById(R.id.hci_interface)
 
-        ifaces.setBackgroundColor(Color.parseColor(nhlPreferences!!.color20()))
-        ifaces.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        ifaces.setHintTextColor(Color.parseColor(nhlPreferences!!.color50()))
-        ifaces.dividerColor = Color.parseColor(nhlPreferences!!.color80())
-        ifaces.arrowTint = Color.parseColor(nhlPreferences!!.color80())
+        ColorChanger.setPowerSpinnerColor(ifaces)
 
-        ifaces.spinnerOutsideTouchListener =
-            OnSpinnerOutsideTouchListener { _: View?, _: MotionEvent? ->
-                ifaces.selectItemByIndex(ifaces.selectedIndex)
-            }
-
-//        bluetoothButton = view.findViewById(R.id.bluetoothButton)
-//        dbusButton = view.findViewById(R.id.dbusButton)
-
-//        val ifacesContainer = view.findViewById<LinearLayout>(R.id.spinnerContainer)
-        setContainerBackground(spinnerBg1)
+        ColorChanger.setContainerBackground(spinnerBg1, true)
         description.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         interfacesText.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
 
-        val gd = GradientDrawable()
-        gd.setStroke(8, Color.parseColor(nhlPreferences!!.color50())) // Stroke width and color
-        gd.cornerRadius = 60f
-        linearContainer.background = gd
+        ColorChanger.setContainerBackground(linearContainer, false)
 
         ifaces.apply {
             setSpinnerAdapter(IconSpinnerAdapter(this))
             lifecycleOwner = this@BluetoothFragment1
         }
 
-//        drawable = mainActivity?.let { ContextCompat.getDrawable(it, R.drawable.kali_wireless_attacks_trans) }!!
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//            drawable.colorFilter = BlendModeColorFilter(Color.parseColor(nhlPreferences!!.color80()), BlendMode.SRC_ATOP)
-//        } else {
-//            @Suppress("DEPRECATION")
-//            drawable.setColorFilter(Color.parseColor(nhlPreferences!!.color80()), PorterDuff.Mode.SRC_ATOP)
-//        }
-
-//        try {
-//            lifecycleScope.launch(Dispatchers.Default) {
-//                loadIfaces()
-//            }
-//        } catch (e: Exception) {
-//            // Log exceptions or handle them appropriately
-//            Log.e("ERROR", "Exception during loadIfaces", e)
-//        }
         lockButton(false, "Please wait...", binderButton)
         lockButton(false, "Please wait...", servicesButton)
         binderStatus
@@ -258,10 +227,7 @@ class BluetoothFragment1 : Fragment() {
             bluetoothButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
 
             // Set the background drawable for each button
-            val drawable = GradientDrawable()
-            drawable.cornerRadius = 60f
-            drawable.setStroke(8, Color.parseColor(nhlPreferences!!.color80()))
-            bluetoothButton.background = drawable
+            ColorChanger.setContainerBackground(bluetoothButton, false, lightTheme = true)
 
             // Calculate button height dynamically
             val buttonHeight = scrollViewHeight / buttonCount - buttonPadding
@@ -298,11 +264,7 @@ class BluetoothFragment1 : Fragment() {
                     nhlPreferences!!.color80()
                 )
             )
-            // Change the background drawable for the previously selected button
-            val drawable = GradientDrawable()
-            drawable.cornerRadius = 60f
-            drawable.setStroke(8, Color.parseColor(nhlPreferences!!.color80()))
-            selectedButton!!.background = drawable
+            ColorChanger.setContainerBackground(selectedButton!!, false, lightTheme = true)
         }
 
         // If the clicked button is the same as the selected button, deselect it
@@ -312,10 +274,7 @@ class BluetoothFragment1 : Fragment() {
         } else {
             // Set the text and background color for the clicked button to indicate selection
             clickedButton.setTextColor(Color.parseColor(nhlPreferences!!.color50()))
-            val selectedDrawable = GradientDrawable()
-            selectedDrawable.cornerRadius = 60f
-            selectedDrawable.setStroke(8, Color.parseColor(nhlPreferences!!.color50()))
-            clickedButton.background = selectedDrawable
+            ColorChanger.setContainerBackground(clickedButton, false)
             selectedButton = clickedButton
             val macAddressPattern = Regex("""([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})""")
             val macAddress = macAddressPattern.find(selectedButton!!.text.toString())?.value
@@ -800,14 +759,6 @@ class BluetoothFragment1 : Fragment() {
         } catch (e: Exception) {
             Log.e("ERROR", "Exception during loadIfaces", e)
         }
-    }
-
-
-    private fun setContainerBackground(container: LinearLayout) {
-        val drawable = GradientDrawable()
-        drawable.cornerRadius = 20f
-        drawable.setStroke(8, Color.parseColor(nhlPreferences!!.color50()))
-        container.background = drawable
     }
 
     companion object {

@@ -18,6 +18,7 @@ import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.statsRecycler.StatsItem
 import com.cr4sh.nhlauncher.recyclers.statsRecycler.StatsAdapter
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
@@ -48,10 +49,10 @@ class SettingsFragment3 : Fragment() {
         adapter = StatsAdapter()
         recyclerView.adapter = adapter
         noToolsText.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        powerSpinnerView.setBackgroundColor(Color.parseColor(nhlPreferences!!.color20()))
-        powerSpinnerView.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        powerSpinnerView.setHintTextColor(Color.parseColor(nhlPreferences!!.color50()))
-        powerSpinnerView.dividerColor = Color.parseColor(nhlPreferences!!.color80())
+
+        ColorChanger.setPowerSpinnerColor(powerSpinnerView)
+        ColorChanger.setContainerBackground(spinnerBg1, true)
+
         title.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         powerSpinnerView.selectItemByIndex(0)
         spinnerChanger(0) // Display all tools by default
@@ -61,14 +62,7 @@ class SettingsFragment3 : Fragment() {
                     newIndex
                 )
             })
-        val gd = GradientDrawable()
-        gd.setStroke(8, Color.parseColor(nhlPreferences!!.color50())) // Stroke width and color
-        gd.cornerRadius = 20f
-        spinnerBg1.background = gd
-        powerSpinnerView.spinnerOutsideTouchListener =
-            OnSpinnerOutsideTouchListener { _: View?, _: MotionEvent? ->
-                powerSpinnerView.selectItemByIndex(powerSpinnerView.selectedIndex)
-            }
+
         return view
     }
 

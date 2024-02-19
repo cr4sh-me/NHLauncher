@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.PermissionUtils
@@ -36,8 +37,9 @@ class PermissionDialog : AppCompatDialogFragment() {
         bkg.setBackgroundColor(Color.parseColor(nhlPreferences.color20()))
         title.setTextColor(Color.parseColor(nhlPreferences.color80()))
         text.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        allowButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
-        allowButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
+
+        ColorChanger.setButtonColors(allowButton)
+
         allowButton.setOnClickListener {
             if (mainActivity != null) {
                 vibrate(mainActivity, 10)

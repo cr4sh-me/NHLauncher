@@ -38,6 +38,7 @@ import com.cr4sh.nhlauncher.pagers.settingsPager.SettingsActivity
 import com.cr4sh.nhlauncher.recyclers.buttonsRecycler.NHLAdapter
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.CategoriesAdapter
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.buttonsRecycler.NHLItem
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.LanguageChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
@@ -289,10 +290,10 @@ class MainActivity : AppCompatActivity() {
         noToolsText = findViewById(R.id.messagebox)
         noToolsText.setTextColor(Color.parseColor(nhlPreferences.color80()))
         categoriesLayoutTitle.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        backButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
-        backButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
-        specialButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
-        specialButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
+
+        ColorChanger.setButtonColors(backButton, true)
+        ColorChanger.setButtonColors(specialButton)
+
         val categoriesAppear = AnimationUtils.loadAnimation(this@MainActivity, R.anim.cat_appear)
         rollCategoriesLayout.setOnClickListener {
             lifecycleScope.launch {

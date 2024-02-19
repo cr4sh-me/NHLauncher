@@ -17,6 +17,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.VibrationUtils.vibrate
@@ -39,7 +40,7 @@ class SettingsFragment4 : Fragment() {
         val textView2 = view.findViewById<TextView>(R.id.textview2)
         val textView3 = view.findViewById<TextView>(R.id.textview3)
         val github = view.findViewById<Button>(R.id.github_button)
-        setButtonColors(github)
+        ColorChanger.setButtonColors(github)
 
         // Set the text for each TextView
         textView1.text = "'OkHttp' library licensed under Apache 2.0"
@@ -86,10 +87,5 @@ class SettingsFragment4 : Fragment() {
         // Set the SpannableString to the TextView
         textView.text = spannableString
         textView.movementMethod = LinkMovementMethod.getInstance()
-    }
-
-    private fun setButtonColors(button: Button) {
-        button.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
-        button.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
     }
 }

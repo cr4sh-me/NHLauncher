@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -38,6 +37,7 @@ import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.activities.specialFeatures.SpecialFeaturesActivity
 import com.cr4sh.nhlauncher.bridge.Bridge.Companion.createExecuteIntent
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
@@ -127,10 +127,7 @@ class WPSAttack : AppCompatActivity() {
         window.navigationBarColor = Color.parseColor(nhlPreferences!!.color20())
         setFinishOnTouchOutside(false)
         val choiceContainer = findViewById<LinearLayout>(R.id.choiceContainer)
-        val selectedDrawable = GradientDrawable()
-        selectedDrawable.cornerRadius = 60f
-        selectedDrawable.setStroke(8, Color.parseColor(nhlPreferences!!.color50()))
-        choiceContainer.background = selectedDrawable
+        ColorChanger.setContainerBackground(choiceContainer)
         val title = findViewById<TextView>(R.id.wps_info)
         val description = findViewById<TextView>(R.id.wps_info2)
         title.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
@@ -138,48 +135,32 @@ class WPSAttack : AppCompatActivity() {
         scanButton = findViewById(R.id.scanButton)
         val cancelButton = findViewById<Button>(R.id.cancel_button)
         val launchAttackButton = findViewById<Button>(R.id.launchAttack)
-        cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color80()))
-        cancelButton.setTextColor(Color.parseColor(nhlPreferences!!.color50()))
-        launchAttackButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
-        launchAttackButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+
+        ColorChanger.setButtonColors(launchAttackButton)
+        ColorChanger.setButtonColors(cancelButton, true)
 
         textMessage = findViewById(R.id.text_msg)
         textMessage.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
 
-        val pixieDustCheckbox = findViewById<CheckBox>(R.id.pixie)
-        val pixieForceCheckbox = findViewById<CheckBox>(R.id.pixieforce)
-        val bruteCheckbox = findViewById<CheckBox>(R.id.brute)
+        val checkboxes = arrayOf<CheckBox>(
+            findViewById(R.id.pixie),
+            findViewById(R.id.pixieforce),
+            findViewById(R.id.brute),
+            findViewById(R.id.pbc)
+        )
+
+        ColorChanger.setupCheckboxesColors(checkboxes)
+
         val customPinCheckbox = findViewById<Button>(R.id.custompin)
         val delayCheckbox = findViewById<Button>(R.id.delay)
-        val wpsButtonCheckbox = findViewById<CheckBox>(R.id.pbc)
-        customPinCheckbox.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
-        customPinCheckbox.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        delayCheckbox.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
-        delayCheckbox.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        pixieDustCheckbox.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        pixieForceCheckbox.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        bruteCheckbox.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        wpsButtonCheckbox.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        pixieDustCheckbox.buttonTintList = ColorStateList.valueOf(
-            Color.parseColor(
-                nhlPreferences!!.color80()
-            )
-        )
-        pixieForceCheckbox.buttonTintList = ColorStateList.valueOf(
-            Color.parseColor(
-                nhlPreferences!!.color80()
-            )
-        )
-        bruteCheckbox.buttonTintList = ColorStateList.valueOf(
-            Color.parseColor(
-                nhlPreferences!!.color80()
-            )
-        )
-        wpsButtonCheckbox.buttonTintList = ColorStateList.valueOf(
-            Color.parseColor(
-                nhlPreferences!!.color80()
-            )
-        )
+
+        val pixieDustCheckbox = checkboxes[0]
+        val pixieForceCheckbox = checkboxes[1]
+        val bruteCheckbox = checkboxes[2]
+        val wpsButtonCheckbox = checkboxes[3]
+
+        ColorChanger.setButtonColors(customPinCheckbox)
+        ColorChanger.setButtonColors(delayCheckbox)
 
         pixieDustCheckbox.isChecked = nhlPreferences!!.isPixieDustActive
         pixieCMD = if (pixieDustCheckbox.isChecked) " -K" else ""

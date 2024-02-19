@@ -17,6 +17,7 @@ import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.database.DBHandler
 import com.cr4sh.nhlauncher.database.DBHandler.Companion.insertTool
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
@@ -45,19 +46,14 @@ class NewToolDialog : AppCompatDialogFragment() {
         val saveButton = view.findViewById<Button>(R.id.save_button)
         bkg.setBackgroundColor(Color.parseColor(nhlPreferences.color20()))
         title.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        myName.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        myDescription.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        myCmd.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        myName.background.mutate().setTint(Color.parseColor(nhlPreferences.color50()))
-        myName.setHintTextColor(Color.parseColor(nhlPreferences.color50()))
-        myCmd.background.mutate().setTint(Color.parseColor(nhlPreferences.color50()))
-        myCmd.setHintTextColor(Color.parseColor(nhlPreferences.color50()))
-        myDescription.background.mutate().setTint(Color.parseColor(nhlPreferences.color50()))
-        myDescription.setHintTextColor(Color.parseColor(nhlPreferences.color50()))
-        cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
-        cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
-        saveButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
-        saveButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
+
+        ColorChanger.setEditTextColor(myName)
+        ColorChanger.setEditTextColor(myDescription)
+        ColorChanger.setEditTextColor(myCmd)
+
+        ColorChanger.setButtonColors(saveButton)
+        ColorChanger.setButtonColors(cancelButton, true)
+
         saveButton.setOnClickListener {
             if (mainActivity != null) {
                 vibrate(mainActivity, 10)

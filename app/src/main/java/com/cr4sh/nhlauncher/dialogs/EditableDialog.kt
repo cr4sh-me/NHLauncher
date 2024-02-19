@@ -18,6 +18,7 @@ import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.database.DBHandler
 import com.cr4sh.nhlauncher.database.DBHandler.Companion.updateToolCmd
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
@@ -48,13 +49,10 @@ class EditableDialog : AppCompatDialogFragment() {
         bkg.setBackgroundColor(Color.parseColor(nhlPreferences.color20()))
         title.setTextColor(Color.parseColor(nhlPreferences.color80()))
         currentCommand.setTextColor(Color.parseColor(nhlPreferences.color50()))
-        newCmd.background.mutate().setTint(Color.parseColor(nhlPreferences.color50()))
-        newCmd.setHintTextColor(Color.parseColor(nhlPreferences.color50()))
-        newCmd.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        saveButton.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
-        saveButton.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
-        cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
+        ColorChanger.setEditTextColor(newCmd)
+        ColorChanger.setButtonColors(saveButton)
+        ColorChanger.setButtonColors(cancelButton, true)
+
         currentCommand.text = requireActivity().resources.getString(R.string.current_cmd) + cmd
         saveButton.setOnClickListener {
             if (mainActivity != null) {

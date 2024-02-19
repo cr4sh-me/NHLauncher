@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
@@ -44,18 +45,13 @@ class ButtonMenuDialog(private var myActivity: MainActivity) : AppCompatDialogFr
         bkg.setBackgroundColor(Color.parseColor(nhlPreferences.color20()))
         title.setTextColor(Color.parseColor(nhlPreferences.color80()))
         description.setTextColor(Color.parseColor(nhlPreferences.color50()))
-        option1.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
-        option1.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        option1.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        option2.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        option2.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
-        option3.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        option3.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
-        option4.setTextColor(Color.parseColor(nhlPreferences.color80()))
-        option4.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
-        cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
-        cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
-//        title.text = Objects.requireNonNull(myActivity.buttonName).uppercase(Locale.getDefault())
+
+        ColorChanger.setButtonColors(option1)
+        ColorChanger.setButtonColors(option2)
+        ColorChanger.setButtonColors(option3)
+        ColorChanger.setButtonColors(option4)
+        ColorChanger.setButtonColors(cancelButton, true)
+
         title.text = myActivity.buttonName.toString().uppercase()
         description.text = myActivity.buttonDescription.toString().uppercase()
 

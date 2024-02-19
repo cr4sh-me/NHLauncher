@@ -32,6 +32,7 @@ import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.database.DBBackup
+import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.LanguageChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
@@ -70,9 +71,17 @@ class SettingsFragment1 : Fragment() {
         val view = inflater.inflate(R.layout.settings_layout1, container, false)
         nhlPreferences = NHLPreferences(requireActivity())
         mainUtils = mainActivity?.let { NHLUtils(it) }
-        vibrationsCheckbox = view.findViewById(R.id.vibrations_checkbox)
-        newButtonsStyle = view.findViewById(R.id.newbuttons_checkbox)
-        overlayCheckbox = view.findViewById(R.id.overlay_checkbox)
+
+        val checkboxes = arrayOf<CheckBox>(
+            view.findViewById(R.id.vibrations_checkbox),
+            view.findViewById(R.id.newbuttons_checkbox),
+            view.findViewById(R.id.overlay_checkbox)
+        )
+        ColorChanger.setupCheckboxesColors(checkboxes)
+
+        vibrationsCheckbox = checkboxes[0]
+        newButtonsStyle = checkboxes[1]
+        overlayCheckbox = checkboxes[2]
         val title = view.findViewById<TextView>(R.id.bt_info2)
         val bkg = view.findViewById<ScrollView>(R.id.custom_theme_dialog_background)
         val runSetup = view.findViewById<Button>(R.id.run_setup)
@@ -93,14 +102,9 @@ class SettingsFragment1 : Fragment() {
         val spinnerBg1 = view.findViewById<LinearLayout>(R.id.spinnerBg1)
         val spinnerBg2 = view.findViewById<LinearLayout>(R.id.spinnerBg2)
         checkUpdate.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        powerSpinnerView.setBackgroundColor(Color.parseColor(nhlPreferences!!.color20()))
-        powerSpinnerView.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        powerSpinnerView.setHintTextColor(Color.parseColor(nhlPreferences!!.color50()))
-        powerSpinnerView.dividerColor = Color.parseColor(nhlPreferences!!.color80())
-        powerSpinnerView2.setBackgroundColor(Color.parseColor(nhlPreferences!!.color20()))
-        powerSpinnerView2.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        powerSpinnerView2.setHintTextColor(Color.parseColor(nhlPreferences!!.color50()))
-        powerSpinnerView2.dividerColor = Color.parseColor(nhlPreferences!!.color80())
+
+        ColorChanger.setPowerSpinnerColor(powerSpinnerView)
+        ColorChanger.setPowerSpinnerColor(powerSpinnerView2)
 
         seekBarDesc.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         seekBarValue.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
@@ -112,30 +116,14 @@ class SettingsFragment1 : Fragment() {
             Color.parseColor(nhlPreferences!!.color80()), BlendMode.SRC_IN
         )
 
-        vibrationsCheckbox.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        newButtonsStyle.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        overlayCheckbox.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        vibrationsCheckbox.buttonTintList = ColorStateList.valueOf(
-            Color.parseColor(
-                nhlPreferences!!.color80()
-            )
-        )
-        newButtonsStyle.buttonTintList = ColorStateList.valueOf(
-            Color.parseColor(
-                nhlPreferences!!.color80()
-            )
-        )
-        overlayCheckbox.buttonTintList = ColorStateList.valueOf(
-            Color.parseColor(
-                nhlPreferences!!.color80()
-            )
-        )
         bkg.setBackgroundColor(Color.parseColor(nhlPreferences!!.color20()))
         title.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        setButtonColors(runSetup)
-        setButtonColors(backupDb)
-        setButtonColors(restoreDb)
-        setButtonColors(saveButton)
+
+        ColorChanger.setButtonColors(runSetup)
+        ColorChanger.setButtonColors(backupDb)
+        ColorChanger.setButtonColors(restoreDb)
+        ColorChanger.setButtonColors(saveButton)
+
         vibrationsCheckbox.isChecked = nhlPreferences!!.vibrationOn()
         newButtonsStyle.isChecked = nhlPreferences!!.isNewButtonStyleActive
 
@@ -208,11 +196,10 @@ class SettingsFragment1 : Fragment() {
                 10
             )
         }
-        val gd = GradientDrawable()
-        gd.setStroke(8, Color.parseColor(nhlPreferences!!.color50())) // Stroke width and color
-        gd.cornerRadius = 20f
-        spinnerBg1.background = gd
-        spinnerBg2.background = gd
+
+        ColorChanger.setContainerBackground(spinnerBg1, true)
+        ColorChanger.setContainerBackground(spinnerBg2, true)
+
         powerSpinnerView.setOnSpinnerItemSelectedListener(
             OnSpinnerItemSelectedListener { _: Int, _: String?, newIndex: Int, _: String? ->
                 if (newIndex == 0) {
@@ -339,14 +326,6 @@ class SettingsFragment1 : Fragment() {
                 applySettings()
             }
         }
-        powerSpinnerView.spinnerOutsideTouchListener =
-            OnSpinnerOutsideTouchListener { _: View?, _: MotionEvent? ->
-                powerSpinnerView.selectItemByIndex(powerSpinnerView.selectedIndex)
-            }
-        powerSpinnerView2.spinnerOutsideTouchListener =
-            OnSpinnerOutsideTouchListener { _: View?, _: MotionEvent? ->
-                powerSpinnerView2.selectItemByIndex(powerSpinnerView2.selectedIndex)
-            }
         return view
     }
 
@@ -378,11 +357,6 @@ class SettingsFragment1 : Fragment() {
                 showCustomToast(requireActivity(), "Settings updated!")
             }
         }
-    }
-
-    private fun setButtonColors(button: Button) {
-        button.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
-        button.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
     }
 
     private fun saveNhlSettings(sortingMode: String?) {
