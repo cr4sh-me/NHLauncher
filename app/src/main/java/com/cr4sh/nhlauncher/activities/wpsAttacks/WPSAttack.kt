@@ -28,7 +28,6 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -39,6 +38,7 @@ import com.cr4sh.nhlauncher.bridge.Bridge.Companion.createExecuteIntent
 import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.ColorChanger.Companion.activityAnimation
 import com.cr4sh.nhlauncher.utils.DialogUtils
+import com.cr4sh.nhlauncher.utils.LanguageChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
@@ -51,7 +51,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 // TODO fix wrong button height calculation while keyboard is open
-class WPSAttack : AppCompatActivity() {
+class WPSAttack : LanguageChanger() {
     var customPINCMD = ""
     var delayCMD = ""
     private lateinit var msg2: TextView

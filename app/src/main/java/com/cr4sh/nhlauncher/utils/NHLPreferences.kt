@@ -10,9 +10,10 @@ import java.util.Locale
 
 
 // This class read, store and return SharedPreferences
-class NHLPreferences(//    private val context: MainActivity = NHLManager.instance.mainActivity
+class NHLPreferences(
     private val context: Context
 ) {
+
     private val nhlPrefs: SharedPreferences =
         context.getSharedPreferences("nhlSettings", Context.MODE_PRIVATE)
     private val setupPrefs: SharedPreferences =
@@ -87,23 +88,32 @@ class NHLPreferences(//    private val context: MainActivity = NHLManager.instan
     }
 
     fun language(): String? {
-        val languageShit = Locale.getDefault().language.uppercase()
-        val languageShit2 = "DESCRIPTION_$languageShit"
+        val languageShit = Locale.getDefault().language
+        val languageShit2 = if (languageShit == "pl") {
+            "DESCRIPTION_PL"
+        } else {
+            "DESCRIPTION_EN"
+        }
         return nhlPrefs.getString("language", languageShit2)
     }
 
-    fun languageLocale(): String? {
-        return nhlPrefs.getString("languageLocale", Locale.getDefault().language)
+    fun languageLocale(): String {
+        return nhlPrefs.getString(
+            "languageLocale",
+            if (Locale.getDefault().language == "pl") "pl" else "en"
+        ) ?: "en"
     }
 
     fun sortingMode(): String? {
         return nhlPrefs.getString("sortingMode", null)
     }
 
-    val isSetupCompleted: Boolean
-        get() = setupPrefs.getBoolean("isSetupCompleted", false)
+    val isSetupCompleted: Boolean get() = setupPrefs.getBoolean("isSetupCompleted", false)
     val isThrottlingMessageShown: Boolean
-        get() = !setupPrefs.getBoolean("isThrottlingMessageShown", false)
+        get() = !setupPrefs.getBoolean(
+            "isThrottlingMessageShown",
+            false
+        )
 
     fun vibrationOn(): Boolean {
         return nhlPrefs.getBoolean("vibrationsOn", false)
@@ -114,7 +124,7 @@ class NHLPreferences(//    private val context: MainActivity = NHLManager.instan
     val recyclerMainHeight: Int
         get() = nhlPrefs.getInt("recyclerHeight", 0)
     val isButtonOverlayActive: Boolean
-        get() = nhlPrefs.getBoolean("isButtonOverlayActive", false)
+        get() = nhlPrefs.getBoolean("isButtonOverlayActive", true)
     val isPixieDustActive: Boolean
         get() = nhlPrefs.getBoolean("isPixieDustActive", false)
     val isPixieForceActive: Boolean

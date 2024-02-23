@@ -6,16 +6,16 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.specialFeatures.SpecialFeaturesActivity
 import com.cr4sh.nhlauncher.utils.ColorChanger.Companion.activityAnimation
+import com.cr4sh.nhlauncher.utils.LanguageChanger
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class BluetoothActivity : AppCompatActivity() {
+class BluetoothActivity : LanguageChanger() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.BackgroundColorSpan
@@ -13,10 +12,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.RelativeLayout
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.buttonsRecycler.NHLItem
@@ -89,7 +88,6 @@ class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewH
     }
 
     // Used to create buttons, and set listeners for them
-    @RequiresApi(Build.VERSION_CODES.S)
     override fun onBindViewHolder(
         holder: NHLViewHolder,
         @SuppressLint("RecyclerView") position: Int
@@ -170,7 +168,12 @@ class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewH
         @SuppressLint("DiscouragedApi") val imageResourceId =
             myActivity?.resources?.getIdentifier(item.image, "drawable", myActivity.packageName)
         if (imageResourceId != null) {
-            holder.imageView.setImageResource(imageResourceId)
+            if (myActivity != null) {
+                Glide.with(myActivity)
+                    .asBitmap()
+                    .load(imageResourceId)
+                    .into(holder.imageView)
+            }
         }
         if (overlay) {
             holder.imageView.setColorFilter(

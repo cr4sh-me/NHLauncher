@@ -13,8 +13,8 @@ android {
         applicationId = "com.cr4sh.nhlauncher"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 5
+        versionName = "2.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -23,8 +23,8 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
             )
         }
     }
@@ -38,16 +38,12 @@ android {
 }
 
 dependencies {
-    val roomVersion = "2.6.1"
+    implementation("com.github.bumptech.glide:glide:4.14.2")
+    ksp("com.github.bumptech.glide:ksp:4.14.2")
 
-    implementation("androidx.room:room-ktx:$roomVersion")
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
-
-    // To use Kotlin Symbol Processing (KSP)
-    ksp("androidx.room:room-compiler:$roomVersion")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     implementation("com.github.QuadFlask:colorpicker:0.0.15")
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.github.skydoves:powerspinner:1.2.7")
 
     implementation("androidx.core:core-ktx:1.12.0")

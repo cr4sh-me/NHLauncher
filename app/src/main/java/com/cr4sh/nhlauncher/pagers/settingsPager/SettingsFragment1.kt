@@ -65,7 +65,7 @@ class SettingsFragment1 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.settings_layout1, container, false)
-        nhlPreferences = NHLPreferences(requireActivity())
+        nhlPreferences = mainActivity?.let { NHLPreferences(it) }
         mainUtils = mainActivity?.let { NHLUtils(it) }
 
         val checkboxes = arrayOf<CheckBox>(
@@ -365,7 +365,9 @@ class SettingsFragment1 : Fragment() {
         editor.putString("languageLocale", languageLocale)
         editor.apply()
 
-        nhlPreferences?.languageLocale()?.let { languageChanger.setLocale(mainActivity, it) }
+//        if (mainActivity != null) {
+//            languageChanger.setLocale(mainActivity, languageLocale)
+//        }
     }
 
     private fun saveVibrationsPref(vibrations: Boolean) {

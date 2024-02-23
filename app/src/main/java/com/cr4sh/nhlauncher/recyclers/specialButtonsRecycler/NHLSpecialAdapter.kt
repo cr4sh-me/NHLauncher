@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.activities.wpsAttacks.WPSAttack
@@ -67,11 +68,15 @@ class NHLSpecialAdapter : RecyclerView.Adapter<NHLSpecialViewHolder>() {
             drawable!!.cornerRadius = 60f
             drawable!!.setStroke(8, Color.parseColor(nhlPreferences!!.color80()))
         }
-        drawable!!.setBounds(0, 0, 0, height) // Set bounds for the drawable
+
+        // Update this line to set bounds for the drawable
+        drawable!!.setBounds(0, 0, parent.width, height)
+
         return NHLSpecialViewHolder(
             LayoutInflater.from(myActivity).inflate(R.layout.custom_button, parent, false)
         )
     }
+
 
     // Used to create buttons, and set listeners for them
     @RequiresApi(Build.VERSION_CODES.S)
@@ -85,7 +90,12 @@ class NHLSpecialAdapter : RecyclerView.Adapter<NHLSpecialViewHolder>() {
         @SuppressLint("DiscouragedApi") val imageResourceId =
             myActivity?.resources?.getIdentifier(item.image, "drawable", myActivity.packageName)
         if (imageResourceId != null) {
-            holder.imageView.setImageResource(imageResourceId)
+            if (myActivity != null) {
+                Glide.with(myActivity)
+                    .asBitmap()
+                    .load(imageResourceId)
+                    .into(holder.imageView)
+            }
         }
         if (overlay) {
             holder.imageView.setColorFilter(

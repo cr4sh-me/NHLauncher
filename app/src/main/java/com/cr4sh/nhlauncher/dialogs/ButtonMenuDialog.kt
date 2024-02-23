@@ -34,6 +34,7 @@ class ButtonMenuDialog(private var myActivity: MainActivity) : AppCompatDialogFr
         val bkg = view.findViewById<LinearLayout>(R.id.custom_theme_dialog_background)
         val title = view.findViewById<TextView>(R.id.dialog_title)
         val description = view.findViewById<TextView>(R.id.dialog_description)
+        val category = view.findViewById<TextView>(R.id.dialog_category)
         val option1 = view.findViewById<Button>(R.id.option1)
         val option2 = view.findViewById<Button>(R.id.option2)
         val option3 = view.findViewById<Button>(R.id.option3)
@@ -45,6 +46,7 @@ class ButtonMenuDialog(private var myActivity: MainActivity) : AppCompatDialogFr
         bkg.setBackgroundColor(Color.parseColor(nhlPreferences.color20()))
         title.setTextColor(Color.parseColor(nhlPreferences.color80()))
         description.setTextColor(Color.parseColor(nhlPreferences.color50()))
+        category.setTextColor(Color.parseColor(nhlPreferences.color50()))
 
         ColorChanger.setButtonColors(option1)
         ColorChanger.setButtonColors(option2)
@@ -53,6 +55,9 @@ class ButtonMenuDialog(private var myActivity: MainActivity) : AppCompatDialogFr
         ColorChanger.setButtonColors(cancelButton, true)
 
         title.text = myActivity.buttonName.toString().uppercase()
+        category.text = "${resources.getString(R.string.category)} ${
+            myActivity.buttonCategory.toString().uppercase()
+        }"
         description.text = myActivity.buttonDescription.toString().uppercase()
 
         option1.setOnClickListener {

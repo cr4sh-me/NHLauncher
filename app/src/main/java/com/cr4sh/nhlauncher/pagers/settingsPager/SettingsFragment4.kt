@@ -32,7 +32,7 @@ class SettingsFragment4 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.settings_layout4, container, false)
-        nhlPreferences = NHLPreferences(requireActivity())
+        nhlPreferences = mainActivity?.let { NHLPreferences(it) }
 
         // Get the TextViews from the layout
         val title = view.findViewById<TextView>(R.id.bt_info2)

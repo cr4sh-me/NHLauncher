@@ -17,6 +17,7 @@ import java.net.UnknownHostException
 
 class UpdateCheckerUtils {
     private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
+
     fun checkUpdateAsync(listener: UpdateCheckListener) {
         mainActivity?.lifecycleScope?.launch(Dispatchers.IO) {
             try {
@@ -154,6 +155,7 @@ class UpdateCheckerUtils {
     @JvmRecord
     data class UpdateCheckResult(val isUpdateAvailable: Boolean, val message: String?)
     companion object {
+
         private const val TAG = "UpdateCheckerUtils"
         private const val GITHUB_API_URL =
             "https://api.github.com/repos/cr4sh-me/NHLauncher/releases/latest"

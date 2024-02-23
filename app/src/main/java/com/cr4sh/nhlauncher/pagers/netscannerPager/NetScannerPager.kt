@@ -9,7 +9,7 @@ class NetScannerPager(fragment: FragmentActivity?) : FragmentStateAdapter(
 ) {
     override fun getItemCount(): Int {
         // Return the number of fragments
-        return 2
+        return 1
     }
 
     override fun createFragment(position: Int): Fragment {
@@ -24,7 +24,7 @@ class NetScannerPager(fragment: FragmentActivity?) : FragmentStateAdapter(
 //            }
 
             else -> {
-                NetScannerFragment2()
+                NetScannerFragment1()
             }
         }
     }

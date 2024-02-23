@@ -11,6 +11,7 @@ import android.widget.RelativeLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.statsRecycler.StatsHolder
@@ -85,7 +86,12 @@ class StatsAdapter : RecyclerView.Adapter<StatsHolder>() {
         @SuppressLint("DiscouragedApi") val imageResourceId =
             myActivity?.resources?.getIdentifier(item.image, "drawable", myActivity.packageName)
         if (imageResourceId != null) {
-            holder.imageView.setImageResource(imageResourceId)
+            if (myActivity != null) {
+                Glide.with(myActivity)
+                    .asBitmap()
+                    .load(imageResourceId)
+                    .into(holder.imageView)
+            }
         }
         if (overlay) {
             holder.imageView.setColorFilter(

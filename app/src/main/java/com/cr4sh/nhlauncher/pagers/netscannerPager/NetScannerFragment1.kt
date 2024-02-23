@@ -87,7 +87,7 @@ class NetScannerFragment1 : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.netscanner_layout1, container, false)
 
-        nhlPreferences = NHLPreferences(requireActivity())
+        nhlPreferences = mainActivity?.let { NHLPreferences(it) }
         nhlUtils = mainActivity?.let { NHLUtils(it) }
 
         val scanButton = view.findViewById<Button>(R.id.start_scan)
@@ -157,7 +157,7 @@ class NetScannerFragment1 : Fragment() {
             setSpinnerAdapter(IconSpinnerAdapter(this))
             setItems(
                 arrayListOf(
-                    IconSpinnerItem("Intense Stealth: -sS -A -Pn", null),
+                    IconSpinnerItem("Intense Stealth: -sS -A", null),
                     IconSpinnerItem("TCP SYN: -sS", null),
                     IconSpinnerItem("TCP Connect: -sT", null),
                     IconSpinnerItem("TCP ACK: -sA", null),
@@ -264,9 +264,11 @@ class NetScannerFragment1 : Fragment() {
                     Log.d("REF", ref)
                     if (ref.contains("NHLDONE")) {
                         mainActivity?.lifecycleScope?.launch {
-                            val intent = Intent(activity, NmapResultsActivity::class.java)
+                            val intent = Intent(mainActivity, NmapResultsActivity::class.java)
                             intent.putExtra("file_path", filePath)
-                            startActivity(intent)
+                            if (isAdded) {
+                                startActivity(intent)
+                            }
                         }
                     } else {
                         mainActivity?.lifecycleScope?.launch {

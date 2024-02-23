@@ -27,9 +27,10 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.specialFeatures.SpecialFeaturesActivity
 import com.cr4sh.nhlauncher.database.DBHandler
@@ -51,7 +52,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : LanguageChanger() {
     var buttonCategory: String? = null
     var buttonName: String? = null
     var buttonDescription: String? = null
@@ -136,15 +137,8 @@ class MainActivity : AppCompatActivity() {
         }
         nhlPreferences = NHLPreferences(this)
 
-        val languageChanger = LanguageChanger()
-        nhlPreferences.languageLocale()?.let { languageChanger.setLocale(this@MainActivity, it) }
-
-
-        // set language
-
         resetRecyclerHeight()
         setContentView(R.layout.activity_main)
-
 
         val rootView = findViewById<View>(android.R.id.content)
 
@@ -324,14 +318,15 @@ class MainActivity : AppCompatActivity() {
         searchEditText.setHintTextColor(Color.parseColor(nhlPreferences.color80()))
         searchEditText.setTextColor(Color.parseColor(nhlPreferences.color80()))
         toolbar.setBackgroundColor(Color.parseColor(nhlPreferences.color50()))
-        @SuppressLint("UseCompatLoadingForDrawables") val searchViewIcon =
-            getDrawable(R.drawable.nhl_searchview)!!
+        val searchViewIcon = AppCompatResources.getDrawable(this, R.drawable.nhl_searchview)!!
         searchViewIcon.setTint(Color.parseColor(nhlPreferences.color80()))
-        searchIcon.setImageDrawable(searchViewIcon)
-        @SuppressLint("UseCompatLoadingForDrawables") val settingsIcon =
-            getDrawable(R.drawable.nhl_settings)!!
+//        searchIcon.setImageDrawable(searchViewIcon)
+        Glide.with(this).load(searchViewIcon).into(searchIcon)
+
+        val settingsIcon = AppCompatResources.getDrawable(this, R.drawable.nhl_settings)!!
         settingsIcon.setTint(Color.parseColor(nhlPreferences.color80()))
-        toolbar.setImageDrawable(settingsIcon)
+//        toolbar.setImageDrawable(settingsIcon)
+        Glide.with(this).load(settingsIcon).into(toolbar)
         val drawableToolbar = GradientDrawable()
         drawableToolbar.cornerRadius = 100f
         drawableToolbar.setStroke(8, Color.parseColor(nhlPreferences.color50()))
@@ -486,13 +481,6 @@ class MainActivity : AppCompatActivity() {
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
-                    }
-
-                    // Prevent newlines from being entered
-                    if (newText.toString().contains("\n")) {
-                        val filteredText = newText.toString().replace("\n", "")
-                        searchEditText.setText(filteredText)
-                        searchEditText.setSelection(filteredText.length)
                     }
                 }
             }

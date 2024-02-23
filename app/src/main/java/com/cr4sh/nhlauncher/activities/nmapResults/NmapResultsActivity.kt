@@ -11,18 +11,18 @@ import android.view.View
 import android.webkit.WebView
 import android.widget.Button
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.utils.ColorChanger.Companion.activityAnimation
+import com.cr4sh.nhlauncher.utils.LanguageChanger
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.ToastUtils
 import kotlinx.coroutines.launch
 import java.io.File
 
 
-class NmapResultsActivity : AppCompatActivity() {
+class NmapResultsActivity : LanguageChanger() {
 
     lateinit var nhlPreferences: NHLPreferences
 

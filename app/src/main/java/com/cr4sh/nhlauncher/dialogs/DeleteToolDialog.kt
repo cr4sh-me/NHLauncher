@@ -51,7 +51,7 @@ class DeleteToolDialog : AppCompatDialogFragment() {
         text2.setTextColor(Color.parseColor(nhlPreferences.color50()))
 
         ColorChanger.setButtonColors(deleteButton)
-        ColorChanger.setButtonColors(deleteButton, true)
+        ColorChanger.setButtonColors(cancelButton, true)
 
         assert(name != null)
         title.text = name!!.uppercase(Locale.getDefault())

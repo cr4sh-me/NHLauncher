@@ -2360,7 +2360,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             "metasploit framework",
             "Platform that supports vulnerability research, exploit development, and the creation of custom security tools",
             "Platforma wspierająca badanie luk w zabezpieczeniach, opracowywanie exploitów i tworzenie niestandardowych narzędzi bezpieczeństwa",
-            "msfdb init && msfconsole",
+            "cd /root && msfconsole",
             "kali_metasploit_framework",
             0
         )

@@ -46,7 +46,7 @@ class SettingsFragment2 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.settings_layout2, container, false)
-        nhlPreferences = NHLPreferences(requireActivity())
+        nhlPreferences = mainActivity?.let { NHLPreferences(it) }
         val manualBox = view.findViewById<LinearLayout>(R.id.hiddenLayout)
         val advancedMode = view.findViewById<LinearLayout>(R.id.advancedLayout)
         val text2 = view.findViewById<TextView>(R.id.text_second)

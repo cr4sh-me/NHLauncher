@@ -7,17 +7,17 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.specialButtonsRecycler.NHLSpecialItem
 import com.cr4sh.nhlauncher.recyclers.specialButtonsRecycler.NHLSpecialAdapter
 import com.cr4sh.nhlauncher.utils.ColorChanger.Companion.activityAnimation
+import com.cr4sh.nhlauncher.utils.LanguageChanger
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.VibrationUtils
 
-class SpecialFeaturesActivity : AppCompatActivity() {
+class SpecialFeaturesActivity : LanguageChanger() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -57,7 +57,7 @@ class SpecialFeaturesActivity : AppCompatActivity() {
         )
         val specialItem3 = NHLSpecialItem(
             "Net Scanner",
-            "Description soon",
+            resources.getString(R.string.netscanner2),
             "socat"
         )
         val newItemList: MutableList<NHLSpecialItem> = ArrayList()

@@ -36,7 +36,7 @@ class SettingsFragment3 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.settings_layout3, container, false)
-        nhlPreferences = NHLPreferences(requireActivity())
+        nhlPreferences = mainActivity?.let { NHLPreferences(it) }
         mDatabase = mainActivity?.mDatabase
         val spinnerBg1 = view.findViewById<LinearLayout>(R.id.spinnerBg1)
         val title = view.findViewById<TextView>(R.id.bt_info2)

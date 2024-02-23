@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.utils.DialogUtils
@@ -25,10 +24,10 @@ class NetScannerFragment2 : Fragment() {
         nhlPreferences = NHLPreferences(requireActivity())
         dialogUtils = DialogUtils(requireActivity().supportFragmentManager)
 
-        val scanButton = view.findViewById<Button>(R.id.scanButton)
-        scanButton.setOnClickListener {
-            scanNetwork()
-        }
+//        val scanButton = view.findViewById<Button>(R.id.scanButton)
+//        scanButton.setOnClickListener {
+//            scanNetwork()
+//        }
 
         return view
     }

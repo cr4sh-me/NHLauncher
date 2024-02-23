@@ -6,15 +6,24 @@ import androidx.appcompat.app.AppCompatActivity
 import java.util.Locale
 
 
-class LanguageChanger : AppCompatActivity() {
+open class LanguageChanger : AppCompatActivity() {
 
-    fun setLocale(context: Context?, localeSpec: String): Context? {
-//            val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(localeSpec)
-//            AppCompatDelegate.setApplicationLocales(appLocale)
-//            context?.createConfigurationContext(context.resources.configuration)
-        val locale = Locale(localeSpec)
-        Locale.setDefault(locale)
-        return updateResourcesLegacy(context!!, locale)
+    private lateinit var nhlPreferences: NHLPreferences
+    override fun attachBaseContext(newBase: Context) {
+        nhlPreferences = NHLPreferences(newBase)
+        super.attachBaseContext(updateBaseContextLocale(newBase))
+    }
+
+    private fun updateBaseContextLocale(context: Context): Context? {
+
+        val x = Locale(nhlPreferences.languageLocale().lowercase())
+
+        // Use older method for api <= 25
+        return if (android.os.Build.VERSION.SDK_INT <= 25) {
+            updateResources(context, x)
+        } else {
+            updateResourcesLegacy(context, x)
+        }
     }
 
     private fun updateResources(context: Context, locale: Locale): Context? {
@@ -25,7 +34,7 @@ class LanguageChanger : AppCompatActivity() {
     }
 
     @Suppress("deprecation")
-    private fun updateResourcesLegacy(context: Context, locale: Locale): Context? {
+    private fun updateResourcesLegacy(context: Context, locale: Locale): Context {
         val resources = context.resources
         val configuration: Configuration = resources.configuration
         configuration.locale = locale

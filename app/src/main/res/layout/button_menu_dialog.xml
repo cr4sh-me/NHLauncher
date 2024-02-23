@@ -15,6 +15,15 @@
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/dialog_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/loading"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        android:textStyle="normal" />
+
+    <TextView
         android:id="@+id/dialog_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

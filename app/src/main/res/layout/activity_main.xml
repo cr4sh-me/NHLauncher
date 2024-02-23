@@ -35,6 +35,8 @@
             android:maxLength="20"
             android:paddingStart="16dp"
             android:visibility="gone"
+            android:inputType="textNoSuggestions"
+            android:maxLines="1"
             tools:ignore="RtlSymmetry" />
 
         <LinearLayout
