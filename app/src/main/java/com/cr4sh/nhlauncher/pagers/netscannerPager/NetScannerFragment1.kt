@@ -45,14 +45,6 @@ class NetScannerFragment1 : Fragment() {
     //    private var scanTime = "10"
     private var nhlPreferences: NHLPreferences? = null
     private var scriptsCMD: String = ""
-
-    //    private var dnsBruteCMD: String = ""
-//    private var smbEnumSharesCMD: String = ""
-//    private var ftpAnonCMD: String = ""
-//    private var smtpEnumCMD: String = ""
-//    private var bruteCMD: String = ""
-//    private var allCMD: String = ""
-//    private var defaultCMD: String = ""
     private var nhlUtils: NHLUtils? = null
     private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     private lateinit var mySwitch: SwitchCompat
@@ -60,25 +52,6 @@ class NetScannerFragment1 : Fragment() {
     private lateinit var mySwitch3: SwitchCompat
     private var pnCMD = ""
     private var ipv6CMD = ""
-
-//    private lateinit var webView: Cu
-//    private var scrollView: ScrollView? = null
-//    private lateinit var linearContainer: LinearLayout
-//    private lateinit var binderButton: Button
-//    private lateinit var servicesButton: Button
-//    private lateinit var scanButton: Button
-//    private lateinit var ifaces: PowerSpinnerView
-//    private lateinit var binderTextView: TextView
-//    private lateinit var dbusTextView: TextView
-//    private lateinit var bluetoothTextView: TextView
-//
-//    //    private lateinit var drawable: Drawable
-//    private var btSmd: File? = null
-//    private var bluebinder: File? = null
-//    private var buttonContainer: LinearLayout? = null
-//    private var selectedButton: Button? = null
-//    private lateinit var messageBox: TextView
-
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -95,19 +68,12 @@ class NetScannerFragment1 : Fragment() {
         val powerSpinnerView2 = view.findViewById<PowerSpinnerView>(R.id.nmap_times)
 
         val checkboxes = arrayOf<CheckBox>(
-            view.findViewById(R.id.auth),
-            view.findViewById(R.id.broadcast),
-            view.findViewById(R.id.default_sc),
-            view.findViewById(R.id.discovery),
-            view.findViewById(R.id.dos),
-            view.findViewById(R.id.exploit),
-            view.findViewById(R.id.external),
-            view.findViewById(R.id.fuzzer),
-            view.findViewById(R.id.intrusive),
-            view.findViewById(R.id.malware),
-            view.findViewById(R.id.safe),
-            view.findViewById(R.id.version),
-            view.findViewById(R.id.vuln)
+            view.findViewById(R.id.mysql_brute),
+            view.findViewById(R.id.ssh_brute),
+            view.findViewById(R.id.dns_brute),
+            view.findViewById(R.id.http_enum),
+            view.findViewById(R.id.vulners),
+            view.findViewById(R.id.vulscan),
         )
 
         checkboxes.forEach { checkbox -> checkbox.setOnClickListener { onCheckboxClicked(checkboxes) } }
@@ -157,6 +123,7 @@ class NetScannerFragment1 : Fragment() {
             setSpinnerAdapter(IconSpinnerAdapter(this))
             setItems(
                 arrayListOf(
+                    IconSpinnerItem("Stealth Version: -sS -sV", null),
                     IconSpinnerItem("Intense Stealth: -sS -A", null),
                     IconSpinnerItem("TCP SYN: -sS", null),
                     IconSpinnerItem("TCP Connect: -sT", null),
@@ -166,7 +133,6 @@ class NetScannerFragment1 : Fragment() {
                     IconSpinnerItem("ALL Ports SYN: -sS -p1-65535", null),
                     IconSpinnerItem("ALL Ports Connect: -sT -p1-65535", null),
                     IconSpinnerItem("Top 50 Ports: --top-ports 50", null),
-                    IconSpinnerItem("Stealth Version: -sS -sV", null),
                     IconSpinnerItem("OS Detection: -O", null),
                     IconSpinnerItem("OS Detection SYN: -sS -O", null)
                 )
@@ -196,7 +162,6 @@ class NetScannerFragment1 : Fragment() {
                     showCustomToast(requireActivity(), "Are you dumb?")
                 }
             } else {
-//                xsltproc nmapscan.xml -o /sdcard/nmap_$(date '+%Y-%m-%d_%H-%M-%S').html
                 mainActivity?.lifecycleScope?.launch(Dispatchers.Default) {
                     runNmap(
                         targetIp.text.toString(),
@@ -205,11 +170,8 @@ class NetScannerFragment1 : Fragment() {
                         scanButton
                     )
                 }
-
-
             }
         }
-
         return view
     }
 
@@ -255,7 +217,6 @@ class NetScannerFragment1 : Fragment() {
                 // Check if nmap didn't throw any errors
                 if (nmapScan.contains("NHLSCANDONE")) {
                     val ref = withContext(Dispatchers.IO) {
-//                            xsltproc -o scanme.html nmap-bootstrap.xsl scanme.xml
                         exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd xsltproc -o /sdcard/nmap.html /root/nmap-bootstrap.xsl /root/nmapscan.xml && echo 'NHLDONE'")
                     }
                     mainActivity?.lifecycleScope?.launch {
@@ -317,7 +278,7 @@ class NetScannerFragment1 : Fragment() {
             val optionText = selectedCheckboxes.joinToString(",") { it.text.toString() }
             "--script $optionText"
         } else {
-            "-sn" // With the -sn option it is possible to run a script scan without a port scan, only host discovery
+            ""
         }
     }
 

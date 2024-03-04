@@ -129,8 +129,8 @@ class MainActivity : LanguageChanger() {
             return
         }
         val permissionUtils = PermissionUtils(this)
-//
-//        // Check for root permissions
+
+        // Check for root permissions
         if (!permissionUtils.isRoot) {
             dialogUtils.openRootDialog()
             return

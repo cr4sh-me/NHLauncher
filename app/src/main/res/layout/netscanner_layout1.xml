@@ -126,11 +126,10 @@
         android:id="@+id/switchWidget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:checked="true"
         android:gravity="center"
         android:padding="10dp"
         android:switchPadding="5dp"
-        android:text="Use bootstrap stylesheet for scan results"
+        android:text="Use bootstrap stylesheet for scan results "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerContainer2"
@@ -144,7 +143,7 @@
         android:gravity="center"
         android:padding="10dp"
         android:switchPadding="5dp"
-        android:text="Skip host discovery: -Pn"
+        android:text="Skip host discovery: -Pn "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/switchWidget" />
@@ -157,7 +156,7 @@
         android:gravity="center"
         android:padding="10dp"
         android:switchPadding="5dp"
-        android:text="Use IPv6 scanning"
+        android:text="Use IPv6 scanning "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/switchWidget2"
@@ -169,7 +168,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="10dp"
-        android:text="Scripts Categories"
+        android:text="Scripts"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -214,23 +213,23 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/auth"
+                        android:id="@+id/mysql_brute"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="20dp"
                         android:layout_weight="1"
-                        android:text="auth"
+                        android:text="mysql-brute"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     <CheckBox
-                        android:id="@+id/broadcast"
+                        android:id="@+id/ssh_brute"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="20dp"
                         android:layout_weight="1"
-                        android:text="broadcast"
+                        android:text="ssh-brute"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 </LinearLayout>
@@ -258,24 +257,23 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/default_sc"
+                        android:id="@+id/dns_brute"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="20dp"
                         android:layout_weight="1"
-                        android:checked="true"
-                        android:text="default"
+                        android:text="dns-brute"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     <CheckBox
-                        android:id="@+id/discovery"
+                        android:id="@+id/http_enum"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="20dp"
                         android:layout_weight="1"
-                        android:text="discovery"
+                        android:text="http-enum"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 </LinearLayout>
@@ -302,146 +300,27 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/dos"
+                        android:id="@+id/vulners"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="20dp"
                         android:layout_weight="1"
-                        android:text="dos"
+                        android:text="vulners/"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     <CheckBox
-                        android:id="@+id/exploit"
+                        android:id="@+id/vulscan"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="20dp"
                         android:layout_weight="1"
-                        android:text="exploit"
+                        android:text="vulscan"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/choiceContainer5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginBottom="5dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/choiceContainer4"
-                tools:ignore="SpeakableTextPresentCheck">
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:id="@+id/external"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_weight="1"
-                        android:text="external"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                    <CheckBox
-                        android:id="@+id/fuzzer"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_weight="1"
-                        android:text="fuzzer"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:id="@+id/intrusive"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_weight="1"
-                        android:text="intrusive"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                    <CheckBox
-                        android:id="@+id/malware"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_weight="1"
-                        android:text="malware"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:id="@+id/safe"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_weight="1"
-                        android:text="safe"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                    <CheckBox
-                        android:id="@+id/version"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_weight="1"
-                        android:text="version"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:id="@+id/vuln"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_weight="1"
-                        android:text="vuln"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-
     </ScrollView>
 
     <Button

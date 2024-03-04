@@ -51,7 +51,7 @@ class NHLSpecialAdapter : RecyclerView.Adapter<NHLSpecialViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NHLSpecialViewHolder {
         nhlPreferences = myActivity?.let { NHLPreferences(it) }
         val originalHeight: Int
-        if (nhlPreferences!!.recyclerMainHeight == 0) {
+        if (nhlPreferences!!.recyclerMainHeight == 0) { //TODO fix crash
             originalHeight = parent.measuredHeight
             saveRecyclerHeight(originalHeight)
         } else {

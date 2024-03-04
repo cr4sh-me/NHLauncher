@@ -1394,18 +1394,6 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             "kali_ffuf",
             0
         )
-        insertTool(
-            db,
-            1,
-            "3",
-            0,
-            "apache-users",
-            "This Perl script will enumerate the usernames on any system that uses Apache with the UserDir module",
-            "Ten skrypt Perla wyliczy nazwy użytkowników w każdym systemie, który używa Apache z modułem UserDir",
-            "apache-users -h",
-            "kali_apache_users",
-            0
-        )
 
         // Category 4
         insertTool(
@@ -2443,10 +2431,10 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             1,
             "9",
             0,
-            "hamster",
+            "hamster-sidejack",
             "Script to test the password strength of the Http Basic Authentication page with a brute force attack",
             "Skrypt do testowania siły hasła strony Http Basic Authentication za pomocą ataku siłowego",
-            "hamster",
+            "hamster-sidejack",
             "kali_hamster_sidejack",
             0
         )

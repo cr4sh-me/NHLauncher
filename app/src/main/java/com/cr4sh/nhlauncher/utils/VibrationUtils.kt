@@ -16,7 +16,7 @@ class VibrationUtils {
     companion object {
         val mainActivity: MainActivity? by lazy { NHLManager.getInstance().getMainActivity() }
 
-        fun vibrate(milliseconds: Long = 10) {
+        fun vibrate(milliseconds: Long = 50) {
             val nhlPreferences = mainActivity?.let { NHLPreferences(it) }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 val vibratorManager =

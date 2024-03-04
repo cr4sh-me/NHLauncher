@@ -2,10 +2,9 @@ package com.cr4sh.nhlauncher.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
-import android.os.Build.VERSION
 import androidx.core.content.ContextCompat
 import com.google.android.material.R
+import com.google.android.material.color.DynamicColors
 import java.util.Locale
 
 
@@ -76,14 +75,14 @@ class NHLPreferences(
     fun dynamicThemeBool(): Boolean {
         return customColorsPrefs.getBoolean(
             "dynamicThemeBool",
-            VERSION.SDK_INT >= Build.VERSION_CODES.S
+            DynamicColors.isDynamicColorAvailable()
         ) // Enable dynamic colors at first launch if A12+
     }
 
     fun advancedThemeBool(): Boolean {
         return customColorsPrefs.getBoolean(
             "advancedThemeBool",
-            VERSION.SDK_INT < Build.VERSION_CODES.S // Enable advanced colors at first launch if lower than A12
+            !DynamicColors.isDynamicColorAvailable() // Enable advanced colors at first launch if lower than A12
         )
     }
 

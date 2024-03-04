@@ -49,7 +49,6 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoriesViewHolder>() {
         }
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesViewHolder {
         nhlPreferences = myActivity?.let { NHLPreferences(it) }
         val originalHeight = parent.measuredHeight
