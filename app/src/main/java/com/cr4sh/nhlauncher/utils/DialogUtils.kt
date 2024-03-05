@@ -16,6 +16,7 @@ import com.cr4sh.nhlauncher.dialogs.FirstSetupDialog
 import com.cr4sh.nhlauncher.dialogs.MissingActivityDialog
 import com.cr4sh.nhlauncher.dialogs.NewToolDialog
 import com.cr4sh.nhlauncher.dialogs.NhlColorPickerDialog
+import com.cr4sh.nhlauncher.dialogs.NmapDeviceDialog
 import com.cr4sh.nhlauncher.dialogs.PermissionDialog
 import com.cr4sh.nhlauncher.dialogs.RootDialog
 import com.cr4sh.nhlauncher.dialogs.ScanTimeDialog
@@ -80,6 +81,14 @@ class DialogUtils(private val fragmentManager: FragmentManager) {
             fsDialog.show(fragmentManager, "FirstSetupDialog")
         }
     }
+
+//    fun openNmapDeviceDialog() {
+//        lifecycleScope?.launch {
+//            val ndDialog = NmapDeviceDialog()
+//            ndDialog.show(childFragmentManger, "NmapDeviceDialog")
+//        }
+//    }
+
 
     fun openPermissionsDialog() {
         // Assuming "fragmentManager" is the support fragment manager from an Activity or Fragment

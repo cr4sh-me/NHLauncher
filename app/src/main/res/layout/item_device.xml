@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textViewIP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="IP Address: " />
+
+    <TextView
+        android:id="@+id/textViewMAC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MAC Address: " />
+
+    <TextView
+        android:id="@+id/textViewVendor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vendor: " />
+
+    <TextView
+        android:id="@+id/textViewOs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OS: " />
+
+    <TextView
+        android:id="@+id/textViewPorts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ports: " />
+
+    <TextView
+        android:id="@+id/textViewServices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Services: " />
+</LinearLayout>

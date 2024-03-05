@@ -179,14 +179,6 @@ class BluetoothFragment1 : Fragment() {
                         dbusAction(false)
                         bluetoothAction(false)
                     }
-
-//                    if (isDbusRunning) {
-//                        // D-Bus is running, proceed with Bluetooth action
-//                        bluetoothAction()
-//                    } else {
-//                        dbusAction()
-//                        bluetoothAction()
-//                    }
                 }
             } catch (e: Exception) {
                 // Log exceptions or handle them appropriately

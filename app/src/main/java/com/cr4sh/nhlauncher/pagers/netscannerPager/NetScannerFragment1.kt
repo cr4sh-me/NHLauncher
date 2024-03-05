@@ -1,39 +1,30 @@
 package com.cr4sh.nhlauncher.pagers.netscannerPager
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.CheckBox
-import android.widget.CompoundButton
-import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
-import com.cr4sh.nhlauncher.activities.nmapResults.NmapResultsActivity
+import com.cr4sh.nhlauncher.overrides.FastScrollRecyclerView
+import com.cr4sh.nhlauncher.pagers.bluetoothPager.DeviceAdapter
+import com.cr4sh.nhlauncher.pagers.bluetoothPager.DeviceItem
 import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ShellExecuter
-import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
-import com.skydoves.powerspinner.IconSpinnerAdapter
-import com.skydoves.powerspinner.IconSpinnerItem
-import com.skydoves.powerspinner.PowerSpinnerView
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
+import java.util.regex.Pattern
 
 
 class NetScannerFragment1 : Fragment() {
@@ -44,14 +35,18 @@ class NetScannerFragment1 : Fragment() {
 
     //    private var scanTime = "10"
     private var nhlPreferences: NHLPreferences? = null
-    private var scriptsCMD: String = ""
     private var nhlUtils: NHLUtils? = null
     private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
-    private lateinit var mySwitch: SwitchCompat
-    private lateinit var mySwitch2: SwitchCompat
-    private lateinit var mySwitch3: SwitchCompat
-    private var pnCMD = ""
-    private var ipv6CMD = ""
+    private lateinit var networkRange: String
+    private lateinit var messageBox: TextView
+    private lateinit var recyclerView: FastScrollRecyclerView
+//    private var x: Int = 0
+//    var deviceIp: String = "Loading..."
+//    var deviceMac: String = "Loading..."
+//    var deviceVendor: String = "Loading..."
+//    var deviceOs: String = "Loading..."
+
+
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,224 +57,179 @@ class NetScannerFragment1 : Fragment() {
 
         nhlPreferences = mainActivity?.let { NHLPreferences(it) }
         nhlUtils = mainActivity?.let { NHLUtils(it) }
+        messageBox = view.findViewById(R.id.text_gateway)
 
+        recyclerView = view.findViewById(R.id.recyclerview)
         val scanButton = view.findViewById<Button>(R.id.start_scan)
-        val powerSpinnerView = view.findViewById<PowerSpinnerView>(R.id.nmap_modes)
-        val powerSpinnerView2 = view.findViewById<PowerSpinnerView>(R.id.nmap_times)
+        ColorChanger.setButtonColors(scanButton)
 
-        val checkboxes = arrayOf<CheckBox>(
-            view.findViewById(R.id.mysql_brute),
-            view.findViewById(R.id.ssh_brute),
-            view.findViewById(R.id.dns_brute),
-            view.findViewById(R.id.http_enum),
-            view.findViewById(R.id.vulners),
-            view.findViewById(R.id.vulscan),
-        )
-
-        checkboxes.forEach { checkbox -> checkbox.setOnClickListener { onCheckboxClicked(checkboxes) } }
-        ColorChanger.setupCheckboxesColors(checkboxes)
-
-        val description = view.findViewById<TextView>(R.id.bt_info2)
-        val textview4 = view.findViewById<TextView>(R.id.textView4)
-        val targetIp = view.findViewById<EditText>(R.id.target_ip)
-        val modeText = view.findViewById<TextView>(R.id.selected_mode)
-        val timeText = view.findViewById<TextView>(R.id.selected_time)
-        val bg1 = view.findViewById<LinearLayout>(R.id.spinnerBg1)
-        val bg2 = view.findViewById<LinearLayout>(R.id.spinnerBg2)
-        mySwitch = view.findViewById(R.id.switchWidget)
-        mySwitch2 = view.findViewById(R.id.switchWidget2)
-        mySwitch3 = view.findViewById(R.id.switchWidget3)
-
-        ColorChanger.setContainerBackground(bg1, true)
-        ColorChanger.setContainerBackground(bg2, true)
-
-        mySwitch2.setOnCheckedChangeListener { _: CompoundButton, b: Boolean ->
-            pnCMD = if (b) "-Pn" else ""
-        }
-
-        mySwitch3.setOnCheckedChangeListener { _: CompoundButton, b: Boolean ->
-            ipv6CMD = if (b) "-6" else ""
-        }
-
-        powerSpinnerView2.apply {
-            setSpinnerAdapter(IconSpinnerAdapter(this))
-            setItems(
-                arrayListOf(
-                    IconSpinnerItem("Paranoid (Avoid IDS): -T0", null),
-                    IconSpinnerItem("Sneaky (Avoid IDS): -T1", null),
-                    IconSpinnerItem("Polite (Slow): -T2", null),
-                    IconSpinnerItem("Normal: -T3", null),
-                    IconSpinnerItem("Aggressive (Fast): -T4", null),
-                    IconSpinnerItem("Insane (Faster): -T5", null),
-                )
-            )
-            selectItemByIndex(3) // select a default item.
-            lifecycleOwner = this@NetScannerFragment1
-        }
-
-        ColorChanger.setButtonColors(scanButton, false)
-
-        powerSpinnerView.apply {
-            setSpinnerAdapter(IconSpinnerAdapter(this))
-            setItems(
-                arrayListOf(
-                    IconSpinnerItem("Stealth Version: -sS -sV", null),
-                    IconSpinnerItem("Intense Stealth: -sS -A", null),
-                    IconSpinnerItem("TCP SYN: -sS", null),
-                    IconSpinnerItem("TCP Connect: -sT", null),
-                    IconSpinnerItem("TCP ACK: -sA", null),
-                    IconSpinnerItem("UDP Scan: -sU", null),
-                    IconSpinnerItem("ALL Ports: -p1-65535", null),
-                    IconSpinnerItem("ALL Ports SYN: -sS -p1-65535", null),
-                    IconSpinnerItem("ALL Ports Connect: -sT -p1-65535", null),
-                    IconSpinnerItem("Top 50 Ports: --top-ports 50", null),
-                    IconSpinnerItem("OS Detection: -O", null),
-                    IconSpinnerItem("OS Detection SYN: -sS -O", null)
-                )
-            )
-            selectItemByIndex(0) // select a default item.
-            lifecycleOwner = this@NetScannerFragment1
-        }
-
-        ColorChanger.setSwitchColor(mySwitch)
-        ColorChanger.setSwitchColor(mySwitch2)
-        ColorChanger.setSwitchColor(mySwitch3)
-
-        description.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        textview4.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-
-        modeText.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-        timeText.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-
-        ColorChanger.setEditTextColor(targetIp)
-
-        ColorChanger.setPowerSpinnerColor(powerSpinnerView)
-        ColorChanger.setPowerSpinnerColor(powerSpinnerView2)
+        getNetworkRange()
 
         scanButton.setOnClickListener {
-            if (targetIp.text.isEmpty()) {
-                mainActivity?.lifecycleScope?.launch {
-                    showCustomToast(requireActivity(), "Are you dumb?")
-                }
-            } else {
-                mainActivity?.lifecycleScope?.launch(Dispatchers.Default) {
-                    runNmap(
-                        targetIp.text.toString(),
-                        powerSpinnerView.text.toString().substringAfter(": "),
-                        powerSpinnerView2.text.toString().substringAfter(": "),
-                        scanButton
-                    )
-                }
-            }
+            runNmapScan()
         }
+
         return view
     }
 
-    @SuppressLint("SdCardPath", "SetTextI18n")
-    private suspend fun runNmap(
-        targetIp: String,
-        options: String,
-        options2: String,
-        scanButton: Button
-    ) {
-        if (mySwitch.isChecked) {
+    @SuppressLint("SetTextI18n")
+    private fun getNetworkRange(){
+        // TODO check if theres wifi connection first
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
-                requireActivity().lifecycleScope.launch {
-                    lockButton(false, "Scanning...", scanButton)
-                }
-
-                // 1. Check and delete log file if exist
-                val filePath = Environment.getExternalStorageDirectory().absolutePath + "/nmap.html"
-                val file = File(filePath)
-                if (file.exists()) {
-                    val deleted = file.delete()
-
-                    if (deleted) {
-                        println("File deleted successfully")
-                    } else {
-                        println("Failed to delete the file")
-                    }
-                } else {
-                    println("File does not exist")
-                }
-
-                // 2. Run nmap and create new log file
-                val nmapScan = withContext(Dispatchers.IO) {
-                    exe.RunAsRootOutput(
-                        "$appScriptsPath/bootkali custom_cmd nmap $targetIp -oX /root/nmapscan.xml --stylesheet /root/nmap-bootstrap.xsl $options $options2" +
-                                " $scriptsCMD $pnCMD $ipv6CMD" +
-                                "&& echo 'NHLSCANDONE' || echo 'NHLSCANERROR'"
-                    )
-                }
-
-                Log.d("NMAPSCAN", nmapScan)
-
-                // Check if nmap didn't throw any errors
-                if (nmapScan.contains("NHLSCANDONE")) {
-                    val ref = withContext(Dispatchers.IO) {
-                        exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd xsltproc -o /sdcard/nmap.html /root/nmap-bootstrap.xsl /root/nmapscan.xml && echo 'NHLDONE'")
-                    }
-                    mainActivity?.lifecycleScope?.launch {
-                        lockButton(true, "Scan", scanButton)
-                    }
-                    Log.d("REF", ref)
-                    if (ref.contains("NHLDONE")) {
-                        mainActivity?.lifecycleScope?.launch {
-                            val intent = Intent(mainActivity, NmapResultsActivity::class.java)
-                            intent.putExtra("file_path", filePath)
-                            if (isAdded) {
-                                startActivity(intent)
-                            }
-                        }
-                    } else {
-                        mainActivity?.lifecycleScope?.launch {
-                            showCustomToast(requireActivity(), "Something went wrong!")
-                        }
-                    }
-                } else {
-                    requireActivity().lifecycleScope.launch {
-                        showCustomToast(requireActivity(), "Something went wrong!")
-                        lockButton(true, "Scan", scanButton)
-                    }
-                }
+                networkRange = exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd ip route show | awk '/wlan0.*scope/ {print $1}'")
+                messageBox.text = "Your network range is: $networkRange"
             } catch (e: Exception) {
-                mainActivity?.lifecycleScope?.launch {
-                    showCustomToast(requireActivity(), "Something went wrong!")
+                e.printStackTrace()
+            }
+        }
+    }
+    @SuppressLint("SetTextI18n")
+    private fun runNmapScan() {
+        lifecycleScope.launch {
+            // Clear recycler
+            recyclerView.adapter?.let { adapter ->
+                if (adapter is DeviceAdapter) {
+                    adapter.clear()
                 }
             }
-        } else {
-            nhlUtils?.runCmd(
-                "nmap $targetIp $options $options2 " +
-                        "$scriptsCMD $pnCMD $ipv6CMD"
-            )
+            messageBox.text = "Scanning network for devices..."
+        }
+        // TODO: Check if there's a network range
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                // Run Nmap command to get IP and MAC details
+                val nmapOutput = exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd nmap -n -sn $networkRange")
+
+                // Parse the nmapOutput to extract IP, MAC, and vendor details
+                val devices = localDevices(nmapOutput)
+
+                displayDevices(devices)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+//    data class Device(
+//        var ip: String = "",
+//        var mac: String = "",
+//        var vendor: String = "",
+//        val openPorts: MutableList<String> = mutableListOf(),
+//        val services: MutableList<String> = mutableListOf(),
+//        var os: String = "Unknown"
+//    )
+    private fun localDevices(nmapOutput: String): List<DeviceItem> {
+        val result = mutableListOf<DeviceItem>()
+        var device: DeviceItem
+
+        val deviceInfoRegex = Regex("Nmap scan report for (\\S+)(?:.*?MAC Address: (\\S+))?(?:.*?\\(([^)]+)\\))?", RegexOption.DOT_MATCHES_ALL)
+
+        deviceInfoRegex.findAll(nmapOutput).forEach { matchResult ->
+            val (ip, mac, vendor) = matchResult.destructured
+            if (mac.isNotBlank() && vendor.isNotBlank()) {
+                device = DeviceItem(ip.trim(), mac.trim(), vendor.trim())
+                result.add(device)
+            }
+        }
+
+        return result
+    }
+
+    private fun displayDevices(devices: List<DeviceItem>) {
+        val totalDevices = devices.size
+
+        lifecycleScope.launch {
+            recyclerView.adapter = DeviceAdapter(devices.toMutableList(), this@NetScannerFragment1)
+
+            // List to keep track of running jobs
+            val jobs = mutableListOf<Job>()
+
+            // Launch a coroutine for scanning each device
+            for ((index, device) in devices.withIndex()) {
+                Log.d("DeviceInfo", "IP: ${device.ip}, MAC: ${device.mac}, Vendor: ${device.vendor}")
+
+                // Update the messageBox to show progress and current scanning IP
+                val progressMessage = "Scanning device ${index + 1} of $totalDevices: ${device.ip}"
+                messageBox.text = progressMessage
+
+                // Run Nmap for the current device and add the job to the list
+                jobs.add(runNmapScoped(device))
+            }
+
+            // Wait for all jobs to complete
+            jobs.forEach { it.join() }
+
+            // Reset the messageBox after scanning all devices
+            messageBox.text = "Scanning completed for all devices"
         }
     }
 
 
-    private fun lockButton(enable: Boolean, binderButtonText: String, choosenButton: Button?) {
-        mainActivity?.lifecycleScope?.launch {
-            choosenButton!!.isEnabled = enable
-            choosenButton.text = binderButtonText
-            if (enable) {
-                choosenButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
-                choosenButton.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
-            } else {
-                choosenButton.setBackgroundColor(Color.parseColor(nhlPreferences!!.color80()))
-                choosenButton.setTextColor(Color.parseColor(nhlPreferences!!.color50()))
+    @SuppressLint("SetTextI18n")
+    private fun runNmapScoped(device: DeviceItem): Job {
+        return lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                // Run Nmap command to get detailed information
+                val nmapOutput = exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd nmap -sV -O --top-ports 200 -Pn --max-os-tries 1 -n ${device.ip}")
+
+                // Continue with parsing
+                parseNmapOutput(nmapOutput, device)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
 
 
-    private fun onCheckboxClicked(x: Array<CheckBox>) {
-        val selectedCheckboxes = x.filter { it.isChecked }
 
-        scriptsCMD = if (selectedCheckboxes.isNotEmpty()) {
-            val optionText = selectedCheckboxes.joinToString(",") { it.text.toString() }
-            "--script $optionText"
-        } else {
-            ""
+    @SuppressLint("SetTextI18n")
+    private fun parseNmapOutput(nmapOutput: String, device: DeviceItem) {
+        // Extract host IP address
+        val ipAddressRegex = Regex("Nmap scan report for (\\S+)")
+        val ipAddressMatch = ipAddressRegex.find(nmapOutput)
+        val ipAddress = ipAddressMatch?.groupValues?.get(1) ?: "Unknown"
+        println("IP Address: $ipAddress")
+
+        // Extract open ports and their details
+        val openPortsRegex = Regex("(\\d+)/tcp\\s+(\\S+)\\s*(\\S+)?\\s*(.*?)\\s*")
+
+        val openPortsMatches = openPortsRegex.findAll(nmapOutput)
+
+        val ports = arrayListOf<String>()
+        val services = arrayListOf<String>()
+
+        for (match in openPortsMatches) {
+            val port = match.groupValues[1]
+            val state = match.groupValues[2]
+            val service = match.groupValues[3]
+            val version = match.groupValues[4]
+            println("Port: $port, State: $state, Service: $service, Version: $version")
+            ports.add(port)
+            services.addAll(listOf(service))
+        }
+
+        // Extract OS details
+        val osDetailsRegex = Regex("OS details: (.+)")
+        val osDetailsMatch = osDetailsRegex.find(nmapOutput)
+        val osDetails = osDetailsMatch?.groupValues?.get(1) ?: "Unknown"
+        println("OS Details: $osDetails")
+
+        lifecycleScope.launch {
+            // Clear recycler
+            recyclerView.adapter?.let { adapter ->
+                if (adapter is DeviceAdapter) {
+                    adapter.updateDevice(device.ip, device.mac, device.vendor, osDetails, ports, services)
+//                    messageBox.text = "${device.ip} scanned!"
+                }
+            }
         }
     }
+
+
+
+
 
 }

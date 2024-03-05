@@ -73,13 +73,6 @@
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".activities.nmapResults.NmapResultsActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.cr4sh.nhlauncher.fileprovider"

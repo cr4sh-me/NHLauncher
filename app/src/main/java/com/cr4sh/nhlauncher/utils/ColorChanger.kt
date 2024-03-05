@@ -107,8 +107,8 @@ class ColorChanger {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 overrideActivityTransition(
                     OVERRIDE_TRANSITION_CLOSE,
-                    androidx.appcompat.R.anim.abc_fade_in,
-                    androidx.appcompat.R.anim.abc_fade_out,
+                    androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom,
+                    androidx.appcompat.R.anim.abc_shrink_fade_out_from_bottom,
                 )
             } else {
                 @Suppress("DEPRECATION")
