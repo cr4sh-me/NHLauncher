@@ -46,7 +46,6 @@ class NmapDeviceDialog(private val clickedDevice: DeviceItem) : AppCompatDialogF
         devicePorts.text = "Ports: ${clickedDevice.ports}"
         deviceServices.text = "Services: ${clickedDevice.services}"
 
-
         val cancelButton = view.findViewById<Button>(R.id.cancel_button)
 
         // Apply custom themes

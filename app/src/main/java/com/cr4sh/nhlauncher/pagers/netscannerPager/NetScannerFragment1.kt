@@ -1,12 +1,18 @@
 package com.cr4sh.nhlauncher.pagers.netscannerPager
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -20,11 +26,14 @@ import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ShellExecuter
+import com.skydoves.powerspinner.IconSpinnerAdapter
+import com.skydoves.powerspinner.IconSpinnerItem
+import com.skydoves.powerspinner.PowerSpinnerView
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.util.regex.Pattern
 
 
 class NetScannerFragment1 : Fragment() {
@@ -37,15 +46,14 @@ class NetScannerFragment1 : Fragment() {
     private var nhlPreferences: NHLPreferences? = null
     private var nhlUtils: NHLUtils? = null
     private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
-    private lateinit var networkRange: String
     private lateinit var messageBox: TextView
     private lateinit var recyclerView: FastScrollRecyclerView
-//    private var x: Int = 0
-//    var deviceIp: String = "Loading..."
-//    var deviceMac: String = "Loading..."
-//    var deviceVendor: String = "Loading..."
-//    var deviceOs: String = "Loading..."
-
+    private var completedScan: Int = 0
+    private var totalDevices: Int = 0
+    private lateinit var progressBar: ProgressBar
+    private lateinit var optionsLayout: LinearLayout
+    private lateinit var portsSpinner: PowerSpinnerView
+    private lateinit var timeSpinner: PowerSpinnerView
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -59,11 +67,47 @@ class NetScannerFragment1 : Fragment() {
         nhlUtils = mainActivity?.let { NHLUtils(it) }
         messageBox = view.findViewById(R.id.text_gateway)
 
-        recyclerView = view.findViewById(R.id.recyclerview)
-        val scanButton = view.findViewById<Button>(R.id.start_scan)
-        ColorChanger.setButtonColors(scanButton)
+        progressBar = view.findViewById(R.id.progressBar)
 
-        getNetworkRange()
+        recyclerView = view.findViewById(R.id.recyclerview)
+        optionsLayout = view.findViewById(R.id.options_container)
+        portsSpinner = view.findViewById(R.id.ports_spinner)
+        timeSpinner = view.findViewById(R.id.time_spinner)
+        val scanButton = view.findViewById<Button>(R.id.start_scan)
+
+        portsSpinner.apply {
+            setSpinnerAdapter(IconSpinnerAdapter(this))
+            setItems(
+                arrayListOf(
+                    IconSpinnerItem(text = "Top 100: --top-ports 100", null),
+                    IconSpinnerItem(text = "Top 250: --top-ports 250", null),
+                    IconSpinnerItem(text = "Top 500: --top-ports 500", null),
+                    IconSpinnerItem(text = "Top 850: --top-ports 850", null),
+                    IconSpinnerItem(text = "Top 1000: --top-ports 1000", null),
+                    IconSpinnerItem(text = "All: -p-", null)))
+            selectItemByIndex(0) // select a default item.
+            lifecycleOwner = this@NetScannerFragment1
+        }
+
+        timeSpinner.apply {
+            setSpinnerAdapter(IconSpinnerAdapter(this))
+            setItems(
+                arrayListOf(
+                    IconSpinnerItem("Paranoid (Avoid IDS): -T0", null),
+                    IconSpinnerItem("Sneaky (Avoid IDS): -T1", null),
+                    IconSpinnerItem("Polite (Slow): -T2", null),
+                    IconSpinnerItem("Normal: -T3", null),
+                    IconSpinnerItem("Aggressive (Fast): -T4", null),
+                    IconSpinnerItem("Insane (Faster): -T5", null),
+                )
+            )
+            selectItemByIndex(3) // select a default item.
+            lifecycleOwner = this@NetScannerFragment1
+        }
+
+        ColorChanger.setPowerSpinnerColor(portsSpinner)
+        ColorChanger.setPowerSpinnerColor(timeSpinner)
+        ColorChanger.setButtonColors(scanButton)
 
         scanButton.setOnClickListener {
             runNmapScan()
@@ -73,53 +117,72 @@ class NetScannerFragment1 : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun getNetworkRange(){
-        // TODO check if theres wifi connection first
-        lifecycleScope.launch(Dispatchers.IO) {
+    private suspend fun getNetworkRange(): String {
+        lifecycleScope.launch {
+            messageBox.text = "Obtaining network range..."
+        }
+        return lifecycleScope.async(Dispatchers.IO) {
             try {
-                networkRange = exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd ip route show | awk '/wlan0.*scope/ {print $1}'")
-                messageBox.text = "Your network range is: $networkRange"
+                return@async exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd ip route show | awk '/wlan0.*scope/ {print $1}'")
             } catch (e: Exception) {
                 e.printStackTrace()
+                return@async ""
             }
+        }.await()
+    }
+
+
+    private fun isWifiConnected(): Boolean {
+        val connectivityManager = mainActivity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        return networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
+    }
+
+    private fun isInternetAvailable(): Boolean {
+        val runtime = Runtime.getRuntime()
+        try {
+            // Ping Google's DNS server to check internet connectivity
+            val ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8")
+            val exitValue = ipProcess.waitFor()
+            return exitValue == 0
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+        return false
     }
     @SuppressLint("SetTextI18n")
     private fun runNmapScan() {
-        lifecycleScope.launch {
-            // Clear recycler
-            recyclerView.adapter?.let { adapter ->
-                if (adapter is DeviceAdapter) {
-                    adapter.clear()
+        if(isWifiConnected() && isInternetAvailable()){
+            lifecycleScope.launch {
+                // Clear recycler
+                recyclerView.adapter?.let { adapter ->
+                    if (adapter is DeviceAdapter) {
+                        adapter.clear()
+                    }
+                }
+                progressBar.isIndeterminate = true
+            }
+            // TODO: Check if there's a network range
+            lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    val range = getNetworkRange()
+                    messageBox.text = "Scanning network for devices..."
+                    val nmapOutput = exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd nmap -n -sn $range")
+                    // Parse the nmapOutput to extract IP, MAC, and vendor details
+                    val devices = localDevices(nmapOutput)
+
+                    displayDevices(devices)
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
-            messageBox.text = "Scanning network for devices..."
-        }
-        // TODO: Check if there's a network range
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                // Run Nmap command to get IP and MAC details
-                val nmapOutput = exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd nmap -n -sn $networkRange")
-
-                // Parse the nmapOutput to extract IP, MAC, and vendor details
-                val devices = localDevices(nmapOutput)
-
-                displayDevices(devices)
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+        } else {
+            messageBox.text = "Check WiFi or internet connection!"
+            progressBar.progress = 0
         }
     }
 
-//    data class Device(
-//        var ip: String = "",
-//        var mac: String = "",
-//        var vendor: String = "",
-//        val openPorts: MutableList<String> = mutableListOf(),
-//        val services: MutableList<String> = mutableListOf(),
-//        var os: String = "Unknown"
-//    )
     private fun localDevices(nmapOutput: String): List<DeviceItem> {
         val result = mutableListOf<DeviceItem>()
         var device: DeviceItem
@@ -138,44 +201,60 @@ class NetScannerFragment1 : Fragment() {
     }
 
     private fun displayDevices(devices: List<DeviceItem>) {
-        val totalDevices = devices.size
+        showOptions(false)
+        progressBar.isIndeterminate = false
+        totalDevices = devices.size
 
         lifecycleScope.launch {
             recyclerView.adapter = DeviceAdapter(devices.toMutableList(), this@NetScannerFragment1)
 
-            // List to keep track of running jobs
-            val jobs = mutableListOf<Job>()
+            // Create a list to store all the deferred tasks
+            val deferredList = mutableListOf<Deferred<Job>>()
 
-            // Launch a coroutine for scanning each device
-            for ((index, device) in devices.withIndex()) {
-                Log.d("DeviceInfo", "IP: ${device.ip}, MAC: ${device.mac}, Vendor: ${device.vendor}")
+            // Launch a coroutine for scanning each device concurrently
+            for (device in devices) {
+                // Use launch to run the tasks concurrently
+                val deferred = lifecycleScope.async(Dispatchers.IO) {
+                    runNmapScoped(device)
+                }
 
-                // Update the messageBox to show progress and current scanning IP
-                val progressMessage = "Scanning device ${index + 1} of $totalDevices: ${device.ip}"
-                messageBox.text = progressMessage
-
-                // Run Nmap for the current device and add the job to the list
-                jobs.add(runNmapScoped(device))
+                deferredList.add(deferred)
             }
 
-            // Wait for all jobs to complete
-            jobs.forEach { it.join() }
-
-            // Reset the messageBox after scanning all devices
-            messageBox.text = "Scanning completed for all devices"
+            // Wait for all tasks to complete
+            deferredList.forEach { it.join() }
         }
     }
+
+
+    @SuppressLint("SetTextI18n")
+    private fun updateProgress(completedScans: Int, totalDevices: Int) {
+        val progress = (completedScans.toFloat() / totalDevices.toFloat() * 100).toInt()
+        lifecycleScope.launch(Dispatchers.Main) {
+            if(progress == 100){
+                messageBox.text = "Scan done!"
+            } else {
+                messageBox.text = "Scanning progress: $progress%"
+            }
+            progressBar.progress = progress
+        }
+    }
+
 
 
     @SuppressLint("SetTextI18n")
     private fun runNmapScoped(device: DeviceItem): Job {
         return lifecycleScope.launch(Dispatchers.IO) {
             try {
+                val command = "$appScriptsPath/bootkali custom_cmd nmap -sV -O ${timeSpinner.text.toString().substringAfter(": ")} ${portsSpinner.text.toString().substringAfter(": ")} -Pn --max-os-tries 1 -n ${device.ip} && echo NHLSCANCOMPLETE"
+                Log.d("NMAPCMD", command)
                 // Run Nmap command to get detailed information
-                val nmapOutput = exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd nmap -sV -O --top-ports 200 -Pn --max-os-tries 1 -n ${device.ip}")
-
-                // Continue with parsing
-                parseNmapOutput(nmapOutput, device)
+                val nmapOutput = exe.RunAsRootOutput(command)
+                if(nmapOutput.contains("NHLSCANCOMPLETE")){
+                    parseNmapOutput(nmapOutput, device)
+                    completedScan++
+                    updateProgress(completedScan, totalDevices)
+                }
 
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -229,7 +308,17 @@ class NetScannerFragment1 : Fragment() {
     }
 
 
-
+    private fun showOptions(show: Boolean){
+        lifecycleScope.launch {
+            if (show){
+                recyclerView.visibility = View.GONE
+                optionsLayout.visibility = View.VISIBLE
+            } else {
+                recyclerView.visibility = View.VISIBLE
+                optionsLayout.visibility = View.GONE
+            }
+        }
+    }
 
 
 }

@@ -17,26 +17,152 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:padding="10dp"
+        android:padding="5dp"
         android:id="@+id/text_gateway"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/loading"
+        android:text="Scan status will be displayed here"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bt_info2" />
 
+    <ProgressBar
+        android:padding="5dp"
+        android:layout_marginHorizontal="5dp"
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:max="100"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_gateway" />
+
+
     <com.cr4sh.nhlauncher.overrides.FastScrollRecyclerView
+        android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/start_scan"
-        app:layout_constraintTop_toBottomOf="@+id/text_gateway" >
+        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
 
 
-    </com.cr4sh.nhlauncher.overrides.FastScrollRecyclerView>
+    <LinearLayout
+        android:id="@+id/options_container"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/start_scan">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Scan options (for single device)"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/switchWidget3" />
+
+        <LinearLayout
+            android:id="@+id/spinnerContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            >
+
+            <TextView
+                android:id="@+id/ports_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Ports"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/spinnerBg1"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:padding="15dp">
+
+                <com.skydoves.powerspinner.PowerSpinnerView
+                    android:id="@+id/ports_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/loading"
+                    app:spinner_arrow_show="false"
+                    app:spinner_divider_show="true"
+                    app:spinner_divider_size="0.1dp"
+                    app:spinner_item_height="60dp"
+                    app:spinner_popup_animation="dropdown"
+                    app:spinner_popup_elevation="10dp"
+                    app:spinner_popup_height="350dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/spinnerContainer2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerContainer">
+
+            <TextView
+                android:id="@+id/time_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Time"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/spinnerBg2"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:padding="15dp">
+
+                <com.skydoves.powerspinner.PowerSpinnerView
+                    android:id="@+id/time_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/loading"
+                    app:spinner_arrow_show="false"
+                    app:spinner_divider_show="true"
+                    app:spinner_divider_size="0.1dp"
+                    app:spinner_item_height="60dp"
+                    app:spinner_popup_animation="dropdown"
+                    app:spinner_popup_elevation="10dp"
+                    app:spinner_popup_height="350dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
 
 
     <Button

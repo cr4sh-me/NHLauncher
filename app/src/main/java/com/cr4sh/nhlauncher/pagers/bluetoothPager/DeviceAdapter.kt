@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.dialogs.NmapDeviceDialog
@@ -25,13 +27,11 @@ class DeviceAdapter(
     private val myActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     val dialogUtils = myActivity?.let { DialogUtils(it.supportFragmentManager) }
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        val textViewIP: TextView = itemView.findViewById(R.id.textViewIP)
-        val textViewMAC: TextView = itemView.findViewById(R.id.textViewMAC)
-        val textViewVendor: TextView = itemView.findViewById(R.id.textViewVendor)
-        val textViewOs: TextView = itemView.findViewById(R.id.textViewOs)
-        val textViewPorts: TextView = itemView.findViewById(R.id.textViewPorts)
-        val textViewServices: TextView = itemView.findViewById(R.id.textViewServices)
-
+        val textViewIP: TextView = itemView.findViewById(R.id.top_left_text)
+        val textViewMAC: TextView = itemView.findViewById(R.id.bottom_right_text)
+        val textViewVendor: TextView = itemView.findViewById(R.id.bottom_left_text)
+        val textViewOs: TextView = itemView.findViewById(R.id.top_right_text)
+        val buttonImage: ImageView = itemView.findViewById(R.id.button_icon)
 
         init {
             itemView.setOnClickListener(this)
@@ -60,16 +60,17 @@ class DeviceAdapter(
     fun updateDevice(ip: String, updatedMac: String, updatedVendor: String, updatedOs: String, ports: ArrayList<String>, services: ArrayList<String>) {
         // Find the index of the device with the specified IP
         val index = devices.indexOfFirst { it.ip == ip }
-
         // Check if the device is found
         if (index != -1) {
             // Update the properties of the device at the found index
+            devices[index].imageRes = devices[index].imageRes
             devices[index].mac = updatedMac
             devices[index].vendor = updatedVendor
             devices[index].os = updatedOs
             devices[index].ports = ports
             devices[index].services = services
 
+            if(devices[index].os == "Unknown"){ devices[index].guessos() }
             // Notify the RecyclerView adapter if you're using one
             notifyItemChanged(index)
         }
@@ -84,14 +85,17 @@ class DeviceAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val device = devices[position]
 
-        holder.textViewIP.text = "IP Address: ${device.ip}"
-        holder.textViewMAC.text = "MAC Address: ${device.mac}"
-        holder.textViewVendor.text = "Vendor: ${device.vendor}"
-        holder.textViewOs.text = "OS: ${device.os}"
-        holder.textViewPorts.text = "Ports: ${device.ports}"
-        holder.textViewServices.text = "Services: ${device.services}"
-
+        holder.textViewIP.text = device.ip
+        holder.textViewMAC.text = device.mac
+        holder.textViewVendor.text = device.vendor
+        holder.textViewOs.text = device.os
+        holder.buttonImage.setImageResource(device.getImage())
     }
+//        Glide.with(holder.buttonImage)
+//            .asBitmap()
+//            .load(device.imgResource)
+//            .into(holder.buttonImage)
+//        }
 
     override fun getItemCount(): Int {
         return devices.size
