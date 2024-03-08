@@ -80,10 +80,8 @@ class NetScannerFragment1 : Fragment() {
             setItems(
                 arrayListOf(
                     IconSpinnerItem(text = "Top 100: --top-ports 100", null),
-                    IconSpinnerItem(text = "Top 250: --top-ports 250", null),
-                    IconSpinnerItem(text = "Top 500: --top-ports 500", null),
-                    IconSpinnerItem(text = "Top 850: --top-ports 850", null),
                     IconSpinnerItem(text = "Top 1000: --top-ports 1000", null),
+                    IconSpinnerItem(text = "Top 10000: --top-ports 10000", null),
                     IconSpinnerItem(text = "All: -p-", null)))
             selectItemByIndex(0) // select a default item.
             lifecycleOwner = this@NetScannerFragment1
@@ -204,6 +202,7 @@ class NetScannerFragment1 : Fragment() {
         showOptions(false)
         progressBar.isIndeterminate = false
         totalDevices = devices.size
+        updateProgress(completedScan, totalDevices)
 
         lifecycleScope.launch {
             recyclerView.adapter = DeviceAdapter(devices.toMutableList(), this@NetScannerFragment1)

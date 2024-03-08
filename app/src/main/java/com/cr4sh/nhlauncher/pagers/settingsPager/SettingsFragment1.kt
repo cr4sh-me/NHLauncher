@@ -30,7 +30,6 @@ import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.database.DBBackup
 import com.cr4sh.nhlauncher.utils.ColorChanger
-import com.cr4sh.nhlauncher.utils.LanguageChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
@@ -42,13 +41,13 @@ import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
 import com.skydoves.powerspinner.PowerSpinnerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class SettingsFragment1 : Fragment() {
     var nhlPreferences: NHLPreferences? = null
     var mainUtils: NHLUtils? = null
     val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
-    private val languageChanger = LanguageChanger()
     private lateinit var updateButton: Button
     private var newSortingModeSetting: String? = null
     private var newLanguageNameSetting: String? = null
@@ -89,6 +88,7 @@ class SettingsFragment1 : Fragment() {
         val seekBarValue = view.findViewById<TextView>(R.id.seekbar_value)
         updateButton = view.findViewById(R.id.update_button)
         val checkUpdate = view.findViewById<TextView>(R.id.checkUpdate)
+        val checkToolsCount = view.findViewById<TextView>(R.id.checkToolsCount)
         val spinnerText1 = view.findViewById<TextView>(R.id.language_spinner_label)
         val spinnerText2 = view.findViewById<TextView>(R.id.sorting_spinner_label)
         spinnerText1.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
@@ -98,6 +98,11 @@ class SettingsFragment1 : Fragment() {
         val spinnerBg1 = view.findViewById<LinearLayout>(R.id.spinnerBg1)
         val spinnerBg2 = view.findViewById<LinearLayout>(R.id.spinnerBg2)
         checkUpdate.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        checkToolsCount.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
+
+        lifecycleScope.launch {
+            checkToolsCount.text = "Tools in database: ${getToolsCount()}"
+        }
 
         ColorChanger.setPowerSpinnerColor(powerSpinnerView)
         ColorChanger.setPowerSpinnerColor(powerSpinnerView2)
@@ -345,6 +350,22 @@ class SettingsFragment1 : Fragment() {
             }
         }
     }
+
+    suspend fun getToolsCount(): Int = withContext(Dispatchers.IO) {
+        val db = mainActivity?.mDatabase
+        val columns = arrayOf("COUNT(*)")
+        val cursor = db?.query("TOOLS", columns, null, null, null, null, null)
+
+        var count = 0
+        cursor?.use {
+            if (it.moveToFirst()) {
+                count = it.getInt(0)
+            }
+        }
+
+        count
+    }
+
 
     private fun saveNhlSettings(sortingMode: String?) {
 

@@ -3386,6 +3386,10 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             //        db.close();
         }
 
+        fun getToolsCount(db: SQLiteDatabase){
+
+        }
+
         // Returns database instance, so we can reuse it
         @Synchronized
         fun getInstance(context: Context): DBHandler? {
