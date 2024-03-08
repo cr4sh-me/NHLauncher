@@ -26,6 +26,7 @@ import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ShellExecuter
+import com.cr4sh.nhlauncher.utils.ToastUtils
 import com.skydoves.powerspinner.IconSpinnerAdapter
 import com.skydoves.powerspinner.IconSpinnerItem
 import com.skydoves.powerspinner.PowerSpinnerView
@@ -246,9 +247,9 @@ class NetScannerFragment1 : Fragment() {
         return lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val command = "$appScriptsPath/bootkali custom_cmd nmap -sV -O ${timeSpinner.text.toString().substringAfter(": ")} ${portsSpinner.text.toString().substringAfter(": ")} -Pn --max-os-tries 1 -n ${device.ip} && echo NHLSCANCOMPLETE"
-                Log.d("NMAPCMD", command)
                 // Run Nmap command to get detailed information
                 val nmapOutput = exe.RunAsRootOutput(command)
+                Log.d("NMAPCMD", nmapOutput)
                 if(nmapOutput.contains("NHLSCANCOMPLETE")){
                     parseNmapOutput(nmapOutput, device)
                     completedScan++
