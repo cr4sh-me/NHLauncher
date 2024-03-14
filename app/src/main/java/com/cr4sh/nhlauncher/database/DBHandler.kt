@@ -40,6 +40,18 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             1,
             "1",
             0,
+            "rustscan",
+            "Modern fast port scanner written in Rust",
+            "Nowoczesny i szybki skaner portow napsany w Rust",
+            "rustscan -h",
+            "rust",
+            0
+        )
+        insertTool(
+            db,
+            1,
+            "1",
+            0,
             "spiderfoot",
             "It automates OSINT for threat intelligence and mapping your attack surface",
             "Automatyzuje OSINT w celu analizy zagrożeń i mapowania powierzchni ataku",
@@ -1054,6 +1066,18 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             "Dzięki rtpbreak możesz wykryć, zrekonstruować i przeanalizować dowolną sesję RTP",
             "rtpbreak -h",
             "kali_menu",
+            0
+        )
+        insertTool(
+            db,
+            1,
+            "2",
+            0,
+            "slowloris",
+            "HTTP Low bandwidth DoS tool",
+            "Narzędzie DoS o niskiej przepustowości HTTP",
+            "slowloris -h",
+            "slowloris",
             0
         )
         insertTool(
@@ -3384,10 +3408,6 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
         fun deleteTool(db: SQLiteDatabase, toolName: String) {
             db.delete("TOOLS", "name=?", arrayOf(toolName))
             //        db.close();
-        }
-
-        fun getToolsCount(db: SQLiteDatabase){
-
         }
 
         // Returns database instance, so we can reuse it

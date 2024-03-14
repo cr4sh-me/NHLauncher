@@ -52,9 +52,7 @@ class NetScannerFragment1 : Fragment() {
     private var completedScan: Int = 0
     private var totalDevices: Int = 0
     private lateinit var progressBar: ProgressBar
-    private lateinit var optionsLayout: LinearLayout
-    private lateinit var portsSpinner: PowerSpinnerView
-    private lateinit var timeSpinner: PowerSpinnerView
+    private lateinit var textInfo: TextView
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -71,41 +69,9 @@ class NetScannerFragment1 : Fragment() {
         progressBar = view.findViewById(R.id.progressBar)
 
         recyclerView = view.findViewById(R.id.recyclerview)
-        optionsLayout = view.findViewById(R.id.options_container)
-        portsSpinner = view.findViewById(R.id.ports_spinner)
-        timeSpinner = view.findViewById(R.id.time_spinner)
         val scanButton = view.findViewById<Button>(R.id.start_scan)
+        textInfo = view.findViewById(R.id.text_info)
 
-        portsSpinner.apply {
-            setSpinnerAdapter(IconSpinnerAdapter(this))
-            setItems(
-                arrayListOf(
-                    IconSpinnerItem(text = "Top 100: --top-ports 100", null),
-                    IconSpinnerItem(text = "Top 1000: --top-ports 1000", null),
-                    IconSpinnerItem(text = "Top 10000: --top-ports 10000", null),
-                    IconSpinnerItem(text = "All: -p-", null)))
-            selectItemByIndex(0) // select a default item.
-            lifecycleOwner = this@NetScannerFragment1
-        }
-
-        timeSpinner.apply {
-            setSpinnerAdapter(IconSpinnerAdapter(this))
-            setItems(
-                arrayListOf(
-                    IconSpinnerItem("Paranoid (Avoid IDS): -T0", null),
-                    IconSpinnerItem("Sneaky (Avoid IDS): -T1", null),
-                    IconSpinnerItem("Polite (Slow): -T2", null),
-                    IconSpinnerItem("Normal: -T3", null),
-                    IconSpinnerItem("Aggressive (Fast): -T4", null),
-                    IconSpinnerItem("Insane (Faster): -T5", null),
-                )
-            )
-            selectItemByIndex(3) // select a default item.
-            lifecycleOwner = this@NetScannerFragment1
-        }
-
-        ColorChanger.setPowerSpinnerColor(portsSpinner)
-        ColorChanger.setPowerSpinnerColor(timeSpinner)
         ColorChanger.setButtonColors(scanButton)
 
         scanButton.setOnClickListener {
@@ -159,6 +125,9 @@ class NetScannerFragment1 : Fragment() {
                         adapter.clear()
                     }
                 }
+                completedScan = 0
+                totalDevices = 0
+                updateProgress(completedScan, totalDevices)
                 progressBar.isIndeterminate = true
             }
             // TODO: Check if there's a network range
@@ -166,11 +135,9 @@ class NetScannerFragment1 : Fragment() {
                 try {
                     val range = getNetworkRange()
                     messageBox.text = "Scanning network for devices..."
-                    val nmapOutput = exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd nmap -n -sn $range")
-                    // Parse the nmapOutput to extract IP, MAC, and vendor details
-                    val devices = localDevices(nmapOutput)
-
-                    displayDevices(devices)
+                    val nmapOutput = exe.RunAsRootOutput("$appScriptsPath/bootkali custom_cmd nmap -n -sn $range | awk '/Nmap scan report/{ip=\$5} /MAC Address/{mac=\$3; vendor=\$4; for (i=5; i<=NF; i++) {vendor = vendor \" \" \$i}; gsub(/[()]/, \"\", vendor); print ip\"#\"mac\"#\"vendor}'")
+                    Log.d("LOCALSCAN", nmapOutput)
+                    displayDevices(localDevices(nmapOutput))
 
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -183,21 +150,31 @@ class NetScannerFragment1 : Fragment() {
     }
 
     private fun localDevices(nmapOutput: String): List<DeviceItem> {
-        val result = mutableListOf<DeviceItem>()
-        var device: DeviceItem
+        val lines = nmapOutput.split("\n")
 
-        val deviceInfoRegex = Regex("Nmap scan report for (\\S+)(?:.*?MAC Address: (\\S+))?(?:.*?\\(([^)]+)\\))?", RegexOption.DOT_MATCHES_ALL)
+        val deviceList = mutableListOf<DeviceItem>()
 
-        deviceInfoRegex.findAll(nmapOutput).forEach { matchResult ->
-            val (ip, mac, vendor) = matchResult.destructured
-            if (mac.isNotBlank() && vendor.isNotBlank()) {
-                device = DeviceItem(ip.trim(), mac.trim(), vendor.trim())
-                result.add(device)
+        for (line in lines) {
+            if (line.isNotBlank()) {
+                val parts = line.split("#")
+                if (parts.size == 3) {
+                    val ip = parts[0].trim()
+                    val mac = parts[1].trim()
+                    val vendor = parts[2].trim()
+
+                    if (ip.isNotEmpty() && mac.isNotEmpty() && vendor.isNotEmpty()) {
+                        deviceList.add(DeviceItem(ip = ip, mac = mac, vendor = vendor))
+                    }
+                }
             }
         }
 
-        return result
+        return deviceList
     }
+
+
+
+
 
     private fun displayDevices(devices: List<DeviceItem>) {
         showOptions(false)
@@ -232,7 +209,7 @@ class NetScannerFragment1 : Fragment() {
         val progress = (completedScans.toFloat() / totalDevices.toFloat() * 100).toInt()
         lifecycleScope.launch(Dispatchers.Main) {
             if(progress == 100){
-                messageBox.text = "Scan done!"
+                messageBox.text = "Scan done, found $totalDevices devices!"
             } else {
                 messageBox.text = "Scanning progress: $progress%"
             }
@@ -246,7 +223,7 @@ class NetScannerFragment1 : Fragment() {
     private fun runNmapScoped(device: DeviceItem): Job {
         return lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val command = "$appScriptsPath/bootkali custom_cmd nmap -sV -O ${timeSpinner.text.toString().substringAfter(": ")} ${portsSpinner.text.toString().substringAfter(": ")} -Pn --max-os-tries 1 -n ${device.ip} && echo NHLSCANCOMPLETE"
+                val command = "$appScriptsPath/bootkali custom_cmd nmap -sV -O -Pn --max-os-tries 1 -n ${device.ip} && echo NHLSCANCOMPLETE"
                 // Run Nmap command to get detailed information
                 val nmapOutput = exe.RunAsRootOutput(command)
                 Log.d("NMAPCMD", nmapOutput)
@@ -307,15 +284,14 @@ class NetScannerFragment1 : Fragment() {
         }
     }
 
-
     private fun showOptions(show: Boolean){
         lifecycleScope.launch {
             if (show){
                 recyclerView.visibility = View.GONE
-                optionsLayout.visibility = View.VISIBLE
+                textInfo.visibility = View.VISIBLE
             } else {
                 recyclerView.visibility = View.VISIBLE
-                optionsLayout.visibility = View.GONE
+                textInfo.visibility = View.GONE
             }
         }
     }
