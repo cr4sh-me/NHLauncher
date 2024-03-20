@@ -137,7 +137,7 @@
     <string name="current_app_version">"Current version: "</string>
     <string name="new_app_version">"New version: "</string>
     <string name="update_avaiable">Update available!</string>
-    <string name="giga_chad">Welcome to test version!</string>
+    <string name="giga_chad">Welcome to the test version!</string>
     <string name="already_updated">Already updated!</string>
     <string name="something_fucked_up">Something went wrong!</string>
     <string name="update_button">Download update!</string>
@@ -193,5 +193,6 @@
     <string name="netscanner">Discover open ports, vulnerabilities and more using Nmap! Customize and run your prompt with just a few clicks!</string>
     <string name="netscanner2">Discover network devices, and their weak points!</string>
     <string name="local_devices_will_be_displayed_here">Local devices will be displayed here</string>
+    <string name="tools_in_the_db">"Tools in the database: "</string>
 
 </resources>

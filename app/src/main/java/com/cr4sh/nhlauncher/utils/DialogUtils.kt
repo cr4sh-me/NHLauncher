@@ -16,7 +16,6 @@ import com.cr4sh.nhlauncher.dialogs.FirstSetupDialog
 import com.cr4sh.nhlauncher.dialogs.MissingActivityDialog
 import com.cr4sh.nhlauncher.dialogs.NewToolDialog
 import com.cr4sh.nhlauncher.dialogs.NhlColorPickerDialog
-import com.cr4sh.nhlauncher.dialogs.NmapDeviceDialog
 import com.cr4sh.nhlauncher.dialogs.PermissionDialog
 import com.cr4sh.nhlauncher.dialogs.RootDialog
 import com.cr4sh.nhlauncher.dialogs.ScanTimeDialog

@@ -21,6 +21,15 @@ import com.cr4sh.nhlauncher.utils.ToastUtils.showCustomToast
 import com.cr4sh.nhlauncher.utils.VibrationUtils
 
 class WpsCustomPinDialog(private val wpsAttack: WPSAttack) : AppCompatDialogFragment() {
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+    }
+
     @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("SetTextI18n")
     override fun onCreateView(

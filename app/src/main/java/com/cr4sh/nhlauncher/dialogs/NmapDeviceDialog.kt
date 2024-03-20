@@ -19,6 +19,15 @@ import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.VibrationUtils
 
 class NmapDeviceDialog(private val clickedDevice: DeviceItem) : AppCompatDialogFragment() {
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+    }
+
     @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("SetTextI18n")
     override fun onCreateView(

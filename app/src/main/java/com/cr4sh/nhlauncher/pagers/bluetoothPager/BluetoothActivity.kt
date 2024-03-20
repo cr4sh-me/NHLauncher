@@ -12,6 +12,7 @@ import com.cr4sh.nhlauncher.activities.specialFeatures.SpecialFeaturesActivity
 import com.cr4sh.nhlauncher.utils.ColorChanger.Companion.activityAnimation
 import com.cr4sh.nhlauncher.utils.LanguageChanger
 import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -34,6 +35,7 @@ class BluetoothActivity : LanguageChanger() {
         cancelButton.setBackgroundColor(Color.parseColor(nhlPreferences.color80()))
         cancelButton.setTextColor(Color.parseColor(nhlPreferences.color50()))
         cancelButton.setOnClickListener {
+            VibrationUtils.vibrate()
             val intent = Intent(this@BluetoothActivity, SpecialFeaturesActivity::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)

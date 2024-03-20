@@ -14,7 +14,6 @@ import android.widget.EditText
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.CompoundButtonCompat
-import com.cr4sh.nhlauncher.R
 import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener
 import com.skydoves.powerspinner.PowerSpinnerView
 
@@ -112,8 +111,10 @@ class ColorChanger {
                 )
             } else {
                 @Suppress("DEPRECATION")
-                overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom,
-                    androidx.appcompat.R.anim.abc_shrink_fade_out_from_bottom)
+                overridePendingTransition(
+                    androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom,
+                    androidx.appcompat.R.anim.abc_shrink_fade_out_from_bottom
+                )
             }
         }
 

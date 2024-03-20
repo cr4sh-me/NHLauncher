@@ -1,10 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bkg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/bkg">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/title"
@@ -26,51 +24,51 @@
             android:orientation="vertical">
 
             <TextView
-                android:padding="5dp"
                 android:id="@+id/device_ip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:padding="5dp"
                 android:text="@string/loading" />
 
             <TextView
-                android:padding="5dp"
                 android:id="@+id/device_mac"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:padding="5dp"
                 android:text="@string/loading" />
 
             <TextView
-                android:padding="5dp"
                 android:id="@+id/device_vendor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:padding="5dp"
                 android:text="@string/loading" />
 
             <TextView
-                android:padding="5dp"
                 android:id="@+id/device_os"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:padding="5dp"
                 android:text="@string/loading" />
 
             <TextView
-                android:padding="5dp"
                 android:id="@+id/device_ports"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:padding="5dp"
                 android:text="@string/loading" />
 
             <TextView
-                android:padding="5dp"
                 android:id="@+id/device_services"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:padding="5dp"
                 android:text="@string/loading" />
 
         </LinearLayout>
@@ -81,7 +79,7 @@
         android:id="@+id/cancel_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/close"
-        android:layout_margin="10dp" />
+        android:layout_margin="10dp"
+        android:text="@string/close" />
 
 </LinearLayout>

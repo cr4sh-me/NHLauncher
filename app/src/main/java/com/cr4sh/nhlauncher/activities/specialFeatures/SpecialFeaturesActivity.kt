@@ -44,7 +44,7 @@ class SpecialFeaturesActivity : LanguageChanger() {
             drawable.cornerRadius = 60f
             drawable.setStroke(8, Color.parseColor(nhlPreferences.color80()))
         }
-        val nhlSpecialAdapter = NHLSpecialAdapter()
+        val nhlSpecialAdapter = NHLSpecialAdapter(this@SpecialFeaturesActivity)
         val specialItem = NHLSpecialItem(
             resources.getString(R.string.wps_attack),
             resources.getString(R.string.wps_desc_short),

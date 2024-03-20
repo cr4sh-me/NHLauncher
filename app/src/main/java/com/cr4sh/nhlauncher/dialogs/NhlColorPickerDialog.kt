@@ -29,8 +29,15 @@ class NhlColorPickerDialog(
     private val hexColorShade: String
 ) : AppCompatDialogFragment() {
     private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
-
     private var hexColorString: String? = null
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+    }
 
     @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("SetTextI18n")

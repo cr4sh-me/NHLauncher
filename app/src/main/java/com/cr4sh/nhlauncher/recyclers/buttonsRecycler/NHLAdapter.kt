@@ -23,6 +23,7 @@ import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -188,6 +189,7 @@ class NHLAdapter(private val editText: EditText) : RecyclerView.Adapter<NHLViewH
         params.setMargins(margin, margin / 2, margin, margin / 2)
         holder.buttonView.layoutParams = params
         holder.itemView.setOnClickListener {
+            VibrationUtils.vibrate()
             if (editText.text.toString().isNotEmpty()) {
                 myActivity?.onBackPressedDispatcher?.onBackPressed() // close searchbar
             }

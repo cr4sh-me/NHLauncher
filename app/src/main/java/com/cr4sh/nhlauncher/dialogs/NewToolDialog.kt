@@ -27,6 +27,14 @@ import com.cr4sh.nhlauncher.utils.VibrationUtils
 class NewToolDialog : AppCompatDialogFragment() {
     private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
 
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+    }
+
     @SuppressLint("Recycle")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

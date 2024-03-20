@@ -71,11 +71,11 @@ class BluetoothFragment2 : Fragment() {
         val bluerangerButton = view.findViewById<Button>(R.id.startBlueranger)
         val sdpButton = view.findViewById<Button>(R.id.startSdp)
         val rfcommButton = view.findViewById<Button>(R.id.startRfcomm)
-        setButtonColors(l2pingButton)
-        setButtonColors(redfangButton)
-        setButtonColors(bluerangerButton)
-        setButtonColors(sdpButton)
-        setButtonColors(rfcommButton)
+        ColorChanger.setButtonColors(l2pingButton)
+        ColorChanger.setButtonColors(redfangButton)
+        ColorChanger.setButtonColors(bluerangerButton)
+        ColorChanger.setButtonColors(sdpButton)
+        ColorChanger.setButtonColors(rfcommButton)
         val sizeText = view.findViewById<TextView>(R.id.l2ping_size)
         val sizeEdit = view.findViewById<EditText>(R.id.l2ping_size_edit)
         val countText = view.findViewById<TextView>(R.id.l2ping_count)
@@ -100,9 +100,11 @@ class BluetoothFragment2 : Fragment() {
         ColorChanger.setEditTextColor(rangeEdit)
 
         checkboxes[0].setOnClickListener {
+            VibrationUtils.vibrate()
             flood = if (checkboxes[0].isChecked) "-f" else ""
         }
         checkboxes[1].setOnClickListener {
+            VibrationUtils.vibrate()
             reverse = if (checkboxes[1].isChecked) "-r" else ""
         }
         l2pingButton.setOnClickListener {
@@ -126,7 +128,6 @@ class BluetoothFragment2 : Fragment() {
 
         redfangButton.setOnClickListener {
             VibrationUtils.vibrate()
-
             if (rangeEdit.text.isEmpty()) {
                 requireActivity().lifecycleScope.launch {
                     showCustomToast(
@@ -144,12 +145,14 @@ class BluetoothFragment2 : Fragment() {
         }
 
         bluerangerButton.setOnClickListener {
+            VibrationUtils.vibrate()
             if (checkForSelectedTarget()) {
                 runCmd("echo -ne \"\\033]0;Blueranger\\007\" && clear;blueranger $selectedIface $selectedTarget")
             }
         }
 
         sdpButton.setOnClickListener {
+            VibrationUtils.vibrate()
             if (checkForSelectedTarget()) {
                 requireActivity().lifecycleScope.launch {
                     dialogUtils!!.openSdpToolDialog()
@@ -158,6 +161,7 @@ class BluetoothFragment2 : Fragment() {
         }
 
         rfcommButton.setOnClickListener {
+            VibrationUtils.vibrate()
             if (checkForSelectedTarget()) {
                 runCmd("echo -ne \"\\033]0;RFComm scan\\007\" && clear;rfcomm_scan $selectedTarget")
             }
@@ -213,10 +217,5 @@ class BluetoothFragment2 : Fragment() {
         } else {
             true
         }
-    }
-
-    private fun setButtonColors(button: Button) {
-        button.setBackgroundColor(Color.parseColor(nhlPreferences!!.color50()))
-        button.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
     }
 }

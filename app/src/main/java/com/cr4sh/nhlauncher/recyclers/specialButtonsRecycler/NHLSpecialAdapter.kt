@@ -11,22 +11,23 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.cr4sh.nhlauncher.R
-import com.cr4sh.nhlauncher.activities.MainActivity
+import com.cr4sh.nhlauncher.activities.specialFeatures.SpecialFeaturesActivity
 import com.cr4sh.nhlauncher.activities.wpsAttacks.WPSAttack
 import com.cr4sh.nhlauncher.pagers.bluetoothPager.BluetoothActivity
 import com.cr4sh.nhlauncher.pagers.netscannerPager.NetScannerActivity
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.specialButtonsRecycler.NHLSpecialItem
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.specialButtonsRecycler.NHLSpecialViewHolder
-import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
+import com.cr4sh.nhlauncher.utils.ToastUtils
 import com.cr4sh.nhlauncher.utils.VibrationUtils
+import kotlinx.coroutines.launch
 import java.util.Locale
 
-class NHLSpecialAdapter : RecyclerView.Adapter<NHLSpecialViewHolder>() {
-    private val myActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
+class NHLSpecialAdapter(private var activity: SpecialFeaturesActivity) :
+    RecyclerView.Adapter<NHLSpecialViewHolder>() {
     private val items: MutableList<NHLSpecialItem> = ArrayList()
     private var height = 0
     private var margin = 0
@@ -42,14 +43,14 @@ class NHLSpecialAdapter : RecyclerView.Adapter<NHLSpecialViewHolder>() {
     }
 
     private fun saveRecyclerHeight(active: Int) {
-        val prefs = myActivity?.getSharedPreferences("nhlSettings", Context.MODE_PRIVATE)
+        val prefs = activity.getSharedPreferences("nhlSettings", Context.MODE_PRIVATE)
         val editor = prefs?.edit()
         editor?.putInt("recyclerHeight", active)
         editor?.apply()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NHLSpecialViewHolder {
-        nhlPreferences = myActivity?.let { NHLPreferences(it) }
+        nhlPreferences = NHLPreferences(activity)
         val originalHeight: Int
         if (nhlPreferences!!.recyclerMainHeight == 0) { //TODO fix crash
             originalHeight = parent.measuredHeight
@@ -73,7 +74,7 @@ class NHLSpecialAdapter : RecyclerView.Adapter<NHLSpecialViewHolder>() {
         drawable!!.setBounds(0, 0, parent.width, height)
 
         return NHLSpecialViewHolder(
-            LayoutInflater.from(myActivity).inflate(R.layout.custom_button, parent, false)
+            LayoutInflater.from(activity).inflate(R.layout.custom_button, parent, false)
         )
     }
 
@@ -88,14 +89,12 @@ class NHLSpecialAdapter : RecyclerView.Adapter<NHLSpecialViewHolder>() {
         holder.nameView.text = item.name.uppercase(Locale.getDefault())
         holder.descriptionView.text = item.description.uppercase(Locale.getDefault())
         @SuppressLint("DiscouragedApi") val imageResourceId =
-            myActivity?.resources?.getIdentifier(item.image, "drawable", myActivity.packageName)
+            activity.resources?.getIdentifier(item.image, "drawable", activity.packageName)
         if (imageResourceId != null) {
-            if (myActivity != null) {
-                Glide.with(myActivity)
-                    .asBitmap()
-                    .load(imageResourceId)
-                    .into(holder.imageView)
-            }
+//            Glide.with(activity)
+//                .load(imageResourceId)
+//                .into(holder.imageView)
+            holder.imageView.setImageResource(imageResourceId)
         }
         if (overlay) {
             holder.imageView.setColorFilter(
@@ -110,23 +109,24 @@ class NHLSpecialAdapter : RecyclerView.Adapter<NHLSpecialViewHolder>() {
         params.setMargins(margin, margin / 2, margin, margin / 2)
         holder.buttonView.layoutParams = params
         holder.itemView.setOnClickListener {
-            if (myActivity != null) {
-                VibrationUtils.vibrate()
-            }
+            VibrationUtils.vibrate()
             when (position) {
                 0 -> {
-                    val intent = Intent(myActivity, WPSAttack::class.java)
-                    myActivity?.startActivity(intent)
+                    val intent = Intent(activity, WPSAttack::class.java)
+                    activity.startActivity(intent)
                 }
 
                 1 -> {
-                    val intent = Intent(myActivity, BluetoothActivity::class.java)
-                    myActivity?.startActivity(intent)
+                    val intent = Intent(activity, BluetoothActivity::class.java)
+                    activity.startActivity(intent)
                 }
 
                 2 -> {
-                    val intent = Intent(myActivity, NetScannerActivity::class.java)
-                    myActivity?.startActivity(intent)
+                    activity.lifecycleScope.launch {
+                        ToastUtils.showCustomToast(activity, "Coming soon...")
+                    }
+//                    val intent = Intent(activity, NetScannerActivity::class.java)
+//                    activity.startActivity(intent)
                 }
             }
         }

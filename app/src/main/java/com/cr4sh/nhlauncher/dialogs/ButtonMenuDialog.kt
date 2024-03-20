@@ -72,7 +72,7 @@ class ButtonMenuDialog(private var myActivity: MainActivity) : AppCompatDialogFr
         }
         option3.setOnClickListener {
             VibrationUtils.vibrate()
-            if (!MainActivity.disableMenu) {
+            if (!MainActivity.disableMenu && myActivity.currentCategoryNumber != 0) {
                 dialogUtils.openNewToolDialog(myActivity.buttonCategory)
             } else {
                 showCustomToast(requireActivity(), resources.getString(R.string.get_out))

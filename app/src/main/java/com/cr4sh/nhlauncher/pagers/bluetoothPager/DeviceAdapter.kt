@@ -8,7 +8,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
 import com.cr4sh.nhlauncher.dialogs.NmapDeviceDialog
@@ -26,7 +25,9 @@ class DeviceAdapter(
 
     private val myActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     val dialogUtils = myActivity?.let { DialogUtils(it.supportFragmentManager) }
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         val textViewIP: TextView = itemView.findViewById(R.id.top_left_text)
         val textViewMAC: TextView = itemView.findViewById(R.id.bottom_right_text)
         val textViewVendor: TextView = itemView.findViewById(R.id.bottom_left_text)
@@ -57,7 +58,14 @@ class DeviceAdapter(
         notifyDataSetChanged()
     }
 
-    fun updateDevice(ip: String, updatedMac: String, updatedVendor: String, updatedOs: String, ports: ArrayList<String>, services: ArrayList<String>) {
+    fun updateDevice(
+        ip: String,
+        updatedMac: String,
+        updatedVendor: String,
+        updatedOs: String,
+        ports: ArrayList<String>,
+        services: ArrayList<String>
+    ) {
         // Find the index of the device with the specified IP
         val index = devices.indexOfFirst { it.ip == ip }
         // Check if the device is found
@@ -70,7 +78,9 @@ class DeviceAdapter(
             devices[index].ports = ports
             devices[index].services = services
 
-            if(devices[index].os == "Unknown"){ devices[index].guessos() }
+            if (devices[index].os == "Unknown") {
+                devices[index].guessos()
+            }
             // Notify the RecyclerView adapter if you're using one
             notifyItemChanged(index)
         }

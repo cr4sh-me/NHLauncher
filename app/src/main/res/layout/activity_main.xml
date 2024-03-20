@@ -32,11 +32,11 @@
             android:layout_height="50dp"
             android:layout_margin="5dp"
             android:hint="@string/search_hint"
+            android:inputType="textNoSuggestions"
             android:maxLength="20"
+            android:maxLines="1"
             android:paddingStart="16dp"
             android:visibility="gone"
-            android:inputType="textNoSuggestions"
-            android:maxLines="1"
             tools:ignore="RtlSymmetry" />
 
         <LinearLayout

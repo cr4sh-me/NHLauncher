@@ -275,7 +275,10 @@ class MainActivity : LanguageChanger() {
         ColorChanger.setButtonColors(backButton, true)
         ColorChanger.setButtonColors(specialButton)
 
-        val categoriesAppear = AnimationUtils.loadAnimation(this@MainActivity, androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom)
+        val categoriesAppear = AnimationUtils.loadAnimation(
+            this@MainActivity,
+            androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom
+        )
 
         rollCategoriesLayout.setOnClickListener {
             lifecycleScope.launch {
@@ -588,7 +591,6 @@ class MainActivity : LanguageChanger() {
     }
 
     companion object {
-        @JvmField
         var disableMenu = false
     }
 }

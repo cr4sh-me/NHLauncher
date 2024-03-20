@@ -59,7 +59,7 @@ class StatsAdapter : RecyclerView.Adapter<StatsHolder>() {
         nhlPreferences = myActivity?.let { NHLPreferences(it) }
         originalHeight = parent.measuredHeight
         margin = 20
-        height = originalHeight / 8 - margin // Button height without margin
+        height = originalHeight / 7 - margin // Button height without margin
         drawable = GradientDrawable()
         if (nhlPreferences!!.isNewButtonStyleActive) {
             drawable!!.setColor(Color.parseColor(nhlPreferences!!.color50()))

@@ -27,6 +27,14 @@ import kotlinx.coroutines.launch
 class SdpToolDialog : AppCompatDialogFragment() {
     private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
 
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        );
+    }
+
     @SuppressLint("SdCardPath")
     private val appScriptsPath = "/data/data/com.offsec.nethunter/scripts"
     private val exe = ShellExecuter()

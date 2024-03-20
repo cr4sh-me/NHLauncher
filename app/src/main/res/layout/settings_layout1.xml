@@ -15,6 +15,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/checkToolsCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:maxLines="3"
+        android:text="@string/loading"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_info2" />
+
+    <TextView
+        android:id="@+id/checkUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:maxLines="3"
+        android:text="@string/click_to_check_for_updates"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkToolsCount" />
+
+
     <ScrollView
         android:id="@+id/custom_theme_dialog_background"
         android:layout_width="match_parent"
@@ -22,33 +48,15 @@
         android:orientation="vertical"
         android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@id/save_button"
-        app:layout_constraintTop_toBottomOf="@+id/bt_info2">
+        app:layout_constraintTop_toBottomOf="@+id/checkUpdate">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="vertical"
-            android:padding="15dp">
-
-            <TextView
-                android:id="@+id/checkToolsCount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:maxLines="3"
-                android:padding="5dp"
-                android:text="@string/loading" />
-
-            <TextView
-                android:id="@+id/checkUpdate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:maxLines="3"
-                android:padding="5dp"
-                android:text="@string/click_to_check_for_updates" />
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="5dp">
 
             <!-- TextView and PowerSpinnerView for Language -->
             <LinearLayout
@@ -146,18 +154,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp">
+                android:gravity="center"
+                android:padding="5dp">
 
                 <SeekBar
                     android:id="@+id/seekbar"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="4" />
 
                 <TextView
                     android:id="@+id/seekbar_value"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/loading" />
@@ -166,21 +175,21 @@
 
             <CheckBox
                 android:id="@+id/vibrations_checkbox"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/enable_vibrations" />
 
             <CheckBox
                 android:id="@+id/newbuttons_checkbox"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/use_new_buttons_style" />
 
             <CheckBox
                 android:id="@+id/overlay_checkbox"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/use_themed_icons_overlay" />
@@ -188,7 +197,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
                 <Button

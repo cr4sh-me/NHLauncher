@@ -18,6 +18,7 @@ import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
 import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.ToastUtils
+import com.cr4sh.nhlauncher.utils.VibrationUtils
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
 import com.skydoves.powerspinner.PowerSpinnerView
 import kotlinx.coroutines.launch
@@ -66,6 +67,7 @@ class BluetoothFragment5 : Fragment() {
         powerSpinnerView.selectItemByIndex(0)
 
         startButton.setOnClickListener {
+            VibrationUtils.vibrate()
             if (intervalEditText.text.isNotEmpty()) {
                 if (checkForSelectedInterface()) {
                     nhlUtils?.runCmd("cd /root/AppleJuice && python3 app.py $advertiseSingle $advertiseRandom -i ${intervalEditText.text}")

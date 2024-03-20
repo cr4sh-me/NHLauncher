@@ -52,7 +52,7 @@ class NHLUtils(
     @SuppressLint("SetTextI18n", "Recycle")
     fun spinnerChanger(category: Int) {
         nhlPreferences.language()?.let { Log.d("Yesd", it) }
-        nhlPreferences.languageLocale()?.let { Log.d("Yesd", it) }
+        nhlPreferences.languageLocale().let { Log.d("Yesd", it) }
         mainActivity.changeCategoryPreview(category) // Set category preview
 
         // Obtain references to app resources and button layout
@@ -71,17 +71,15 @@ class NHLUtils(
         )
         val selection: String
         val selectionArgs: Array<String>
+        // Enable creating new buttons in normal categories
+        MainActivity.disableMenu = false
         if (category == 0) {
             selection = "FAVOURITE = ?"
             selectionArgs = arrayOf("1")
-            // Disable creating new buttons in fav category
-            MainActivity.disableMenu = true
         } else {
             val categoryNumber = category.toString()
             selection = "CATEGORY = ?"
             selectionArgs = arrayOf(categoryNumber)
-            // Enable creating new buttons in normal categories
-            MainActivity.disableMenu = false
         }
 
         mainActivity.lifecycleScope.launch {
@@ -171,27 +169,32 @@ class NHLUtils(
                 cursor.moveToNext()
             }
         }
-        assert(isFavourite != null)
         if (isFavourite == "1") {
             ToastUtils.showCustomToast(
                 mainActivity,
                 mainActivity.resources.getString(R.string.removed_favourite)
             )
-            mainActivity.buttonName?.let {
-                DBHandler.updateToolFavorite(mDatabase, it, 0)
+            lifecycleScope.launch(Dispatchers.IO) {
+                mainActivity.buttonName?.let {
+                    DBHandler.updateToolFavorite(mDatabase, it, 0)
+                }
             }
         } else {
             ToastUtils.showCustomToast(
                 mainActivity,
                 mainActivity.resources.getString(R.string.added_favourite)
             )
-            mainActivity.buttonName?.let {
-                DBHandler.updateToolFavorite(mDatabase, it, 1)
+            lifecycleScope.launch(Dispatchers.IO) {
+                mainActivity.buttonName?.let {
+                    DBHandler.updateToolFavorite(mDatabase, it, 1)
+                }
             }
         }
 
-        if(!MainActivity.disableMenu){
-            restartSpinner()
+        if (!MainActivity.disableMenu) {
+            lifecycleScope.launch {
+                restartSpinner()
+            }
         }
 
         // Close cursor

@@ -2080,7 +2080,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB
             "bluesnarfer",
             "A bluetooth bluesnarfing Utility",
             "Narzędzie do bluesnarfingu Bluetooth",
-            "blusnarfer --help",
+            "bluesnarfer -h",
             "bluetooth",
             0
         )

@@ -58,7 +58,7 @@ class SettingsFragment1 : Fragment() {
     private lateinit var overlayCheckbox: CheckBox
 
     @RequiresApi(Build.VERSION_CODES.S)
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -101,7 +101,8 @@ class SettingsFragment1 : Fragment() {
         checkToolsCount.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
 
         lifecycleScope.launch {
-            checkToolsCount.text = "Tools in database: ${getToolsCount()}"
+            checkToolsCount.text =
+                requireActivity().resources.getString(R.string.tools_in_the_db) + getToolsCount()
         }
 
         ColorChanger.setPowerSpinnerColor(powerSpinnerView)
