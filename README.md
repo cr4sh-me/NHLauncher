@@ -8,7 +8,7 @@ NHLauncher is an application that makes it easier and faster to launch pentestin
 - Higly customizable
 - Modern UI design
 
-## Features
+## Requirements
 - Brain (working one)
 - Full NetHunter installation
 - Root
