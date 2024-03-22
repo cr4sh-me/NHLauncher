@@ -1,4 +1,4 @@
-package com.cr4sh.nhlauncher.pagers.bluetoothPager.settingsPager
+package com.cr4sh.nhlauncher.pagers.settingsPager
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

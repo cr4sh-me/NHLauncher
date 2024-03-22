@@ -2,6 +2,7 @@ package com.cr4sh.nhlauncher.utils
 
 import android.app.Activity
 import android.app.Activity.OVERRIDE_TRANSITION_CLOSE
+import android.app.Activity.OVERRIDE_TRANSITION_OPEN
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -105,7 +106,7 @@ class ColorChanger {
         fun Activity.activityAnimation() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 overrideActivityTransition(
-                    OVERRIDE_TRANSITION_CLOSE,
+                    OVERRIDE_TRANSITION_OPEN,
                     androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom,
                     androidx.appcompat.R.anim.abc_shrink_fade_out_from_bottom,
                 )

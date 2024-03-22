@@ -48,6 +48,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textview2" />
 
+    <TextView
+        android:id="@+id/textview4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/loading"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textview3" />
+
     <Button
         android:id="@+id/github_button"
         android:layout_width="match_parent"
@@ -56,7 +67,7 @@
         android:text="@string/nhlauncher_github"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textview3" />
+        app:layout_constraintTop_toBottomOf="@+id/textview4" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

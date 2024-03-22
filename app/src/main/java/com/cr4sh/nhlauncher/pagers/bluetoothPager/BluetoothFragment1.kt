@@ -1,6 +1,9 @@
 package com.cr4sh.nhlauncher.pagers.bluetoothPager
 
 import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -20,6 +23,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
+import com.cr4sh.nhlauncher.bridge.Bridge
 import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.DialogUtils
 import com.cr4sh.nhlauncher.utils.NHLManager
@@ -48,8 +52,8 @@ class BluetoothFragment1 : Fragment() {
     private val appScriptsPath = "/data/data/com.offsec.nethunter/scripts"
     var scanTime = "10"
     var nhlPreferences: NHLPreferences? = null
-    private var nhlUtils: NHLUtils? = null
-    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
+//    private var nhlUtils: NHLUtils? = null
+//    private val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     private var scrollView: ScrollView? = null
     private lateinit var linearContainer: LinearLayout
     private lateinit var binderButton: Button
@@ -75,7 +79,7 @@ class BluetoothFragment1 : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.bt_layout1, container, false)
         nhlPreferences = NHLPreferences(requireActivity())
-        nhlUtils = mainActivity?.let { NHLUtils(it) }
+//        nhlUtils = mainActivity?.let { NHLUtils(it) }
         btSmd = File("/sys/module/hci_smd/parameters/hcismd_set")
         val chrootPath = "/data/local/nhsystem/kali-arm64"
         bluebinder = File("$chrootPath/usr/sbin/bluebinder")
@@ -241,7 +245,7 @@ class BluetoothFragment1 : Fragment() {
     private fun handleLongButtonClick(bluetoothButton: String): Boolean {
         val macAddressPattern = Regex("""([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})""")
         val macAddress = macAddressPattern.find(bluetoothButton)?.value
-        nhlUtils?.copyToClipboard(macAddress.toString())
+        copyToClipboard(macAddress.toString())
         return true
     }
 
@@ -599,7 +603,7 @@ class BluetoothFragment1 : Fragment() {
                 } else {
                     // Disable Bluetooth service and launch bluebinder
                     exe.RunAsRoot(arrayOf("svc bluetooth disable"))
-                    nhlUtils?.runCmd("echo -ne \"\\033]0;Bluebinder\\007\" && clear;bluebinder || bluebinder;exit")
+                    runCmd("echo -ne \"\\033]0;Bluebinder\\007\" && clear;bluebinder || bluebinder;exit")
                 }
             }
         } catch (e: Exception) {
@@ -773,5 +777,23 @@ class BluetoothFragment1 : Fragment() {
                 servicesStatus
             }
         }
+    }
+
+    // TODO move these functions to somewhere else
+    private fun runCmd(cmd: String?) {
+        @SuppressLint("SdCardPath") val intent =
+            cmd?.let {
+                Bridge.createExecuteIntent(
+                    "/data/data/com.offsec.nhterm/files/usr/bin/kali", it
+                )
+            }
+        //        intent.putExtra(EXTRA_FOREGOUND, true)
+        requireActivity().startActivity(intent)
+    }
+
+    private fun copyToClipboard(text: CharSequence) {
+        val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("Copied!", text)
+        clipboard.setPrimaryClip(clip)
     }
 }

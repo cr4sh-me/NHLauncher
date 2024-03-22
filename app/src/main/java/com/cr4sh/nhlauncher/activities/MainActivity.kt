@@ -12,10 +12,12 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -48,9 +50,11 @@ import com.cr4sh.nhlauncher.utils.NHLUtils
 import com.cr4sh.nhlauncher.utils.PermissionUtils
 import com.cr4sh.nhlauncher.utils.VibrationUtils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+
 
 class MainActivity : LanguageChanger() {
     var buttonCategory: String? = null
@@ -100,40 +104,37 @@ class MainActivity : LanguageChanger() {
 
         activityAnimation()
 
-        val dialogUtils = DialogUtils(this.supportFragmentManager)
+        val dialogUtils by lazy { DialogUtils(this.supportFragmentManager) }
 
-        // Check for nethunter and terminal apps
-        val pm = packageManager
-        try {
-            // First, check if the com.offsec.nethunter and com.offsec.nhterm packages exist
-            pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES)
-            pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES)
-
-            // Then, check if the com.offsec.nhterm.ui.term.NeoTermRemoteInterface activity exists within com.offsec.nhterm
-            val intent = Intent()
-            intent.setComponent(
-                ComponentName(
-                    "com.offsec.nhterm",
-                    "com.offsec.nhterm.ui.term.NeoTermRemoteInterface"
-                )
-            )
-            val activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-            if (activities.isEmpty()) {
-                // The activity is missing
-                dialogUtils.openMissingActivityDialog()
-                return
+        lifecycleScope.launch {
+            // Asynchronous operations
+            val pm = packageManager
+            val missingApps = withContext(Dispatchers.IO) {
+                try {
+                    pm.getPackageInfo("com.offsec.nethunter", PackageManager.GET_ACTIVITIES)
+                    pm.getPackageInfo("com.offsec.nhterm", PackageManager.GET_ACTIVITIES)
+                    val intent = Intent().apply {
+                        component = ComponentName("com.offsec.nhterm", "com.offsec.nhterm.ui.term.NeoTermRemoteInterface")
+                    }
+                    val activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+                    if (activities.isEmpty()) {
+                        listOf("MissingActivity")
+                    } else {
+                        emptyList()
+                    }
+                } catch (e: PackageManager.NameNotFoundException) {
+                    listOf("MissingApps")
+                }
             }
-        } catch (e: PackageManager.NameNotFoundException) {
-            // One of the packages is missing
-            dialogUtils.openAppsDialog()
-            return
-        }
-        val permissionUtils = PermissionUtils(this)
 
-        // Check for root permissions
-        if (!permissionUtils.isRoot) {
-            dialogUtils.openRootDialog()
-            return
+            // Handle missing apps
+            if (missingApps.isNotEmpty()) {
+                when (missingApps.first()) {
+                    "MissingActivity" -> dialogUtils.openMissingActivityDialog()
+                    "MissingApps" -> dialogUtils.openAppsDialog()
+                }
+                return@launch
+            }
         }
         nhlPreferences = NHLPreferences(this)
 
@@ -163,6 +164,8 @@ class MainActivity : LanguageChanger() {
         }
         requestPermissionLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
+
+        val permissionUtils = PermissionUtils(this@MainActivity)
 
         // Check for permissions
         if (!permissionUtils.isPermissionsGranted && !permissionDialogShown) {
@@ -259,7 +262,9 @@ class MainActivity : LanguageChanger() {
             findViewById(R.id.showCategoriesImage) // Init rollCategories before spinnerChanger method
         rollCategoriesText =
             findViewById(R.id.showCategoriesText) // Init rollCategoriesText before spinnerChanger method
-        mainUtils.spinnerChanger(if (isFavourite == 0) 1 else 0)
+        lifecycleScope.launch(Dispatchers.Default){
+            mainUtils.spinnerChanger(if (isFavourite == 0) 1 else 0)
+        }
         currentCategoryNumber = if (isFavourite == 0) 1 else 0
         searchIcon = findViewById(R.id.searchIcon)
         toolbar = findViewById(R.id.toolBar)
@@ -398,6 +403,7 @@ class MainActivity : LanguageChanger() {
                 drawableSearchIcon.setColor(Color.parseColor(nhlPreferences.color50()))
             }
         }
+
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
@@ -481,6 +487,14 @@ class MainActivity : LanguageChanger() {
                                         return true
                                     }
                                 })
+                                searchEditText.setOnEditorActionListener { _, actionId, _ ->
+                                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                                        // Run first search tool
+                                        recyclerView.getChildAt(0)?.performClick()
+                                        return@setOnEditorActionListener true
+                                    }
+                                    false
+                                }
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -541,11 +555,9 @@ class MainActivity : LanguageChanger() {
             backButton.callOnClick()
         }
     }
-
     private fun closeSearchBar() {
-        // Clear searchbar, every close
+        // Clear searchbar, every close. DON'T CHANGE THIS
         searchEditText.text = null
-
         // Enable things
         enableAfterAnimation(toolbar)
         enableAfterAnimation(rollCategoriesLayout)
@@ -560,27 +572,40 @@ class MainActivity : LanguageChanger() {
         disableWhileAnimation(searchEditText)
         drawableSearchIcon.setColor(Color.TRANSPARENT)
 
-        // After animation
-        rollCategoriesLayout.startAnimation(rollOutToolbar)
-        toolbar.startAnimation(rollOutToolbar)
-        searchEditText.startAnimation(rollOut)
-        mainUtils.restartSpinner()
+        // Start animations
+        val animationDuration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+
+        rollCategoriesLayout.startAnimation(rollOutToolbar.apply {
+            duration = animationDuration
+        })
+
+        lifecycleScope.launch(Dispatchers.Default) {
+            delay(animationDuration) // Wait for rollCategoriesLayout animation to finish
+            // Call spinnerChanger after animation finishes
+            withContext(Dispatchers.Main) {
+                mainUtils.spinnerChanger(currentCategoryNumber, true)
+            }
+        }
     }
+
+
 
     fun changeCategoryPreview(position: Int) {
         val categoryTextView: String = valuesList[position]
         val imageResourceId: Int = imageList[position]
 
-        // Set image resource and color filter
-        rollCategories.setImageResource(imageResourceId)
-        rollCategories.setColorFilter(
-            Color.parseColor(nhlPreferences.color80()),
-            PorterDuff.Mode.MULTIPLY
-        )
+        lifecycleScope.launch {
+            // Set image resource and color filter
+            rollCategories.setImageResource(imageResourceId)
+            rollCategories.setColorFilter(
+                Color.parseColor(nhlPreferences.color80()),
+                PorterDuff.Mode.MULTIPLY
+            )
 
-        // Set text and text color
-        rollCategoriesText.text = categoryTextView
-        rollCategoriesText.setTextColor(Color.parseColor(nhlPreferences.color80()))
+            // Set text and text color
+            rollCategoriesText.text = categoryTextView
+            rollCategoriesText.setTextColor(Color.parseColor(nhlPreferences.color80()))
+        }
     }
 
     private fun resetRecyclerHeight() {

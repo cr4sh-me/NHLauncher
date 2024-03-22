@@ -16,6 +16,7 @@ import com.cr4sh.nhlauncher.database.DBHandler
 import com.cr4sh.nhlauncher.recyclers.buttonsRecycler.NHLAdapter
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.buttonsRecycler.NHLItem
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -25,6 +26,8 @@ class NHLUtils(
 ) : AppCompatActivity() {
     private val mDatabase: SQLiteDatabase = mainActivity.mDatabase
     private val nhlPreferences: NHLPreferences = NHLPreferences(mainActivity)
+    private val cache: MutableMap<Int, List<NHLItem>> = HashMap()
+
 
     // NetHunter bridge function
     fun runCmd(cmd: String?) {
@@ -49,17 +52,54 @@ class NHLUtils(
     }
 
     // Queries db for buttons with given categories and display them!
-    @SuppressLint("SetTextI18n", "Recycle")
-    fun spinnerChanger(category: Int) {
+// Function to refresh cache with the latest data from the database
+    fun refreshCache(category: Int) {
+        // Fetch data from the database
+        val newData = queryDatabase(category)
+        // Update cache with fetched data
+        cache[category] = newData
+    }
+
+    suspend fun spinnerChanger(category: Int, scroll: Boolean=false) {
+        // UI operations before starting coroutine
         nhlPreferences.language()?.let { Log.d("Yesd", it) }
         nhlPreferences.languageLocale().let { Log.d("Yesd", it) }
         mainActivity.changeCategoryPreview(category) // Set category preview
 
-        // Obtain references to app resources and button layout
-        val resources = mainActivity.resources
-        val layout = mainActivity.recyclerView
-        val noToolsText = mainActivity.findViewById<TextView>(R.id.messagebox)
-        noToolsText.text = null
+        MainActivity.disableMenu = false
+
+        try {
+            val newItemList = withContext(Dispatchers.Default) {
+                // Fetch data from cache or database
+                val itemList = getDataFromCacheOrDatabase(category)
+                itemList
+            }
+
+            withContext(Dispatchers.Main) {
+                // UI updates based on cached or fetched data
+                updateUI(newItemList, scroll)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Handle exception appropriately, e.g., display error message
+        }
+    }
+
+    // Function to fetch data from cache or database
+    private fun getDataFromCacheOrDatabase(category: Int): List<NHLItem> {
+        return if (cache.containsKey(category)) {
+            cache[category] ?: emptyList()
+        } else {
+            // Data is not cached, fetch from the database
+            val newData = queryDatabase(category)
+            // Update cache with fetched data
+            cache[category] = newData
+            newData
+        }
+    }
+
+    // Function to fetch data from the database
+    private fun queryDatabase(category: Int): List<NHLItem> {
         val projection = arrayOf(
             "CATEGORY",
             "FAVOURITE",
@@ -69,10 +109,10 @@ class NHLUtils(
             "ICON",
             "USAGE"
         )
+
         val selection: String
         val selectionArgs: Array<String>
-        // Enable creating new buttons in normal categories
-        MainActivity.disableMenu = false
+
         if (category == 0) {
             selection = "FAVOURITE = ?"
             selectionArgs = arrayOf("1")
@@ -82,74 +122,79 @@ class NHLUtils(
             selectionArgs = arrayOf(categoryNumber)
         }
 
-        mainActivity.lifecycleScope.launch {
-            try {
-                val newItemList = withContext(Dispatchers.Default) {
-                    val cursor = mDatabase.query(
-                        "TOOLS",
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        nhlPreferences.sortingMode(),
-                        null
+        val cursor = mDatabase.query(
+            "TOOLS",
+            projection,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            nhlPreferences.sortingMode(),
+            null
+        )
+
+        val itemList: MutableList<NHLItem> = ArrayList()
+        cursor?.use { x ->
+            if (x.count > 0) {
+                while (x.moveToNext()) {
+                    val toolCategory = x.getString(0)
+                    val toolName = x.getString(2)
+                    val toolDescription = x.getString(3)
+                    val toolCmd = x.getString(4)
+                    val toolIcon = x.getString(5)
+                    val toolUsage = x.getInt(6)
+
+                    val item = NHLItem(
+                        toolCategory,
+                        toolName,
+                        toolDescription,
+                        toolCmd,
+                        toolIcon,
+                        toolUsage
                     )
-                    val itemList: MutableList<NHLItem> = ArrayList()
-                    if (cursor != null) {
-                        if (cursor.count > 0) {
-                            // Create a new itemList from the cursor data
-                            while (cursor.moveToNext()) {
-                                val toolCategory = cursor.getString(0)
-                                val toolName = cursor.getString(2)
-                                val toolDescription = cursor.getString(3)
-                                val toolCmd = cursor.getString(4)
-                                val toolIcon = cursor.getString(5)
-                                val toolUsage = cursor.getInt(6)
-
-                                val item = NHLItem(
-                                    toolCategory,
-                                    toolName,
-                                    toolDescription,
-                                    toolCmd,
-                                    toolIcon,
-                                    toolUsage
-                                )
-                                itemList.add(item)
-                            }
-                        }
-                    }
-                    cursor?.close()
-                    itemList
+                    itemList.add(item)
                 }
-
-                if (newItemList.isEmpty()) {
-                    val adapter = layout.adapter
-                    if (adapter is NHLAdapter) {
-                        // Call the suspend function within a coroutine
-                        adapter.updateData(ArrayList()) // Empty list to clear existing data
-                    }
-                    mainActivity.enableAfterAnimation(noToolsText)
-                    noToolsText.text = resources.getString(R.string.no_fav_tools)
-                } else {
-                    noToolsText.text = null
-                    mainActivity.disableWhileAnimation(noToolsText)
-                    val adapter = layout.adapter
-                    if (adapter is NHLAdapter) {
-                        // Call the suspend function within a coroutine
-                        adapter.updateData(newItemList)
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
+        }
+
+        return itemList
+    }
+
+    // Function to update UI based on the fetched or cached data
+    private suspend fun updateUI(newItemList: List<NHLItem>, scroll: Boolean) {
+        val resources = mainActivity.resources
+        val layout = mainActivity.recyclerView
+        val noToolsText = mainActivity.findViewById<TextView>(R.id.messagebox)
+
+        if (newItemList.isEmpty()) {
+            val adapter = layout.adapter
+            if (adapter is NHLAdapter) {
+                adapter.updateData(ArrayList()) // Empty list to clear existing data
+            }
+            mainActivity.enableAfterAnimation(noToolsText)
+            noToolsText.text = resources.getString(R.string.no_fav_tools)
+        } else {
+            noToolsText.text = null
+            mainActivity.disableWhileAnimation(noToolsText)
+            val adapter = layout.adapter
+            if (adapter is NHLAdapter) {
+                adapter.updateData(newItemList)
+            }
+        }
+        if(scroll){
+            delay(1)
+            layout.scrollToPosition(0)
         }
     }
 
 
+
+
     // Fills our spinner with text and images
     fun restartSpinner() {
-        spinnerChanger(mainActivity.currentCategoryNumber) // Just set to category chosen before
+        lifecycleScope.launch(Dispatchers.Default){
+            spinnerChanger(mainActivity.currentCategoryNumber) // Just set to category chosen before
+        }
     }
 
     // Refreshes our TextView that is responsible for app background

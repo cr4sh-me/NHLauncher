@@ -22,4 +22,8 @@ class NHLItemDiffCallback(
 
         return oldItem == newItem
     }
+    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+        // If you don't want to animate the change, return null
+        return null
+    }
 }

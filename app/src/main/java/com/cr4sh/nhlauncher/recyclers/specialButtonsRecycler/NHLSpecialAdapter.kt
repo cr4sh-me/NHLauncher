@@ -17,7 +17,6 @@ import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.specialFeatures.SpecialFeaturesActivity
 import com.cr4sh.nhlauncher.activities.wpsAttacks.WPSAttack
 import com.cr4sh.nhlauncher.pagers.bluetoothPager.BluetoothActivity
-import com.cr4sh.nhlauncher.pagers.netscannerPager.NetScannerActivity
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.specialButtonsRecycler.NHLSpecialItem
 import com.cr4sh.nhlauncher.recyclers.categoriesRecycler.specialButtonsRecycler.NHLSpecialViewHolder
 import com.cr4sh.nhlauncher.utils.NHLPreferences

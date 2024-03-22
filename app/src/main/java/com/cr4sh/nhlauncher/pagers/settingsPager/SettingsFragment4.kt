@@ -39,6 +39,7 @@ class SettingsFragment4 : Fragment() {
         val textView1 = view.findViewById<TextView>(R.id.textview1)
         val textView2 = view.findViewById<TextView>(R.id.textview2)
         val textView3 = view.findViewById<TextView>(R.id.textview3)
+        val textView4 = view.findViewById<TextView>(R.id.textview4)
         val github = view.findViewById<Button>(R.id.github_button)
         ColorChanger.setButtonColors(github)
 
@@ -46,15 +47,18 @@ class SettingsFragment4 : Fragment() {
         textView1.text = "'OkHttp' library licensed under Apache 2.0"
         textView2.text = "'PowerSpinner' library licensed under Apache 2.0"
         textView3.text = "'colorpicker' library licensed under Apache 2.0"
+        textView4.text = "'Glide' library licensed under Apache 2.0"
 
         // Create ClickableSpan for each TextView
         setClickableSpan(textView1, "https://github.com/square/okhttp")
         setClickableSpan(textView2, "https://github.com/skydoves/PowerSpinner")
         setClickableSpan(textView3, "https://github.com/QuadFlask/colorpicker")
+        setClickableSpan(textView4, "https://github.com/bumptech/glide")
         title.setTextColor(Color.parseColor(nhlPreferences!!.color80()))
         textView1.setLinkTextColor(Color.parseColor(nhlPreferences!!.color80()))
         textView2.setLinkTextColor(Color.parseColor(nhlPreferences!!.color80()))
         textView3.setLinkTextColor(Color.parseColor(nhlPreferences!!.color80()))
+        textView4.setLinkTextColor(Color.parseColor(nhlPreferences!!.color80()))
         github.setOnClickListener {
             if (mainActivity != null) {
                 VibrationUtils.vibrate()

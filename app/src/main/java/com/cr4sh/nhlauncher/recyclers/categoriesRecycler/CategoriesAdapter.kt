@@ -107,7 +107,9 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoriesViewHolder>() {
                 VibrationUtils.vibrate()
             }
             myActivity?.backButton?.callOnClick()
-            mainUtils?.spinnerChanger(position)
+            myActivity?.lifecycleScope?.launch(Dispatchers.Default){
+                mainUtils?.spinnerChanger(position, true)
+            }
             myActivity?.currentCategoryNumber = position
         }
     }

@@ -17,6 +17,8 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class BluetoothActivity : LanguageChanger() {
+
+    // TODO FIX FREEZE WHILE STARTING BT TOOLKIT
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,7 +46,7 @@ class BluetoothActivity : LanguageChanger() {
         val viewPager2 = findViewById<ViewPager2>(R.id.pager)
         val adapter = BluetoothPager(this)
         viewPager2.adapter = adapter
-        viewPager2.offscreenPageLimit = 5
+        viewPager2.offscreenPageLimit = 3
         val tabs = findViewById<TabLayout>(R.id.tabLayout)
         TabLayoutMediator(tabs, viewPager2) { tab: TabLayout.Tab, position: Int ->
             when (position) {

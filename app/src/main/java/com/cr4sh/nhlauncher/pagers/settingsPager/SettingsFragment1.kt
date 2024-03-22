@@ -134,6 +134,7 @@ class SettingsFragment1 : Fragment() {
 
         seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+//                VibrationUtils.vibrate()
                 buttonsCount = progress
                 seekBarValue.text = progress.toString()
                 Log.d("SeekBar", "TextView text set to: ${seekBarValue.text}")
@@ -352,7 +353,7 @@ class SettingsFragment1 : Fragment() {
         }
     }
 
-    suspend fun getToolsCount(): Int = withContext(Dispatchers.IO) {
+    private suspend fun getToolsCount(): Int = withContext(Dispatchers.IO) {
         val db = mainActivity?.mDatabase
         val columns = arrayOf("COUNT(*)")
         val cursor = db?.query("TOOLS", columns, null, null, null, null, null)

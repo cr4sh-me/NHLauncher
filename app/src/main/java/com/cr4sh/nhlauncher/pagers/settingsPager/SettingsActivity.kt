@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.viewpager2.widget.ViewPager2
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
-import com.cr4sh.nhlauncher.pagers.bluetoothPager.settingsPager.SettingsPager
 import com.cr4sh.nhlauncher.utils.ColorChanger.Companion.activityAnimation
 import com.cr4sh.nhlauncher.utils.LanguageChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
@@ -54,10 +53,7 @@ class SettingsActivity : LanguageChanger() {
         val tabs = findViewById<TabLayout>(R.id.tabLayout)
         TabLayoutMediator(tabs, viewPager2) { tab: TabLayout.Tab, position: Int ->
             when (position) {
-                0 -> tab.setText(
-                    resources.getString(R.string.general)
-                )
-
+                0 -> tab.setText(resources.getString(R.string.general))
                 1 -> tab.setText(resources.getString(R.string.themes_settings))
                 2 -> tab.setText(resources.getString(R.string.statistics))
                 3 -> tab.setText(resources.getString(R.string.about))
@@ -75,11 +71,11 @@ class SettingsActivity : LanguageChanger() {
         tabs.setSelectedTabIndicatorColor(Color.parseColor(nhlPreferences.color80()))
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (isFinishing) {
-            activityAnimation()
-        }
-    }
+//    override fun onPause() {
+//        super.onPause()
+//        if (isFinishing) {
+//            activityAnimation()
+//        }
+//    }
 
 }

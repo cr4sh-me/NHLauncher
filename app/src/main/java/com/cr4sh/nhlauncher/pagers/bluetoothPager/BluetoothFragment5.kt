@@ -1,5 +1,6 @@
 package com.cr4sh.nhlauncher.pagers.bluetoothPager
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.cr4sh.nhlauncher.R
 import com.cr4sh.nhlauncher.activities.MainActivity
+import com.cr4sh.nhlauncher.bridge.Bridge
 import com.cr4sh.nhlauncher.utils.ColorChanger
 import com.cr4sh.nhlauncher.utils.NHLManager
 import com.cr4sh.nhlauncher.utils.NHLPreferences
@@ -25,8 +27,8 @@ import kotlinx.coroutines.launch
 
 class BluetoothFragment5 : Fragment() {
     var nhlPreferences: NHLPreferences? = null
-    private var nhlUtils: NHLUtils? = null
-    val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
+//    private var nhlUtils: NHLUtils? = null
+//    val mainActivity: MainActivity? = NHLManager.getInstance().getMainActivity()
     private var advertiseSingle: String = ""
     private var advertiseRandom: String = ""
 
@@ -36,7 +38,7 @@ class BluetoothFragment5 : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.bt_layout5, container, false)
         nhlPreferences = NHLPreferences(requireActivity())
-        nhlUtils = mainActivity?.let { NHLUtils(it) }
+//        nhlUtils = mainActivity?.let { NHLUtils(it) }
         val juiceInfo = view.findViewById<TextView>(R.id.juiceInfo)
         val startButton = view.findViewById<Button>(R.id.startButton)
         val spinnerBg1 = view.findViewById<LinearLayout>(R.id.bottomContainer)
@@ -70,13 +72,11 @@ class BluetoothFragment5 : Fragment() {
             VibrationUtils.vibrate()
             if (intervalEditText.text.isNotEmpty()) {
                 if (checkForSelectedInterface()) {
-                    nhlUtils?.runCmd("cd /root/AppleJuice && python3 app.py $advertiseSingle $advertiseRandom -i ${intervalEditText.text}")
+                    runCmd("cd /root/AppleJuice && python3 app.py $advertiseSingle $advertiseRandom -i ${intervalEditText.text}")
                 }
             } else {
                 requireActivity().lifecycleScope.launch {
-                    if (mainActivity != null) {
-                        ToastUtils.showCustomToast(mainActivity, "Are you dumb?")
-                    }
+                        ToastUtils.showCustomToast(requireActivity(), "Are you dumb?")
                 }
             }
         }
@@ -84,10 +84,21 @@ class BluetoothFragment5 : Fragment() {
         return view
     }
 
+    private fun runCmd(cmd: String?) {
+        @SuppressLint("SdCardPath") val intent =
+            cmd?.let {
+                Bridge.createExecuteIntent(
+                    "/data/data/com.offsec.nhterm/files/usr/bin/kali", it
+                )
+            }
+        //        intent.putExtra(EXTRA_FOREGOUND, true)
+        requireActivity().startActivity(intent)
+    }
+
     private fun checkForSelectedInterface(): Boolean {
         // Check for interface only
         return if (BluetoothFragment1.selectedIface == "None") {
-            mainActivity?.lifecycleScope?.launch {
+            requireActivity().lifecycleScope?.launch {
                 ToastUtils.showCustomToast(
                     requireActivity(),
                     "No selected interface!"
